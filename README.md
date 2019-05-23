@@ -3,7 +3,7 @@
 
 ## EasyImage 简单图床
 > 支持多文件上传,异地上传,api上传,简单无数据库,返回图片url,markdown,bbscode,html的一款图床程序
-演示地址： [http://t.cn/ReBp80X](http://t.cn/ReBp80X"http://t.cn/ReBp80X")
+演示地址： [https://img.545141.com](https://img.545141.com"https://img.545141.com")
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](http://www.mycodes.net/48/4925.htm "PHP多图长传程序2.4.3")
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
 
@@ -31,9 +31,6 @@
 #### 功能支持：
 
 - 支持设置图片质量
-- 支持文字/图片水印 可自定义文字颜色
-- 支持文字水印背景颜色
-- 支持文字水印透明度
 - 支持上传图片转换为指定格式
 - 支持设置图片指定宽/高
 - 支持限制最低宽度/高度上传
@@ -42,10 +39,9 @@
 - 支持仅登录后上传
 - 支持设置广告
 - 支持网站统计 请将统计代码放入:public/static/hm.js
-- ~~支持删除自定义删除图片(仅管理员)~~ -> 使用最新的管理系统
+- 图片管理(删除，查看)
 - 支持上传图片至远程服务器(异域存储)
-- 支持开启/关闭api上传~~(支持开启/关闭api自定义文字水印)~~ 不使用api自定义水印
-- ~~支持删除远程上传文件~~ -> 不再支持删除远程文件
+- 支持开启/关闭api上传
 
 #### api上传示例：
 参数：
@@ -81,7 +77,7 @@ api上传成功后返回json：
 3. 修改B.com的config.php 'domain'=>'https://B.com'
 4. 修改A.com的config.php'CDomain'=>'https://B.com/corssdomain/'
 - 这样就添加了异域上传，如果有什么改动的话，可以直接复制config.php到B.com
-- 因为异域上传存在任意上传的功能，强烈建议确定A.comf服务器后修改file.php中的
+- 因为异域上传存在任意上传的功能，强烈建议确定A.com服务器后修改file.php中的
 header('Access-Control-Allow-Origin:*')
 将其修改为:
 header('Access-Control-Allow-Origin:https://A.com/')
@@ -96,6 +92,12 @@ header('Access-Control-Allow-Origin:https://A.com/')
 - 全新的目录系统，精简代码
 - 设置仅允许在config.php修改，注释更加明了，即使没有代码基础也可以操作
 - 增加新的文件管理系统，感谢 tinyfilemanager
+- ~~支持文字/图片水印 可自定义文字颜色~~
+- ~~支持文字水印背景颜色~~
+- ~~支持文字水印透明度~~
+- ~~支持删除远程上传文件~~ -> 不再支持删除远程文件
+- ~~(支持开启/关闭api自定义文字水印)~~
+- ~~支持删除自定义删除图片(仅管理员)~~
 
 * 2018-8-17 v1.6.4
 - 支持删除远程上传文件
@@ -144,11 +146,9 @@ header('Access-Control-Allow-Origin:https://A.com/')
 - 最初模型
 
 #### 兼容性
-文件上传视图不支持IE9以下的浏览器,api不限制,建议php5.6及以上需要服务器支持,Fileinfo, iconv ,zip和 mbstring扩展,如果缺失会导致无法访问管理面板以及上传图片。
+文件上传视图不支持IE9以下的浏览器,api不限制。建议php5.6及以上版本,需要服务器支持Fileinfo, iconv ,zip和mbstring扩展,如果缺失会导致无法访问管理面板以及上传图片。
 
-文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要 HTML5 支持）来添加上传文件，支持大文件分片上传，优先使用 HTML5
-
-文件上传功能，旧的浏览器自动使用 Flash 和 Silverlight 的方式兼容。
+文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要 HTML5 支持）来添加上传文件，支持上传大图片，优先使用 HTML5，旧的浏览器自动使用Flash和Silverlight的方式兼容。
 <hr />
 
  - 感谢: [verot](https://www.verot.net "verot" )提供非常好用的class.upload.php上传类
