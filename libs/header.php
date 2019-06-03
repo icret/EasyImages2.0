@@ -10,7 +10,7 @@ echo '
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="'.$config['keywords'].'" />
     <meta name="description" content="'.$config['description'].'" />
-    <link rel="shortcut icon" href="favicon.ico"  type="image/x-icon" />
+    <link rel="shortcut icon" href="../public/static/favicon.ico"  type="image/x-icon" />
     '.static_cdn().'
     <style>
         .uploader-files{
@@ -25,7 +25,7 @@ echo '
         <ul class="nav nav-pills">
             <li class="active"><a href="index.php">首页</a></li>
             <li><a href="https://github.com/icret/easyImages2.0" target="_blank">GitHub<span class="label label-badge label-success"></span></a></li>
-            <li><a href="public/data/tinyfilemanager.php" target="_blank">管理<span class="label label-badge label-success"></span></a></li>
+            <li><a href="tinyfilemanager.php" target="_blank">管理<span class="label label-badge label-success"></span></a></li>
             <li><a class="dropdown-toggle hidden-xs" data-toggle="dropdown" href="#">二维码<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <input id="text" type="hidden" value=""/>

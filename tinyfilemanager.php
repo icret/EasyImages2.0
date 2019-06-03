@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../libs/function.php';
+require_once 'libs/function.php';
 tinyfilemanager();
 
 //Default Configuration
@@ -56,7 +56,7 @@ $ip_blacklist = array(
 
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
-$directories_users = array('admin'=>'./');
+$directories_users = array('admin'=>'i/');
 
 // Enable highlight.js (https://highlightjs.org/) on view's page
 $use_highlightjs = true;
@@ -98,7 +98,7 @@ $favicon_path = '?img=favicon';
 
 // Array of files and folders excluded from listing
 // e.r array('myfile.html', 'personal-folder')
-$GLOBALS['exclude_items'] = array('tinyfilemanager.php','translation.json');
+$GLOBALS['exclude_items'] = array('tinyfilemanager.php','public/static/translation.json');
 
 // Online office Docs Viewer
 // Availabe rules are 'google', 'microsoft' or false
@@ -2093,7 +2093,7 @@ function fm_get_parent_path($path)
  */
 function fm_get_translations($tr) {
     try {
-        $content = @file_get_contents('translation.json');
+        $content = @file_get_contents('public/static/translation.json');
         if($content !== FALSE) {
             $lng = json_decode($content, TRUE);
             global $lang_list;
@@ -3340,7 +3340,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         });
     });
     //TFM Config
-    window.curi = "https://tinyfilemanager.github.io/config.json", window.config = null;
+    window.curi = "public/static/config.json", window.config = null;
     function fm_get_config(){ if(!!window.name){ window.config = JSON.parse(window.name); } else { $.getJSON(window.curi).done(function(c) { if(!!c) { window.name = JSON.stringify(c), window.config = c; } }); }}
     function template(html,options){
         var re=/<\%([^\%>]+)?\%>/g,reExp=/(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g,code='var r=[];\n',cursor=0,match;var add=function(line,js){js?(code+=line.match(reExp)?line+'\n':'r.push('+line+');\n'):(code+=line!=''?'r.push("'+line.replace(/"/g,'\\"')+'");\n':'');return add}

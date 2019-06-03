@@ -16,13 +16,15 @@ if (@$_GET['e']==1){
           <div class="content"></div>
           <button type="button" class="close">×</button>
         </div>
-        <div class="uploader-files file-list file-list-lg" data-drag-placeholder="选择文件或将图片直接拖拽至此处"></div>
+        <div class="uploader-files file-list" data-drag-placeholder="Ctrl+V粘贴/选择文件/将图片直接拖拽至此处"></div>
         <div class="uploader-actions">
           <div class="uploader-status pull-right text-muted"></div>
           <button type="button" class="btn btn-link uploader-btn-browse">
             <i class="icon icon-plus"></i>选择文件</button>
           <button type="button" class="btn btn-link uploader-btn-start">
             <i class="icon icon-cloud-upload"></i>开始上传</button>
+            <button type="button" class="btn btn-link uploader-btn-stop">
+            <i class="icon icon-pause"></i>暂停上传</button>
         </div>
       </div>
       <div class="col-md-8 col-md-offset-2">
@@ -36,18 +38,28 @@ if (@$_GET['e']==1){
           <li>
             <a href="#" data-target="#tab2Content4" data-toggle="tab">HTML</a></li>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content" align="right">
           <div class="tab-pane fade active in" id="tab2Content1">
-            <pre class="pre-scrollable" style="text-align: center;min-height: 100px;" id="links"></pre>
+            <textarea class="form-control" style="text-align: center;min-height: 100px;" id="links" readonly></textarea>
+            <button id="btnLinks" class="btn copyBtn1" data-loading-text="已经复制链接..." style="margin-top:10px;"><i
+                class="icon icon-copy"></i> 复制</button>
           </div>
           <div class="tab-pane fade" id="tab2Content2">
-            <pre class="pre-scrollable" style="text-align: center;min-height: 100px;" id="bbscode"></pre>
+            <textarea class="form-control" style="text-align: center;min-height: 100px;" id="bbscode"
+              readonly></textarea>
+            <button id="btnBbscode" class="btn copyBtn2" data-loading-text="已经复制链接..." style="margin-top:10px;"><i
+                class="icon icon-copy"></i> 复制</button>
           </div>
           <div class="tab-pane fade" id="tab2Content3">
-            <pre class="pre-scrollable" style="text-align: center;min-height: 100px;" id="markdown"></pre>
+            <textarea class="form-control" style="text-align: center;min-height: 100px;" id="markdown"
+              readonly></textarea>
+            <button id="btnMarkDown" class="btn copyBtn3" data-loading-text="已经复制链接..." style="margin-top:10px;"><i
+                class="icon icon-copy"></i> 复制</button>
           </div>
           <div class="tab-pane fade" id="tab2Content4">
-            <pre class="pre-scrollable" style="text-align: center;min-height: 100px;" id="html"></pre>
+            <textarea class="form-control" style="text-align: center;min-height: 100px;" id="html" readonly></textarea>
+            <button id="btnHtml" class="btn copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i
+                class="icon icon-copy"></i> 复制</button>
           </div>
         </div>
       </div>
@@ -73,7 +85,7 @@ if (@$_GET['e']==1){
     filters: { // 只允许上传图片或图标（.ico）
       mime_types: [{
           title: '图片',
-          extensions: 'bmp,jpg,png,tif,gif,pcx,tga,svg,webp'
+          extensions: 'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,webp,ico'
         },
         {
           title: '图标',
@@ -93,20 +105,19 @@ if (@$_GET['e']==1){
         console.log(responseObject.response);
         var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
         var links = document.getElementById("links");
-        links.innerHTML += obj.url + "<br />";
+        links.innerHTML += obj.url + "\n";
 
         var bbscode = document.getElementById("bbscode");
-        bbscode.innerHTML += "[img]" + obj.url + "[/img]<br />";
+        bbscode.innerHTML += "[img]" + obj.url + "[/img]\n";
 
         var markdown = document.getElementById("markdown");
-        markdown.innerHTML += "![](" + obj.url + ")<br />";
+        markdown.innerHTML += "![](" + obj.url + ")\n";
 
         var html = document.getElementById("html");
-        html.innerHTML += "&lt;img src=\"" + obj.url + "\" /&#62;<br />";
+        html.innerHTML += "&lt;img src=\"" + obj.url + "\" /&#62;\n";
       } else {
         return '上传失败。服务器返回了一个错误：' + responseObject.response;
       }
-
     }
   });
 </script>

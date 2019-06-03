@@ -24,10 +24,6 @@ if($handle->uploaded){
     $handle->image_min_height = $config['minHeight'];    
     // 转换图片为指定格式
     $handle->image_convert = $config['imgConvert'];
-    //PNG图片压缩
-    $handle->png_compression = $config['zipPNG'];
-    //JPEG图片压缩
-    $handle->jpeg_quality = $config['zipJPEG'];
     
     //等比例缩减图片
     if($config['imgRatio']){
@@ -86,19 +82,13 @@ if($handle->uploaded){
         echo $handle->error;
     }
 
-    if($config['jpg_zip_php']>0 && $handle->file_dst_name_ext=='jpg'){        
-        $file = __DIR__.config_path().$handle->file_dst_name;
-        $percent = $config['jpg_zip_php'];  //图片压缩比
-        list($width, $height) = getimagesize($file); //获取原图尺寸
-        //缩放尺寸
-        $newwidth = $width * $percent;
-        $newheight = $height * $percent;
-        $src_im = imagecreatefromjpeg($file);
-        $dst_im = imagecreatetruecolor($newwidth, $newheight);
-        imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-        imagejpeg($dst_im,$file); //输出压缩后的图片
-        imagedestroy($dst_im);
-        imagedestroy($src_im);
+    // 上传完成图片后调用imgcompress类压缩图片
+    if($config['imgcompress_percent']>0 && $handle->file_dst_name_ext!='gif'){
+        $source = APP_ROOT.config_path().$handle->file_dst_name; // 原图
+        $dst_img = APP_ROOT.config_path().$handle->file_dst_name; //存放路径
+        $percent = $config['imgcompress_percent'];  #是否缩放压缩
+        $image = (new imgcompress($source,$percent))->compressImg($dst_img);            
     }
+    
     unset($handle);
 }

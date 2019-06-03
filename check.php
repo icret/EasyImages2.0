@@ -36,6 +36,12 @@
 
 </html>
 <?php
+if(@isset($_POST['psw'])){
+  echo '<hr/><br />新加密密码：<code>'.password_hash($_POST['psw'],PASSWORD_DEFAULT).'</code>';
+  echo '<br />请将新密码全部复制并覆盖<code>/public/data/tinyfilemanager.php</code>第28行中替换相应的字符';
+  echo '<br/>登录密码为：<code>'.$_POST['psw'].'</code>';
+}
+
 echo '<hr/>当前PHP版本：'.phpversion();
 if(extension_loaded('gd')){
   echo '<br />GD已安装：'.gd_info()['GD Version'];
@@ -73,12 +79,6 @@ if(!extension_loaded('mbstring')){
   echo '<br/>mbstring已安装';
 }
 
-
-if(@isset($_POST['psw'])){
-  echo '<hr/><br />新加密密码：<code>'.password_hash($_POST['psw'],PASSWORD_DEFAULT).'</code>';
-  echo '<br />请将新密码全部复制并覆盖<code>/public/data/tinyfilemanager.php</code>第28行中替换相应的字符';
-  echo '<br/>登录密码为：<code>'.$_POST['psw'].'</code>';
-}
 echo '<br/><br/>以下是php所有拓展和版本信息，请使用ctrl+f快速搜索查找问题：<br/>';
 phpinfo();
 exit;

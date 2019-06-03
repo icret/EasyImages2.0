@@ -40,30 +40,26 @@ function checkLogin() {
     }
 }
 
-// 检查配置文件中目录是否存在是否可写
+// 检查配置文件中目录是否存在是否可写并创建相应目录
+
 function config_path(){
-    global $config;
-    $real_path = APP_ROOT.$config['path'];
-    if(!is_dir($real_path)){
-        mkdir($real_path,0777,true);
-    }elseif(!is_writable($real_path)){
-        chmod($real_path,0777);
-    }
-    //创建年目录
-    $real_path = $config['path'].date('Y');
-    if(!is_dir($real_path)){
-        mkdir($real_path,0777);
-    }elseif(!is_writable($real_path)){
-        chmod($real_path,0777);
-    }
-    // 创建月目录
-    $real_path = $real_path.'/'.date('m');
-    if(!is_dir($real_path)){
-        mkdir($real_path,0777);
-    }elseif(!is_writable($real_path)){
-        chmod($real_path,0777);
-    }
-    return $real_path.'/';
+	global $config;
+	$img_path = $config['path'].date('Y').'/'.date('m').'/'.date('d');
+	
+	if (!is_dir($img_path)){
+		mkdir($img_path,0755,true);
+	}
+	
+	if (!is_writable($img_path)){
+		chmod($img_path,0755);
+	}
+	
+	return $img_path.'/';
+}
+
+// 图片重命名规则
+function imgName(){
+    return base_convert(date('His').mt_rand(1024,10240),10,36);
 }
 
  // 设置广告
@@ -98,7 +94,8 @@ function static_cdn(){
         <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js?v3.3.1"></script>
         <script src="https://cdn.bootcss.com/zui/1.8.1/js/zui.min.js?v1.8.1"></script>
         <script src="https://cdn.bootcss.com/zui/1.8.1/lib/uploader/zui.uploader.min.js?v1.8.1"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/icret/easyImages@1.5.3/static/qrcode.min.js?v1"></script>
+        <script src="https://cdn.jsdelivr.net/gh/icret/easyImages@1.5.3/static/qrcode.min.js?v1"></script>
+        <script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js?v2.0.4"></script>
         ';
 
     }else{
@@ -111,6 +108,7 @@ function static_cdn(){
         <script src="../public/static/zui/js/zui.min.js?v1.8.1"></script>
         <script src="../public/static/zui/lib/uploader/zui.uploader.min.js?v1.8.1"></script>
         <script src="../public/static/qrcode.min.js?v1.0"></script>
+        <script src="../public/static/clipboard.min.js?v2.0.4"></script>
         ';
     }
 }
