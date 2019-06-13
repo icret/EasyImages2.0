@@ -16,7 +16,7 @@ if (@$_GET['e']==1){
           <div class="content"></div>
           <button type="button" class="close">×</button>
         </div>
-        <div class="uploader-files file-list" data-drag-placeholder="Ctrl+V粘贴/选择文件/将图片直接拖拽至此处"></div>
+        <div class="uploader-files file-list file-list-lg" data-drag-placeholder="Ctrl+V粘贴/选择文件/将图片直接拖拽至此处"></div>
         <div class="uploader-actions">
           <div class="uploader-status pull-right text-muted"></div>
           <button type="button" class="btn btn-link uploader-btn-browse">
@@ -68,7 +68,7 @@ if (@$_GET['e']==1){
 <script>
   $('#upShowID').uploader({
     // 当选择文件后立即自动进行上传操作
-    autoUpload: true,
+    autoUpload: false,
     // 文件上传提交地址
     url: '<?php echo crossdomain();?>file.php',
     //图片压缩

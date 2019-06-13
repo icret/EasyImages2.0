@@ -1749,13 +1749,12 @@ $all_files_size = 0;
                 <tr>
                     <?php if (!FM_READONLY): ?>
                         <td class="custom-checkbox-td">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="<?php echo $ik ?>" name="file[]" value="<?php echo fm_enc($f) ?>">
-                            <label class="custom-control-label" for="<?php echo $ik ?>"></label>
+                        <div>
+                            <input type="checkbox" id="<?php echo $ik ?>" name="file[]" value="<?php echo fm_enc($f) ?>">
                         </div>
                         </td><?php endif; ?>
                     <td>
-                        <div class="filename"><a href="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>" width="100px" height="100px" class="img-rounded"></a>							</div>
+                        <div class="filename"><a href="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>" width="100px" height="100px" class="img-rounded"></a></div>
                     </td>
                     <td><span title="<?php printf('%s bytes', $filesize_raw) ?>"><?php echo $filesize ?></span></td>
                     <td><?php echo $modif ?></td>

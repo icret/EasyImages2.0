@@ -23,7 +23,7 @@
     3.检测 PHP允许上传的大小<br />
     4.检测 Fileinfo, iconv ,zip和 mbstring扩展，如果缺失会导致无法访问管理面板以及上传图片<br/>
     <br/>PHP检测不一定准确，请以最下边phpinfo信息为准！可以实用ctrl+f搜索，如果是disable则没有安装!<br/>
-    5.修改密码是用于文件管理 请将新密码全部复制并覆盖<code>/public/data/tinyfilemanager.php</code>第28行中替换相应的字符
+    5.修改密码是用于文件管理 请将新密码全部复制并覆盖<code>tinyfilemanager.php</code>第28行中替换相应的字符
     <br />默认密码：<code>easyimage</code><br />
     6.使用完本工具后建议删除！避免泄露服务器信息<br />
   </p>
@@ -38,7 +38,7 @@
 <?php
 if(@isset($_POST['psw'])){
   echo '<hr/><br />新加密密码：<code>'.password_hash($_POST['psw'],PASSWORD_DEFAULT).'</code>';
-  echo '<br />请将新密码全部复制并覆盖<code>/public/data/tinyfilemanager.php</code>第28行中替换相应的字符';
+  echo '<br />请将新密码全部复制并覆盖<code>tinyfilemanager.php</code>第28行中替换相应的字符';
   echo '<br/>登录密码为：<code>'.$_POST['psw'].'</code>';
 }
 

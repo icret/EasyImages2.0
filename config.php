@@ -29,7 +29,7 @@ $config = array(
      'tips' => ' 单个文件限制5M，每次最多上传30张图片,本网站仅做演示用，不对图片负任何责任。',
     // 当前域名,末尾不加"/" 如果是异域上传请修改为当前异域域名
      'domain' => 'https://img.545141.com',
-    // 存储路径 前后要加"/" 如更改此目录，需要修改tinyfilemanager.php中的$directories_users路径
+    // 存储路径 前后要加"/" 如更改此目录，需要同步修改tinyfilemanager.php中的$directories_users路径
      'path' => '/i/',
     // 最大上传限制 默认为5m 请使用工具转换mb http://www.bejson.com/convert/filesize/
      'maxSize' => 5242880,
@@ -84,7 +84,7 @@ $config = array(
     // 缩减的最大宽度
      'image_y' => 1024,
     // 开启静态文件CDN 开启true 关闭false
-     'static_cdn' => true,
+     'static_cdn' => false,
     // 开启顶部广告 如果想添加或修改广告请到 public/static/ad_top.html
      'ad_top' => false,
     //  开启底部广告 如果想添加或修改广告请到 public/static/ad_bot.html
