@@ -68,7 +68,7 @@ $config = array(
      'imgConvert' => '',
     // 是否通过缩放来压缩，如果要保持源图比例，把参数$percent保持为1，范围 0.1-1
      // 即使原比例压缩，也可大幅度缩小。如果缩小比例，则体积会更小。
-     'imgcompress_percent' => 0.95,
+     'compress' => 0.95,
     //最大宽度
      'maxWidth' => 10240,
     // 最大高度

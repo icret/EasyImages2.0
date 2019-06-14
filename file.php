@@ -90,9 +90,9 @@ if ($handle->uploaded) {
         echo json_encode($reJson,JSON_UNESCAPED_UNICODE);
     }
     
-    // 利用 imagecreatefrom*压缩不太好用，不过可以预防病毒
-    if ($config['imgcompress_percent'] > 0 && $handle->file_dst_name_ext != 'gif') {
-        $percent = $config['imgcompress_percent']; //图片压缩比
+    // 利用 imagecreatefrom*压缩 同时避免设置水印后重复压缩
+    if ($config['compress'] > 0 && $handle->file_dst_name_ext != 'gif' && $config['watermark'] == 0) {
+        $percent = $config['compress']; //图片压缩比
         list($width, $height) = getimagesize($handle->file_dst_pathname); //获取原图尺寸
         //缩放尺寸
         $newwidth = $width * $percent;
