@@ -59,6 +59,8 @@ class Imgs
 
         #  创建画布
         $temp_img = imagecreatetruecolor($temp_w, $temp_h);
+        @imagealphablending($temp_img,false);//这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;3-2
+        @imagesavealpha($temp_img,true);//这里很重要,意思是不要丢了$thumb图像的透明色;3-3
         switch ($info[2]) {
             case 1:
                 $im = imagecreatefromgif($src);
@@ -72,6 +74,7 @@ class Imgs
                 break;
             case 3:
                 $im = imagecreatefrompng($src);
+                imagesavealpha($im,true);//这里很重要;3-1
                 imagecopyresampled($temp_img, $im, 0, 0, 0, 0, $temp_w, $temp_h, $width, $height);
                 imagepng($temp_img, $savepath, 100);
                 break;
@@ -147,12 +150,10 @@ class Imgs
             switch ($srcInfo[2]) {
                 case 1:
                     $dst_img = imagecreatefromgif($src);
-                    imagesavealpha($dst_img,true);//这里很重要;3-1
                     break;
 
                 case 2:
                     $dst_img = imagecreatefromjpeg($src);
-                    imagesavealpha($dst_img,true);//这里很重要;3-1
                     break;
 
                 case 3:

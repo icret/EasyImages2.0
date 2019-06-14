@@ -2,14 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2ee2f11-40d4-43c6-9de2-9c41691ca848" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/EasyImages2.0.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/libs/WaterMask.php" beforeDir="false" afterPath="$PROJECT_DIR$/libs/WaterMask.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,8 +20,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/libs/WaterMask.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="149" column="61" selection-start-line="149" selection-start-column="61" selection-end-line="149" selection-end-column="61" />
+            <state relative-caret-position="124">
+              <caret line="151" column="56" selection-start-line="151" selection-start-column="56" selection-end-line="151" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -51,10 +43,10 @@
       <find>compress</find>
       <find>imgcompress_percent</find>
       <find>res</find>
-      <find>imagecreatetruecolor</find>
       <find>def</find>
       <find>imagecopy</find>
       <find>imagecopyresampled</find>
+      <find>imagecreatetruecolor</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -176,12 +168,12 @@
       <workItem from="1560444856509" duration="3460000" />
       <workItem from="1560511153119" duration="2276000" />
       <workItem from="1560513441936" duration="8769000" />
-      <workItem from="1560528928873" duration="1113000" />
+      <workItem from="1560528928873" duration="1816000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17758000" />
+    <option name="totallyTimeSpent" value="18461000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -283,8 +275,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/libs/WaterMask.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="149" column="61" selection-start-line="149" selection-start-column="61" selection-end-line="149" selection-end-column="61" />
+        <state relative-caret-position="124">
+          <caret line="151" column="56" selection-start-line="151" selection-start-column="56" selection-end-line="151" selection-end-column="56" />
         </state>
       </provider>
     </entry>
