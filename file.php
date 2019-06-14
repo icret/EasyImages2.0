@@ -98,30 +98,32 @@ if ($handle->uploaded) {
         $newwidth = $width * $percent;
         $newheight = $height * $percent;
 
+        // 创建一个透明的背景图片
+        $dst_im = imagecreatetruecolor($newwidth, $newheight);
+        $bg = imagecolorallocatealpha($dst_im, 0, 0, 0, 127);
+        imagefill($dst_im, 0, 0, $bg);
+        imagesavealpha($dst_im, true);
+
         if ($handle->file_dst_name_ext === 'jpg') {
             $src_im = imagecreatefromjpeg($handle->file_dst_pathname);
-            $dst_im = imagecreatetruecolor($newwidth, $newheight);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
             imagejpeg($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         } elseif ($handle->file_dst_name_ext === 'png') {
             $src_im = imagecreatefrompng($handle->file_dst_pathname);
-            $dst_im = imagecreatetruecolor($newwidth, $newheight);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
             imagepng($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         } elseif ($handle->file_dst_name_ext === 'gif') {
             $src_im = imagecreatefromgif($handle->file_dst_pathname);
-            $dst_im = imagecreatetruecolor($newwidth, $newheight);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
             imagegif($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         } elseif ($handle->file_dst_name_ext === 'wbmp') {
             $src_im = imagecreatefromwbmp($handle->file_dst_pathname);
-            $dst_im = imagecreatetruecolor($newwidth, $newheight);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
             imagewbmp($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
             imagedestroy($dst_im);

@@ -47,11 +47,11 @@ function config_path(){
 	$img_path = $config['path'].date('Y').'/'.date('m').'/'.date('d');
 	
 	if (!is_dir($img_path)){
-		mkdir($img_path,0755,true);
+		@mkdir($img_path,0755,true);
 	}
 	
 	if (!is_writable($img_path)){
-		chmod($img_path,0755);
+		@chmod($img_path,0755);
 	}
 	
 	return $img_path.'/';
