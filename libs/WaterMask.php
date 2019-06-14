@@ -130,8 +130,10 @@ class Imgs
 
             $srcImg_w = is_numeric($obj[0]) ? $obj[0] : 400;
             $srcImg_h = is_numeric($obj[1]) ? $obj[1] : 300;
-            # 创建画布
+            # 创建透明画布 一共3个步骤，在下边有标记
             $dst_img = @imagecreatetruecolor($srcImg_w, $srcImg_h);
+            @imagealphablending($dst_img,false);//这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;3-2
+            @imagesavealpha($dst_img,true);//这里很重要,意思是不要丢了$thumb图像的透明色;3-3
         } else {
             #  获取图片信息
             $srcInfo = @getimagesize($src);
@@ -145,14 +147,17 @@ class Imgs
             switch ($srcInfo[2]) {
                 case 1:
                     $dst_img = imagecreatefromgif($src);
+                    imagesavealpha($dst_img,true);//这里很重要;3-1
                     break;
 
                 case 2:
                     $dst_img = imagecreatefromjpeg($src);
+                    imagesavealpha($dst_img,true);//这里很重要;3-1
                     break;
 
                 case 3:
                     $dst_img = imagecreatefrompng($src);
+                    imagesavealpha($dst_img,true);//这里很重要;3-1
                     break;
 
                 default:
