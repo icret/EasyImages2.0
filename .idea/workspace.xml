@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2ee2f11-40d4-43c6-9de2-9c41691ca848" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/tinyfilemanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/tinyfilemanager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,15 +26,27 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tinyfilemanager.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
+            <state relative-caret-position="-786">
               <caret line="1655" column="104" selection-start-line="1655" selection-start-column="104" selection-end-line="1655" selection-end-column="104" />
               <folding>
                 <element signature="n#style#0;n#textarea#0;n#!!top" expanded="true" />
                 <element signature="e#1#7#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="468">
+                <caret line="44" column="12" selection-start-line="44" selection-start-column="12" selection-end-line="44" selection-end-column="12" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -75,11 +87,11 @@
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/libs/test.php" />
         <option value="$PROJECT_DIR$/libs/function.php" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/config.php" />
         <option value="$PROJECT_DIR$/file.php" />
         <option value="$PROJECT_DIR$/libs/WaterMask.php" />
         <option value="$PROJECT_DIR$/tinyfilemanager.php" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -173,12 +185,12 @@
       <workItem from="1560444856509" duration="3460000" />
       <workItem from="1560511153119" duration="2276000" />
       <workItem from="1560513441936" duration="8769000" />
-      <workItem from="1560528928873" duration="2464000" />
+      <workItem from="1560528928873" duration="3271000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19109000" />
+    <option name="totallyTimeSpent" value="19916000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -240,16 +252,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libs/test.php" />
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="338">
-            <caret line="107" column="19" selection-start-line="107" selection-start-column="19" selection-end-line="107" selection-end-column="19" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/libs/function.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
@@ -280,12 +282,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tinyfilemanager.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
+        <state relative-caret-position="-786">
           <caret line="1655" column="104" selection-start-line="1655" selection-start-column="104" selection-end-line="1655" selection-end-column="104" />
           <folding>
             <element signature="n#style#0;n#textarea#0;n#!!top" expanded="true" />
             <element signature="e#1#7#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="468">
+            <caret line="44" column="12" selection-start-line="44" selection-start-column="12" selection-end-line="44" selection-end-column="12" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
