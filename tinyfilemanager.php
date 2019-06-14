@@ -1653,8 +1653,7 @@ $all_files_size = 0;
                 <?php if (!FM_READONLY): ?>
                     <th style="width:3%" class="custom-checkbox-header">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="js-select-all-items" onclick="checkbox_toggle()">
-                            <label class="custom-control-label" for="js-select-all-items"></label>
+                            <input type="checkbox" id="js-select-all-items" onclick="checkbox_toggle()">
                         </div>
                     </th><?php endif; ?>
                 <th><?php echo lng('Name') ?></th>
@@ -1701,8 +1700,7 @@ $all_files_size = 0;
                     <?php if (!FM_READONLY): ?>
                         <td class="custom-checkbox-td">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="<?php echo $ii ?>" name="file[]" value="<?php echo fm_enc($f) ?>">
-                            <label class="custom-control-label" for="<?php echo $ii ?>"></label>
+                            <input type="checkbox" id="<?php echo $ii ?>" name="file[]" value="<?php echo fm_enc($f) ?>">
                         </div>
                         </td><?php endif; ?>
                     <td>

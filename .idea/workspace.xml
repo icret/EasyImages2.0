@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2ee2f11-40d4-43c6-9de2-9c41691ca848" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/libs/WaterMask.php" beforeDir="false" afterPath="$PROJECT_DIR$/libs/WaterMask.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tinyfilemanager.php" beforeDir="false" afterPath="$PROJECT_DIR$/tinyfilemanager.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,11 +17,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libs/WaterMask.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="124">
               <caret line="151" column="56" selection-start-line="151" selection-start-column="56" selection-end-line="151" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tinyfilemanager.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="1655" column="104" selection-start-line="1655" selection-start-column="104" selection-end-line="1655" selection-end-column="104" />
+              <folding>
+                <element signature="n#style#0;n#textarea#0;n#!!top" expanded="true" />
+                <element signature="e#1#7#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -33,7 +46,6 @@
       <find>data</find>
       <find>&lt;img</find>
       <find>class=&quot;custom-control-input&quot;</find>
-      <find>custom-control custom-checkbox</find>
       <find>.png</find>
       <find>png</find>
       <find>imgs</find>
@@ -47,6 +59,7 @@
       <find>imagecopy</find>
       <find>imagecopyresampled</find>
       <find>imagecreatetruecolor</find>
+      <find>custom-control custom-checkbox</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -59,7 +72,6 @@
         <option value="$PROJECT_DIR$/check.php" />
         <option value="$PROJECT_DIR$/libs/footer.php" />
         <option value="$PROJECT_DIR$/libs/header.php" />
-        <option value="$PROJECT_DIR$/tinyfilemanager.php" />
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/libs/test.php" />
         <option value="$PROJECT_DIR$/libs/function.php" />
@@ -67,6 +79,7 @@
         <option value="$PROJECT_DIR$/config.php" />
         <option value="$PROJECT_DIR$/file.php" />
         <option value="$PROJECT_DIR$/libs/WaterMask.php" />
+        <option value="$PROJECT_DIR$/tinyfilemanager.php" />
       </list>
     </option>
   </component>
@@ -101,15 +114,7 @@
             <path>
               <item name="EasyImages2.0" type="b2602c69:ProjectViewProjectNode" />
               <item name="EasyImages2.0" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-              <item name="WaterMask.php" type="88303cf5:PhpFileNode" />
-            </path>
-            <path>
-              <item name="EasyImages2.0" type="b2602c69:ProjectViewProjectNode" />
-              <item name="EasyImages2.0" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-              <item name="WaterMask.php" type="88303cf5:PhpFileNode" />
-              <item name="Imgs" type="e2efd96b:PhpElementNode" />
+              <item name="tinyfilemanager.php" type="88303cf5:PhpFileNode" />
             </path>
           </expand>
           <select />
@@ -168,12 +173,12 @@
       <workItem from="1560444856509" duration="3460000" />
       <workItem from="1560511153119" duration="2276000" />
       <workItem from="1560513441936" duration="8769000" />
-      <workItem from="1560528928873" duration="1816000" />
+      <workItem from="1560528928873" duration="2464000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18461000" />
+    <option name="totallyTimeSpent" value="19109000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -210,13 +215,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="572">
           <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tinyfilemanager.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="47008">
-          <caret line="1756" column="344" selection-start-line="1756" selection-start-column="344" selection-end-line="1756" selection-end-column="344" />
         </state>
       </provider>
     </entry>
@@ -277,6 +275,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="124">
           <caret line="151" column="56" selection-start-line="151" selection-start-column="56" selection-end-line="151" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tinyfilemanager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="1655" column="104" selection-start-line="1655" selection-start-column="104" selection-end-line="1655" selection-end-column="104" />
+          <folding>
+            <element signature="n#style#0;n#textarea#0;n#!!top" expanded="true" />
+            <element signature="e#1#7#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
