@@ -104,28 +104,28 @@ if ($handle->uploaded) {
         imagefill($dst_im, 0, 0, $bg);
         imagesavealpha($dst_im, true);
 
-        if ($handle->file_dst_name_ext === 'jpg') {
+        if ($handle->file_dst_name_ext === 'jpg' || $handle->file_dst_name_ext === 'jpeg') {
             $src_im = imagecreatefromjpeg($handle->file_dst_pathname);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagejpeg($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
+            imagejpeg($dst_im, $handle->file_dst_pathname,$config['imgGifJpgWebp']); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         } elseif ($handle->file_dst_name_ext === 'png') {
             $src_im = imagecreatefrompng($handle->file_dst_pathname);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagepng($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
+            imagepng($dst_im, $handle->file_dst_pathname,$config['imagepng']); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         } elseif ($handle->file_dst_name_ext === 'gif') {
             $src_im = imagecreatefromgif($handle->file_dst_pathname);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagegif($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
+            imagegif($dst_im, $handle->file_dst_pathname,$config['imgGifJpgWebp']); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         } elseif ($handle->file_dst_name_ext === 'wbmp') {
             $src_im = imagecreatefromwbmp($handle->file_dst_pathname);
             imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagewbmp($dst_im, $handle->file_dst_pathname); //输出压缩后的图片
+            imagewbmp($dst_im, $handle->file_dst_pathname,$config['imgGifJpgWebp']); //输出压缩后的图片
             imagedestroy($dst_im);
             imagedestroy($src_im);
         }

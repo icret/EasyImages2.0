@@ -66,9 +66,13 @@ $config = array(
      'waterImg' => 'public/static/watermark.png',
     // 转换图片为指定格式 可选：''|'png'|'jpeg'|'gif'|'bmp';默认值：''
      'imgConvert' => '',
-    // 是否通过缩放来压缩，如果要保持源图比例，把参数$percent保持为1，范围 0.1-1
+    // 是否通过缩放来压缩，如果要保持源图比例，把参数$percent保持为1，范围 0.1-1 0为关闭
      // 即使原比例压缩，也可大幅度缩小。如果缩小比例，则体积会更小。
-     'compress' => 0.95,
+     'compress' => 0.99,
+    // gif和jpeg的压缩质量 压缩等级0-100，压缩后1最小，100最大
+    'imgGifJpgWebp'=> 85,
+    // png的压缩质量 压缩等级0-9，压缩后9最小，0最大
+    'imagepng' => 3,
     //最大宽度
      'maxWidth' => 10240,
     // 最大高度
