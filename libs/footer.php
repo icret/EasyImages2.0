@@ -33,7 +33,15 @@ echo '
   </script>
   <script src="public/static/paste.js"></script>
   <script src="public/static/copy_btn.js"></script>
-  <script src="public/static/hm.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?5320b69f4f1caa9328dfada73c8e6a75";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
   <footer class="text-muted small col-md-12" style="text-align: center">
    '.showAD('bot').'
   <hr />

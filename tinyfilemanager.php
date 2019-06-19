@@ -974,7 +974,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
     fm_show_nav_path(FM_PATH); // current path
     ?>
 
-    <link href="https://cdn.bootcss.com/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet">
+    <link href="public/static/dropzone.min.css" rel="stylesheet">
     <div class="path">
 
         <div class="card mb-2 fm-upload-wrapper">
@@ -1014,7 +1014,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
             </div>
         </div>
     </div>
-    <script src="https://cdn.bootcss.com/dropzone/5.5.1/min/dropzone.min.js"></script>
+    <script src="public/static/dropzone.min.js"></script>
     <script>
         Dropzone.options.fileUploader = {
             timeout: 120000,
@@ -2906,7 +2906,7 @@ global $lang, $root_url, $favicon_path;
     <meta name="googlebot" content="noindex">
     <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
     <title><?php echo fm_enc(APP_TITLE) ?></title>
-    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="public/static/bootstrap.min.css" rel="stylesheet">
     <style>
         body.fm-login-page{background-color:#f7f9fb;font-size:14px}
         .fm-login-page .brand{width:121px;overflow:hidden;margin:0 auto;margin:40px auto;margin-bottom:0;position:relative;z-index:1}
@@ -2944,10 +2944,10 @@ global $lang, $root_url, $favicon_path;
     {
     ?>
 </div>
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.slim.min.js"></script>
-<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="public/static/jquery.slim.min.js"></script>
+<script src="public/static/bootstrap.min.js"></script>
 <!-- ZUI Javascript组件 -->
-<script src="https://cdn.bootcss.com/zui/1.9.1/js/zui.min.js?v=1.9.1"></script>
+<script src="public/static/zui/js/zui.min.js?v=1.9.1"></script>
 </body>
 </html>
 <?php
@@ -2978,11 +2978,11 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     <meta name="googlebot" content="noindex">
     <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
     <title><?php echo fm_enc(APP_TITLE) ?></title>
-    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/ekko-lightbox/5.3.0/ekko-lightbox.css" rel="stylesheet">
+    <link href="public/static/bootstrap.min.css" rel="stylesheet">
+    <link href="public/static/font-awesome.min.css" rel="stylesheet">
+    <link href="public/static/ekko-lightbox.css" rel="stylesheet">
     <?php if (FM_USE_HIGHLIGHTJS): ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/<?php echo FM_HIGHLIGHTJS_STYLE ?>.min.css">
+    <link rel="stylesheet" href="public/static/vs.min.css">
     <?php endif; ?>
     <style>
         body {
@@ -3320,12 +3320,12 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     {
     ?>
 </div>
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdn.bootcss.com/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.bootcss.com/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+<script src="public/static/jquery.min.js"></script>
+<script src="public/static/bootstrap.min.js"></script>
+<script src="public/static/jquery.dataTables.min.js"></script>
+<script src="public/static/ekko-lightbox.min.js"></script>
 <?php if (FM_USE_HIGHLIGHTJS): ?>
-    <script src="https://cdn.bootcss.com/highlight.js/9.15.6/highlight.min.js"></script>
+    <script src="public/static/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad(); var isHighlightingEnabled = true;</script>
 <?php endif; ?>
 <script>
@@ -3439,7 +3439,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     });
 </script>
 <?php if (isset($_GET['edit']) && isset($_GET['env']) && FM_EDIT_FILE): ?>
-    <script src="https://cdn.bootcss.com/ace/1.4.4/ace.js"></script>
+    <script src="public/static/ace.js"></script>
     <script>
         var editor = ace.edit("editor");
         editor.getSession().setMode("ace/mode/javascript");
