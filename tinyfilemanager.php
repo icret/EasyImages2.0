@@ -25,7 +25,7 @@ $use_auth = true;
 // Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
 // Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
 $auth_users = array(
-    'admin' => '$2y$10$USj7ZngZnv3/q5TdZGaKFOgieEA15SIr0eEPcsQxf6aIulR.DgwTW', //请将加密的密码覆盖，默认密码easyimage
+    'admin' => password_hash($config['password'], PASSWORD_DEFAULT), // 登录密码
 );
 
 // Readonly users (username array)

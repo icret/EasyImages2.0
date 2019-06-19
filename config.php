@@ -35,9 +35,9 @@ $config = array(
      'maxSize' => 5242880,
     // 是否开启登录上传 开启:true 关闭false
      'mustLogin' => false,
-    // 登录密码 此密码非管理密码
-     'password' => '7080',
-    // 开启管理 开启后务必修改密码 修改方式请见read.php
+    // 登录和管理密码
+     'password' => 'admin',
+    // 是否开启管理
      'tinyfilemanager' => true,
     // 是否开启API上传
      'apiStatus' => false,
