@@ -16,7 +16,7 @@
 3. 安装正常后请修改登录管理密码！
 4. 如果无法登陆管理界面或上传图片，请先打开check.php检查扩展或者使用phpinfo检查。
 5. 默认我会给你设置成最优方案，api与异域上传默认关闭
-6. 下载源码后可以精简一些文件：README.md,check.php,LICENSE,如不需要异域存储可以删除crossdomain文件夹。
+6. 下载源码后可以删除一些文件：README.md,check.php,LICENSE
 7. 请将所有文件必须赋予0755权限，执行用户设置www权限，否则可能会导致上传成功但不返回url
 8. 可以使用浏览器的 F12调试模式->console查看错误
 9. js不要设置分片上传大小，此会导致部分图片上传失败。
@@ -31,7 +31,6 @@
 - 全新的目录系统，精简代码
 - 设置仅允许在config.php修改，注释更加明了，即使没有代码基础也可以操作
 - 增加新的文件管理系统
-
 
 <hr />
 
@@ -70,27 +69,7 @@ api上传成功后返回json：
 {"result":"success","url":"https:\/\/img.545141.com\/public\/data\/2019\/05\/5ce64172d24fa.png"}
 ```
 如果关闭api上传，则什么都不显示。
-#### 异地上传[跨域上传] 教程：
-1. 开启config.php的跨域上传功能
-2. 将 crossdomain 文件夹内和根目录的config.php拷贝到新的服务器
-3. 新的服务器上把所有文件和目录赋予0777权限
-4. 修改新服务器的 config.php 的 **"domain"**为当前域名
-5. 修改原服务器的 config.php 的 'CDomains' 为 http：//www.新域名.com/crossdmain/file.php
 
-##### 异地上传举个栗子：
-- 我有一个域名A.com，想上传到B.com
-1. 修改A.com服务器的config.php 'crossDomain'=>true,
-2. 复制corssdomain文件夹和A.com的config.php到B.com同一目录下 并赋予777权限(chmod -R 777 /B.com/*)
-3. 修改B.com的config.php 'domain'=>'https://B.com'
-4. 修改A.com的config.php'CDomain'=>'https://B.com/corssdomain/'
-- 这样就添加了异域上传，如果有什么改动的话，可以直接复制config.php到B.com
-- 因为异域上传存在任意上传的功能，强烈建议确定A.com服务器后修改file.php中的
-header('Access-Control-Allow-Origin:*')
-将其修改为:
-header('Access-Control-Allow-Origin:https://A.com/')
-指定域名可以限制别人上传图片！(并不能保证完全能防止，毕竟可以伪造)
-
----
 * 2019-6-26 v2.0.2.0
 - 精简压缩代码，使得不再压缩后变大
 - 删除异域上传功能，不再支持异域上传
