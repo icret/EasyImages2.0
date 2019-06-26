@@ -70,13 +70,9 @@ if (@$_GET['e']==1){
     // 当选择文件后立即自动进行上传操作
     autoUpload: false,
     // 文件上传提交地址
-    url: '<?php echo crossdomain();?>file.php',
-    //图片压缩
-    resize: {
-      quuality: 90,
-    },
+    url: 'file.php',
     // 最大支持的上传文件
-    max_file_size: '5mb',
+    max_file_size: <?php echo $config['maxSize'];?>,
     // 是否分片上传 0为不分片 经测试分片容易使图片上传失败
     chunk_size: 0,
     //点击文件列表上传文件
@@ -85,7 +81,7 @@ if (@$_GET['e']==1){
     filters: { // 只允许上传图片或图标（.ico）
       mime_types: [{
           title: '图片',
-          extensions: 'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,webp,ico'
+          extensions: '<?php echo getExtensions();?>'
         },
         {
           title: '图标',

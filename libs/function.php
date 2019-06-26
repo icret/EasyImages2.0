@@ -122,12 +122,16 @@ function tinyfilemanager(){
     }
 }
 
-// 异域上传
-function crossdomain(){
+
+// 获取允许上传的扩展名
+function getExtensions(){
     global $config;
-    if($config['crossdomain']){
-        return $config['CDomains'];
+    $mime = '';
+    for ($i=0;$i<count($config['extensions']);$i++)
+    {
+        $mime.=$config['extensions'][$i].',';
     }
+    return rtrim($mime,',');
 }
 
 //$qqgroup = ' <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="EasyImage 简单图床" title="EasyImage 简单图床"></a>';

@@ -89,48 +89,5 @@ if ($handle->uploaded) {
         );
         echo json_encode($reJson,JSON_UNESCAPED_UNICODE);
     }
-    
-    // 利用 imagecreatefrom*压缩 同时避免设置水印后重复压缩
-    if ($config['compress'] > 0 && $handle->file_dst_name_ext != 'gif' && $config['watermark'] == 0) {
-        $percent = $config['compress']; //图片压缩比
-        list($width, $height) = getimagesize($handle->file_dst_pathname); //获取原图尺寸
-        //缩放尺寸
-        $newwidth = $width * $percent;
-        $newheight = $height * $percent;
-
-        // 创建一个透明的背景图片
-        $dst_im = imagecreatetruecolor($newwidth, $newheight);
-        $bg = imagecolorallocatealpha($dst_im, 0, 0, 0, 127);
-        imagefill($dst_im, 0, 0, $bg);
-        imagesavealpha($dst_im, true);
-
-        if ($handle->file_dst_name_ext === 'jpg' || $handle->file_dst_name_ext === 'jpeg') {
-            $src_im = imagecreatefromjpeg($handle->file_dst_pathname);
-            imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagejpeg($dst_im, $handle->file_dst_pathname,$config['imgGifJpgWebp']); //输出压缩后的图片
-            imagedestroy($dst_im);
-            imagedestroy($src_im);
-        } elseif ($handle->file_dst_name_ext === 'png') {
-            $src_im = imagecreatefrompng($handle->file_dst_pathname);
-            imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagepng($dst_im, $handle->file_dst_pathname,$config['imagepng']); //输出压缩后的图片
-            imagedestroy($dst_im);
-            imagedestroy($src_im);
-        } elseif ($handle->file_dst_name_ext === 'gif') {
-            $src_im = imagecreatefromgif($handle->file_dst_pathname);
-            imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagegif($dst_im, $handle->file_dst_pathname,$config['imgGifJpgWebp']); //输出压缩后的图片
-            imagedestroy($dst_im);
-            imagedestroy($src_im);
-        } elseif ($handle->file_dst_name_ext === 'wbmp') {
-            $src_im = imagecreatefromwbmp($handle->file_dst_pathname);
-            imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-            imagewbmp($dst_im, $handle->file_dst_pathname,$config['imgGifJpgWebp']); //输出压缩后的图片
-            imagedestroy($dst_im);
-            imagedestroy($src_im);
-        }
-
-    }
-
     unset($handle);
 }
