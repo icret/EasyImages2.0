@@ -4,9 +4,10 @@
  *
  * @author icret
  * @email  lemonim@qq.com
- * @Github https://github.com/icret/easyImages
+ * @Github https://github.com/icret/EasyImages2.0
  * @link   https://www.545141.com/902.html
  * @Review 2019-5-21 13:05:20
+ * @last   2019-6-29 09:02:19
  * 上传后请打开check.php先检查服务器配置，更改密码，更改域名等操作
  */
 
@@ -87,5 +88,5 @@ $config = array(
      'ad_top' => false,
     //  开启底部广告 如果想添加或修改广告修改 public/static/ad_bot.html
      'ad_bot' => false,
-    'Version' => '2.0.2.0',
+    'version' => '2.0.2.0',
 );
