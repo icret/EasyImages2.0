@@ -91,7 +91,7 @@ if (@$_GET['e']==1){
       prevent_duplicates: true
     },
     // 限制文件上传数目
-    limitFilesCount: 30,
+    limitFilesCount: <?php echo $config['maxUploadFiles'];?>,
     // 自动上传失败的文件
     autoResetFails: true,
 

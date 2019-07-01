@@ -37,6 +37,8 @@ $config = array(
      'path' => '/i/',
     // 最大上传限制 默认为 5242880Bytes = 5MB 请使用工具转换MB http://www.bejson.com/convert/filesize/
      'maxSize' => 5242880,
+    // 每次最多上传图片数
+    'maxUploadFiles'=>30,
     // 是否开启登录上传 开启:true 关闭false
      'mustLogin' => false,
     // 是否开启管理
