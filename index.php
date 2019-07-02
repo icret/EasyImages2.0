@@ -9,8 +9,7 @@ if (@$_GET['e']==1){
 ?>
 <div class="container">
   <div class="col-md-12">
-    <ul style="list-style: none;margin:1px 1px 30px 1px;">
-      <?php if(!empty($config['tips'])){echo '<li class="icon icon-dot-circle text-muted">'.$config['tips'].'</li></ul>';} ?>
+      <?php if(!empty($config['tips'])){echo '<ul style="list-style: none;margin:1px 1px 30px 1px;"><li class="icon icon-dot-circle text-muted"> '.$config['tips'].'</li></ul>';} ?>
       <div id='upShowID' class="uploader col-md-10 col-md-offset-1" data-ride="uploader" data-url="file.php">
         <div class="uploader-message text-center">
           <div class="content"></div>
