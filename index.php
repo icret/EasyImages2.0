@@ -65,57 +65,57 @@ if (@$_GET['e']==1){
       </div>
   </div>
 </div>
-<script>
-  $('#upShowID').uploader({
-    // 当选择文件后立即自动进行上传操作
-    autoUpload: false,
-    // 文件上传提交地址
-    url: 'file.php',
-    // 最大支持的上传文件
-    max_file_size: <?php echo $config['maxSize'];?>,
-    // 是否分片上传 0为不分片 经测试分片容易使图片上传失败
-    chunk_size: 0,
-    //点击文件列表上传文件
-    browseByClickList: true,
-    // 上传格式过滤
-    filters: { // 只允许上传图片或图标（.ico）
-      mime_types: [{
-          title: '图片',
-          extensions: '<?php echo getExtensions();?>'
-        },
-        {
-          title: '图标',
-          extensions: 'ico'
-        }
-      ],
-      prevent_duplicates: true
-    },
-    // 限制文件上传数目
-    limitFilesCount: <?php echo $config['maxUploadFiles'];?>,
-    // 自动上传失败的文件
-    autoResetFails: true,
+    <script src="public/static/paste.js"></script>
+    <script src="public/static/copy_btn.js"></script>
+    <script>
+        $('#upShowID').uploader({
+            // 当选择文件后立即自动进行上传操作
+            autoUpload: false,
+            // 文件上传提交地址
+            url: 'file.php',
+            // 最大支持的上传文件
+            max_file_size: <?php echo $config['maxSize']; ?> ,
+            // 是否分片上传 0为不分片 经测试分片容易使图片上传失败
+            chunk_size: 0,
+            //点击文件列表上传文件
+            browseByClickList: true,
+            // 上传格式过滤
+            filters: { // 只允许上传图片或图标（.ico）
+                mime_types: [{
+                    title: '图片',
+                    extensions: '<?php echo getExtensions();?>'
+                }, {
+                    title: '图标',
+                    extensions: 'ico'
+                }],
+                prevent_duplicates: true
+            },
+            // 限制文件上传数目
+            limitFilesCount: <?php echo $config['maxUploadFiles']; ?> ,
+            // 自动上传失败的文件
+            autoResetFails: true,
 
-    responseHandler: function (responseObject, file) {
-      // 当服务器返回的文本内容包含 `'success'` 文件上传成功
-      if (responseObject.response.indexOf('success')) {
-        console.log(responseObject.response);
-        var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
-        var links = document.getElementById("links");
-        links.innerHTML += obj.url + "\n";
+            responseHandler: function (responseObject, file) {
+                // 当服务器返回的文本内容包含 `'success'` 文件上传成功
+                if (responseObject.response.indexOf('success')) {
+                    console.log(responseObject.response);
+                    var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
+                    var links = document.getElementById("links");
+                    links.innerHTML += obj.url + "\n";
 
-        var bbscode = document.getElementById("bbscode");
-        bbscode.innerHTML += "[img]" + obj.url + "[/img]\n";
+                    var bbscode = document.getElementById("bbscode");
+                    bbscode.innerHTML += "[img]" + obj.url + "[/img]\n";
 
-        var markdown = document.getElementById("markdown");
-        markdown.innerHTML += "![](" + obj.url + ")\n";
+                    var markdown = document.getElementById("markdown");
+                    markdown.innerHTML += "![](" + obj.url + ")\n";
 
-        var html = document.getElementById("html");
-        html.innerHTML += "&lt;img src=\"" + obj.url + "\" /&#62;\n";
-      } else {
-        return '上传失败。服务器返回了一个错误：' + responseObject.response;
-      }
-    }
-  });
-</script>
+                    var html = document.getElementById("html");
+                    html.innerHTML += "&lt;img src=\"" + obj.url + "\" /&#62;\n";
+                } else {
+                    return '上传失败。服务器返回了一个错误：' + responseObject.response;
+                }
+            }
+        });
+    </script>
 <?php 
 include APP_ROOT.'/libs/footer.php';
