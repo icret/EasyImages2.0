@@ -64,9 +64,7 @@ if (@$_GET['e']==1){
       </div>
   </div>
 </div>
-<div id="ad" class="col-md-12" align="center" style="padding:5px;">
-	<!--<a href="https://hostdie.com/?REF-QTYI5H" target="_blank"><img src="https://img.545141.com/i/2019/06/15/1u713g.png" data-toggle="lightbox" data-image="https://img.545141.com/i/2019/06/15/1u713g.png" data-caption="小图看大图" class="img-thumbnail" width="275px"></a> -->
-	
+<div id="ad" class="col-md-12" align="center" style="padding:5px;">	
 </div>
     <script src="public/static/paste.js"></script>
     <script src="public/static/copy_btn.js"></script>
