@@ -6,7 +6,7 @@ require APP_ROOT . '/libs/WaterMask.php';
 // 检查是否开启api上传
 if ($config['apiStatus']) {header('Access-Control-Allow-Origin:*');}
 
-$handle = new upload($_FILES['file'], 'zh_CN');
+$handle = new Upload($_FILES['file'], 'zh_CN');
 
 if ($handle->uploaded) {
     // 允许上传的mime类型
