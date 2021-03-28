@@ -2,7 +2,7 @@
 // +------------------------------------------------------------------------+
 // | class.upload.php                                                       |
 // +------------------------------------------------------------------------+
-// | Copyright (c) Colin Verot 2003-2018. All rights reserved.              |
+// | Copyright (c) Colin Verot 2003-2019. All rights reserved.              |
 // | Email         colin@verot.net                                          |
 // | Web           http://www.verot.net                                     |
 // +------------------------------------------------------------------------+
@@ -25,6 +25,9 @@
 // | This script is free to use, don't abuse.                               |
 // +------------------------------------------------------------------------+
 
+// namespace Verot\Upload;
+
+if (!defined('IMG_WEBP')) define('IMG_WEBP', 32);
 
 /**
  * Class upload
@@ -33,7 +36,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Colin Verot
  */
-class upload {
+class Upload {
 
 
     /**
@@ -181,7 +184,7 @@ class upload {
     var $image_src_pixels;
 
     /**
-     * Type of image (png, gif, jpg or bmp)
+     * Type of image (png, gif, jpg, webp or bmp)
      *
      * @access public
      * @var string
@@ -205,7 +208,7 @@ class upload {
     var $image_dst_y;
 
     /**
-     * Destination image type (png, gif, jpg or bmp)
+     * Destination image type (png, gif, jpg, webp or bmp)
      *
      * @access public
      * @var integer
@@ -496,7 +499,7 @@ class upload {
     /**
      * Set this variable to convert the file if it is an image
      *
-     * Possibles values are : ''; 'png'; 'jpeg'; 'gif'; 'bmp'
+     * Possibles values are : ''; 'png'; 'jpeg'; 'gif'; 'webp'; 'bmp'
      *
      * Default value is '' (no conversion)<br>
      * If {@link resize} is true, {@link convert} will be set to the source file extension
@@ -755,6 +758,16 @@ class upload {
     var $jpeg_quality;
 
     /**
+     * Quality of WebP created/converted destination image
+     *
+     * Default value is 85
+     *
+     * @access public
+     * @var integer
+     */
+    var $webp_quality;
+
+    /**
      * Determines the quality of the JPG image to fit a desired file size
      *
      * The JPG quality will be set between 1 and 100%
@@ -804,7 +817,7 @@ class upload {
      * Background color, used to paint transparent areas with
      *
      * If set, it will forcibly remove transparency by painting transparent areas with the color
-     * This setting will fill in all transparent areas in PNG and GIF, as opposed to {@link image_default_color}
+     * This setting will fill in all transparent areas in PNG, WEPB and GIF, as opposed to {@link image_default_color}
      * which will do so only in BMP, JPEG, and alpha transparent areas in transparent GIFs
      * This setting overrides {@link image_default_color}
      *
@@ -820,7 +833,7 @@ class upload {
      *
      * This setting is to be used to define a background color for semi transparent areas
      * of an alpha transparent when the output format doesn't support alpha transparency
-     * This is useful when, from an alpha transparent PNG image, or an image with alpha transparent features
+     * This is useful when, from an alpha transparent PNG or WEBP image, or an image with alpha transparent features
      * if you want to output it as a transparent GIFs for instance, you can set a blending color for transparent areas
      * If you output in JPEG or BMP, this color will be used to fill in the previously transparent areas
      *
@@ -1549,7 +1562,7 @@ class upload {
     /**
      * Adds a watermark on the image
      *
-     * Value is a local image filename, relative or absolute. GIF, JPG, BMP and PNG are supported, as well as PNG alpha.
+     * Value is a local image filename, relative or absolute. GIF, JPG, BMP, WEBP and PNG are supported, as well as PNG and WEBP alpha.
      *
      * If set, this setting allow the use of all other settings starting with image_watermark_
      *
@@ -1676,6 +1689,17 @@ class upload {
     var $forbidden;
 
     /**
+     * Blacklisted file extensions
+     *
+     * List of blacklisted extensions, that are enforced if {@link no_script} is true
+     *
+     * @access public
+     * @var array
+     */
+    var $blacklist;
+
+
+    /**
      * Array of translated error messages
      *
      * By default, the language is english (en_GB)
@@ -1749,6 +1773,7 @@ class upload {
         $this->image_no_shrinking       = false;
 
         $this->png_compression          = null;
+        $this->webp_quality             = 85;
         $this->jpeg_quality             = 85;
         $this->jpeg_size                = null;
         $this->image_interlace          = false;
@@ -1885,6 +1910,7 @@ class upload {
             'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
             'application/vocaltec-media-file',
             'application/wordperfect',
+            'application/haansoftxlsx',
             'application/x-bittorrent',
             'application/x-bzip',
             'application/x-bzip2',
@@ -1914,7 +1940,13 @@ class upload {
             'text/richtext',
             'text/xml',
             'video/*',
-            'text/csv'
+            'text/csv',
+            'text/x-c',
+            'text/x-csv',
+            'text/comma-separated-values',
+            'text/x-comma-separated-values',
+            'application/csv',
+            'application/x-csv',
         );
 
         $this->mime_types = array(
@@ -1922,6 +1954,7 @@ class upload {
             'jpeg' => 'image/jpeg',
             'jpe' => 'image/jpeg',
             'gif' => 'image/gif',
+            'webp' => 'image/webp',
             'png' => 'image/png',
             'bmp' => 'image/bmp',
             'flif' => 'image/flif',
@@ -2003,6 +2036,28 @@ class upload {
             'csv' => 'text/csv',
         );
 
+        $this->blacklist = array(
+            'php',
+            'php7',
+            'php6',
+            'php5',
+            'php4',
+            'php3',
+            'phtml',
+            'pht',
+            'phpt',
+            'phtm',
+            'phps',
+            'inc',
+            'pl',
+            'py',
+            'cgi',
+            'asp',
+            'js',
+            'sh',
+            'phar',
+        );
+
     }
 
     /**
@@ -2038,7 +2093,7 @@ class upload {
      */
     function upload($file, $lang = 'en_GB') {
 
-        $this->version            = '0.35dev';
+        $this->version            = '03/08/2019';
 
         $this->file_src_name      = '';
         $this->file_src_name_body = '';
@@ -2152,6 +2207,10 @@ class upload {
                 $this->image_supported['image/png'] = 'png';
                 $this->image_supported['image/x-png'] = 'png';
             }
+            if (imagetypes() & IMG_WEBP) {
+                $this->image_supported['image/webp'] = 'webp';
+                $this->image_supported['image/x-webp'] = 'webp';
+            }
             if (imagetypes() & IMG_WBMP) {
                 $this->image_supported['image/bmp'] = 'bmp';
                 $this->image_supported['image/x-ms-bmp'] = 'bmp';
@@ -2170,6 +2229,7 @@ class upload {
             }
             $gd           = $this->gdversion() ? $this->gdversion(true) : 'GD not present';
             $supported    = trim((in_array('png', $this->image_supported) ? 'png' : '') . ' ' .
+                                 (in_array('webp', $this->image_supported) ? 'webp' : '') . ' ' .
                                  (in_array('jpg', $this->image_supported) ? 'jpg' : '') . ' ' .
                                  (in_array('gif', $this->image_supported) ? 'gif' : '') . ' ' .
                                  (in_array('bmp', $this->image_supported) ? 'bmp' : ''));
@@ -2194,6 +2254,7 @@ class upload {
                 $this->uploaded = false;
                 $this->error = $this->translate('file_error');
             } else {
+                $file = (string) $file;
                 if (substr($file, 0, 4) == 'php:' || substr($file, 0, 5) == 'data:' || substr($file, 0, 7) == 'base64:') {
                     $data = null;
 
@@ -2297,7 +2358,7 @@ class upload {
             // this is an element from $_FILE, i.e. an uploaded file
             $this->log .= '<b>source is an uploaded file</b><br />';
             if ($this->uploaded) {
-                $this->file_src_error         = trim($file['error']);
+                $this->file_src_error         = trim((int) $file['error']);
                 switch($this->file_src_error) {
                     case UPLOAD_ERR_OK:
                         // all is OK
@@ -2338,8 +2399,8 @@ class upload {
             }
 
             if ($this->uploaded) {
-                $this->file_src_pathname   = $file['tmp_name'];
-                $this->file_src_name       = $file['name'];
+                $this->file_src_pathname   = (string) $file['tmp_name'];
+                $this->file_src_name       = (string) $file['name'];
                 if ($this->file_src_name == '') {
                     $this->uploaded = false;
                     $this->error = $this->translate('try_again');
@@ -2356,8 +2417,8 @@ class upload {
                     $this->file_src_name_ext      = '';
                     $this->file_src_name_body     = $this->file_src_name;
                 }
-                $this->file_src_size = $file['size'];
-                $mime_from_browser = $file['type'];
+                $this->file_src_size = (int) $file['size'];
+                $mime_from_browser = (string) $file['type'];
             }
         }
 
@@ -2492,7 +2553,8 @@ class upload {
                             $this->file_src_mime = ($mime==IMAGETYPE_GIF  ? 'image/gif' :
                                                    ($mime==IMAGETYPE_JPEG ? 'image/jpeg' :
                                                    ($mime==IMAGETYPE_PNG  ? 'image/png' :
-                                                   ($mime==IMAGETYPE_BMP  ? 'image/bmp' : null))));
+                                                   ($mime==IMAGETYPE_WEBP  ? 'image/webp' :
+                                                   ($mime==IMAGETYPE_BMP  ? 'image/bmp' : null)))));
                         }
                         $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;MIME type detected as ' . $this->file_src_mime . ' by PHP getimagesize() function<br />';
                         if (preg_match("/^([\.\w-]+)\/([\.\w-]+)(.*)$/i", $this->file_src_mime)) {
@@ -2775,7 +2837,7 @@ class upload {
      */
     function getsize($size) {
         if ($size === null) return null;
-        $last = strtolower($size{strlen($size)-1});
+        $last = is_string($size) ? strtolower(substr($size, -1)) : null;
         $size = (int) $size;
         switch($last) {
             case 'g':
@@ -2847,7 +2909,7 @@ class upload {
         if ($this->gdversion() >= 2 && !$this->image_is_palette) {
             // create a true color image
             $dst_im = imagecreatetruecolor($x, $y);
-            // this preserves transparency in PNGs, in true color
+            // this preserves transparency in PNG and WEBP, in true color
             if (empty($this->image_background_color) || $trsp) {
                 imagealphablending($dst_im, false );
                 imagefilledrectangle($dst_im, 0, 0, $x, $y, imagecolorallocatealpha($dst_im, 0, 0, 0, 127));
@@ -2880,15 +2942,29 @@ class upload {
      * @return resource Destination image
      */
     function imagetransfer($src_im, $dst_im) {
-        if (is_resource($dst_im)) imagedestroy($dst_im);
+        $this->imageunset($dst_im);
         $dst_im = & $src_im;
         return $dst_im;
     }
 
     /**
+     * Destroy GD ressource
+     *
+     * @access private
+     * @param  resource $im Image
+     */
+    function imageunset($im) {
+        if (is_resource($im)) {
+            imagedestroy($im);
+        } else if (is_object($im) && $im instanceOf \GdImage) {
+            unset($im);
+        }
+    }
+
+    /**
      * Merges two images
      *
-     * If the output format is PNG, then we do it pixel per pixel to retain the alpha channel
+     * If the output format is PNG or WEBP, then we do it pixel per pixel to retain the alpha channel
      *
      * @access private
      * @param  resource $dst_img Destination image
@@ -3044,7 +3120,7 @@ class upload {
                 }
                 // if the file is text based, or has a dangerous extension, we rename it as .txt
                 if ((((substr($this->file_src_mime, 0, 5) == 'text/' && $this->file_src_mime != 'text/rtf') || strpos($this->file_src_mime, 'javascript') !== false)  && (substr($file_src_name, -4) != '.txt'))
-                    || preg_match('/\.(php|php5|php4|php3|phtml|pl|py|cgi|asp|js)$/i', $this->file_src_name)
+                    || preg_match('/\.(' . implode('|', $this->blacklist) . ')$/i', $this->file_src_name)
                     || $this->file_force_extension && empty($file_src_name_ext)) {
                     $this->file_src_mime = 'text/plain';
                     if ($this->file_src_name_ext) $file_src_name_body = $file_src_name_body . '.' . $this->file_src_name_ext;
@@ -3453,6 +3529,20 @@ class upload {
                                 }
                             }
                             break;
+                        case 'webp':
+                            if (!$this->function_enabled('imagecreatefromwebp')) {
+                                $this->processed = false;
+                                $this->error = $this->translate('no_create_support', array('WEBP'));
+                            } else {
+                                $image_src = @imagecreatefromwebp($this->file_src_pathname);
+                                if (!$image_src) {
+                                    $this->processed = false;
+                                    $this->error = $this->translate('create_error', array('WEBP'));
+                                } else {
+                                    $this->log .= '- source image is WEBP<br />';
+                                }
+                            }
+                            break;
                         case 'gif':
                             if (!$this->function_enabled('imagecreatefromgif')) {
                                 $this->processed = false;
@@ -3503,7 +3593,7 @@ class upload {
                     }
 
                     // we set the default color to be the background color if we don't output in a transparent format
-                    if ($this->image_convert != 'png' && $this->image_convert != 'gif' && !empty($this->image_default_color) && empty($this->image_background_color)) $this->image_background_color = $this->image_default_color;
+                    if ($this->image_convert != 'png' && $this->image_convert != 'webp' && $this->image_convert != 'gif' && !empty($this->image_default_color) && empty($this->image_background_color)) $this->image_background_color = $this->image_default_color;
                     if (!empty($this->image_background_color)) $this->image_default_color = $this->image_background_color;
                     if (empty($this->image_default_color)) $this->image_default_color = '#FFFFFF';
 
@@ -3903,7 +3993,7 @@ class upload {
                             imagecopyresized($filter, $image_dst, 0, 0, 0, 0, round($this->image_dst_x / $this->image_pixelate), round($this->image_dst_y / $this->image_pixelate), $this->image_dst_x, $this->image_dst_y);
                             imagecopyresized($image_dst, $filter, 0, 0, 0, 0, $this->image_dst_x, $this->image_dst_y, round($this->image_dst_x / $this->image_pixelate), round($this->image_dst_y / $this->image_pixelate));
                         }
-                        imagedestroy($filter);
+                        $this->imageunset($filter);
                     }
 
                     // unsharp mask
@@ -3967,8 +4057,8 @@ class upload {
                                     }
                                 }
                             }
-                            imagedestroy($canvas);
-                            imagedestroy($blur);
+                            $this->imageunset($canvas);
+                            $this->imageunset($blur);
                         }
                     }
 
@@ -3980,7 +4070,7 @@ class upload {
                         $color = imagecolorallocate($filter, $red, $green, $blue);
                         imagefilledrectangle($filter, 0, 0, $this->image_dst_x, $this->image_dst_y, $color);
                         $this->imagecopymergealpha($image_dst, $filter, 0, 0, 0, 0, $this->image_dst_x, $this->image_dst_y, $this->image_overlay_opacity);
-                        imagedestroy($filter);
+                        $this->imageunset($filter);
                     }
 
                     // add brightness, contrast and tint, turns to greyscale and inverts colors
@@ -4235,6 +4325,18 @@ class upload {
                                     $this->error = $this->translate('watermark_create_error', array('PNG'));
                                 } else {
                                     $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;watermark source image is PNG<br />';
+                                    $watermark_checked = true;
+                                }
+                            }
+                        } else if ($watermark_type == IMAGETYPE_WEBP) {
+                            if (!$this->function_enabled('imagecreatefromwebp')) {
+                                $this->error = $this->translate('watermark_no_create_support', array('WEBP'));
+                            } else {
+                                $filter = @imagecreatefromwebp($this->image_watermark);
+                                if (!$filter) {
+                                    $this->error = $this->translate('watermark_create_error', array('WEBP'));
+                                } else {
+                                    $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;watermark source image is WEBP<br />';
                                     $watermark_checked = true;
                                 }
                             }
@@ -4502,7 +4604,7 @@ class upload {
                                 $background_color = imagecolorallocate($filter, $red, $green, $blue);
                                 imagefilledrectangle($filter, 0, 0, $text_width, $text_height, $background_color);
                                 $this->imagecopymergealpha($image_dst, $filter, $text_x, $text_y, 0, 0, $text_width, $text_height, $this->image_text_background_opacity);
-                                imagedestroy($filter);
+                                $this->imageunset($filter);
                             } else {
                                 $background_color = imagecolorallocate($image_dst ,$red, $green, $blue);
                                 imagefilledrectangle($image_dst, $text_x, $text_y, $text_x + $text_width, $text_y + $text_height, $background_color);
@@ -4551,7 +4653,7 @@ class upload {
                                              $text);
                             }
                             $this->imagecopymergealpha($image_dst, $filter, $text_x, $text_y, 0, 0, $t_width, $t_height, $this->image_text_opacity);
-                            imagedestroy($filter);
+                            $this->imageunset($filter);
 
                         } else {
                             $text_color = imagecolorallocate($image_dst ,$red, $green, $blue);
@@ -4833,6 +4935,24 @@ class upload {
                                 $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;PNG image created<br />';
                             }
                             break;
+                        case 'webp':
+                            imagealphablending( $image_dst, false );
+                            imagesavealpha( $image_dst, true );
+                            if (!$return_mode) {
+                                $result = @imagewebp($image_dst, $this->file_dst_pathname, $this->webp_quality);
+                            } else {
+                                ob_start();
+                                $result = @imagewebp($image_dst, null, $this->webp_quality);
+                                $return_content = ob_get_contents();
+                                ob_end_clean();
+                            }
+                            if (!$result) {
+                                $this->processed = false;
+                                $this->error = $this->translate('file_create', array('WEBP'));
+                            } else {
+                                $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;WEBP image created<br />';
+                            }
+                            break;
                         case 'gif':
                             if (!$return_mode) {
                                 $result = @imagegif($image_dst, $this->file_dst_pathname);
@@ -4871,8 +4991,8 @@ class upload {
                             $this->error = $this->translate('no_conversion_type');
                     }
                     if ($this->processed) {
-                        if (is_resource($image_src)) imagedestroy($image_src);
-                        if (is_resource($image_dst)) imagedestroy($image_dst);
+                        $this->imageunset($image_src);
+                        $this->imageunset($image_dst);
                         $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;image objects destroyed<br />';
                     }
                 }
@@ -5024,7 +5144,7 @@ class upload {
         if (!imageistruecolor($im)) {
             $tmp = imagecreatetruecolor($w, $h);
             imagecopy($tmp, $im, 0, 0, 0, 0, $w, $h);
-            imagedestroy($im);
+            $this->imageunset($im);
             $im = & $tmp;
         }
 
