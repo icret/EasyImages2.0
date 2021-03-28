@@ -133,4 +133,4 @@ function getExtensions(){
     }
     return rtrim($mime,',');
 }
-$qqgroup = ' <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=cR0UHB4fGBwxAABfEh4c" style="text-decoration:none;"><img src="/i/2019/07/19/qsrw7.png" alt="EasyImage 简单图床图片举报" title="EasyImage 简单图床图片举报"></a> <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="EasyImage 简单图床加入QQ群" title="EasyImage 简单图床加入QQ群"></a>';
+// $qqgroup = ' <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=cR0UHB4fGBwxAABfEh4c" style="text-decoration:none;"><img src="/i/2019/07/19/qsrw7.png" alt="EasyImage 简单图床图片举报" title="EasyImage 简单图床图片举报"></a> <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="EasyImage 简单图床加入QQ群" title="EasyImage 简单图床加入QQ群"></a>';
