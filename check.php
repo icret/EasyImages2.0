@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>检测工具</title>
+  <title>简单图床安装环境检测</title>
   <style>
     a:link{color:grey;}
     a:visited{color:black;}

@@ -28,7 +28,9 @@ if ($handle->uploaded) {
 
     //等比例缩减图片
     if ($config['imgRatio']) {
+        $handle->image_resize = true;
         $handle->image_x = $config['image_x'];
+        $handle->image_y = $config['image_y'];
     }
     // 存储图片路径:images/201807/
     $handle->process(APP_ROOT . config_path());

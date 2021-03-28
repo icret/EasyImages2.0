@@ -78,7 +78,7 @@ $config = array(
      'minWidth' => 5,
     // 允许上传的最小高度
      'minHeight' => 5,
-    // 等比例缩小图片 宽度和高度请设置 image_x image_y 开启true，关闭false 关闭下mage_x和image_y设置不生效
+    // 等比例缩小图片 宽度和高度请设置 image_x image_y 开启true，关闭false 关闭下image_x和image_y设置不生效
      'imgRatio' => false,
     // 缩减的最大高度
      'image_x' => 1024,

@@ -64,8 +64,6 @@ if (@$_GET['e']==1){
       </div>
   </div>
 </div>
-<div id="ad" class="col-md-12" align="center" style="padding:5px;">	
-</div>
     <script src="public/static/paste.js"></script>
     <script src="public/static/copy_btn.js"></script>
     <script>
