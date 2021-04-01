@@ -1,3 +1,6 @@
+![打赏作者](https://i1.100024.xyz/i/2019/06/15/1u713g.png
+ "打赏作者")
+
 ![简单图床示例](https://i1.100024.xyz/public/data/2019/05/5ce6915f50a1a.png
  "简单图床示例")
 ![简单图床示例](https://i1.100024.xyz/public/data/2019/05/5cecf12575f6e.png
