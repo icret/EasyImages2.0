@@ -73,7 +73,7 @@ if ($handle->uploaded) {
         }
     }
 
-    // 图片完整相对路径:images/201807/0ed7ccfd4dab9cbc.jpg
+    // 图片完整相对路径:/i/2021/04/14/n86ajk.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
         // 上传成功后返回json数据

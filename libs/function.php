@@ -88,27 +88,27 @@ function static_cdn(){
     if ($config['static_cdn']){
         // 开启CDN
         return '
-        <link href="https://cdn.bootcss.com/zui/1.8.1/css/zui.min.css" rel="stylesheet">
-        <link href="https://cdn.bootcss.com/zui/1.8.1/lib/uploader/zui.uploader.min.css" rel="stylesheet">
+        <link href="https://cdn.bootcdn.net/ajax/libs/zui/1.9.2/css/zui.min.css?v1.9.2" rel="stylesheet">
+        <link href="https://cdn.bootcdn.net/ajax/libs/zui/1.9.2/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
         
-        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js?v3.3.1"></script>
-        <script src="https://cdn.bootcss.com/zui/1.8.1/js/zui.min.js?v1.8.1"></script>
-        <script src="https://cdn.bootcss.com/zui/1.8.1/lib/uploader/zui.uploader.min.js?v1.8.1"></script>
-        <script src="https://cdn.jsdelivr.net/gh/icret/easyImages@1.5.3/static/qrcode.min.js?v1"></script>
-        <script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js?v2.0.4"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js?v3.6.0"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/zui/1.9.2/js/zui.min.js?v1.9.2"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/zui/1.9.2/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
+        <script src="https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@master/public/static/qrcode.min.js?v2.0"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js?v2.0.8"></script>
         ';
 
     }else{
         // 本地文件
         return '
-         <link href="../public/static/zui/css/zui.min.css?v1.8.1" rel="stylesheet">
-        <link href="../public/static/zui/lib/uploader/zui.uploader.min.css?v1.8.1" rel="stylesheet">
+        <link href="../public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
+        <link href="../public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
         
-        <script src="../public/static/jquery.min.js?v3.3.1"></script>
-        <script src="../public/static/zui/js/zui.min.js?v1.8.1"></script>
-        <script src="../public/static/zui/lib/uploader/zui.uploader.min.js?v1.8.1"></script>
-        <script src="../public/static/qrcode.min.js?v1.0"></script>
-        <script src="../public/static/clipboard.min.js?v2.0.4"></script>
+        <script src="../public/static/jquery.min.js?v3.6.0"></script>
+        <script src="../public/static/zui/js/zui.min.js?v1.9.2"></script>
+        <script src="../public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
+        <script src="../public/static/qrcode.min.js?v2.0"></script>
+        <script src="../public/static/clipboard.js?v2.0.8"></script>
         ';
     }
 }
@@ -117,7 +117,7 @@ function static_cdn(){
 function tinyfilemanager(){
     global $config;
     if(!$config['tinyfilemanager']){
-        header('Location: '.$config['domain'].'?not_open_manager');
+        header('Location: '.$config['domain'].'?manager-closed');
         exit;
     }
 }
@@ -133,4 +133,3 @@ function getExtensions(){
     }
     return rtrim($mime,',');
 }
-// $qqgroup = ' <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=cR0UHB4fGBwxAABfEh4c" style="text-decoration:none;"><img src="/i/2019/07/19/qsrw7.png" alt="EasyImage 简单图床图片举报" title="EasyImage 简单图床图片举报"></a> <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="EasyImage 简单图床加入QQ群" title="EasyImage 简单图床加入QQ群"></a>';
