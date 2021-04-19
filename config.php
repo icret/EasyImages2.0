@@ -87,5 +87,5 @@ $config = array(
     //  开启底部广告 如果想添加或修改广告请到 public/static/ad_bot.html
      'ad_bot' => false,
     // 当前版本 
-    'version' => '2.0.2.2',
+    'version' => '2.0.2.1 Beta',
 );
