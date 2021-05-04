@@ -55,11 +55,11 @@ $config = array(
   'maxUploadFiles' => 30,
   // 是否开启登录上传 开启:true 关闭:false
   'mustLogin' => false,
-  // 是否开启tinyfilemanager文件管理
+  // 是否开启tinyfilemanager文件管理 开启:true 关闭:false
   'tinyfilemanager' => true,
   // 登录上传和后台管理密码,管理用户名为：admin
   'password' => 'admin@123',
-  // 是否开启API上传
+  // 是否开启API上传 开启:true 关闭:false
   'apiStatus' => true,
   // 是否开启水印:0关闭，1文字水印，2图片水印 不能使用动态gif添加水印
   'watermark' => 0,
@@ -92,24 +92,24 @@ $config = array(
   'minWidth' => 5,
   // 允许上传的最小高度
   'minHeight' => 5,
-  // 等比例缩小图片 宽度和高度请设置 image_x image_y 开启true，关闭false 关闭下image_x和image_y设置不生效
+  // 等比例缩小图片 宽度和高度请设置 image_x image_y 开启:true 关闭:false 关闭下image_x和image_y设置不生效
   'imgRatio' => false,
   // 缩减的最大高度
   'image_x' => 10240,
   // 缩减的最大宽度
   'image_y' => 10240,
-  // 开启静态文件CDN 开启true 关闭false
+  // 开启静态文件CDN 开启:true 关闭:false
   'static_cdn' => false,
-  // 开启顶部广告 开启true 关闭false 如果想添加或修改广告请到 public/static/ad_top.html
+  // 开启顶部广告 开启:true 关闭:false 如果想添加或修改广告请到 public/static/ad_top.html
   'ad_top' => false,
-  // 开启底部广告 开启true 关闭false 如果想添加或修改广告请到 public/static/ad_bot.html
+  // 开启底部广告 开启:true 关闭:false 如果想添加或修改广告请到 public/static/ad_bot.html
   'ad_bot' => false,
-  // 开启游客预览（广场） 开启true 关闭false
+  // 开启游客预览（广场）开启:true 关闭:false
   'showSwitch' => true,
   // 默认预览数量，可在网址后填写参数实时更改预览数量 如：https://img.545141.com/libs/list.php?num=3
   'listNumber' => 20,
   // 上传框底部自定义信息，仅支持html格式
-  'customize' =>'
+  'customize' => '
     <!--打赏
     <div id="ad" class="col-md-12" align="center" style="padding:5px;">
       <img data-toggle="lightbox" src="//i1.100024.xyz/i/2019/06/15/1u713g.png" data-image="//i1.100024.xyz/i/2019/06/15/1u713g.png" data-caption="赞助开发者" class="img-thumbnail" alt="" width="220">
@@ -129,6 +129,8 @@ $config = array(
     </a>
     -->	       
     ',
+  // 开启环境检测 开启:true 关闭:false
+  'checkEnv' => true,
   // 当前版本
   'version' => '2.1.0',
 );

@@ -135,5 +135,5 @@ mustLogin();
   });
 </script>
 <?php
-checkEnv(); // 环境检测
+checkEnv($config['checkEnv']); // 环境检测
 require_once __DIR__ . '/libs/footer.php';

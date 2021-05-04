@@ -115,8 +115,7 @@ function static_cdn()
     <script src="//cdn.staticfile.org/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="//cdn.staticfile.org/clipboard.js/2.0.8/clipboard.min.js?v2.0.8"></script>
 	<script src="//cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
-	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.1.0/public/static/hm.js"></script>	
-        ';
+	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.1.0/public/static/hm.js"></script>';
 	} else {
 		// 本地文件
 		return '<link href="../public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
@@ -128,8 +127,7 @@ function static_cdn()
     <script src="../public/static/qrcode.min.js?v2.0"></script>	
 	<script src="../public/static/hm.js"></script>
     <script src="../public/static/zui/lib/clipboard/clipboard.min.js?vv1.5.5"></script>
-	<script src="../public/static/nprogress.min.js"></script>
-    ';
+	<script src="../public/static/nprogress.min.js"></script>';
 	}
 }
 
@@ -142,7 +140,6 @@ function tinyfilemanager()
 		exit;
 	}
 }
-
 
 // 获取允许上传的扩展名
 function getExtensions()
@@ -168,7 +165,6 @@ function getDirectorySize($path)
 	return $bytestotal;
 }
 
-
 /**
  * 获取指定文件夹文件数量
  * @param $url 传入一个路径如：/apps/web
@@ -187,7 +183,6 @@ function getFileNumber($url)
 	}
 	return $num;
 }
-
 
 /* 
  * 图片展示页面
@@ -302,7 +297,7 @@ function getActive($url)
 /**
  * 加密/解密图片路径
  * @param string $data 要加密的内容
- * @param $mode=1或0  1解密 0加密
+ * @param int $mode =1或0  1解密 0加密
  * 
  */
 function ulrHash($data, $mode)
@@ -379,39 +374,41 @@ function is_online()
  * 
  * 检测是否更改默认域名
  */
-function checkEnv()
+function checkEnv($mode)
 {
 	global $config;
 
-	// 扩展检测
-	$expand = array('fileinfo', 'iconv', 'gd', 'mbstring', 'openssl',);
-	foreach ($expand as $val) {
-		if (!extension_loaded($val)) {
-			echo '
+	if ($mode) {
+		// 扩展检测
+		$expand = array('fileinfo', 'iconv', 'gd', 'mbstring', 'openssl',);
+		foreach ($expand as $val) {
+			if (!extension_loaded($val)) {
+				echo '
 			<script>
 			new $.zui.Messager("扩展：' . $val . '- 未安装,可能导致图片上传失败！请尽快修复。", {type: "black" // 定义颜色主题 
 			}).show();
 			</script>
 		';
+			}
 		}
-	}
-	// 检测是否更改默认域名
-	$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.1.15');
-	if (strstr($url, $_SERVER['HTTP_HOST'])) {
-		echo '
+		// 检测是否更改默认域名
+		$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.1.15');
+		if (strstr($url, $_SERVER['HTTP_HOST'])) {
+			echo '
 		<script>
 		new $.zui.Messager("请修改默认域名，可能会导致图片访问异常！", {type: "black" // 定义颜色主题 
 		}).show();
 		</script>
 		';
-	}
-	// 检测是否更改默认密码
-	if ($config['password'] === 'admin@123') {
-		echo '
+		}
+		// 检测是否更改默认密码
+		if ($config['password'] === 'admin@123') {
+			echo '
 		<script>
 		new $.zui.Messager("请修改默认密码，否则会有泄露风险！", {type: "warning" // 定义颜色主题 
 		}).show();
 		</script>
 		';
+		}
 	}
 }

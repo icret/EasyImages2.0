@@ -102,5 +102,4 @@
   <a href="https://www.545141.com/902.html" target="_blank">Icret</a> Ver:<a href="https://github.com/icret/easyImages2.0" target="_blank"><?php echo $config['version']; ?> <i class="icon icon-github"></i></a>
 </footer>
 </body>
-
 </html>
