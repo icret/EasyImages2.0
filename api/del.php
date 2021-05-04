@@ -24,7 +24,7 @@ if (empty($_REQUEST)) {
 // 解密删除
 if (isset($_GET['hash'])) {
     $delFile = $_GET['hash'];
-    $delFile = ulrHash($delFile, 1);
+    $delFile = urlHash($delFile, 1);
     getDel($delFile);
 }
 

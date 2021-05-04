@@ -301,15 +301,16 @@ function getActive($url)
  * @param int $mode =1或0  1解密 0加密
  * 
  */
-function ulrHash($data, $mode)
+function urlHash($data, $mode)
 {
 	global $config;
 	$key =  $config['password'];
+	$iv = 'sciCuBC7orQtDhTO';
 	if ($mode) {
-		$decode =  openssl_decrypt(urldecode($data), "DES-ECB", $key, 0);
+		$decode =  openssl_decrypt(base64_decode($data), "AES-128-CBC", $key, 0,$iv);
 		return $decode;
 	} else {
-		$encode = urlencode(openssl_encrypt($data, "DES-ECB", $key, 0));
+		$encode = base64_encode(openssl_encrypt($data, "AES-128-CBC", $key, 0,$iv));
 		return $encode;
 	}
 }

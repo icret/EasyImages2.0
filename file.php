@@ -77,7 +77,7 @@ if ($handle->uploaded) {
 
         // 上传成功后返回json数据
         $imageUrl = $config['domain'] . config_path() . $handle->file_dst_name;
-        $delUrl = $_SERVER['HTTP_HOST'] . '/api/del.php?hash=' . ulrHash(config_path() . $handle->file_dst_name, 0);
+        $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
 
         $reJson = array(
             "result" => 'success',

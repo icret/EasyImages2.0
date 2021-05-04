@@ -6,7 +6,7 @@
  * @author  icret
  * @email   lemonim@qq.com
  * @Github  https://github.com/icret/easyImages2.0
- * @Last    2021-5-4 18:08:08
+ * @Last    2021-5-5 04:33:16
 
  * 上传后请打开check.php先检查服务器配置，更改密码等操作
  * 安装完毕后请删除README.md,check.php,LICENSE等非必要文件
@@ -54,7 +54,7 @@ $config = array(
   // 每次最多上传图片数
   'maxUploadFiles' => 30,
   // 是否开启登录上传 开启:true 关闭:false
-  'mustLogin' => true,
+  'mustLogin' => false,
   // 是否开启tinyfilemanager文件管理 开启:true 关闭:false
   'tinyfilemanager' => true,
   // 登录上传和后台管理密码,管理用户名为：admin
@@ -112,7 +112,7 @@ $config = array(
   'customize' => '
     <!--打赏
     <div id="ad" class="col-md-12" align="center" style="padding:5px;">
-      <img data-toggle="lightbox" src="//i1.100024.xyz/i/2019/06/15/1u713g.png" data-image="//i1.100024.xyz/i/2019/06/15/1u713g.png" data-caption="赞助开发者" class="img-thumbnail" alt="" width="220">
+      <img data-toggle="lightbox" src="//i1.100024.xyz/public/images/dashang.png" data-image="//i1.100024.xyz/public/images/dashang.png" data-caption="赞助开发者" class="img-thumbnail" alt="" width="220">
     </div>
     -->
     <!-- 非img.545141.com跳转
