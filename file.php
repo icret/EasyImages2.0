@@ -1,10 +1,8 @@
 <?php
 require __DIR__ . '/libs/function.php';
-require APP_ROOT . '/libs/class.upload.php';
-require APP_ROOT . '/libs/WaterMask.php';
+require __DIR__ . '/libs/class.upload.php';
+require __DIR__ . '/libs/WaterMask.php';
 
-// 检查是否开启api上传
-if ($config['apiStatus']) {header('Access-Control-Allow-Origin:*');}
 
 $handle = new Upload($_FILES['file'], 'zh_CN');
 
@@ -33,7 +31,7 @@ if ($handle->uploaded) {
         $handle->image_y = $config['image_y'];
     }
     // 存储图片路径:images/201807/
-    $handle->process(APP_ROOT . config_path());
+    $handle->process(__DIR__ . config_path());
 
     // 设置水印
     if ($config['watermark'] > 0) {
@@ -42,11 +40,11 @@ if ($handle->uploaded) {
                 if (isAnimatedGif($handle->file_src_pathname) === 0) {
                     $arr = [
                         #  水印图片路径（如果不存在将会被当成是字符串水印）
-                         'res' => $config['waterText'],
+                        'res' => $config['waterText'],
                         #  水印显示位置
-                         'pos' => $config['waterPosition'],
+                        'pos' => $config['waterPosition'],
                         #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
-                         'name' => $handle->file_dst_pathname,
+                        'name' => $handle->file_dst_pathname,
                         'font' => $config['textFont'],
                         'fontSize' => $config['textSize'],
                         'color' => $config['textColor'],
@@ -58,11 +56,11 @@ if ($handle->uploaded) {
                 if (isAnimatedGif($handle->file_src_pathname) === 0) {
                     $arr = [
                         #  水印图片路径（如果不存在将会被当成是字符串水印）
-                         'res' => $config['waterImg'],
+                        'res' => $config['waterImg'],
                         #  水印显示位置
-                         'pos' => $config['waterPosition'],
+                        'pos' => $config['waterPosition'],
                         #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
-                         'name' => $handle->file_dst_pathname,
+                        'name' => $handle->file_dst_pathname,
                     ];
                     Imgs::setWater($handle->file_dst_pathname, $arr);
                 }
@@ -72,14 +70,19 @@ if ($handle->uploaded) {
                 break;
         }
     }
-
-    // 图片完整相对路径:/i/2021/04/14/n86ajk.jpg
+    // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
+
+
         // 上传成功后返回json数据
+        $imageUrl = $config['domain'] . config_path() . $handle->file_dst_name;
+        $delUrl = $_SERVER['HTTP_HOST'] . '/api/del.php?hash=' . ulrHash(config_path() . $handle->file_dst_name, 0);
+
         $reJson = array(
             "result" => 'success',
-            "url" => $config['domain'] . config_path() . $handle->file_dst_name,
+            "url" => $imageUrl,
+            "del" =>  $delUrl,
         );
         echo json_encode($reJson);
         $handle->clean();
@@ -89,7 +92,7 @@ if ($handle->uploaded) {
             "result" => 'failed',
             "message" => $handle->error,
         );
-        echo json_encode($reJson,JSON_UNESCAPED_UNICODE);
+        echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
     }
     unset($handle);
 }

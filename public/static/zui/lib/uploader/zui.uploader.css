@@ -1,8 +1,8 @@
 /*!
- * ZUI: 文件上传 - v1.8.1 - 2018-04-08
- * http://zui.sexy
+ * ZUI: 文件上传 - v1.9.2 - 2020-07-09
+ * http://openzui.com
  * GitHub: https://github.com/easysoft/zui.git 
- * Copyright (c) 2018 cnezsoft.com; Licensed MIT
+ * Copyright (c) 2020 cnezsoft.com; Licensed MIT
  */
 
 .uploader {
@@ -24,7 +24,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 100;
+  display: block;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -67,9 +68,19 @@
        -o-transform: scale(1);
           transform: scale(1);
   }
+.ie .file-dragable[data-drop-placeholder]:before {
+  display: block!important;
+  display: -webkit-box !important;
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display:         flex !important;
+  }
 .file-drag-enter[data-drop-placeholder]:before {
   background-color: #fff0d5;
   border-style: solid;
+  }
+.ie .file-drag-enter.file-dragable > .uploader-message {
+  pointer-events: none;
   }
 .uploader-files,
 .file-list {

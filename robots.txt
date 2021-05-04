@@ -1,3 +1,5 @@
 # robots.txt
+Disallow: /api/
 Disallow: /libs/
 Disallow: /public/
+Disallow: /config/
