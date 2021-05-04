@@ -88,7 +88,7 @@
       <span class="label"><i class="icon icon-qrcode"></i> 二维码</a></span>
     <a href="/tinyfilemanager.php?p=<?php echo date('Y/m/d'); ?>" target="_blank"><span class="label"><i class="icon icon-desktop"></i> 管理</a></span>
     <a href="/api/api-web.php" target="_blank"><span class="label"><i class="icon icon-key"></i> API</a></span>
-    <?php require_once 'function.php';
+    <?php
     if (is_online()) {
       echo '<a href="/libs/logout.php" ><span class="label"><i class="icon icon-signout"></i> 退出</a></span>';
     } else {
@@ -102,4 +102,5 @@
   <a href="https://www.545141.com/902.html" target="_blank">Icret</a> Ver:<a href="https://github.com/icret/easyImages2.0" target="_blank"><?php echo $config['version']; ?> <i class="icon icon-github"></i></a>
 </footer>
 </body>
+
 </html>

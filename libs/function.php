@@ -22,12 +22,13 @@ function checkLogin()
 			echo '
 			<script> new $.zui.Messager("登录成功", {type: "success" // 定义颜色主题 
 			}).show();</script>';
-			//header("refresh:1;"); // 1s后刷新当前页面
+			header("refresh:1;"); // 1s后刷新当前页面
 		} else {	// 密码错误
 			echo '
 			<script> new $.zui.Messager("密码错误", {type: "danger" // 定义颜色主题 
 			}).show();</script>';
-			exit(include __DIR__ . '/login.php');
+			//exit(include __DIR__ . '/login.php');
+			exit(header("refresh:1;"));
 		}
 	} elseif (isset($_COOKIE['admin'])) {	// cookie正确
 		if ($_COOKIE['admin'] == $md5Pwd) {
@@ -35,14 +36,14 @@ function checkLogin()
 			echo '
 			<script> new $.zui.Messager("密码已更改，请重新登录", {type: "special" // 定义颜色主题 
 			}).show();</script>';
-			header('loction:login.php');
+			//header('loction:login.php');
 			exit(include __DIR__ . '/login.php');
 		}
 	} else {	// 无登录无cookie
 		echo '
 			<script> new $.zui.Messager("请登录后再上传！", {type: "danger" // 定义颜色主题 
 			}).show();</script>';
-		header('loction:login.php');
+		//header('loction:login.php');
 		exit(include __DIR__ . '/login.php');
 	}
 }

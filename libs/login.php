@@ -11,8 +11,6 @@ if (isset($_POST['password'])) {
 }
 
 ?>
-
-<script src="../public/static/md5.min.js"></script>
 <center>
 	<div class="center" style="margin: 40px;">
 		<form class="form-inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return md5_post()">
@@ -26,6 +24,7 @@ if (isset($_POST['password'])) {
 		</form>
 	</div>
 </center>
+<script src="../public/static/md5.min.js"></script>
 <script>
 	function md5_post() {
 		var password = document.getElementById('password');

@@ -54,7 +54,7 @@ $config = array(
   // 每次最多上传图片数
   'maxUploadFiles' => 30,
   // 是否开启登录上传 开启:true 关闭:false
-  'mustLogin' => false,
+  'mustLogin' => true,
   // 是否开启tinyfilemanager文件管理 开启:true 关闭:false
   'tinyfilemanager' => true,
   // 登录上传和后台管理密码,管理用户名为：admin
@@ -129,7 +129,7 @@ $config = array(
     </a>
     -->	       
     ',
-  // 开启环境检测 开启:true 关闭:false
+  // 扩展与基本设置检测 开启:true 关闭:false
   'checkEnv' => true,
   // 当前版本
   'version' => '2.1.0',

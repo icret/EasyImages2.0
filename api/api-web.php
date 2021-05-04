@@ -93,7 +93,7 @@ if (!is_online()) {
 			</button>
 		</form>
 	</div>
-	';
+';
 }
 ?>
 <div class="col-md-4">
@@ -112,50 +112,11 @@ if (!is_online()) {
 				<input type="text" name="token" class="form-control" placeholder="请输入Token" />
 			</div>
 		</div>
-		<!-- API上传的图片链接
-			<div class="form-group">
-				<label>
-					API上传的图片链接
-				</label>
-				<div class="form-group">
-					<input type="text" class="form-control" readonly>
-				</div>
-			<br />
-			-->
 		<button type="submit" class="btn btn-mini btn-primary">
 			API上传
 		</button>
 	</form>
 </div>
-<div class="col-md-4">
-	<table class="table table-hover table-bordered table-condensed table-responsive">
-		<thead>
-			<tr>
-				<th>当前可用Token列表：</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php
-			$key = count($tokenList);
-			for ($x = 0; $x < $key; $x++) {
-				echo '<tr><td>' . $tokenList[$x] . '</td></tr>';
-			} ?>
-		</tbody>
-	</table>
-</div>
-
-<!-- API上传测试
-	<div class="col-md-4">
-		<form action="index.php" method="post" enctype="multipart/form-data">
-		<input type="file" class="form-control"  accept="image/*" name="image" >		
-		<input type="text" name = "token" placeholder="请输入Token"/>
-		<button type="submit" class="btn btn-mini btn-primary">API上传测试</button>
-		</form>	
-	</div>
-</div>
--->
-
-
 </div>
 <script>
 	var oBtn = document.getElementById('del');

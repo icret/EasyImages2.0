@@ -1,4 +1,0 @@
-RewriteEngine on RewriteCond % !^$
-RewriteRule i/(.*).(php)$ – [F]
-RewriteRule public/(.*).(php)$ – [F]
-RewriteRule config/(.*).(php)$ – [F]
