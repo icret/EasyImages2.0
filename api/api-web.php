@@ -80,10 +80,10 @@ if (!is_online()) {
 	</div>
 	<div class="col-md-4">
 	<div id="title" style="margin: 10px;"></div>
-		<form class="form-condensed" method="get" action="' . $_SERVER['PHP_SELF'] . '" id="form" name="delForm" onSubmit="getStr();">
+		<form class="form-condensed" method="get" action="del.php" id="form" name="delForm" onSubmit="getStr();">
 			<div class="form-group">
 				<label>
-					删除图片
+					删除图片 - 格式：<br /><code>https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg</code>
 				</label>
 				<input type="url" name="url" class="form-control" id="del" placeholder="请输入图片链接" />
 			</div>
