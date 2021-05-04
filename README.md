@@ -190,7 +190,7 @@ RewriteRule config/(.*).(php)$ – [F]
 </details>
 
 <br />
-[EasyImage 1.6.4版本](https://github.com/icret/easyImages)（不建议再使用）
+[EasyImage 1.6.4版本](https://github.com/icret/easyImages)    不建议再使用
 <hr />
 
 #### 兼容性
