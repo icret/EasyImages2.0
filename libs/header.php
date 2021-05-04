@@ -45,7 +45,7 @@ echo '<!DOCTYPE html>
 			<a href="//' . $_SERVER['HTTP_HOST'] . '/libs/list.php">
 				<i class="icon icon-list"> 广场</i>
 				<span class="label label-badge label-success">
-					' . $config['listNumber'] . '</span>
+					' . getFileNumber(__DIR__ . '/../' . config_path()). '</span>
 			</a>
 		</li>
 		<li class="">

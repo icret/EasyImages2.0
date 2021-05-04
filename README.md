@@ -84,20 +84,20 @@ RewriteRule config/(.*).(php)$ – [F]
 ```
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
-<details><summary><mark><font color=darkred>点击查看更新日志</font></mark></summary>
+<details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
 * 2021-5-2 v2.1
 - 将tinyfilemanager配置文件简单翻译并集成到config.php
 - 增加底部自定义信息
 - 增加检测PHP环境，给与提示
-- 增加删除图片url（不会保存链接）
+- 增加删除图片url（服务器不会保存删除链接）
 - 恢复随机浏览20张上传图片 可以设定浏览数量和关闭浏览
 - - 随机浏览图片可以在线删除
 - 可以使用 https://img.545141.com/libs/list.php?num=100 定义浏览数量
 - 修复一些调用
 - 更改二维码显示方式
-- 开启api 并以token方式上传
-- 修复check.php相关文件
+- 开启api 需要token验证上传
+- 重构并修复check.php相关文件
 - 重构部分代码
 - 更改目录结构
 - 增加安全性配置
@@ -190,7 +190,7 @@ RewriteRule config/(.*).(php)$ – [F]
 </details>
 
 <br />
-[EasyImage 1.6.4版本](https://github.com/icret/easyImages)    不建议再使用
+不建议再使用 [EasyImage 1.6.4版本](https://github.com/icret/easyImages)
 <hr />
 
 #### 兼容性
