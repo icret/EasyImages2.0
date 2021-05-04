@@ -127,6 +127,22 @@ if (!is_online()) {
 		</button>
 	</form>
 </div>
+<div class="col-md-4">
+	<table class="table table-hover table-bordered table-condensed table-responsive">
+		<thead>
+			<tr>
+				<th>当前可用Token列表：</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+			$key = count($tokenList);
+			for ($x = 0; $x < $key; $x++) {
+				echo '<tr><td>' . $tokenList[$x] . '</td></tr>';
+			} ?>
+		</tbody>
+	</table>
+</div>
 
 <!-- API上传测试
 	<div class="col-md-4">
