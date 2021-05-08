@@ -12,7 +12,7 @@ if ($handle->uploaded) {
     // 文件命名
     $handle->file_new_name_body = imgName();
     // 最大上传限制
-    //$handle->file_max_sizes = $config['maxSize'];
+    $handle->file_max_sizes = $config['maxSize'];
     // 最大宽度
     $handle->image_max_width = $config['maxWidth'];
     // 最大高度
@@ -23,15 +23,13 @@ if ($handle->uploaded) {
     $handle->image_min_height = $config['minHeight'];
     // 转换图片为指定格式
     $handle->image_convert = $config['imgConvert'];
-    
-    /* 等比例缩减图片
+
+    //等比例缩减图片
     if ($config['imgRatio']) {
         $handle->image_resize = true;
         $handle->image_x = $config['image_x'];
         $handle->image_y = $config['image_y'];
     }
-    */
-    
     // 存储图片路径:images/201807/
     $handle->process(__DIR__ . config_path());
 
@@ -75,6 +73,8 @@ if ($handle->uploaded) {
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
+
+
         // 上传成功后返回json数据
         $imageUrl = $config['domain'] . config_path() . $handle->file_dst_name;
         $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);

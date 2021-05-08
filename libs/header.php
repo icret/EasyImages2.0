@@ -34,8 +34,15 @@ echo '<!DOCTYPE html>
 			<i class="icon icon-home"> 首页</i>
 			</a>
 		</li>
+		<!-- 管理
+		<li>
+			<a href="//' . $_SERVER['HTTP_HOST'] . '/tinyfilemanager.php?p=' . date('Y/m/d') . '" target="_blank">
+				管理
+			</a>
+		</li>
+		-->
 		<li class="' . getActive('list') . '">
-			<a href="//' . $_SERVER['HTTP_HOST'] . '/libs/list.php?date='. date('Y/m/d/').'&num='.$config['listNumber'].'">
+			<a href="//' . $_SERVER['HTTP_HOST'] . '/libs/list.php">
 				<i class="icon icon-list"> 广场</i>
 				<span class="label label-badge label-success">
 					' . getFileNumber(__DIR__ . '/../' . config_path()) . '</span>
@@ -46,6 +53,25 @@ echo '<!DOCTYPE html>
 			<i class="icon icon-github "> 源码下载</i>
 			</a>
 		</li>
+		<!-- 弹窗
+		<li>
+		<a class="dropdown-toggle" data-toggle="dropdown" href="###">更多 <span class="caret"></span></a>
+		<ul class="dropdown-menu">
+		<li>
+		<a href="">任务</a>
+		</li>
+		<li>
+		<a href="">Bug</a>
+		</li>
+		<li>
+		<a href="">需求</a>
+		</li>
+		<li>
+		<a href="">用例</a>
+		</li>
+		</ul>
+		</li>
+		-->
 	</ul>
 </div>
 <!-- 顶部导航栏END -->

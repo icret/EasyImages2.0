@@ -8,17 +8,11 @@ require_once '../libs/function.php';
 
 /*//////////////////////////////////////////////////////////*/
 
-// 根据token查找用户ID
+// 查找token
 if (isset($_POST['token'])) {
-	$getID = '用户ID：' . getID($_POST['token']);
+	$getID = '用户ID:' . getID($_POST['token']);
 } else {
 	$getID = null;
-}
-// 根据用户ID查找token
-if (isset($_POST['id'])) {
-	$getToken = '用户token：' . getIDToken($_POST['id']);
-} else {
-	$getToken = null;
 }
 
 // 提交登录
@@ -83,20 +77,6 @@ if (!is_online()) {
 				查找
 			</button>
 		</form>
-	</div>	
-	<div class="col-md-4">
-	<div id="title" style="margin: 10px;"></div>
-		<form class="form-condensed" action="' . $_SERVER['PHP_SELF'] . '" method="post">
-			<div class="form-group">
-				<label>
-				根据ID查找用户Token
-				</label>
-				<input type="text" name="id" class="form-control"  placeholder="请输入用户ID"  value="' . $getToken . '">
-			</div>
-			<button type="submit" class="btn btn-mini btn-primary">
-				查找
-			</button>
-		</form>
 	</div>
 	<div class="col-md-4">
 	<div id="title" style="margin: 10px;"></div>
@@ -107,6 +87,7 @@ if (!is_online()) {
 				</label>
 				<input type="url" name="url" class="form-control" id="del" placeholder="请输入图片链接" />
 			</div>
+
 			<button type="submit" class="btn btn-mini btn-primary">
 				删除
 			</button>
@@ -159,23 +140,4 @@ if (!is_online()) {
 	}
 	*/
 </script>
-<div class="col-md-4">
-	<table class="table table-hover table-bordered table-condensed table-responsive">
-		<thead>
-			<tr>
-				<th>当前Token列表：</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php
-			if (is_online()) {
-				foreach ($tokenList as $value) {
-					echo '<tr><td>' . $value . '</td></tr>';
-				}
-			}
-			?>
-		</tbody>
-	</table>
-</div>
-
 <?php require_once './../libs/footer.php';

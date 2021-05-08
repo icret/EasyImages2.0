@@ -58,11 +58,10 @@ function mustLogin()
 }
 
 // 检查配置文件中目录是否存在是否可写并创建相应目录
-function config_path($path = null)
+function config_path()
 {
 	global $config;
-	$path = $path ?? date('Y/m/d/');
-	$img_path = $config['path'] . $path;
+	$img_path = $config['path'] . date('Y/m/d/');
 
 	if (!is_dir($img_path)) {
 		@mkdir($img_path, 0755, true);
@@ -308,10 +307,10 @@ function urlHash($data, $mode)
 	$key =  $config['password'];
 	$iv = 'sciCuBC7orQtDhTO';
 	if ($mode) {
-		$decode =  openssl_decrypt(base64_decode($data), "AES-128-CBC", $key, 0, $iv);
+		$decode =  openssl_decrypt(base64_decode($data), "AES-128-CBC", $key, 0,$iv);
 		return $decode;
 	} else {
-		$encode = base64_encode(openssl_encrypt($data, "AES-128-CBC", $key, 0, $iv));
+		$encode = base64_encode(openssl_encrypt($data, "AES-128-CBC", $key, 0,$iv));
 		return $encode;
 	}
 }
@@ -413,24 +412,5 @@ function checkEnv($mode)
 		</script>
 		';
 		}
-	}
-}
-
-// 前端改变图片长宽
-function imgRatio()
-{
-	global $config;
-	if ($config['imgRatio']) {
-		$image_x =  $config['image_x'];
-		$image_y =  $config['image_y'];
-		echo '
-		resize:{
-			width: ' . $image_x . ',
-			height: ' . $image_y . ',
-			preserve_headers: false,	// 是否保留图片的元数据
-		},
-		';
-	} else {
-		return null;
 	}
 }

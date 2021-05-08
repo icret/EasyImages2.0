@@ -32,21 +32,9 @@ function getID($token)
     global $tokenList;
     $token = preg_replace('/[\W]/', '', $token); // 过滤非字母数字，删除空格
     $key = array_search($token, $tokenList);
-    if ($key >= 0) {
+    if ($key) {
         return $key;
     } else {
         return ('没有这个用户ID');
-    }
-};
-
-// 通过ID查找用户Token
-function getIDToken($id)
-{
-    global $tokenList;
-    $id = preg_replace('/[\W]/', '', $id); // 过滤非字母数字，删除空格
-    foreach ($tokenList as $key => $value) {
-        if ($key == $id) {
-            return $value;
-        }
     }
 };

@@ -60,7 +60,7 @@ $config = array(
   // 登录上传和后台管理密码,管理用户名为：admin
   'password' => 'admin@123',
   // 是否开启API上传 开启:true 关闭:false
-  'apiStatus' => false,
+  'apiStatus' => true,
   // 是否开启水印:0关闭，1文字水印，2图片水印 不能使用动态gif添加水印
   'watermark' => 0,
   // 水印文字内容
@@ -81,7 +81,7 @@ $config = array(
   // 图片水印路径 支持GIF,JPG,BMP,PNG和PNG alpha
   'waterImg' => 'public/images/watermark.png',
   // 允许上传的图片扩展名
-  'extensions' => ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'svg', 'webp', 'jpeg', 'tga', 'svg', 'ico'],
+  'extensions' => array('bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'svg', 'webp', 'jpeg', 'tga', 'svg', 'ico'),
   // 转换图片为指定格式 可选：''|'png'|'jpeg'|'gif'|'bmp';默认值：''
   'imgConvert' => '',
   // 最大上传宽度
@@ -92,12 +92,12 @@ $config = array(
   'minWidth' => 5,
   // 允许上传的最小高度
   'minHeight' => 5,
-  // 改变图片宽高 宽度和高度请设置 image_x image_y 开启:true 关闭:false 关闭下image_x和image_y设置不生效
+  // 等比例缩小图片 宽度和高度请设置 image_x image_y 开启:true 关闭:false 关闭下image_x和image_y设置不生效
   'imgRatio' => false,
   // 缩减的最大高度
-  'image_x' => 1000,
+  'image_x' => 10240,
   // 缩减的最大宽度
-  'image_y' => 800,
+  'image_y' => 10240,
   // 开启静态文件CDN 开启:true 关闭:false
   'static_cdn' => false,
   // 开启顶部广告 开启:true 关闭:false 如果想添加或修改广告请到 public/static/ad_top.html
@@ -108,7 +108,7 @@ $config = array(
   'showSwitch' => true,
   // 默认预览数量，可在网址后填写参数实时更改预览数量 如：https://img.545141.com/libs/list.php?num=3
   'listNumber' => 20,
-  // 上传框底部自定义信息，仅支持html格式 下面是举例：
+  // 上传框底部自定义信息，仅支持html格式
   'customize' => '
     <!--打赏
     <div id="ad" class="col-md-12" align="center" style="padding:5px;">
@@ -120,17 +120,19 @@ $config = array(
     -->
     <!-- QQ邮箱、QQ群
     <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=cR0UHB4fGBwxAABfEh4c">
-      <i class="icon icon-envelope-alt">联系邮箱 </i></span>
-    </a> 
+      <span class="label label-primary label-outline">
+      <i class="icon icon-envelope-alt">联系邮箱</i></span>
+    </a>	
     <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f">
+      <span class="label label-primary label-outline">
         <i class="icon icon-qq">加入QQ群</i></span>
     </a>
-    --> 
+    -->	       
     ',
   // 扩展与基本设置检测 开启:true 关闭:false
   'checkEnv' => true,
   // 当前版本
-  'version' => '2.1.1',
+  'version' => '2.1.0',
 );
 
 
