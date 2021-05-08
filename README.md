@@ -28,18 +28,15 @@
 #### 注意：
 
 1. 安装之前先使用浏览器访问check.php检查扩展是否都安装！
-2. 使用前请注意先修改config.php中的domain域名。
-3. 请将所有文件必须赋予0755权限，或者赋予www权限
-4. 上传后必须修改config.php的位置：
+2. 请将所有文件赋予0755权限或www权限
+3. 上传后必须修改config.php的位置：
    - domain 当前图片域名
    - password 登录管理密码！
-5. 如果无法登陆管理界面或上传图片，请先打开check.php检查扩展或者使用phpinfo检查。
-6. 可以使用浏览器的 F12调试模式->console查看错误
-7. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
-8. js不要设置分片上传大小，此会导致部分图片上传失败。
-9. 默认我会给你设置成最优方案，api上传默认关闭
-10. 下载源码后可以删除一些文件：README.md,check.php,LICENSE
-11. 欢迎加群：[623688684](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
+4. 如果无法登陆管理界面或上传图片，请先打开check.php检查扩展或者使用phpinfo检查。
+5. 可以使用浏览器的 F12调试模式->console查看错误
+6. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
+7. 下载源码后可以删除一些文件：README.md,check.php,LICENSE
+8. 欢迎加群：[623688684](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
 #### API上传示例：
 参数：
@@ -60,7 +57,7 @@ html form上传示例:
 api上传成功后返回json：
 
 ```json
-参数:"sucess"上传成功 "failed" 上传失败 "url" 图片链接  "del" 删除链接
+// 参数:"sucess"上传成功 "url" 图片链接  "del" 删除链接 "failed" 上传失败 "message" 错误信息
 {"result":"success","url":"http:\/\/192.168.1.15\/i\/2021\/05\/03\/u34au6_2.jpg","del":"http:\/\/192.168.1.15\/api\/api-web.php?hash=XH%BB2Z%D1%08%D8%E2%D7%048%DFJ%86n%C0%06%DAD%DCP%3E%CF%C4%1B%60%E5%C4Pli"}
 ```
 
@@ -85,6 +82,15 @@ RewriteRule config/(.*).(php)$ – [F]
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+
+* 2021-5-8 v2.1.1
+- 修复上传界面上传失败提示信息bug
+- 浏览页面重构
+- 删除页面添加登录删除
+- 调整首页显示
+- 将调整图片长宽放置前端，减小资源开销
+- 其他小调整
+
 
 * 2021-5-2 v2.1
 - 将tinyfilemanager配置文件简单翻译并集成到config.php

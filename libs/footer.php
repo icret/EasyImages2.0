@@ -48,8 +48,8 @@
         makeCode();
       }
     });
-</script>
-<script>
+    
+  // NProgress
   $("body").show();
   $(".version").text(NProgress.version);
   NProgress.start();
@@ -74,29 +74,23 @@
 <script src="../public/static/hm.js"></script>
 <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php echo showAD('bot'); ?>
   <p><?php echo $config['customize']; ?></p>
+  
+ 
+  <hr>
+  <p>请勿上传违反中国政策的图片<i class="icon icon-smile"></i> </p>
   <div>
-    <p>
-      <span class="label label-dot label-outline">Default</span>
-      <span class="label label-dot label-primary label-outline">Primary</span>
-      <span class="label label-dot label-success label-outline">Success</span>
-      <span class="label label-dot label-info label-outline">Info</span>
-      <span class="label label-dot label-warning label-outline">Warning</span>
-      <span class="label label-dot label-danger label-outline">Danger</span>
-    </p>
     <!-- 对话框触发按钮 -->
     <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">
-      <span class="label"><i class="icon icon-qrcode"></i> 二维码</a></span>
-    <a href="/tinyfilemanager.php?p=<?php echo date('Y/m/d'); ?>" target="_blank"><span class="label"><i class="icon icon-desktop"></i> 管理</a></span>
-    <a href="/api/api-web.php" target="_blank"><span class="label"><i class="icon icon-key"></i> API</a></span>
+      <i class="icon icon-qrcode"></i>二维码 </a>
+    <a href="/tinyfilemanager.php?p=<?php echo date('Y/m/d'); ?>" target="_blank" ><i class="icon icon-desktop"></i>管理 </a>
+    <a href="/api/api-web.php" target="_blank"><i class="icon icon-key"></i>API </a>
     <?php
     if (is_online()) {
-      echo '<a href="/libs/logout.php" ><span class="label"><i class="icon icon-signout"></i> 退出</a></span>';
+      echo '<a href="/libs/logout.php" ><i class="icon icon-signout"></i>退出 </a>';
     } else {
-      echo '<a href="/libs/login.php" ><span class="label"><i class="icon icon-user"></i> 登录</a></span>';
+      echo '<a href="/libs/login.php" ><i class="icon icon-user"></i>登录 </a>';
     } ?>
   </div>
-  <hr>
-  <p>请勿上传违反中国政策的图片<i class="icon icon-smile"></i></p>
   <?php echo 'Copyright © 2018-' . date('Y'); ?>
   <a href="https://img.545141.com/" target="_blank">EasyImage</a> By
   <a href="https://www.545141.com/902.html" target="_blank">Icret</a> Ver:<a href="https://github.com/icret/easyImages2.0" target="_blank"><?php echo $config['version']; ?> <i class="icon icon-github"></i></a>
