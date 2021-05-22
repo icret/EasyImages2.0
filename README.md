@@ -84,7 +84,7 @@ RewriteRule config/(.*).(php)$ – [F]
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
-* 2021-5-8 v2.2.0
+* 2021-5-22 v2.2.0
 - 增加根目录静态属性
 - 增加浏览页面懒加载
 - 增加浏览页面启用选定日期查看图片
