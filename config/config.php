@@ -62,7 +62,7 @@ $config = array(
   // 每次最多上传图片数
   'maxUploadFiles' => 30,
   // 是否开启登录上传 开启:true 关闭:false
-  'mustLogin' => true,
+  'mustLogin' => false,
   // 是否开启tinyfilemanager文件管理 开启:true 关闭:false
   'tinyfilemanager' => true,
   // 登录上传和后台管理密码,管理用户名为：admin
