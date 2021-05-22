@@ -61,7 +61,9 @@ function mustLogin()
 function config_path($path = null)
 {
 	global $config;
-	$path = $path ?? date('Y/m/d/');
+	// php5.6 兼容写法：
+	$path = isset($path) ? $path : date('Y/m/d/');
+	// php7.0 $path = $path ?? date('Y/m/d/');
 	$img_path = $config['path'] . $path;
 
 	if (!is_dir($img_path)) {
@@ -120,16 +122,16 @@ function static_cdn()
 	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.1.0/public/static/hm.js"></script>';
 	} else {
 		// 本地文件
-		return '<link href="../public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
-    <link href="../public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
-	<link href="../public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
-    <script src="../public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
-    <script src="../public/static/zui/js/zui.min.js?v1.9.2"></script>
-    <script src="../public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
-    <script src="../public/static/qrcode.min.js?v2.0"></script>	
-	<script src="../public/static/hm.js"></script>
-    <script src="../public/static/zui/lib/clipboard/clipboard.min.js?vv1.5.5"></script>
-	<script src="../public/static/nprogress.min.js"></script>';
+		return '<link href="/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
+    <link href="/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
+	<link href="/public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
+    <script src="/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
+    <script src="/public/static/zui/js/zui.min.js?v1.9.2"></script>
+    <script src="/public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
+    <script src="/public/static/qrcode.min.js?v2.0"></script>	
+	<script src="/public/static/hm.js"></script>
+    <script src="/public/static/zui/lib/clipboard/clipboard.min.js?vv1.5.5"></script>
+	<script src="/public/static/nprogress.min.js"></script>';
 	}
 }
 
@@ -142,7 +144,7 @@ function tinyfilemanager()
 		exit;
 	}
 }
-
+/*
 // 获取允许上传的扩展名
 function getExtensions()
 {
@@ -153,7 +155,7 @@ function getExtensions()
 	}
 	return rtrim($mime, ',');
 }
-
+*/
 // 获取目录大小 如果目录文件较多将很费时
 function getDirectorySize($path)
 {
@@ -317,12 +319,21 @@ function urlHash($data, $mode)
 }
 
 // 删除指定文件
-function getDel($url)
+function getDel($url, $type)
 {
-	// url本地化
-	$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
-	$url = urldecode(trim($url));
-	$url = $_SERVER['DOCUMENT_ROOT'] . $url;
+	if ($type == 'url') {
+		// url本地化
+		$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
+		$url = urldecode(trim($url));
+		$url = $_SERVER['DOCUMENT_ROOT'] . $url;
+	}
+	if ($type == 'hash') {
+		// url本地化
+		$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
+		$url = urldecode(trim($url));
+		$url = APP_ROOT . $url;
+	}
+
 
 	// 文件是否存在
 	if (is_file($url)) {
@@ -373,9 +384,9 @@ function is_online()
  * 需检测的扩展：'fileinfo', 'iconv', 'gd', 'mbstring', 'openssl','zip',
  * zip 扩展不是必须的，但会影响tinyfilemanager文件压缩(本次不检测)。
  * 
- * 检测是否修改默认密码
- * 
  * 检测是否更改默认域名
+ * 
+ * 检测是否修改默认密码
  */
 function checkEnv($mode)
 {
@@ -394,6 +405,7 @@ function checkEnv($mode)
 		';
 			}
 		}
+
 		// 检测是否更改默认域名
 		$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.1.15');
 		if (strstr($url, $_SERVER['HTTP_HOST'])) {
@@ -404,7 +416,7 @@ function checkEnv($mode)
 		</script>
 		';
 		}
-		// 检测是否更改默认密码
+		// 检测是否修改默认密码
 		if ($config['password'] === 'admin@123') {
 			echo '
 		<script>
@@ -432,5 +444,60 @@ function imgRatio()
 		';
 	} else {
 		return null;
+	}
+}
+
+/**
+ * 定时获取GitHub 最新版本
+ */
+
+function getVersion()
+{
+	global $config;
+
+	if ($config['checkEnv']) {
+		require_once APP_ROOT . '/libs/class.version.php';
+		// 获取版本地址
+		$url = "https://api.github.com/repositories/188228357/releases/latest";
+		$getVersion = new getVerson($url);
+
+		$now = date('dH'); // 当前日期时间
+		$get_ver_day = array('1006', '2501');   // 检测日期的时间
+
+		foreach ($get_ver_day as $day) {
+			if (empty($getVersion->readJson())) { // 不存在就下载
+				$getVersion->downJson();
+			} else if ($day == $now) { // 是否在需要更新的日期
+				$getVersion->downJson();
+			} elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
+				return null;
+			} else { // 返回版本
+				return ':' . $getVersion->readJson();
+			}
+		}
+	} else {
+		return null;
+	}
+}
+
+// 删除非空目录
+function deldir($dir)
+{
+	if (file_exists($dir)) {
+		$files = scandir($dir);
+		foreach ($files as $file) {
+			if ($file != '.' && $file != '..') {
+				$path = $dir . '/' . $file;
+				if (is_dir($path)) {
+					deldir($path);
+				} else {
+					unlink($path);
+				}
+			}
+		}
+		rmdir($dir);
+		return true;
+	} else {
+		return false;
 	}
 }

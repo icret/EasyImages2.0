@@ -59,8 +59,8 @@ class Imgs
 
         #  创建画布
         $temp_img = imagecreatetruecolor($temp_w, $temp_h);
-        @imagealphablending($temp_img,false);//这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;3-2
-        @imagesavealpha($temp_img,true);//这里很重要,意思是不要丢了$thumb图像的透明色;3-3
+        @imagealphablending($temp_img, false); //这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;3-2
+        @imagesavealpha($temp_img, true); //这里很重要,意思是不要丢了$thumb图像的透明色;3-3
         switch ($info[2]) {
             case 1:
                 $im = imagecreatefromgif($src);
@@ -74,7 +74,7 @@ class Imgs
                 break;
             case 3:
                 $im = imagecreatefrompng($src);
-                imagesavealpha($im,true);//这里很重要;3-1
+                imagesavealpha($im, true); //这里很重要;3-1
                 imagecopyresampled($temp_img, $im, 0, 0, 0, 0, $temp_w, $temp_h, $width, $height);
                 imagepng($temp_img, $savepath, 100);
                 break;
@@ -117,7 +117,7 @@ class Imgs
         );
         $def = array_merge($def, $arr);
         /**
-        判断$src是不是图片，不是就创建画布
+         * 判断$src是不是图片，不是就创建画布
          */
         if (!file_exists($src)) {
             if (empty($def['name'])) {
@@ -127,16 +127,18 @@ class Imgs
             # 计算画布宽高
             $obj = explode(',', $src);
             if (count($obj) != 2) {
-                return array('code' => false,
-                    'msg' => '请给正确的宽高，或你给的不是一个有效的地址！');
+                return array(
+                    'code' => false,
+                    'msg' => '请给正确的宽高，或你给的不是一个有效的地址！'
+                );
             }
 
             $srcImg_w = is_numeric($obj[0]) ? $obj[0] : 400;
             $srcImg_h = is_numeric($obj[1]) ? $obj[1] : 300;
             # 创建透明画布 一共3个步骤，在下边有标记
             $dst_img = @imagecreatetruecolor($srcImg_w, $srcImg_h);
-            @imagealphablending($dst_img,false);//这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;3-2
-            @imagesavealpha($dst_img,true);//这里很重要,意思是不要丢了$thumb图像的透明色;3-3
+            @imagealphablending($dst_img, false); //这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;3-2
+            @imagesavealpha($dst_img, true); //这里很重要,意思是不要丢了$thumb图像的透明色;3-3
         } else {
             #  获取图片信息
             $srcInfo = @getimagesize($src);
@@ -158,7 +160,7 @@ class Imgs
 
                 case 3:
                     $dst_img = imagecreatefrompng($src);
-                    imagesavealpha($dst_img,true);//这里很重要;3-1
+                    imagesavealpha($dst_img, true); //这里很重要;3-1
                     break;
 
                 default:
@@ -167,7 +169,7 @@ class Imgs
             }
         }
         /**
-        计算出水印宽高
+         * 计算出水印宽高
          */
         if (!file_exists($def['res'])) {
             if (!file_exists($def['font'])) {
@@ -207,7 +209,7 @@ class Imgs
             $logoh = $res_h;
         }
         /**
-        计算水印显示位置
+         * 计算水印显示位置
          */
         if ($def['pos'] == 0) {
             $def['pos'] = rand(1, 9);
@@ -264,7 +266,7 @@ class Imgs
                 exit;
         }
         /**
-        把图片水印或文字水印，加到目标图片中
+         * 把图片水印或文字水印，加到目标图片中
          */
         if (file_exists($def['res'])) {
             imagecopy($dst_img, $markim, $x, $y, 0, 0, $logow, $logoh);
@@ -284,14 +286,22 @@ class Imgs
             }
 
             $def['color'] = imagecolorallocatealpha($dst_img, $rgb[0], $rgb[1], $rgb[2], $rgb[3]);
-            imagettftext($dst_img, $def['fontSize'], 0, $x,
-                $y, $def['color'], $def['font'], $def['res']);
+            imagettftext(
+                $dst_img,
+                $def['fontSize'],
+                0,
+                $x,
+                $y,
+                $def['color'],
+                $def['font'],
+                $def['res']
+            );
         }
         /**
-        保存处理过的图片（有水印了的图片）
+         * 保存处理过的图片（有水印了的图片）
          */
         $name = explode('.', $def['name']);
-		$num = count($name)-1;		
+        $num = count($name) - 1;
         switch (strtolower($name[$num])) {
             case 'jpeg':
                 imagejpeg($dst_img, $def['name']);

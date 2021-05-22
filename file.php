@@ -1,8 +1,8 @@
+
 <?php
 require __DIR__ . '/libs/function.php';
-require __DIR__ . '/libs/class.upload.php';
-require __DIR__ . '/libs/WaterMask.php';
-
+require APP_ROOT . '/libs/class.upload.php';
+require APP_ROOT . '/libs/WaterMask.php';
 
 $handle = new Upload($_FILES['file'], 'zh_CN');
 
@@ -23,17 +23,17 @@ if ($handle->uploaded) {
     $handle->image_min_height = $config['minHeight'];
     // 转换图片为指定格式
     $handle->image_convert = $config['imgConvert'];
-    
-    /* 等比例缩减图片
+
+    /* 等比例缩减图片 放到前端了
     if ($config['imgRatio']) {
         $handle->image_resize = true;
         $handle->image_x = $config['image_x'];
         $handle->image_y = $config['image_y'];
     }
     */
-    
+
     // 存储图片路径:images/201807/
-    $handle->process(__DIR__ . config_path());
+    $handle->process(APP_ROOT . config_path());
 
     // 设置水印
     if ($config['watermark'] > 0) {
@@ -72,12 +72,20 @@ if ($handle->uploaded) {
                 break;
         }
     }
+
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
         // 上传成功后返回json数据
-        $imageUrl = $config['domain'] . config_path() . $handle->file_dst_name;
-        $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
+
+        // 判断PHP版本启用删除
+        $ver = substr(PHP_VERSION, 0, 3);
+        if ($ver >= '7.0') {
+            $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        } else {
+            $delUrl = 'PHP≥7.0 才能启用删除！';
+        }
 
         $reJson = array(
             "result" => 'success',
@@ -94,5 +102,17 @@ if ($handle->uploaded) {
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
     }
+
+    // 压缩图片 后压缩模式，不影响前台输出速度
+    if (!isAnimatedGif($handle->file_dst_pathname))
+        if ($config['compress']) {
+            require 'libs/compress/Imagick/class.Imgcompress.php';
+            $img = new Imgcompress($handle->file_dst_pathname, 1);
+            $img->compressImg($handle->file_dst_pathname);
+            // 释放
+            ob_flush();
+            flush();
+        }
+
     unset($handle);
 }

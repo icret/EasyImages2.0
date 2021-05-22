@@ -1,5 +1,5 @@
 <?php
-require_once './header.php';
+require_once 'header.php';
 
 if (isset($_COOKIE['admin']) and $_COOKIE['admin'] == md5($config['password'])) {
     setcookie("admin", null, time() - 1, '/');
@@ -23,4 +23,4 @@ if (isset($_COOKIE['admin']) and $_COOKIE['admin'] == md5($config['password'])) 
         ';
 }
 
-require_once './footer.php';
+require_once 'footer.php';

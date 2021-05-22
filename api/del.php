@@ -3,8 +3,8 @@
 /**
  * 删除文件页面
  */
-require_once $_SERVER['DOCUMENT_ROOT'] . '/libs/header.php';
-require_once '../libs/function.php';
+require_once '../libs/header.php';
+require_once APP_ROOT . '/libs/function.php';
 echo '<div class="col-md-4 col-md-offset-4">
 	<div id="title" style="margin: 10px;"></div>
 
@@ -13,7 +13,7 @@ echo '<div class="col-md-4 col-md-offset-4">
                 <label for="exampleInputInviteCode3">删除图片-格式：</label>
                 <input type="text" class="form-control" id="exampleInputInviteCode3" name="url" placeholder="https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg">
             </div>
-            <button type="submit" class="btn btn-primary">删除</button>
+            <button type="submit" class="btn btn-danger">删除</button>
         </form>
 	</div>
     ';
@@ -37,15 +37,15 @@ if (empty($_REQUEST)) {
 
 // 解密删除
 if (isset($_GET['hash'])) {
-    $delFile = $_GET['hash'];
-    $delFile = urlHash($delFile, 1);
-    getDel($delFile);
+    $delHash = $_GET['hash'];
+    $delHash = urlHash($delHash, 1);
+    getDel($delHash, 'hash');
 }
 
 // 检查登录后再处理url删除请求
 if (is_online()) {
     if (isset($_GET['url'])) {
-        getDel($_GET['url']);
+        getDel($_GET['url'], 'url');
     }
 } else {
     if (isset($_GET['url'])) {
@@ -60,9 +60,12 @@ if (is_online()) {
     }
 }
 
-require_once '../libs/footer.php';
+require_once APP_ROOT . '/libs/footer.php';
 ?>
 <script>
+    // 修改网页标题
+    document.title = "删除图片 - <?php echo $config['title']; ?>";
+
     var oBtn = document.getElementById('del');
     var oTi = document.getElementById('title');
     if ('oninput' in oBtn) {
@@ -74,13 +77,4 @@ require_once '../libs/footer.php';
     function getWord() {
         oTi.innerHTML = '<img src="' + oBtn.value + '" width="200" class="img-rounded" /><br />';
     }
-    /** 
-    // 动态修改请求地址
-    function getStr(string, str) {
-        string = oBtn.value;
-        str = 'images';
-        var str_before = string.split(str)[0];
-        document.delForm.action = str_before + 'del.php';
-    }
-    */
 </script>

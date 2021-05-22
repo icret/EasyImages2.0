@@ -48,7 +48,7 @@
         makeCode();
       }
     });
-    
+
   // NProgress
   $("body").show();
   $(".version").text(NProgress.version);
@@ -74,26 +74,29 @@
 <script src="../public/static/hm.js"></script>
 <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php echo showAD('bot'); ?>
   <p><?php echo $config['customize']; ?></p>
-  
- 
+
+
   <hr>
   <p>请勿上传违反中国政策的图片<i class="icon icon-smile"></i> </p>
   <div>
     <!-- 对话框触发按钮 -->
     <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">
       <i class="icon icon-qrcode"></i>二维码 </a>
-    <a href="/tinyfilemanager.php?p=<?php echo date('Y/m/d'); ?>" target="_blank" ><i class="icon icon-desktop"></i>管理 </a>
-    <a href="/api/api-web.php" target="_blank"><i class="icon icon-key"></i>API </a>
+    <a href="<?php echo $config['domain']; ?>/tinyfilemanager.php?p=<?php echo date('Y/m/d'); ?>" target="_blank"><i class="icon icon-desktop"></i>管理 </a>
+    <a href="<?php echo $config['domain']; ?>/api/apiTest/" target="_blank"><i class="icon icon-key"></i>API </a>
     <?php
     if (is_online()) {
-      echo '<a href="/libs/logout.php" ><i class="icon icon-signout"></i>退出 </a>';
+      echo '
+      <a href="' . $config['domain'] . '/api/api-web.php" target="_blank"><i class="icon icon-rocket"></i>API管理 </a>
+      <a href="' . $config['domain'] . '/libs/logout.php" ><i class="icon icon-signout"></i>退出 </a>
+      ';
     } else {
-      echo '<a href="/libs/login.php" ><i class="icon icon-user"></i>登录 </a>';
+      echo '<a href="' . $config['domain'] . '/libs/login.php" ><i class="icon icon-user"></i>登录 </a>';
     } ?>
   </div>
   <?php echo 'Copyright © 2018-' . date('Y'); ?>
   <a href="https://img.545141.com/" target="_blank">EasyImage</a> By
-  <a href="https://www.545141.com/902.html" target="_blank">Icret</a> Ver:<a href="https://github.com/icret/easyImages2.0" target="_blank"><?php echo $config['version']; ?> <i class="icon icon-github"></i></a>
+  <a href="https://www.545141.com/902.html" target="_blank">Icret</a> Ver:<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo $config['version']; ?> <i class="icon icon-github"></i><?php echo @getVersion(); ?></a>
 </footer>
 </body>
 

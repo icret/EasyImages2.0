@@ -29,6 +29,8 @@
 @date_default_timezone_set('Asia/Shanghai');
 // 修改内存限制 根据服务器配置选择，低于128M容易出现上传失败，你懂得图片挺占用内存的
 @ini_set('memory_limit', '512M');
+// 定义根目录
+@define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
 
 
 /*---------------图床配置-------------------*/
@@ -42,8 +44,14 @@ $config = array(
   'description' => '简单图床EasyImage是一款支持多文件上传的无数据库图床,可以完美替代PHP多图上传程序，最新html5自适应页面兼容手机电脑，上传后返回图片直链，markdown图片，论坛贴图bbscode链接，简单方便支持一键复制，支持多域名，api上传。',
   // 网站公告
   'tips' => '本站仅做演示用,不定时清理图片，单文件≤5M，每次上传≤30张',
-  // 当前域名,末尾不加"/" 图床域名与图片域名可以不同，比如A域名上传，可以返回B域名链接，A、B需绑定到同一空间下
+  /**
+   * 网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，A、B需绑定到同一空间下
+   * 如果不变的话，下边2个填写成一样的！
+   */
+  // 网站域名,末尾不加"/" 
   'domain' => 'http://192.168.1.15',
+  // 图片链接域名,末尾不加"/"
+  'imgurl' => 'http://192.168.1.15',
   /**
    * 存储路径 前后要加"/" 
    * 可根据Apache/Nginx配置安全，参考：https://www.545141.com/981.html 或 README.md
@@ -54,13 +62,13 @@ $config = array(
   // 每次最多上传图片数
   'maxUploadFiles' => 30,
   // 是否开启登录上传 开启:true 关闭:false
-  'mustLogin' => false,
+  'mustLogin' => true,
   // 是否开启tinyfilemanager文件管理 开启:true 关闭:false
   'tinyfilemanager' => true,
   // 登录上传和后台管理密码,管理用户名为：admin
   'password' => 'admin@123',
   // 是否开启API上传 开启:true 关闭:false
-  'apiStatus' => false,
+  'apiStatus' => true,
   // 是否开启水印:0关闭，1文字水印，2图片水印 不能使用动态gif添加水印
   'watermark' => 0,
   // 水印文字内容
@@ -81,7 +89,9 @@ $config = array(
   // 图片水印路径 支持GIF,JPG,BMP,PNG和PNG alpha
   'waterImg' => 'public/images/watermark.png',
   // 允许上传的图片扩展名
-  'extensions' => ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'svg', 'webp', 'jpeg', 'tga', 'svg', 'ico'],
+  'extensions' => "'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,ico'",
+  // 轻微有损压缩图片 开启:true 关闭:false  * 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向
+  'compress' => true,
   // 转换图片为指定格式 可选：''|'png'|'jpeg'|'gif'|'bmp';默认值：''
   'imgConvert' => '',
   // 最大上传宽度
@@ -127,10 +137,10 @@ $config = array(
     </a>
     --> 
     ',
-  // 扩展与基本设置检测 开启:true 关闭:false
+  // PHP插件检测-安全设置检测-版本检测 开启:true 关闭:false
   'checkEnv' => true,
   // 当前版本
-  'version' => '2.1.1',
+  'version' => '2.2.0',
 );
 
 

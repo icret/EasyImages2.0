@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '/../libs/function.php';
-require __DIR__  . '/../libs/class.upload.php';
-require __DIR__  . '/../libs/WaterMask.php';
-require __DIR__ . '/libs/apiFunction.php';
+require_once __DIR__ . './../libs/function.php';
+require_once APP_ROOT . '/api/libs/apiFunction.php';
+require_once APP_ROOT . '/libs/class.upload.php';
+require_once APP_ROOT . '/config/api_key.php';
 
 // 检查是否开启api上传
 if ($config['apiStatus']) {
@@ -14,8 +14,6 @@ if ($config['apiStatus']) {
 // 检查api合法性
 checkToken($_POST['token']);
 $token = $_POST['token'];
-
-
 
 $handle = new Upload($_FILES['image'], 'zh_CN');
 
@@ -87,11 +85,9 @@ if ($handle->uploaded) {
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
-
-
         // 上传成功后返回json数据
-        $imageUrl = $config['domain'] . config_path() . $handle->file_dst_name;
-        $delUrl = $config['domain'] . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
+        $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
 
         $reJson = array(
             "result" => 'success',
@@ -108,5 +104,17 @@ if ($handle->uploaded) {
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
     }
+
+    // 压缩图片 后压缩模式，不影响前台输出速度
+    if (!isAnimatedGif($handle->file_dst_pathname))
+        if ($config['compress']) {
+            require '../libs/compress/Imagick/class.Imgcompress.php';
+            $img = new Imgcompress($handle->file_dst_pathname, 1);
+            $img->compressImg($handle->file_dst_pathname);
+            // 释放
+            ob_flush();
+            flush();
+        }
+
     unset($handle);
 }

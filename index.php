@@ -1,11 +1,10 @@
 <?php
-require_once './libs/header.php';
+require_once 'libs/header.php';
 
 // 公告
 if (isset($config['tips'])) {
   echo '<ul style="list-style: none;margin:1px 1px 30px 1px;"><li class="icon icon-dot-circle text-muted"> ' . $config['tips'] . '</li></ul>';
 }
-
 // 检查登录
 mustLogin();
 ?>
@@ -46,7 +45,7 @@ mustLogin();
           <a href="#" data-target="#tab2Content5" data-toggle="tab">删除</a>
         </li>
       </ul>
-      <div class="tab-content" align="right">
+      <div class="tab-content"  style="text-align:right">
         <div class="tab-pane fade active in" id="tab2Content1">
           <textarea class="form-control" style="text-align: center;min-height: 100px;" id="links" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-repeat"></i> 刷新</button>
@@ -94,25 +93,19 @@ mustLogin();
     browseByClickList: true,
     // 上传格式过滤
     filters: { // 只允许上传图片或图标（.ico）
-      mime_types: [{
-        title: '图片',
-        extensions: <?php echo "'";
-                    foreach ($config['extensions'] as $extensions) {
-                      echo  $extensions . ',';
-                    }
-                    echo "'"; ?>,
-      }, {
-        title: '图标',
-        extensions: 'ico'
-      }],
+      mime_types: [
+		  {title: '图片',extensions: <?php echo $config['extensions']; ?>},
+      {title: '图标',extensions: 'ico'}
+      ],
       prevent_duplicates: true
+
     },
     // 限制文件上传数目
     limitFilesCount: <?php echo $config['maxUploadFiles']; ?>,
     // 自动上传失败的文件
     autoResetFails: true,
     <?php imgRatio(); ?>
-    responseHandler: function(responseObject, file) {
+    responseHandler : function(responseObject, file) {
       var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
       console.log(responseObject.response); // 输出log
       if (obj.result === 'success') {
@@ -140,4 +133,4 @@ mustLogin();
 </script>
 <?php
 checkEnv($config['checkEnv']); // 环境检测
-require_once __DIR__ . '/libs/footer.php';
+require_once APP_ROOT . '/libs/footer.php';

@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/tokenList.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
+require_once  './../config/api_key.php';
+require_once  './../config/config.php';
 
 // Token 生成
 function privateToken($length = 32)

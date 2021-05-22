@@ -131,7 +131,7 @@ $ip_blacklist = array(
 );
 
 // if User has the customized config file, try to use it to override the default config above
-$config_file = __DIR__.'/config/config.php';
+$config_file = APP_ROOT.'/config/config.php';
 if (is_readable($config_file)) {
     @include($config_file);
 }
@@ -4027,5 +4027,5 @@ function lng($txt) {
  * 添加函数
     行    4：   require_once './libs/function.php'; tinyfilemanager();
  * 调用配置文件
-    行  134:    $config_file = __DIR__.'/config/config.php';
+    行  134:    $config_file = APP_ROOT. '/config/config.php';
  */
