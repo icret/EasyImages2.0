@@ -47,7 +47,8 @@ if (isset($_POST['delDir'])) {
 	<div class="alert alert-primary">
 		<h3 style="text-align:center">EasyImage2.0 快捷操作中心</h2>
 			<hr />
-			<h5>此页面为常用一键操作，目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h4>
+			<h5>此页面为常用一键操作，目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h5>
+			<h5>当前版本：<?php echo $config['version'] ?></h5>
 	</div>
 </div>
 <div class="col-md-12">
@@ -159,7 +160,7 @@ if (isset($_POST['delDir'])) {
 					<label for="exampleInputInviteCode1" style="color:red">删除所选日期文件夹（删除之后无法恢复！）：</label>
 					<input type="text" class="form-control form-date" name="delDir" value="2021/05/22/" readonly="">
 				</div>
-				<button type="submit" class="btn btn-mini btn-danger">删除目录</button>
+				<button type="submit" class="btn btn-mini btn-danger" onClick="delcfm()">删除目录</button>
 			</form>
 		</div>
 
@@ -170,6 +171,7 @@ if (isset($_POST['delDir'])) {
 <link href="../public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="../public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
+	// 动态显示要删除的图片
 	var oBtn = document.getElementById('del');
 	var oTi = document.getElementById('title');
 	if ('oninput' in oBtn) {
@@ -181,7 +183,6 @@ if (isset($_POST['delDir'])) {
 	function getWord() {
 		var delimgurl = document.getElementById("delimgurl");
 		delimgurl.innerHTML += '<img src="' + oBtn.value + '" width="200" class="img-rounded" /><br />';
-		//oTi.innerHTML = '<img src="' + oBtn.value + '" width="200" class="img-rounded" /><br />';
 	}
 
 	// 仅选择日期
@@ -196,7 +197,15 @@ if (isset($_POST['delDir'])) {
 		format: "yyyy/mm/dd/"
 	});
 
+	// Title
 	document.title = "管理中心 - <?php echo $config['title']; ?>";
+
+	// 删除目录确认
+	function delcfm() {
+		if (!confirm("确认要删除？\n* 删除文件夹后将无法恢复！")) {
+			window.event.returnValue = false;
+		}
+	}
 </script>
 
 <?php require_once APP_ROOT . '/libs/footer.php';

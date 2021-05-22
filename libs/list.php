@@ -10,9 +10,9 @@ if ($config['showSwitch']) {
 	if ($fileArr[0]) {
 		foreach ($fileArr as $key => $value) {
 			if ($key < $keyNum) {
-				$boxImg = $config['domain'] . config_path($path) . $value;
+				$boxImg = $config['imgurl'] . config_path($path) . $value;
 				echo '<div class="col-md-4 col-sm-6 col-lg-3"><div class="card listNum">
-			   <img data-toggle="lightbox"  data-image="' . $boxImg . '" src="../public/images/Eclipse-1s-200px.svg" class="img-thumbnail" alt="简单图床-EasyImage" >
+			   <img data-toggle="lightbox"  data-image="' . $boxImg . '" src="../public/images/loading.svg" class="img-thumbnail" alt="简单图床-EasyImage" >
 					<a href="' . $boxImg . '" target="_blank">		
 						<div class="pull-left" style="margin-top:5px;">
 						<span class="label label-success">打开原图</span>
@@ -70,27 +70,122 @@ $httpUrl = array(
 	</div>
 </div>
 <!-- 返回顶部 -->
-<p id="back-top" style="display:none"><a href="#top"><span></span></a></p>
+<div style="display: none;" id="rocket-to-top">
+	<div style="opacity:0;display: block;" class="level-2"></div>
+	<div class="level-3"></div>
+</div>
 <style>
-	#back-top {
-		position: fixed;
-		bottom: 10px;
-		right: 8px;
-		z-index: 99;
+	* {
+		list-style: none;
+		border: 0;
 	}
 
-	#back-top span {
-		width: 70px;
-		height: 140px;
+	#rocket-to-top div {
+		left: 0;
+		margin: 0;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		top: 0;
+		width: 149px;
+	}
+
+	#rocket-to-top .level-2 {
+		background: url("../public/images/rocket_button_up.png") no-repeat scroll -149px 0 transparent;
+		display: none;
+		height: 250px;
+		opacity: 0;
+		z-index: 1;
+	}
+
+	#rocket-to-top .level-3 {
+		background: none repeat scroll 0 0 transparent;
+		cursor: pointer;
 		display: block;
-		background: url(../public/images/top.png) no-repeat center center;
+		height: 150px;
+		z-index: 2;
 	}
 
-	#back-top a {
-		outline: none
+	#rocket-to-top {
+		background: url("../public/images/rocket_button_up.png") no-repeat scroll 0 0 transparent;
+		cursor: default;
+		display: block;
+		height: 250px;
+		margin: -125px 0 0;
+		overflow: hidden;
+		padding: 0;
+		position: fixed;
+		right: 0;
+		top: 80%;
+		width: 149px;
+		z-index: 11;
 	}
 </style>
-
+<script>
+	// 返回顶部
+	$(function() {
+		var e = $("#rocket-to-top"),
+			t = $(document).scrollTop(),
+			n,
+			r,
+			i = !0;
+		$(window).scroll(function() {
+				var t = $(document).scrollTop();
+				t == 0 ? e.css("background-position") == "0px 0px" ? e.fadeOut("slow") : i && (i = !1, $(".level-2").css("opacity", 1), e.delay(100).animate({
+						marginTop: "-1000px"
+					},
+					"normal",
+					function() {
+						e.css({
+								"margin-top": "-125px",
+								display: "none"
+							}),
+							i = !0
+					})) : e.fadeIn("slow")
+			}),
+			e.hover(function() {
+					$(".level-2").stop(!0).animate({
+						opacity: 1
+					})
+				},
+				function() {
+					$(".level-2").stop(!0).animate({
+						opacity: 0
+					})
+				}),
+			$(".level-3").click(function() {
+				function t() {
+					var t = e.css("background-position");
+					if (e.css("display") == "none" || i == 0) {
+						clearInterval(n),
+							e.css("background-position", "0px 0px");
+						return
+					}
+					switch (t) {
+						case "0px 0px":
+							e.css("background-position", "-298px 0px");
+							break;
+						case "-298px 0px":
+							e.css("background-position", "-447px 0px");
+							break;
+						case "-447px 0px":
+							e.css("background-position", "-596px 0px");
+							break;
+						case "-596px 0px":
+							e.css("background-position", "-745px 0px");
+							break;
+						case "-745px 0px":
+							e.css("background-position", "-298px 0px");
+					}
+				}
+				if (!i) return;
+				n = setInterval(t, 50),
+					$("html,body").animate({
+						scrollTop: 0
+					}, "slow");
+			});
+	});
+</script>
 <script type="text/javascript">
 	// 仅选择日期
 	$(".form-date").datetimepicker({
@@ -112,25 +207,5 @@ $httpUrl = array(
 		},
 		delay: 2000
 	})
-	// 返回顶部
-	$(function() {
-		// hide #back-top first
-		$("#back-top").hide();
-		// fade in #back-top
-		$(window).scroll(function() {
-			if ($(this).scrollTop() > 400) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-		// scroll body to 0px on click
-		$('#back-top a').click(function() {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 500);
-			return false;
-		});
-	});
 </script>
 <?php require_once APP_ROOT . '/libs/footer.php';

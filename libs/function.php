@@ -472,7 +472,7 @@ function getVersion()
 			} elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
 				return null;
 			} else { // 返回版本
-				return ':' . $getVersion->readJson();
+				return '：' . $getVersion->readJson();
 			}
 		}
 	} else {
