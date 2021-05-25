@@ -6,7 +6,8 @@
  * @author  icret
  * @email   lemonim@qq.com
  * @Github  https://github.com/icret/easyImages2.0
- * @Last    2021-5-5 04:33:16
+ * QQ Group 623688684
+ * @Last    2021-5-25 21:12:34
 
  * 上传后请打开check.php先检查服务器配置，更改密码等操作
  * 安装完毕后请删除README.md,check.php,LICENSE等非必要文件

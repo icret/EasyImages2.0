@@ -103,7 +103,7 @@ if (isset($_POST['delDir'])) {
 		<form action="../libs/compressing.php" method="post" target="_blank">
 			<div class="form-group">
 				<label for="exampleInputInviteCode1">压缩文件夹内图片(格式：2021/05/10/)：</label>
-				<input type="text" class="form-control form-date" placeholder="" name="folder" value="2021/05/06/" readonly="">
+				<input type="text" class="form-control form-date" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
 			</div>
 			<div class="radio">
 				<label>
@@ -146,9 +146,10 @@ if (isset($_POST['delDir'])) {
 		<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
 			<div class="form-group">
 				<label for="exampleInputInviteCode1" style="color:red">删除所选日期文件夹（删除之后无法恢复！）：</label>
-				<input type="text" class="form-control form-date" name="delDir" value="2021/05/22/" readonly="">
+				<input type="text" class="form-control form-date" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly="">
 			</div>
-			<button type="submit" class="btn btn-mini btn-danger" onClick="delcfm()">删除目录</button>
+
+			<button type="submit" class="btn btn-mini btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复！');">删除目录</button>
 		</form>
 	</div>
 </div>
@@ -186,13 +187,6 @@ if (isset($_POST['delDir'])) {
 
 	// Title
 	document.title = "管理中心 - <?php echo $config['title']; ?>";
-
-	// 删除目录确认
-	function delcfm() {
-		if (!confirm("确认要删除？\n* 删除文件夹后将无法恢复！")) {
-			window.event.returnValue = false;
-		}
-	}
 </script>
 
 <?php require_once APP_ROOT . '/libs/footer.php';

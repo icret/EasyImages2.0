@@ -1,12 +1,14 @@
 <?php
 require_once __DIR__ . '/header.php';
 
-if ($config['showSwitch']) {
+
+if (!$config['showSwitch'] and !is_online()) {
+	echo '<p class="text-danger" style="center">管理员关闭了预览哦~~</p>';
+} else {
+
 	$path = $_GET['date'] ??  date('Y/m/d/');
 	$keyNum = $_GET['num'] ?? $config['listNumber'];
-
 	$fileArr = getFile(APP_ROOT . config_path($path));
-
 	if ($fileArr[0]) {
 		foreach ($fileArr as $key => $value) {
 			if ($key < $keyNum) {
@@ -15,7 +17,7 @@ if ($config['showSwitch']) {
 			   <img data-toggle="lightbox"  data-image="' . $boxImg . '" src="../public/images/loading.svg" class="img-thumbnail" alt="简单图床-EasyImage" >
 					<a href="' . $boxImg . '" target="_blank">		
 						<div class="pull-left" style="margin-top:5px;">
-						<span class="label label-success">打开原图</span>
+						<span class="label label-success">查看大图</span>
 						</div> 	
 					</a>
 					<a href="' . $config['domain'] . '/api/del.php?url=' . $boxImg . '" target="_blank">
@@ -30,8 +32,6 @@ if ($config['showSwitch']) {
 	} else {
 		echo '<p class="text-danger" style="center">今天还没有上传的图片哟~~ <br />快来上传第一张吧~！</p>';
 	}
-} else {
-	echo '<p class="text-danger" style="center">管理员关闭了预览哦~~</p>';
 }
 
 $yesterday =  date("Y/m/d/", strtotime("-1 day"));	// 昨日日期
@@ -40,10 +40,10 @@ $yesterdayUpload = getFileNumber(APP_ROOT . $config['path'] . $yesterday);	// �
 $spaceUsed = getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__));		// 占用空间
 
 // 当前日期全部上传
-$allUploud = $_GET['date'] ?: date('Y/m/d/');
+$allUploud = $_GET['date'] ?? date('Y/m/d/');
 $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 
-$httpUrl = array(
+@$httpUrl = array(
 	'date' => $path,
 	'num' => getFileNumber(APP_ROOT . config_path($path)),
 );
@@ -63,7 +63,7 @@ $httpUrl = array(
 		<form class="form-inline" action="list.php" method="get">
 			<div class="form-group">
 				<label for="exampleInputInviteCode3">按日期：</label>
-				<input type="text" class="form-control form-date" value="2021/05/09/" name="date" readonly="">
+				<input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="">
 			</div>
 			<button type="submit" class="btn btn-primary">跳转</button>
 		</form>
