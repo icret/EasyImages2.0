@@ -205,7 +205,7 @@ $httpUrl = array(
 		onload: function(elem) {
 			console.log(elem)
 		},
-		delay: 2000
+		delay: 300
 	})
 </script>
 <?php require_once APP_ROOT . '/libs/footer.php';

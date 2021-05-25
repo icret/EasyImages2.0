@@ -11,6 +11,7 @@
 	<meta name="description" content="<?php echo  $config['description']; ?>" />
 	<link rel="shortcut icon" href="<?php echo $config['domain']; ?>/favicon.ico" type="image/x-icon" />
 	<?php echo static_cdn(); ?>
+	
 	<style>
 		.uploader-files {
 			min-height: 160px;

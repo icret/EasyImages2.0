@@ -11,19 +11,16 @@ if (!is_online()) {
 	checkLogin();
 }
 
-// 根据token查找用户ID
-if (isset($_POST['token'])) {
-	$getID = '用户ID：' . getID($_POST['token']);
-} else {
-	$getID = null;
+// 查找用户ID或者Token
+if (isset($_POST['radio'])) {
+	if ($_POST['radio'] == 'id') {
+		$radio_value = '用户token：' . getIDToken($_POST['radio-value']);
+	} elseif ($_POST['radio'] == 'token') {
+		$radio_value = '用户ID：' . getID($_POST['radio-value']);
+	} else {
+		$radio_value = null;
+	}
 }
-// 根据用户ID查找token
-if (isset($_POST['id'])) {
-	$getToken = '用户token：' . getIDToken($_POST['id']);
-} else {
-	$getToken = null;
-}
-
 // 删除非空目录
 if (isset($_POST['delDir'])) {
 	$delDir = APP_ROOT . $config['path'] . $_POST['delDir'];
@@ -47,8 +44,11 @@ if (isset($_POST['delDir'])) {
 	<div class="alert alert-primary">
 		<h3 style="text-align:center">EasyImage2.0 快捷操作中心</h2>
 			<hr />
-			<h5>此页面为常用一键操作，目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h5>
-			<h5>当前版本：<?php echo $config['version'] ?></h5>
+			<h5>此页面为常用快捷操作，目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h5>
+			<h5>当前软件环境信息：PHP版本：<?php echo  phpversion(); ?>；PHP上传最大值：<?php echo ini_get('upload_max_filesize'); ?>；POST上传最大值：<?php echo ini_get('post_max_size'); ?>；</h5>
+			<h5><?php
+				$yesterday =  date("Y/m/d/", strtotime("-1 day"));
+				echo '今日上传数量：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传数量：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday) . ' 占用空间：' . getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__))	. ' 剩余空间：' . getDistUsed(disk_free_space(__DIR__)); ?>
 	</div>
 </div>
 <div class="col-md-12">
@@ -69,102 +69,89 @@ if (isset($_POST['delDir'])) {
 			</div>
 	</div>
 	<div class="col-md-4">
-		<div class="form-group">
-			<label for="exampleInputMoney6">
-				根据Token查找用户ID
-			</label>
-			<input type="text" class="form-control" id="exampleInputMoney6" name="token" placeholder="输入Token" value="<?php echo $getID; ?>">
-		</div>
-		<button type="submit" class="btn btn-primary">
-			查找
-		</button>
+		<form></form>
+		<form class="form-condensed" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+			<div class="form-group">
+				<label for="exampleInputAccount6">根据ID/Token查找用户信息</label>
+				<input type="text" name="radio-value" id="exampleInputAccount6" class="form-control" placeholder="输入信息" value="<?php echo @$radio_value; ?>">
+				<div class="radio-primary"><input type="radio" name="radio" value="id" id="primaryradio1" checked="checked"><label for="primaryradio1">根据ID查找用户Token</label></div>
+				<div class="radio-primary"><input type="radio" name="radio" value="token" id="primaryradio2"><label for="primaryradio2">根据Token查找用户ID</label></div>
+				<button type="submit" class="btn btn-mini btn-primary">
+					查找
+				</button>
+			</div>
 		</form>
 	</div>
 	<div class="col-md-4">
-
-		<div id="title" style="margin: 10px;"></div>
-		<form class="form-condensed" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+		<div id="delimgurl"></div>
+		<div id="title"></div>
+		<form class="form-condensed" method="get" action="del.php" id="form" name="delForm" onSubmit="getStr();" target="_blank">
 			<div class="form-group">
-				<label>
-					根据ID查找用户Token
+				<label for="del">
+					删除图片
 				</label>
-				<input type="text" name="id" class="form-control" placeholder="请输入用户ID" value="<?php echo $getToken; ?>">
+				<input type="url" name="url" class="form-control" id="del" placeholder="请输入图片链接" />
 			</div>
-			<button type="submit" class="btn btn-mini btn-primary">
-				查找
-			</button>
+			<label>格式：<code>https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg</code></label>
+			<input type="submit" class="btn btn-mini btn-primary" value="删除" />
 		</form>
 	</div>
-	<div class="col-md-12">
-		<div class="col-md-4">
-			<div id="delimgurl"></div>
-			<div id="title" style="margin: 10px;"></div>
-			<form class="form-condensed" method="get" action="del.php" id="form" name="delForm" onSubmit="getStr();" target="_blank">
-				<div class="form-group">
-					<label>
-						删除图片 - 格式：<br /><code>https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg</code>
-					</label>
-					<input type="url" name="url" class="form-control" id="del" placeholder="请输入图片链接" />
-				</div>
-				<input type="submit" class="btn btn-mini btn-primary" value="删除" />
-			</form>
-		</div>
-		<div class="col-md-4">
-			<form action="../libs/compressing.php" method="post" target="_blank">
-				<div class="form-group">
-					<label for="exampleInputInviteCode1">压缩文件夹内图片(格式：2021/05/10/)：</label>
-					<input type="text" class="form-control form-date" placeholder="" name="folder" value="2021/05/06/" readonly="">
-				</div>
-				<div class="radio">
-					<label>
-						<input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩，不需重复压缩)
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<input type="radio" name="type" value="TinyImg"> 使用TinyImag压缩（需要申请key)
-					</label>
-				</div>
-				<div>
-					<label>
-						* 如果页面长时间没有响应，表示正面正在压缩！
-					</label>
-					<label>
-						两种压缩均为不可逆，并且非常占用硬件资源。
-					</label>
-				</div>
-				<button type="submit" class="btn  btn-mini btn-success">开始压缩</button>
-			</form>
-		</div>
-		<div class="col-md-4">
-			<table class="table table-hover table-bordered table-condensed table-responsive">
-				<thead>
-					<tr>
-						<th>当前可用Token列表：</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					foreach ($tokenList as $value) {
-						echo '<tr><td>' . $value . '</td></tr>';
-					}
-					?>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="col-md-12">
-		<div class="col-md-4">
-			<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
-				<div class="form-group">
-					<label for="exampleInputInviteCode1" style="color:red">删除所选日期文件夹（删除之后无法恢复！）：</label>
-					<input type="text" class="form-control form-date" name="delDir" value="2021/05/22/" readonly="">
-				</div>
-				<button type="submit" class="btn btn-mini btn-danger" onClick="delcfm()">删除目录</button>
-			</form>
-		</div>
+</div>
+<div class="col-md-12">
 
+	<div class="col-md-4">
+		<form action="../libs/compressing.php" method="post" target="_blank">
+			<div class="form-group">
+				<label for="exampleInputInviteCode1">压缩文件夹内图片(格式：2021/05/10/)：</label>
+				<input type="text" class="form-control form-date" placeholder="" name="folder" value="2021/05/06/" readonly="">
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩，不需重复压缩)
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="type" value="TinyImg"> 使用TinyImag压缩（需要申请key)
+				</label>
+			</div>
+			<div>
+				<label>
+					* 如果页面长时间没有响应，表示正面正在压缩！
+				</label>
+				<label>
+					两种压缩均为不可逆，并且非常占用硬件资源。
+				</label>
+			</div>
+			<button type="submit" class="btn  btn-mini btn-success">开始压缩</button>
+		</form>
 	</div>
+	<div class="col-md-4">
+		<table class="table table-hover table-bordered table-condensed table-responsive">
+			<thead>
+				<tr>
+					<th>当前可用Token列表：</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				foreach ($tokenList as $value) {
+					echo '<tr><td>' . $value . '</td></tr>';
+				}
+				?>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-4">
+		<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+			<div class="form-group">
+				<label for="exampleInputInviteCode1" style="color:red">删除所选日期文件夹（删除之后无法恢复！）：</label>
+				<input type="text" class="form-control form-date" name="delDir" value="2021/05/22/" readonly="">
+			</div>
+			<button type="submit" class="btn btn-mini btn-danger" onClick="delcfm()">删除目录</button>
+		</form>
+	</div>
+</div>
 </div>
 </div>
 </div>

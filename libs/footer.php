@@ -8,12 +8,10 @@
           <span class="sr-only">关闭</span></button>
         <h4 class="modal-title icon icon-mobile" style="text-align: center">扫描二维码使用手机上传</h4>
       </div>
-      <div class="modal-body">
-        <center>
-          <input id="text" type="hidden" value="" />
-          <p id="qrcode" style="width:100%;"></p>
+      <div class="modal-body" align="center">
+        <input id="text" type="hidden" value="" />
+        <p id="qrcode"></p>
       </div>
-      </center>
       <div class="modal-footer">
         <a class="btn btn-danger btn-sm" href="" target="_blank">访问</a>
         <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">关闭</button>
@@ -87,7 +85,7 @@
     <?php
     if (is_online()) {
       echo '
-      <a href="' . $config['domain'] . '/api/api-web.php" target="_blank"><i class="icon icon-rocket"></i>API管理 </a>
+      <a href="' . $config['domain'] . '/api/api-web.php" target="_blank"><i class="icon icon-rocket"></i>快捷操作 </a>
       <a href="' . $config['domain'] . '/libs/logout.php" ><i class="icon icon-signout"></i>退出 </a>
       ';
     } else {

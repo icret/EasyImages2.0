@@ -58,7 +58,7 @@ $config = array(
    */
   'path' => '/i/',
   // 最大上传限制 默认为5M 请使用工具转换Mb http://www.bejson.com/convert/filesize/
-  'maxSize' => 5242880,
+  'maxSize' => 15242880,
   // 每次最多上传图片数
   'maxUploadFiles' => 30,
   // 是否开启登录上传 开启:true 关闭:false
@@ -122,7 +122,7 @@ $config = array(
   'customize' => '
     <!--打赏
     <div id="ad" class="col-md-12" align="center" style="padding:5px;">
-      <img data-toggle="lightbox" src="//i1.100024.xyz/public/images/dashang.png" data-image="//i1.100024.xyz/public/images/dashang.png" data-caption="赞助开发者" class="img-thumbnail" alt="" width="220">
+      <img data-toggle="lightbox" src="https://img.545141.com/public/images/%E6%89%93%E8%B5%8F%E5%BC%80%E5%8F%91%E8%80%85.jpg" data-image="https://img.545141.com/public/images/%E6%89%93%E8%B5%8F%E5%BC%80%E5%8F%91%E8%80%85.jpg" data-caption="赞助开发者" class="img-thumbnail" alt="" width="220">
     </div>
     -->
     <!-- 非img.545141.com跳转
@@ -140,7 +140,7 @@ $config = array(
   // PHP插件检测-安全设置检测-版本检测 开启:true 关闭:false
   'checkEnv' => true,
   // 当前版本
-  'version' => '2.2.0',
+  'version' => '2.2.1',
 );
 
 

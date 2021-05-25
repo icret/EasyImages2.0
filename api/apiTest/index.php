@@ -16,7 +16,7 @@ require_once APP_ROOT . '/config/api_key.php';
                 <div class="form-group">
                     <input type="text" name="token" placeholder="请输入Token" class="form-control" />
                 </div>
-                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="submit" class="btn btn-primary">上传</button>
             </form>
         </div>
     </div>

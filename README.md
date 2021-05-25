@@ -1,6 +1,6 @@
-![简单图床示例](https://i1.100024.xyz/public/data/2019/05/5ce6915f50a1a.png
+![简单图床示例](https://i1.100024.xyz/i/2020/12/31/ulmtho.png
  "简单图床示例")
-![简单图床示例](https://i1.100024.xyz/public/data/2019/05/5cecf12575f6e.png
+![简单图床示例](https://i1.100024.xyz/i/2020/12/31/ulmjmn.png
  "简单图床示例")
 
 ## EasyImage 简单图床 2.0
