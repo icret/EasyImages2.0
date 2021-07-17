@@ -1,9 +1,10 @@
-<?php require_once __DIR__ . '/function.php'; ?>
+<?php 
+require_once __DIR__ . '/function.php';?>
 <!DOCTYPE html>
 <html lang="zh-cn">
 
 <head>
-	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><?php echo  $config['title']; ?></title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +12,7 @@
 	<meta name="description" content="<?php echo  $config['description']; ?>" />
 	<link rel="shortcut icon" href="<?php echo $config['domain']; ?>/favicon.ico" type="image/x-icon" />
 	<?php echo static_cdn(); ?>
-	
+
 	<style>
 		.uploader-files {
 			min-height: 160px;

@@ -50,9 +50,9 @@ $config = array(
    * 如果不变的话，下边2个填写成一样的！
    */
   // 网站域名,末尾不加"/" 
-  'domain' => 'http://192.168.1.15',
+  'domain' => 'http://192.168.2.100',
   // 图片链接域名,末尾不加"/"
-  'imgurl' => 'http://192.168.1.15',
+  'imgurl' => 'http://192.168.2.100',
   /**
    * 存储路径 前后要加"/" 
    * 可根据Apache/Nginx配置安全，参考：https://www.545141.com/981.html 或 README.md
@@ -122,9 +122,7 @@ $config = array(
   // 上传框底部自定义信息，仅支持html格式 下面是举例：
   'customize' => '
     <!--打赏
-    <div id="ad" class="col-md-12" align="center" style="padding:5px;">
-      <img data-toggle="lightbox" src="https://img.545141.com/public/images/%E6%89%93%E8%B5%8F%E5%BC%80%E5%8F%91%E8%80%85.jpg" data-image="https://img.545141.com/public/images/%E6%89%93%E8%B5%8F%E5%BC%80%E5%8F%91%E8%80%85.jpg" data-caption="赞助开发者" class="img-thumbnail" alt="" width="220">
-    </div>
+    <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
     -->
     <!-- 非img.545141.com跳转
     <img style="display:none" src=" " onerror=\'this.onerror=null;var currentDomain="img."+"545141." + "com"; var str1=currentDomain; str2="docu"+"ment.loca"+"tion.host"; str3=eval(str2) ;if( str1!=str3 ){ do_action = "loca" + "tion." + "href = loca" + "tion.href" + ".rep" + "lace(docu" +"ment"+".loca"+"tion.ho"+"st," + "currentDomain" + ")";eval(do_action) }\' />		

@@ -18,8 +18,8 @@ class TinyImg
             return false;
         }
         foreach ($images as $image) {
-            $input = $inputFolder . "\\" . $image;
-            $output = $outputFolder . "\\" . $image;
+            $input = $inputFolder . $image;
+            $output = $outputFolder . $image;
             print($input . " => 源文件<br>");
             print($output . " => 成功文件<br>");
             $this->compressImg($key, $input, $output);

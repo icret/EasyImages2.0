@@ -1,9 +1,7 @@
 <?php
 require_once __DIR__ . '/header.php';
-
-
 if (!$config['showSwitch'] and !is_online()) {
-	echo '<p class="text-danger" style="center">管理员关闭了预览哦~~</p>';
+	echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
 } else {
 
 	$path = $_GET['date'] ??  date('Y/m/d/');
@@ -30,7 +28,7 @@ if (!$config['showSwitch'] and !is_online()) {
 			}
 		}
 	} else {
-		echo '<p class="text-danger" style="center">今天还没有上传的图片哟~~ <br />快来上传第一张吧~！</p>';
+		echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~！</div>';
 	}
 }
 
@@ -48,32 +46,6 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 	'num' => getFileNumber(APP_ROOT . config_path($path)),
 );
 ?>
-
-<script src="../public/static/lazyload.js"></script>
-<link href="../public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="../public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
-<div class="col-md-12">
-	<div class="col-md-6">
-		<a href="list.php"><span class="label label-success label-outline"> 今日上传:<?php echo $todayUpload; ?>张</span></a>
-		<a href="list.php?date=<?php echo $yesterday; ?>"><span class="label label-warning  label-outline"> 昨日上传:<?php echo $yesterdayUpload; ?>张</span></a>
-		<a href="list.php?<?php echo http_build_query($httpUrl); ?>"><span class="label label-info  label-outline"> 当前日期共上传:<?php echo $allUploud; ?>张</span></a>
-		<span class="label label-danger  label-outline"> 存储占用:<?php echo $spaceUsed; ?></span>
-	</div>
-	<div class="col-md-6">
-		<form class="form-inline" action="list.php" method="get">
-			<div class="form-group">
-				<label for="exampleInputInviteCode3">按日期：</label>
-				<input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="">
-			</div>
-			<button type="submit" class="btn btn-primary">跳转</button>
-		</form>
-	</div>
-</div>
-<!-- 返回顶部 -->
-<div style="display: none;" id="rocket-to-top">
-	<div style="opacity:0;display: block;" class="level-2"></div>
-	<div class="level-3"></div>
-</div>
 <style>
 	* {
 		list-style: none;
@@ -121,6 +93,31 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 		z-index: 11;
 	}
 </style>
+<script src="../public/static/lazyload.js"></script>
+<link href="../public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+<script src="../public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<div class="col-md-12">
+	<div class="col-md-6">
+		<a href="list.php"><span class="label label-success label-outline"> 今日：<?php echo $todayUpload; ?>张</span></a>
+		<a href="list.php?date=<?php echo $yesterday; ?>"><span class="label label-warning  label-outline"> 昨日：<?php echo $yesterdayUpload; ?>张</span></a>
+		<a href="list.php?<?php echo http_build_query($httpUrl); ?>"><span class="label label-info  label-outline"> 当前上传：<?php echo $allUploud; ?>张</span></a>
+		<span class="label label-danger  label-outline"> 占用：<?php echo $spaceUsed; ?></span>
+	</div>
+	<div class="col-md-6">
+		<form class="form-inline" action="list.php" method="get">
+			<div class="form-group">
+				<label for="exampleInputInviteCode3">按日期：</label>
+				<input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="">
+			</div>
+			<button type="submit" class="btn btn-primary">跳转</button>
+		</form>
+	</div>
+</div>
+<!-- 返回顶部 -->
+<div style="display: none;" id="rocket-to-top">
+	<div style="opacity:0;display: block;" class="level-2"></div>
+	<div class="level-3"></div>
+</div>
 <script>
 	// 返回顶部
 	$(function() {

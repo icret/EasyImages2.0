@@ -2,6 +2,7 @@
 require_once __DIR__ . './../libs/function.php';
 require_once APP_ROOT . '/api/libs/apiFunction.php';
 require_once APP_ROOT . '/libs/class.upload.php';
+require_once APP_ROOT . '/libs/WaterMask.php';
 require_once APP_ROOT . '/config/api_key.php';
 
 // 检查是否开启api上传

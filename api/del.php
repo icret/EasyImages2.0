@@ -31,7 +31,8 @@ if (empty($_REQUEST)) {
     echo '
     <div class="col-md-12">
     <hr />
-    <a href="' . $img . '" target="_blank"><img src="' . $img  . '" alt="简单图床-EasyImage" class="img-thumbnail"></a>
+	<div style="text-align:center;"><span class="label">图片属性：'.@getimagesize($img)[0].'px X '.@getimagesize($img)[1].'px</span></div>
+    <a href="' . $img . '" target="_blank"><img src="' . $img  . '" alt="简单图床-EasyImage" class="img-thumbnail"></a>	
     </div>';
 }
 
