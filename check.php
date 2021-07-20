@@ -30,7 +30,7 @@
   <hr />
   <h4>说明：</h4>
   <h5>1. 建议使用<font color="red">PHP7.0</font>及以上版本；</h5>
-  <h5>2. 大部分上传失败是由于<font color="red">upload_max_filesize、post_max_size、文件权限</font>设置不正确；</h5>
+  <h5>2. 大部分上传失败是由于<font color="red">upload_max_filesize、post_max_size</font>设置不正确；</h5>
   <h5>3. 本程序用到 <font color="red">Fileinfo、iconv、zip、mbstring、openssl</font> 扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。</h5>
   <h5>4. <font color="red">zip</font>扩展不是必须的，但会影响tinyfilemanager文件压缩(不会在首页中检测)。</h5>
   <h5>5. 上传后必须修改config.php的位置：<font color="red">domain</font>当前网站域名，<font color="red">imgurl</font>当前图片域名，<font color="red">password</font>登录管理密码！</h5>
@@ -39,12 +39,10 @@
   <h4>EasyImage2.0 基础检测：</h4>
   <?php
   echo '当前PHP版本：<font color="green">' . phpversion() . '</font>';
-  $quanxian =  substr(base_convert(fileperms("file.php"), 10, 8), 3);
-  if (!is_executable('file.php') || $quanxian != '777') {
-    echo '<br/><font color="red">上传文件权限错误（当前权限：' . $quanxian . '），<b>windows可以无视</b>，linux使用 chmod -R 0777 /mulu/* 赋予权限</font>';
-  } else {
-
+  if (is_executable('file.php')) {
     echo '<br/><font color="green">当前文件可执行</font>';
+  } else {
+    echo '<br/><font color="red">当前文件不可执行，<b>windows可以无视</b>，linux使用 chmod -R 755 /路径/* 赋予权限</font>';
   }
   echo '<br /><font color="green">upload_max_filesize</font> PHP上传最大值：' . ini_get('upload_max_filesize');
   echo '<br /><font color="green">post_max_size</font> PHP POST上传最大值：' . ini_get('post_max_size') . '<br />';
