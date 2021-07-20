@@ -1,4 +1,3 @@
-
 var copyBtn = document.getElementsByClassName('copyBtn1')[0];
 copyBtn.onclick = function () {
   var copyVal = document.getElementById("links");

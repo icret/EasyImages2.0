@@ -100,8 +100,8 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 	<div class="col-md-6">
 		<a href="list.php"><span class="label label-success label-outline"> 今日：<?php echo $todayUpload; ?>张</span></a>
 		<a href="list.php?date=<?php echo $yesterday; ?>"><span class="label label-warning  label-outline"> 昨日：<?php echo $yesterdayUpload; ?>张</span></a>
-		<a href="list.php?<?php echo http_build_query($httpUrl); ?>"><span class="label label-info  label-outline"> 当前上传：<?php echo $allUploud; ?>张</span></a>
-		<span class="label label-danger  label-outline"> 占用：<?php echo $spaceUsed; ?></span>
+		<a href="list.php?<?php echo http_build_query($httpUrl); ?>"><span class="label label-info  label-outline"> 当前：<?php echo $allUploud; ?>张</span></a>
+		<!--<span class="label label-danger  label-outline"> 占用：<?php echo $spaceUsed; ?></span>-->
 	</div>
 	<div class="col-md-6">
 		<form class="form-inline" action="list.php" method="get">

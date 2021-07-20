@@ -173,13 +173,13 @@ function getDirectorySize($path)
 
 /**
  * 获取指定文件夹文件数量
- * @param $url 传入一个路径如：/apps/web
+ * @param $dir 传入一个路径如：/apps/web
  * @return int 返回文件数量
  */
-function getFileNumber($url)
+function getFileNumber($dir)
 {
 	$num = 0;
-	$arr = glob($url);
+	$arr = glob($dir);
 	foreach ($arr as $v) {
 		if (is_file($v)) {
 			$num++;
@@ -242,13 +242,12 @@ function getFile($dir)
  * echo "目录数为:{$dirn}<br>";
  * echo "文件数为:{$filen}<br>";
  */
-$dirn = 0; //目录数
-$filen = 0; //文件数
+
 
 function getdirnum($file)
 {
-	global $dirn;
-	global $filen;
+	$dirn = 0; //目录数
+	$filen = 0; //文件数
 	$dir = opendir($file);
 	while ($filename = readdir($dir)) {
 		if ($filename != "." && $filename != "..") {
@@ -409,7 +408,7 @@ function checkEnv($mode)
 		}
 
 		// 检测是否更改默认域名
-		$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.1.15');
+		$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.2.100');
 		if (strstr($url, $_SERVER['HTTP_HOST'])) {
 			echo '
 		<script>
@@ -474,7 +473,7 @@ function getVersion()
 			} elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
 				return null;
 			} else { // 返回版本
-				return '：' . $getVersion->readJson();
+				return $getVersion->readJson();
 			}
 		}
 	} else {

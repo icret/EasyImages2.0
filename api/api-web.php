@@ -44,11 +44,13 @@ if (isset($_POST['delDir'])) {
 	<div class="alert alert-primary">
 		<h3 style="text-align:center">EasyImage2.0 快捷操作中心</h2>
 			<hr />
-			<h5>此页面为常用快捷操作，目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h5>
-			<h5>当前软件环境信息：PHP版本：<?php echo  phpversion(); ?>；PHP上传最大值：<?php echo ini_get('upload_max_filesize'); ?>；POST上传最大值：<?php echo ini_get('post_max_size'); ?>；</h5>
+			<h5>目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h5>
+			<h5>环境信息：PHP版本：<?php echo  phpversion(); ?>；PHP上传最大值：<?php echo ini_get('upload_max_filesize'); ?>；POST上传最大值：<?php echo ini_get('post_max_size'); ?>；</h5>
 			<h5><?php
 				$yesterday =  date("Y/m/d/", strtotime("-1 day"));
-				echo '今日上传数量：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传数量：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday) . ' 占用空间：' . getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__))	. ' 剩余空间：' . getDistUsed(disk_free_space(__DIR__)); ?>
+				echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday) . '； 已用空间：' . getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__))	. ' 剩余空间：' . getDistUsed(disk_free_space(__DIR__)); ?>
+			</h5>
+			<h5>当前软件版本：<?php echo $config['version'];?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion();?></a></h5>
 	</div>
 </div>
 <div class="col-md-12">

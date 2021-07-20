@@ -139,7 +139,7 @@ $config = array(
   // PHP插件检测-安全设置检测-版本检测 开启:true 关闭:false
   'checkEnv' => true,
   // 当前版本
-  'version' => '2.2.1',
+  'version' => '2.2.2',
 );
 
 

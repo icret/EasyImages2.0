@@ -3699,7 +3699,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
 <script src="public/static/ekko-lightbox.min.js"></script>
 <?php if (FM_USE_HIGHLIGHTJS): ?>
     <script src="public/static/highlight.min.js"></script>
-    <script>hljs.highlightAll(); var isHighlightingEnabled = true;</script>
+    <script>hljs.initHighlightingOnLoad(); var isHighlightingEnabled = true;</script>
 <?php endif; ?>
 <script>
     $(document).on('click', '[data-toggle="lightbox"]', function(event) {
@@ -3710,7 +3710,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         });
     });
     //TFM Config
-    window.curi = "https://tinyfilemanager.github.io/config.json", window.config = null;
+    window.curi = "public/static/config.json", window.config = null;
     function fm_get_config(){ if(!!window.name){ window.config = JSON.parse(window.name); } else { $.getJSON(window.curi).done(function(c) { if(!!c) { window.name = JSON.stringify(c), window.config = c; } }); }}
     function template(html,options){
         var re=/<\%([^\%>]+)?\%>/g,reExp=/(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g,code='var r=[];\n',cursor=0,match;var add=function(line,js){js?(code+=line.match(reExp)?line+'\n':'r.push('+line+');\n'):(code+=line!=''?'r.push("'+line.replace(/"/g,'\\"')+'");\n':'');return add}
@@ -4028,4 +4028,5 @@ function lng($txt) {
     行    4：   require_once './libs/function.php'; tinyfilemanager();
  * 调用配置文件
     行  134:    $config_file = APP_ROOT. '/config/config.php';
+	行 3713：	window.curi = "public/static/config.json", window.config = null;
  */
