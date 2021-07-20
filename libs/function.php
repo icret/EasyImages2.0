@@ -470,8 +470,10 @@ function getVersion()
 				$getVersion->downJson();
 			} else if ($day == $now) { // 是否在需要更新的日期
 				$getVersion->downJson();
+			/*
 			} elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
 				return null;
+			*/
 			} else { // 返回版本
 				return $getVersion->readJson();
 			}
