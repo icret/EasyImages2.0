@@ -12,7 +12,7 @@ require_once __DIR__.'/libs/function.php'; tinyfilemanager();
 define('VERSION', '2.4.5');
 
 //Application Title
-define('APP_TITLE', 'EasyImage2.0 File Manager');
+define('APP_TITLE', 'EasyImage File Manager');
 
 // --- EDIT BELOW CONFIGURATION CAREFULLY ---
 
@@ -4019,7 +4019,7 @@ function lng($txt) {
 	行 3701:    <script src="public/static/highlight.min.js"></script>
 	行 3881:    <script src="public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
  * 更改标题	
-	行   14:      //Application Title 改为 define('APP_TITLE', 'EasyImage2.0 File Manager');
+	行   14:      //Application Title 改为 define('APP_TITLE', 'EasyImage File Manager');
  * 更改文件浏览方式->改为默认显示图片卡片
 	行 1988:	<div class="filename">
  * 更改默认配置

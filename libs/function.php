@@ -111,16 +111,16 @@ function static_cdn()
 	if ($config['static_cdn']) {
 		// 开启CDN
 		return '
-	<link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
-    <link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
-    <link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/nprogress.min.css" rel="stylesheet">
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/zui/js/zui.min.js?v1.9.2"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/zui/lib/uploader/zui.uploader.min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/qrcode.min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/zui/lib/clipboard/clipboard.min.js?v2.0.8"></script>
-	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/nprogress.min.js"></script>
-	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.2.0/public/static/hm.js"></script>';
+	<link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/nprogress.min.css" rel="stylesheet">
+    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
+    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/js/zui.min.js?v1.9.2"></script>
+    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/uploader/zui.uploader.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/qrcode.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/clipboard/clipboard.min.js?v2.0.8"></script>
+	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/nprogress.min.js"></script>
+	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/hm.js"></script>';
 	} else {
 		// 本地文件
 		return '
