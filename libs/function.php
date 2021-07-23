@@ -109,31 +109,10 @@ function static_cdn()
 {
 	global $config;
 	if ($config['static_cdn']) {
-		// 开启CDN
-		return '
-	<link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
-    <link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
-    <link href="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/nprogress.min.css" rel="stylesheet">
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/js/zui.min.js?v1.9.2"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/uploader/zui.uploader.min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/qrcode.min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/zui/lib/clipboard/clipboard.min.js?v2.0.8"></script>
-	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/nprogress.min.js"></script>
-	<script src="//cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/static/hm.js"></script>';
-	} else {
-		// 本地文件
-		return '
-	<link href="/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
-    <link href="/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
-	<link href="/public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
-    <script src="/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
-    <script src="/public/static/zui/js/zui.min.js?v1.9.2"></script>
-    <script src="/public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
-    <script src="/public/static/qrcode.min.js?v2.0"></script>	
-	<script src="/public/static/hm.js"></script>
-    <script src="/public/static/zui/lib/clipboard/clipboard.min.js?vv1.5.5"></script>
-	<script src="/public/static/nprogress.min.js"></script>';
+		echo '//cdn.jsdelivr.net/gh/icret/EasyImages2.0';
+	}else
+	{
+		echo $config['domain'];
 	}
 }
 

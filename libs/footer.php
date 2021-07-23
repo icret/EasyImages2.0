@@ -69,7 +69,7 @@
     NProgress.done();
   });
 </script>
-<script src="../public/static/hm.js"></script>
+<script src="<?php static_cdn();?>/public/static/hm.js"></script>
 <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php echo showAD('bot'); ?>
   <p><?php echo $config['customize']; ?></p>
 

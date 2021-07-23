@@ -93,9 +93,9 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 		z-index: 11;
 	}
 </style>
-<script src="../public/static/lazyload.js"></script>
-<link href="../public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="../public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<script src="<?php static_cdn();?>/public/static/lazyload.js"></script>
+<link href="<?php static_cdn();?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+<script src="<?php static_cdn();?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <div class="col-md-12">
 	<div class="col-md-6">
 		<a href="list.php"><span class="label label-success label-outline"> 今日：<?php echo $todayUpload; ?>张</span></a>

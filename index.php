@@ -77,8 +77,8 @@ mustLogin();
 </div>
 </div>
 </table>
-<script src="public/static/paste.js"></script>
-<script src="public/static/copy_btn.js"></script>
+<script src="<?php static_cdn();?>/public/static/paste.js"></script>
+<script src="<?php static_cdn();?>/public/static/copy_btn.js"></script>
 <script>
   $('#upShowID').uploader({
     // 自动上传
