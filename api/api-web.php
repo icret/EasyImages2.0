@@ -158,8 +158,8 @@ if (isset($_POST['delDir'])) {
 </div>
 </div>
 </div>
-<link href="../public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="../public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<link href="<?php static_cdn();?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+<script src="<?php static_cdn();?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
 	// 动态显示要删除的图片
 	var oBtn = document.getElementById('del');

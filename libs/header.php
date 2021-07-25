@@ -52,11 +52,13 @@ require_once __DIR__ . '/function.php';?>
 						<?php echo getFileNumber(APP_ROOT . config_path()); ?></span>
 				</a>
 			</li>
+			<!-- 源码下载
 			<li class="">
 				<a href="https://github.com/icret/easyImages2.0" target="_blank">
 					<i class="icon icon-github "> 源码下载</i>
 				</a>
 			</li>
+			-->
 		</ul>
 	</div>
 	<!-- 顶部导航栏END -->
