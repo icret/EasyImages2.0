@@ -98,7 +98,7 @@ $config = array(
   // 图片水印路径 支持GIF,JPG,BMP,PNG和PNG alpha
   'waterImg' => 'public/images/watermark.png',
   // 允许上传的图片扩展名
-  'extensions' => "'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,psd,ico'",
+  'extensions' => "'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,ico'",
   // 轻微有损压缩图片 开启:true 关闭:false  * 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向
   'compress' => true,
   // 转换图片为指定格式 可选：''|'png'|'jpeg'|'gif'|'bmp';默认值：''
@@ -145,7 +145,7 @@ $config = array(
   'listNumber' => 20,
   // 上传框底部自定义信息，仅支持html格式 可以放置统计代码 下面是举例：
   'customize' => '
-    <!-- 统计代码
+    <!-- 统计代码-->
     <script>
     var _hmt = _hmt || [];
     (function() {
@@ -155,7 +155,7 @@ $config = array(
       s.parentNode.insertBefore(hm, s);
     })();
     </script>
-    -->
+    
     <!--打赏
     <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
     -->
