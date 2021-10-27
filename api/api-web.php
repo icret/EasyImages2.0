@@ -49,6 +49,7 @@ if (isset($_POST['delDir'])) {
 			<h5>请为本人博客<a href="https://www.545141.com/" target="_blank">www.545141.com</a>加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）。</h5>
 			<p>
 				<button type="button" class="btn btn-mini" data-toggle="collapse" data-target="#collapseExample">服务信息<i class="icon icon-hand-down"></i></button>
+				<a href="https://img.545141.com/sponsor/index.html" target="_blank"><button type="button" class="btn btn-danger btn-mini">打赏作者 <i class="icon icon-heart-empty"></i></button></a>
 			</p>
 			<div class="collapse" id="collapseExample">
 				<div class="bg-danger with-padding">
