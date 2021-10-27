@@ -48,8 +48,26 @@
     });
 
   // NProgress
+  $("body").show();
+  $(".version").text(NProgress.version);
   NProgress.start();
-  NProgress.done();
+  setTimeout(function() {
+    NProgress.done();
+    $(".fade").removeClass("out");
+  }, 1000);
+
+  $("#b-0").click(function() {
+    NProgress.start();
+  });
+  $("#b-40").click(function() {
+    NProgress.set(0.4);
+  });
+  $("#b-inc").click(function() {
+    NProgress.inc();
+  });
+  $("#b-100").click(function() {
+    NProgress.done();
+  });
 </script>
 <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php if($config['ad_bot']){echo $config['ad_bot_info'];} ?>
   <p><?php echo $config['customize']; ?></p>

@@ -1757,7 +1757,7 @@ class Upload {
         $this->file_max_size = $this->getsize($this->file_max_size_raw);
 
         $this->image_resize             = false;    // resize the image
-        $this->image_convert            = '';       // convert. values :''; 'png'; 'jpeg'; 'gif'; 'bmp'
+        $this->image_convert            = '';       // convert. values :''; 'png'; 'jpeg'; 'gif'; 'bmp'; 'webp'
 
         $this->image_x                  = 150;
         $this->image_y                  = 150;
@@ -2093,7 +2093,7 @@ class Upload {
      */
     function upload($file, $lang = 'en_GB') {
 
-        $this->version            = '03/08/2019';
+        $this->version            = '05/10/2021';
 
         $this->file_src_name      = '';
         $this->file_src_name_body = '';
@@ -3586,9 +3586,12 @@ class Upload {
                     if (empty($this->image_convert)) {
                         $this->log .= '- setting destination file type to ' . $this->image_src_type . '<br />';
                         $this->image_convert = $this->image_src_type;
+                    } else {
+                        $this->log .= '- requested destination file type is ' . $this->image_convert . '<br />';
                     }
 
                     if (!in_array($this->image_convert, $this->image_supported)) {
+                        $this->log .= '- destination file type ' . $this->image_convert . ' is not supported; switching to jpg<br />';
                         $this->image_convert = 'jpg';
                     }
 
