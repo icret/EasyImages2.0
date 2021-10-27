@@ -11,6 +11,8 @@ require_once __DIR__ . '/function.php';?>
 	<meta name="keywords" content="<?php echo  $config['keywords']; ?>" />
 	<meta name="description" content="<?php echo  $config['description']; ?>" />
 	<link rel="shortcut icon" href="<?php echo $config['domain']; ?>/favicon.ico" type="image/x-icon" />
+	<link rel="dns-prefetch" href="<?php echo $config['imgurl'];?>" />
+	<link rel="dns-prefetch" href="<?php echo $config['static_cdn_url'];?>" />
 	<link href="<?php static_cdn();?>/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
     <link href="<?php static_cdn();?>/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
 	<link href="<?php static_cdn();?>/public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
@@ -37,7 +39,7 @@ require_once __DIR__ . '/function.php';?>
 </head>
 
 <body class="container">
-	<?php echo showAD('top'); ?>
+	<?php if($config['ad_top']){echo $config['ad_top_info'];} ?>
 	<div class="md-lg-12 header-dividing">
 		<ul class="nav nav-pills">
 			<li class="<?php echo getActive('index'); ?>">
@@ -52,13 +54,6 @@ require_once __DIR__ . '/function.php';?>
 						<?php echo getFileNumber(APP_ROOT . config_path()); ?></span>
 				</a>
 			</li>
-			<!-- 源码下载
-			<li class="">
-				<a href="https://github.com/icret/easyImages2.0" target="_blank">
-					<i class="icon icon-github "> 源码下载</i>
-				</a>
-			</li>
-			-->
 		</ul>
 	</div>
 	<!-- 顶部导航栏END -->

@@ -80,7 +80,40 @@ function config_path($path = null)
 // 图片命名规则
 function imgName()
 {
-	return base_convert(date('His') . mt_rand(1024, 10240), 10, 36);
+	global $config;
+	$style = $config['imgName'];
+
+	function create_guid()	// guid生成函数
+	{
+		if (function_exists('com_create_guid') === true) {
+			return trim(com_create_guid(), '{}');
+		}
+
+		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+	}
+
+	switch ($style) {
+		case "date":	// 以上传时间 例：192704
+			return date("His");
+			break;
+		case "unix":	// 以Unix时间 例：1635074840
+			return time();
+			break;
+		case "uniqid":	// 基于以微秒计的当前时间 例：6175436c73418
+			return uniqid(true);
+			break;
+		case "guid":	// 全球唯一标识符 例：6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA
+			return create_guid();
+			break;
+		case "md5":	// md5加密时间 例：3888aa69eb321a2b61fcc63520bf6c82
+			return md5(microtime());
+			break;
+		case "sha1":	// sha1加密微秒 例：654faac01499e0cb5fb0e9d78b21e234c63d842a
+			return sha1(microtime());
+			break;
+		default:
+			return base_convert(date('His') . mt_rand(1024, 10240), 10, 36);	// 将上传时间+随机数转换为36进制 例：vx77yu
+	}
 }
 
 // 设置广告
@@ -109,9 +142,8 @@ function static_cdn()
 {
 	global $config;
 	if ($config['static_cdn']) {
-		echo '//cdn.jsdelivr.net/gh/icret/EasyImages2.0';
-	}else
-	{
+		echo $config['static_cdn_url'];
+	} else {
 		echo $config['domain'];
 	}
 }
@@ -301,16 +333,15 @@ function urlHash($data, $mode)
 // 删除指定文件
 function getDel($url, $type)
 {
+
+	// url本地化
+	$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
+	$url = urldecode(trim($url));
+
 	if ($type == 'url') {
-		// url本地化
-		$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
-		$url = urldecode(trim($url));
 		$url = $_SERVER['DOCUMENT_ROOT'] . $url;
 	}
 	if ($type == 'hash') {
-		// url本地化
-		$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
-		$url = urldecode(trim($url));
 		$url = APP_ROOT . $url;
 	}
 
@@ -371,7 +402,6 @@ function is_online()
 function checkEnv($mode)
 {
 	global $config;
-
 	if ($mode) {
 		// 扩展检测
 		$expand = array('fileinfo', 'iconv', 'gd', 'mbstring', 'openssl',);
@@ -385,7 +415,6 @@ function checkEnv($mode)
 		';
 			}
 		}
-
 		// 检测是否更改默认域名
 		$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.2.100');
 		if (strstr($url, $_SERVER['HTTP_HOST'])) {
@@ -405,8 +434,95 @@ function checkEnv($mode)
 		</script>
 		';
 		}
+		// 检查环境配置
+		if (!is_file(APP_ROOT . '/config/EasyIamge.lock')) {
+			echo '
+		<div class="modal fade" id="myModal-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">
+					<i class="icon icon-heart">	</i><a href="https://www.545141.com/846.html" target="_blank">简单图床-EasyImage2.0</a> 安装环境检测</h4>
+				</div>
+				<div class="modal-body">
+					<h4>说明：</h4>
+					<h5>1. 建议使用
+					<font color="red">PHP7.0</font>及以上版本；</h5>
+					<h5>2. 上传失败大部分是由于
+					<font color="red">upload_max_filesize、post_max_size、文件权限</font>设置不正确；</h5>
+					<h5>3. 本程序用到
+					<font color="red">Fileinfo、iconv、zip、mbstring、openssl</font>扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。</h5>
+					<h5>4.
+					<font color="red">zip</font>扩展不是必须的，但会影响文件压缩(不会在首页中检测)。</h5>
+					<h5>5. 上传后必须修改
+					<font color="red">config.php</font>的位置：
+					<font color="red">domain</font>当前网站域名，
+					<font color="red">imgurl</font>当前图片域名，
+					<font color="red">password</font>登录管理密码！</h5>
+					<hr />
+					<h4>EasyImage2.0 基础检测：</h4>
+					当前PHP版本：<font color="green">' . phpversion() . '</font>';
+			$quanxian = substr(base_convert(fileperms("file.php"), 10, 8), 3);
+			if (!is_executable('file.php') || $quanxian != '755') {
+				echo '
+					<br/>
+					<font color="red">上传文件权限错误（当前权限：' . $quanxian . '），<br />
+					<b>windows可以无视，linux使用 chmod -R 0755 /所在目录/* 赋予权限</font>';
+			} else {
+				echo '
+					<br/>
+					<font color="green">当前文件可执行</font>';
+			}
+			echo '
+					<br />
+					<font color="green">upload_max_filesize</font>PHP上传最大值：' . ini_get('upload_max_filesize');
+			echo '
+					<br />
+					<font color="green">post_max_size</font>PHP POST上传最大值：' . ini_get('post_max_size') . '
+					<br />';
+			$expand = array('fileinfo', 'iconv', 'gd', 'zip', 'mbstring', 'openssl',);
+			foreach ($expand as $val) {
+				if (extension_loaded($val)) {
+					echo '
+					<font color="green">' . $val . "</font>- 已安装
+					<br />";
+				} else {
+					echo "
+					<script language='javascript'>alert('$val - 未安装')</script>";
+					echo '
+					<font color="red">' . $val . "- 未安装</font>
+					<br />";
+				}
+			}
+			echo '
+					<hr/>以下是当前PHP所有已安装扩展：
+					<br/>';
+			foreach (get_loaded_extensions() as $val) {
+				echo '
+					<font color="green">' . $val . '</font>，';
+			}
+			echo '</div>
+				<div class="modal-footer">
+				<p>安装环境检测弹窗只会第一次打开时展示，会在config目录下自动生成EasyIamge.lock，如需再次展示或更换空间请自行删除EasyIamge.lock！刷新后此提示框消失。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+			<script>$("#myModal-1").modal({
+				keyboard: true,
+				moveable: true,
+				backdrop: "static",//点击空白处不关闭对话框
+				show: true
+			})
+			alert("初次打开会检测环境配置，请仔细看!!");
+			</script>
+		';
+			file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定文件，如需再次展示请删除此文件！', FILE_APPEND | LOCK_EX);
+			clearstatcache();
+		}
 	}
 }
+
 
 // 前端改变图片长宽
 function imgRatio()
@@ -449,7 +565,7 @@ function getVersion()
 				$getVersion->downJson();
 			} else if ($day == $now) { // 是否在需要更新的日期
 				$getVersion->downJson();
-			/*
+				/*
 			} elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
 				return null;
 			*/

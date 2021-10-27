@@ -27,16 +27,16 @@
 
 #### 注意：
 
-1. 安装之前先使用浏览器访问check.php检查扩展是否都安装！
+1. 第一次访问会检查环境并在config目录下生成EasyImage.lock
 2. 请将所有文件赋予0755权限或www权限
 3. 上传后必须修改config.php的位置：
    - domain 当前网站域名
    - imgurl 当前图片域名
    - password 登录管理密码！
-4. 如果无法登陆管理界面或上传图片，请先打开check.php检查扩展或者使用phpinfo检查。
+4. 如果无法登陆管理界面或上传图片，请检查扩展或者使用phpinfo检查。
 5. 可以使用浏览器的 F12调试模式->console查看错误
 6. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
-7. 下载源码后可以删除一些文件：README.md,check.php,LICENSE
+7. 下载源码后可以删除一些文件：README.md,LICENSE
 8. 欢迎加群：[623688684](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
 #### API上传示例：
@@ -83,6 +83,16 @@ RewriteRule config/(.*).(php)$ – [F]
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+
+* 2021-10-24 v2.3.0
+- 将服务器环境监测改为第一次打开时自动检测（如需再次展示需删除config目录下的EasyImage.lock）
+- 增加快捷操作中心显示服务信息
+- 增加自定义上传文件的命名方式（详见config.php文件里的注释）
+- 增加隐私政策、服务条款、DMCA
+- 增加自定义静态文件CDN源
+- 增加dns-prefetch
+- 删除了tinyfilemanager文件管理（感觉没什么用）
+- 一些bug得以修复
 
 * 2021-5-22 v2.2.0
 - 增加根目录静态属性
@@ -212,12 +222,11 @@ RewriteRule config/(.*).(php)$ – [F]
 <hr />
 
 #### 兼容性
-文件上传视图不支持IE9以下的浏览器,api不限制。建议php7.0及以上版本,需要服务器支持Fileinfo、iconv、zip、mbstring、openssl 扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。
+PHP需要7.0及以上版本,需要PHP支持Fileinfo、iconv、zip、mbstring、openssl 扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。
 
 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要 HTML5 支持）来添加上传文件，支持上传大图片，优先使用 HTML5，旧的浏览器自动使用Flash和Silverlight的方式兼容。
 <hr />
 
  - 感谢: [verot](https://github.com/verot/class.upload.php "verot" )提供非常好用的class.upload.php上传类
  - 感谢: [ZUI](https://github.com/easysoft/zui "ZUI" ) 提供css框架
- - 感谢:[tinyfilemanager](https://github.com/prasathmani/tinyfilemanager "tinyfilemanager" ) 提供的文件管理
  - 本源码遵循 GNU Public License

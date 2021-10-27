@@ -1,6 +1,4 @@
 # robots.txt
 User-agent: *
 Disallow: 
-Disallow: /api/
-Disallow: /public/
 Disallow: /config/

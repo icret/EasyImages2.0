@@ -44,13 +44,43 @@ if (isset($_POST['delDir'])) {
 	<div class="alert alert-primary">
 		<h3 style="text-align:center">EasyImage2.0 快捷操作中心</h2>
 			<hr />
-			<h5>目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用。</h5>
-			<h5>环境信息：PHP版本：<?php echo  phpversion(); ?>；PHP上传最大值：<?php echo ini_get('upload_max_filesize'); ?>；POST上传最大值：<?php echo ini_get('post_max_size'); ?>；</h5>
-			<h5><?php
-				$yesterday =  date("Y/m/d/", strtotime("-1 day"));
-				echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday) . '； 已用空间：' . getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__))	. ' 剩余空间：' . getDistUsed(disk_free_space(__DIR__)); ?>
-			</h5>
-			<h5>当前软件版本：<?php echo $config['version'];?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion();?></a></h5>
+			<h5>目录保存以 年/月/日/ 递进，非必要请勿修改！否则会导致部分操作不可用；</h5>
+			<h5>本人仅为程序开源创作，如非法网站使用与本人无关，请勿用于非法用途；</h5>
+			<h5>请为本人博客<a href="https://www.545141.com/" target="_blank">www.545141.com</a>加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）。</h5>
+			<p>
+				<button type="button" class="btn btn-mini" data-toggle="collapse" data-target="#collapseExample">服务信息<i class="icon icon-hand-down"></i></button>
+			</p>
+			<div class="collapse" id="collapseExample">
+				<div class="bg-danger with-padding">
+					<h5>系统信息</h5>
+					<hr />
+					<p>服务器系统：<?PHP echo php_uname('s') . ' <small class="text-muted">' . php_uname() . '</small>'; ?></p>
+					<p>WEB服务：<?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
+					<p>服务器IP：<?PHP echo  GetHostByName($_SERVER['SERVER_NAME']) ?></p>
+					<p>系统时间：<?PHP echo date("Y-m-d G:i:s"); ?></p>
+					<p>已用空间：<?php echo  getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) . ' 剩余空间：' . getDistUsed(disk_free_space(__DIR__)); ?></p>
+					<h5>PHP信息</h5>
+					<hr />
+					<p>PHP版本：<?php echo  phpversion(); ?></p>
+					<p>GD版本：<?php echo (gd_info()["GD Version"]); ?></p>
+					<p>PHP上传限制：<?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
+					<p>POST上传限制：<?php echo ini_get('post_max_size'); ?></p>
+					<p>PHP最长执行时间：<?PHP echo get_cfg_var("max_execution_time") . "秒 "; ?></p>
+					<p>PHP允许占用内存：<?PHP echo get_cfg_var("memory_limit") . "M "; ?></p>
+					<h5>我的信息</h5>
+					<hr />
+					<p>浏览器：<?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
+					<p>访问者IP：<?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
+					<h5>图床信息</h5>
+					<hr />
+					<p><?php
+						$yesterday =  date("Y/m/d/", strtotime("-1 day"));
+						echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday); ?>
+					</p>
+					<p>当前版本：<?php echo $config['version']; ?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion(); ?></a></p>
+
+				</div>
+			</div>
 	</div>
 </div>
 <div class="col-md-12">
@@ -155,11 +185,8 @@ if (isset($_POST['delDir'])) {
 		</form>
 	</div>
 </div>
-</div>
-</div>
-</div>
-<link href="<?php static_cdn();?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="<?php static_cdn();?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
 	// 动态显示要删除的图片
 	var oBtn = document.getElementById('del');

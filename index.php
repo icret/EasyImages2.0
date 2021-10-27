@@ -2,7 +2,7 @@
 require_once 'libs/header.php';
 
 // 公告
-if (isset($config['tips'])) {
+if (!empty($config['tips'])) {
   echo '<ul style="list-style: none;margin:1px 1px 30px 1px;"><li class="icon icon-bullhorn text-muted"> ' . $config['tips'] . '</li></ul>';
 }
 // 检查登录
@@ -27,7 +27,7 @@ mustLogin();
           <i class="icon icon-pause"></i>暂停上传</button>
       </div>
     </div>
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
       <ul class="nav nav-tabs">
         <li class="active">
           <a href="#" data-target="#tab2Content1" data-toggle="tab">直链</a>
