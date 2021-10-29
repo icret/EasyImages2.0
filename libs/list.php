@@ -3,8 +3,8 @@ require_once __DIR__ . '/header.php';
 if (!$config['showSwitch'] and !is_online()) {
     echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
 } else {
-    $path = $_GET['date'] ?? date('Y/m/d/');
-    $keyNum = $_GET['num'] ?? $config['listNumber'];
+    $path = isset($_GET['date']) ?$_GET['date']: date('Y/m/d/');
+    $keyNum =isset( $_GET['num'] )?$_GET['num']:$config['listNumber'];
     $fileArr = getFile(APP_ROOT . config_path($path));
     if ($fileArr[0]) {
 		echo '<div class="cards listNum">';
@@ -42,11 +42,12 @@ $yesterdayUpload = getFileNumber(APP_ROOT . $config['path'] . $yesterday);
 $spaceUsed = getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__));
 // 占用空间
 // 当前日期全部上传
-$allUploud = $_GET['date'] ?? date('Y/m/d/');
+$allUploud = isset($_GET['date'])?$_GET['date']:date('Y/m/d/');
 $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 @($httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path))));
 ?>
 <style>
+  /** 返回顶部*/
 	* {
 	list-style: none;
 	border: 0;
