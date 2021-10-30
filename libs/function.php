@@ -619,17 +619,16 @@ function get_json($img)
 	$output = json_decode($output, true);
 	return $output;
 }
-
 // 检查图片是否违规
-function checkImg($imageUrl)
+function checkImg($imageUrl, $mode = true)
 {
 	global $config;
 
 	$response = get_json($imageUrl);
-	if ($response['rating_index'] == '3') {								//  (1 = everyone, 2 = teen, 3 = adult)
-
+	if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
 		$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-		$name =  basename($imageUrl);    								// 文件名 p8vypd.png
+		//$name =  date('Y_m_d').'_'.basename($imageUrl);    			// 文件名 p8vypd.png
+		$name =  date('Y_m_d') . '_' . basename($imageUrl);    			// 文件名 2021_10_30_p8vypd.png
 		$new_path = APP_ROOT . $config['path'] . 'cache/' . $name;      // 新路径含文件名
 		$cache_dir = APP_ROOT . $config['path'] . 'cache/'; 			// cache路径
 
@@ -640,4 +639,15 @@ function checkImg($imageUrl)
 			rename($old_path, $new_path);
 		}
 	}
+}
+
+// 还原被审查的图片
+function re_checkImg($name)
+{
+	global $config;
+
+	$now_file = str_replace('_', '/', $name); 						// 当前图片相对位置 2021/10/30/p8vypd.png
+	$now_path_file = APP_ROOT . $config['path'] . 'cache/' . $name; // 当前图片绝对位置 */i/cache/2021_10_30_p8vypd.png
+	$to_file = APP_ROOT . $config['path'] . $now_file; 	 			// 还原图片的绝对位置 */i/2021/10/30/p8vypd.png
+	rename($now_path_file, $to_file);
 }

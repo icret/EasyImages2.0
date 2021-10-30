@@ -65,6 +65,7 @@ RewriteRule config/(.*).(php)$ – [F]
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+
 * 2021年10月30日
 - 增加监黄接口
 - 增加对php5.6-php8.0的支持

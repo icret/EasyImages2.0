@@ -179,7 +179,9 @@ $config = array(
    * 从 https://moderatecontent.com/ 获取key并填入/config/api_key.php的图片检查key
    * 开启后会受服务器到https://moderatecontent.com/ 速度影响，国内不建议开启！
    */
-  'checkImg' => false,
+  'checkImg' => true,
+  // 设置是不良图片概率,概率越大准确率越高，
+  'checkImg_value' => 50,
   // 当前版本
-  'version' => '2.3.1',
+  'version' => '2.3.1'
 );

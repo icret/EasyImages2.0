@@ -36,6 +36,12 @@ if (isset($_POST['delDir'])) {
 		header("refresh:1;"); // 1s后刷新当前页面
 	}
 }
+// 恢复图片
+if(isset($_GET['reimg'])){
+	$name = $_GET['reimg'];
+	re_checkImg($name);
+}
+
 ?>
 <div class="container">
 	<div class="row">
@@ -145,12 +151,12 @@ if (isset($_POST['delDir'])) {
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩的，不需重复压缩)
+							<input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩，不需重复压缩)
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" name="type" value="TinyImg"> 使用tinypng压缩（申请key：<a href="https://tinypng.com/" target="_blank">https://tinypng.com/</a>
+							<input type="radio" name="type" value="TinyImg"> 使用TinyImag压缩（需要申请key)
 						</label>
 					</div>
 					<div>
@@ -193,7 +199,7 @@ if (isset($_POST['delDir'])) {
 		</div>
 		<div class="col-md-12">
 			<hr>
-			<div class="col-md-6">
+			<div class="col-md-7">
 				<p>
 					<button type="button" class="btn" data-toggle="collapse" data-target="#lis_cache">疑似违规的图片<i class="icon icon-hand-down"></i></button>
 				</p>
@@ -211,6 +217,7 @@ if (isset($_POST['delDir'])) {
 									<th>长宽（像素）</th>
 									<th>大小</th>
 									<th>查看图片</th>
+									<th>还原图片</th>
 									<th>删除图片</th>
 								</tr>
 							</thead>
@@ -227,7 +234,7 @@ if (isset($_POST['delDir'])) {
 									@$filen_name = $cache_file[$i];												// 图片名称
 									@list($width, $height, $type, $attr) = getimagesize($file_cache_path);   	// 图片长、宽、类型、属性
 									$url = $config['imgurl'] . $config['path'] . 'cache/' . $cache_file[$i];    // 图片网络连接
-									$unlink_url = $config['domain'] . '/api/del.php?url=' . $url;               // 图片删除连接
+									$unlink_img = $config['domain'] . '/api/del.php?url=' . $url;               // 图片删除连接
 									// 缩略图文件
 									$thumb_cache_file = $config['domain'] . '/libs/thumb.php?img=' . $file_path . '&width=300&height=300';
 									echo '
@@ -238,7 +245,8 @@ if (isset($_POST['delDir'])) {
 									<td>' . $height . '*' . $width . '</td>
 									<td>' . $file_size . '</td>
 									<td><a class="btn btn-mini" href="' . $url  . '" target="_blank">查看原图</a></td>
-									<td><a class="btn btn-mini btn-danger" href="' . $unlink_url . '" target="_blank">删除图片</a></td>
+									<td><a class="btn btn-mini btn-success" href="?reimg='.$filen_name.'">恢复图片</a></td>
+									<td><a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除图片</a></td>
 								</tr>
 									';
 								}
