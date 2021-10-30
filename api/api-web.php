@@ -73,10 +73,23 @@ if (isset($_POST['delDir'])) {
 						<p>访问者IP：<?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
 						<h5>图床信息</h5>
 						<hr />
-						<p><?php $yesterday =  date("Y/m/d/", strtotime("-1 day"));echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday); ?></p>
+						<p><?php $yesterday =  date("Y/m/d/", strtotime("-1 day"));
+							echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday); ?></p>
 						<p>当前版本：<?php echo $config['version']; ?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion(); ?></a></p>
+						<p><?php
+							if (empty($tinyImag_key['TinyImag'])) {
+								echo '压缩图片 TinyImag Key未填写，申请地址：<a href="https://tinypng.com/developers" target="_blank">https://tinypng.com/developers</a><br/>';
+							} else {
+								echo '压缩图片 TinyImag Key已填写<br/>';
+							}
+							if (empty($moderatecontent['key'])) {
+								echo '图片检查 moderatecontent key未填写，申请地址： <a href="https://moderatecontent.com/" target="_blank">https://moderatecontent.com/</a>';
+							} else {
+								echo '图片检查 moderatecontent key已填写';
+							}
+							?></p>
 					</div>
-				</div>	
+				</div>
 			</div>
 		</div>
 		<div class="col-md-12">
@@ -84,9 +97,7 @@ if (isset($_POST['delDir'])) {
 				<form class="form-condensed" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
 					<label for="exampleInputMoney1">
 						新Token需按要求填入
-						<code>
-							/config/api_key.php
-						</code>
+						<code>/config/api_key.php</code>
 						才生效
 					</label>
 					<div class="input-group">
@@ -126,7 +137,6 @@ if (isset($_POST['delDir'])) {
 			</div>
 		</div>
 		<div class="col-md-12">
-
 			<div class="col-md-4">
 				<form action="../libs/compressing.php" method="post" target="_blank">
 					<div class="form-group">
@@ -135,12 +145,12 @@ if (isset($_POST['delDir'])) {
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩，不需重复压缩)
+							<input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩的，不需重复压缩)
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input type="radio" name="type" value="TinyImg"> 使用TinyImag压缩（需要申请key)
+							<input type="radio" name="type" value="TinyImg"> 使用tinypng压缩（申请key：<a href="https://tinypng.com/" target="_blank">https://tinypng.com/</a>
 						</label>
 					</div>
 					<div>
@@ -179,6 +189,71 @@ if (isset($_POST['delDir'])) {
 
 					<button type="submit" class="btn btn-mini btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复！');">删除目录</button>
 				</form>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<hr>
+			<div class="col-md-6">
+				<p>
+					<button type="button" class="btn" data-toggle="collapse" data-target="#lis_cache">疑似违规的图片<i class="icon icon-hand-down"></i></button>
+				</p>
+				<div class="collapse" id="lis_cache">
+					<p>为了服务器的稳定，仅显示最近20张图片；监黄需要在<code>config.php</code>中开启<code>checkImg</code>属性。</p>
+					<p>key申请地址：<a href="https://moderatecontent.com" target="_blank">https://moderatecontent.com</a></p>
+					<p>获得key后填入<code>/config/api_key.php</code>-><code>moderatecontent</code>属性</p>
+					<div class="table-responsive">
+						<table class="table table-hover table-bordered table-auto table-condensed table-striped">
+							<thead>
+								<tr>
+									<th>序号</th>
+									<th>缩略图</th>
+									<th>文件名</th>
+									<th>长宽（像素）</th>
+									<th>大小</th>
+									<th>查看图片</th>
+									<th>删除图片</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								// 获取被隔离的文件
+								@$cache_dir = APP_ROOT . $config['path'] . 'cache/';   							// cache目录
+								@$cache_file = getFile($cache_dir);  											// 获取所有文件
+								@$cache_num = count($cache_file);    											// 统计目录文件个数
+								for ($i = 0; $i < $cache_num and $i < 21; $i++) {								// 循环输出文件
+									$file_cache_path = APP_ROOT . $config['path'] . 'cache/' . $cache_file[$i]; // 图片绝对路径
+									$file_path =  $config['path'] . 'cache/' . $cache_file[$i];					// 图片相对路径
+									@$file_size =  getDistUsed(filesize($file_cache_path));                  	// 图片大小
+									@$filen_name = $cache_file[$i];												// 图片名称
+									@list($width, $height, $type, $attr) = getimagesize($file_cache_path);   	// 图片长、宽、类型、属性
+									$url = $config['imgurl'] . $config['path'] . 'cache/' . $cache_file[$i];    // 图片网络连接
+									$unlink_url = $config['domain'] . '/api/del.php?url=' . $url;               // 图片删除连接
+									// 缩略图文件
+									$thumb_cache_file = $config['domain'] . '/libs/thumb.php?img=' . $file_path . '&width=300&height=300';
+									echo '
+								<tr>
+									<td>' . $i . '</td>
+									<td><img data-toggle="lightbox" src="' . $thumb_cache_file . '" data-image="' . $thumb_cache_file . '" class="img-thumbnail" ></td>
+									<td>' . $filen_name . '</td>
+									<td>' . $height . '*' . $width . '</td>
+									<td>' . $file_size . '</td>
+									<td><a class="btn btn-mini" href="' . $url  . '" target="_blank">查看原图</a></td>
+									<td><a class="btn btn-mini btn-danger" href="' . $unlink_url . '" target="_blank">删除图片</a></td>
+								</tr>
+									';
+								}
+								echo '
+								<span class="label label-primary label-outline">总数：' . $cache_num . '</span>&nbsp;
+								<form action="' . $_SERVER['PHP_SELF'] . '" method="post">
+									<input type="hidden" name="delDir" value="/cache/" readonly="">
+									<button class="btn btn-danger btn-mini" ">删除全部违规图片</button>
+								</form>
+								';
+								?>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

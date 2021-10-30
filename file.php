@@ -115,4 +115,12 @@ if ($handle->uploaded) {
         }
 
     unset($handle);
+
+    // 图片违规检查
+       
+    if($config['checkImg']){
+        require_once APP_ROOT . '/config/api_key.php';
+        @checkImg($imageUrl);
+    }   
+  
 }

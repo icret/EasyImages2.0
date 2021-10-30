@@ -20,10 +20,15 @@
 - [x] 支持设置图片指定宽/高
 - [x] 支持限制最低宽度/高度上传
 - [x] 支持设置广告
+- [x] 图片监黄
 - [x] 支持开启/关闭api上传
 - [x] 在线管理图片(增、删、改、查)
 - [x] 支持网站统计 请将统计代码放入:public/static/hm.js
 - [x] 更多·····
+
+#### 安装文档
+
+[https://www.kancloud.cn/easyimage/easyimage](https://www.kancloud.cn/easyimage/easyimage)
 
 #### 注意：
 
@@ -38,29 +43,6 @@
 6. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
 7. 下载源码后可以删除一些文件：README.md,LICENSE
 8. 欢迎加群：[623688684](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
-
-#### API上传示例：
-参数：
-
-| 参数名称 | 类型 | 是否必须 | 说明 |
-| :------------: | :------------: | :------------: | :------------: |
-| image | file | 是 | 需上传的图片 |
-| api | text | 是 | token |
-
-html form上传示例:
-```html
-<form action="../index.php" method="post" enctype="multipart/form-data">
-    <input type="file"  name="image" accept="image/*" >
-    <input type="text" name = "token" placeholder="在tokenList文件找到token并输入"/>
-    <input type="submit" />
-</form>
-```
-api上传成功后返回json：
-
-```json
-// 参数:"sucess"上传成功 "url" 图片链接  "del" 删除链接 "failed" 上传失败 "message" 错误信息
-{"result":"success","url":"http:\/\/192.168.1.15\/i\/2021\/05\/03\/u34au6_2.jpg","del":"http:\/\/192.168.1.15\/api\/api-web.php?hash=XH%BB2Z%D1%08%D8%E2%D7%048%DFJ%86n%C0%06%DAD%DCP%3E%CF%C4%1B%60%E5%C4Pli"}
-```
 
 #### 安全配置
  - Apache配置文件默认设置上传目录不可运行 
@@ -83,6 +65,10 @@ RewriteRule config/(.*).(php)$ – [F]
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+* 2021年10月30日
+- 增加监黄接口
+- 增加对php5.6-php8.0的支持
+- 修复二级目录无法使用
 
 * 2021-10-24 v2.3.0
 - 将服务器环境监测改为第一次打开时自动检测（如需再次展示需删除config目录下的EasyImage.lock）
@@ -222,7 +208,7 @@ RewriteRule config/(.*).(php)$ – [F]
 <hr />
 
 #### 兼容性
-PHP需要7.0及以上版本,需要PHP支持Fileinfo、iconv、zip、mbstring、openssl 扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。
+PHP推荐使用PHP7.0及以上版本,需要PHP支持Fileinfo、iconv、zip、mbstring、openssl 扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。
 
 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要 HTML5 支持）来添加上传文件，支持上传大图片，优先使用 HTML5，旧的浏览器自动使用Flash和Silverlight的方式兼容。
 <hr />

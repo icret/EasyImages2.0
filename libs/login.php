@@ -7,7 +7,7 @@ require_once APP_ROOT . '/libs/header.php';
 // 提交登录
 if (isset($_POST['password'])) {
 	checkLogin();
-	Header("Location:../");
+	header("refresh:2;url=" . $config['domain'] . "");
 }
 
 ?>
@@ -24,7 +24,7 @@ if (isset($_POST['password'])) {
 		</form>
 	</div>
 </center>
-<script src="../public/static/md5.min.js"></script>
+<script src="<?php echo $config['domain']; ?>/public/static/md5.min.js"></script>
 <script>
 	function md5_post() {
 		var password = document.getElementById('password');
@@ -36,4 +36,5 @@ if (isset($_POST['password'])) {
 </script>
 
 <?php
+
 require_once APP_ROOT . '/libs/footer.php';

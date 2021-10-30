@@ -53,6 +53,12 @@ $config = array(
   'domain' => 'http://localhost',
   // 图片链接域名,末尾不加"/"
   'imgurl' => 'http://localhost',
+  // 登录上传和后台管理密码,管理用户名为：admin
+  'password' => 'admin@123',
+  // 是否开启登录上传 开启:true 关闭:false
+  'mustLogin' => false,
+  // 是否开启API上传 开启:true 关闭:false
+  'apiStatus' => false,
   /**
    * 存储路径 前后要加"/" 
    * 可根据Apache/Nginx配置安全，参考：https://www.545141.com/981.html 或 README.md
@@ -69,15 +75,9 @@ $config = array(
    */
   'imgName'  =>  'default',
   // 最大上传限制 默认为5M 请使用工具转换Mb http://www.bejson.com/convert/filesize/
-  'maxSize' => 15242880,
+  'maxSize' => 5242880,
   // 每次最多上传图片数
   'maxUploadFiles' => 30,
-  // 是否开启登录上传 开启:true 关闭:false
-  'mustLogin' => false,
-  // 登录上传和后台管理密码,管理用户名为：admin
-  'password' => 'admin@123',
-  // 是否开启API上传 开启:true 关闭:false
-  'apiStatus' => true,
   // 是否开启水印:0关闭，1文字水印，2图片水印 不能使用动态gif添加水印
   'watermark' => 0,
   // 水印文字内容
@@ -99,8 +99,11 @@ $config = array(
   'waterImg' => 'public/images/watermark.png',
   // 允许上传的图片扩展名
   'extensions' => "'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,ico'",
-  // 轻微有损压缩图片 开启:true 关闭:false  * 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向
-  'compress' => true,
+  /* 轻微有损压缩图片 开启:true 关闭:false  
+   * 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向
+   * 开启后会增加服务器负担  
+   */
+  'compress' => false,
   // 转换图片为指定格式 可选：''|'png'|'jpeg'|'gif'|'bmp';默认值：''
   'imgConvert' => '',
   // 最大上传宽度
@@ -124,7 +127,7 @@ $config = array(
   // 开启顶部广告 开启:true 关闭:false 如果想添加或修改广告请到
   'ad_top' => false,
   // 顶部广告内容 支持html
-  'ad_top_info'  =>'
+  'ad_top_info'  => '
   <div id="ad" class="col-md-12" align="center" style="padding:5px;">
     <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
     <a href="https://app.cloudcone.com/?ref=3521" target="_blank"><img src="/public/images/ad.jpg" /></a>
@@ -133,7 +136,7 @@ $config = array(
   // 开启底部广告 开启:true 关闭:false 如果想添加或修改广告请到
   'ad_bot' => false,
   // 底部广告内容 支持html
-  'ad_bot_info'  =>'
+  'ad_bot_info'  => '
   <div id="ad" class="col-md-12" align="center" style="padding:5px;">
       <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
       <a href="https://app.cloudcone.com/?ref=3521" target="_blank"><img src="/public/images/ad.jpg" /></a>
@@ -155,14 +158,12 @@ $config = array(
       s.parentNode.insertBefore(hm, s);
     })();
     </script>
-    
-    <!--打赏
-    <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
-    -->
-    <!-- 非img.545141.com跳转
+
+    <!-- 自定义js举例：非img.545141.com跳转 
     <img style="display:none" src=" " onerror=\'this.onerror=null;var currentDomain="img."+"545141." + "com"; var str1=currentDomain; str2="docu"+"ment.loca"+"tion.host"; str3=eval(str2) ;if( str1!=str3 ){ do_action = "loca" + "tion." + "href = loca" + "tion.href" + ".rep" + "lace(docu" +"ment"+".loca"+"tion.ho"+"st," + "currentDomain" + ")";eval(do_action) }\' />		
     -->
-    <!-- QQ邮箱、QQ群
+    <!--自定义代码举例：打赏、QQ邮箱、QQ群 可删除
+    <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
     <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=cR0UHB4fGBwxAABfEh4c">
       <i class="icon icon-envelope-alt">联系邮箱 </i></span>
     </a> 
@@ -174,6 +175,11 @@ $config = array(
     ',
   // PHP插件检测-安全设置检测-版本检测 开启:true 关闭:false
   'checkEnv' => true,
+  /* 图片监黄 开启:true 关闭:false 
+   * 从 https://moderatecontent.com/ 获取key并填入/config/api_key.php的图片检查key
+   * 开启后会受服务器到https://moderatecontent.com/ 速度影响，国内不建议开启！
+   */
+  'checkImg' => false,
   // 当前版本
-  'version' => '2.3.0',
+  'version' => '2.3.1',
 );

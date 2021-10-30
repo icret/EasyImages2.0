@@ -14,7 +14,7 @@ require_once APP_ROOT . '/config/api_key.php';
  */
 function compress($floder, $type = 'Imgcompress', $source = '')
 {
-    global $Api_Key;
+    global $tinyImag_key;
     global $config;
     ini_set('max_execution_time', '0');  // 脚本运行的时间（以秒为单位）0不限制
 
@@ -35,12 +35,12 @@ function compress($floder, $type = 'Imgcompress', $source = '')
     }
 
     if ($type == 'TinyImg') {
-        if (empty($Api_Key['TinyImag'])) {
+        if (empty($tinyImag_key['TinyImag'])) {
             exit('请先申请TinyImag key并保存再试！');
         }
         $folder =  '..' . $config['path'] . $source;
         $tinyImg = new TinyImg();
-        $key = $Api_Key['TinyImag'];
+        $key = $tinyImag_key['TinyImag'];
         $input = $folder; //这个文件夹下的文件会被压缩
         $output = $folder; //压缩的结果会被保存到这个文件夹中
         $tinyImg->compressImgsFolder($key, $input, $output);

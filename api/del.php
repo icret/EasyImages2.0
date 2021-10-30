@@ -23,9 +23,11 @@ if (empty($_REQUEST)) {
     new $.zui.Messager("没有要删除的图片！", {type: "danger" // 定义颜色主题 
     }).show();
     // 延时3.5s跳转			
-    window.setTimeout("window.location=\'/../ \'",3500);
+    // window.setTimeout("window.location=\'/../ \'",3500);
     </script>
     ';
+    header("refresh:3;url=".$config['domain']."");
+    
 } elseif (isset($_GET['url'])) {
     $img = $_GET['url'];
     echo '
@@ -55,9 +57,10 @@ if (is_online()) {
             new $.zui.Messager("请登录后再删除", {type: "danger" // 定义颜色主题 
             }).show();
             // 延时2s跳转			
-        window.setTimeout("window.location=\'/../libs/login.php \'",2000);
+            // window.setTimeout("window.location=\'/../libs/login.php \'",2000);
             </script>
 			';
+            header("refresh:2;url=".$config['domain']."/libs/login.php");            
     }
 }
 

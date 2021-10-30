@@ -599,3 +599,45 @@ function deldir($dir)
 		return false;
 	}
 }
+
+// curl访问网站并返回解码过的json信息
+function get_json($img)
+{
+	global $moderatecontent;
+
+	$url = $moderatecontent['url'] . $moderatecontent['key'] . '&url=' . $img;
+	$headerArray = array("Content-type:application/json;", "Accept:application/json");
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArray);
+	curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36');
+	$output = curl_exec($ch);
+	curl_close($ch);
+	$output = json_decode($output, true);
+	return $output;
+}
+
+// 检查图片是否违规
+function checkImg($imageUrl)
+{
+	global $config;
+
+	$response = get_json($imageUrl);
+	if ($response['rating_index'] == '3') {								//  (1 = everyone, 2 = teen, 3 = adult)
+
+		$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+		$name =  basename($imageUrl);    								// 文件名 p8vypd.png
+		$new_path = APP_ROOT . $config['path'] . 'cache/' . $name;      // 新路径含文件名
+		$cache_dir = APP_ROOT . $config['path'] . 'cache/'; 			// cache路径
+
+		if (is_dir($cache_dir)) {										// 创建cache目录并移动
+			rename($old_path, $new_path);
+		} else {
+			mkdir($cache_dir, 0777, true);
+			rename($old_path, $new_path);
+		}
+	}
+}
