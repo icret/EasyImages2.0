@@ -66,7 +66,7 @@ RewriteRule config/(.*).(php)$ – [F]
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
-* 2021年10月30日
+* 2021年10月30日 v2.3.1
 - 增加监黄接口
 - 增加对php5.6-php8.0的支持
 - 修复二级目录无法使用

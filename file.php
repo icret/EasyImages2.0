@@ -120,7 +120,7 @@ if ($handle->uploaded) {
        
     if($config['checkImg']){
         require_once APP_ROOT . '/config/api_key.php';
-        checkImg($imageUrl);
+        @checkImg($imageUrl);
     }   
   
 }
