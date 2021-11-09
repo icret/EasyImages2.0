@@ -90,8 +90,12 @@ class Thumb{
         # 创建新的背景画布
         if($height>=$thumb_h){
             $thumb=imagecreatetruecolor($width,$thumb_h);
+            @imagealphablending($thumb, false); //这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;2-1
+            @imagesavealpha($thumb, true); //这里很重要,意思是不要丢了$thumb图像的透明色;2-2 EasyImage修改
         }else{
             $thumb=imagecreatetruecolor($width,$height);
+            @imagealphablending($thumb, false); //这里很重要,意思是不合并颜色,直接用$img图像颜色替换,包括透明色;2-1
+            @imagesavealpha($thumb, true); //这里很重要,意思是不要丢了$thumb图像的透明色;2-2 EasyImage修改
             $thumb_h=$height;
         }
     

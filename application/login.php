@@ -3,7 +3,7 @@
  * 登录页面
  */
 require_once 'function.php';
-require_once APP_ROOT . '/libs/header.php';
+require_once APP_ROOT . '/application/header.php';
 // 提交登录
 if (isset($_POST['password'])) {
 	checkLogin();
@@ -37,4 +37,4 @@ if (isset($_POST['password'])) {
 
 <?php
 
-require_once APP_ROOT . '/libs/footer.php';
+require_once APP_ROOT . '/application/footer.php';

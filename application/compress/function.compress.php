@@ -4,8 +4,8 @@
  * 压缩文件函数调用位置
  */
 require_once __DIR__ . '/../function.php';
-require_once APP_ROOT . '/libs/compress/Imagick/class.Imgcompress.php';
-require_once APP_ROOT . '/libs/compress/TinyImg/TinyImg.php';
+require_once APP_ROOT . '/application/compress/Imagick/class.Imgcompress.php';
+require_once APP_ROOT . '/application/compress/TinyImg/TinyImg.php';
 require_once APP_ROOT . '/config/api_key.php';
 
 /**
@@ -14,7 +14,6 @@ require_once APP_ROOT . '/config/api_key.php';
  */
 function compress($floder, $type = 'Imgcompress', $source = '')
 {
-    global $tinyImag_key;
     global $config;
     ini_set('max_execution_time', '0');  // 脚本运行的时间（以秒为单位）0不限制
 
@@ -35,12 +34,12 @@ function compress($floder, $type = 'Imgcompress', $source = '')
     }
 
     if ($type == 'TinyImg') {
-        if (empty($tinyImag_key['TinyImag'])) {
+        if (empty($config['TinyImag_key'])) {
             exit('请先申请TinyImag key并保存再试！');
         }
         $folder =  '..' . $config['path'] . $source;
         $tinyImg = new TinyImg();
-        $key = $tinyImag_key['TinyImag'];
+        $key = $config['TinyImag_key'];
         $input = $folder; //这个文件夹下的文件会被压缩
         $output = $folder; //压缩的结果会被保存到这个文件夹中
         $tinyImg->compressImgsFolder($key, $input, $output);

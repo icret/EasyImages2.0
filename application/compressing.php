@@ -4,7 +4,7 @@
  * 压缩状态页面
  */
 require_once 'header.php';
-require_once APP_ROOT . '/libs/compress/function.compress.php';
+require_once APP_ROOT . '/application/compress/function.compress.php';
 
 // 检测登录
 if (!is_online()) {

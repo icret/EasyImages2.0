@@ -2,9 +2,10 @@
 /*
  * API 页面管理
  */
-require_once '../libs/header.php';
+require_once '../application/header.php';
 require_once APP_ROOT . '/config/api_key.php';
-require_once APP_ROOT . '/api/libs//apiFunction.php';
+require_once APP_ROOT . '/api/application/apiFunction.php';
+require_once APP_ROOT . '/application/chart.php';
 
 // 检测登录
 if (!is_online()) {
@@ -36,12 +37,30 @@ if (isset($_POST['delDir'])) {
 		header("refresh:1;"); // 1s后刷新当前页面
 	}
 }
+
 // 恢复图片
-if(isset($_GET['reimg'])){
+if (isset($_GET['reimg'])) {
 	$name = $_GET['reimg'];
 	re_checkImg($name);
 }
 
+// 统计图表
+$char_data = read_chart_total();
+
+$chart_date =  '';
+foreach ($char_data['date'] as $value) {
+	$chart_date .= $value;
+}
+
+$chart_number = '';
+foreach ($char_data['number'] as $value) {
+	$chart_number .= $value;
+}
+
+$chart_disk = '';
+foreach ($char_data['disk'] as $value) {
+	$chart_disk .= $value;
+}
 ?>
 <div class="container">
 	<div class="row">
@@ -79,21 +98,26 @@ if(isset($_GET['reimg'])){
 						<p>访问者IP：<?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
 						<h5>图床信息</h5>
 						<hr />
-						<p><?php $yesterday =  date("Y/m/d/", strtotime("-1 day"));
-							echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday); ?></p>
-						<p>当前版本：<?php echo $config['version']; ?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion(); ?></a></p>
 						<p><?php
-							if (empty($tinyImag_key['TinyImag'])) {
+							if (empty($config['TinyImag_key'])) {
 								echo '压缩图片 TinyImag Key未填写，申请地址：<a href="https://tinypng.com/developers" target="_blank">https://tinypng.com/developers</a><br/>';
 							} else {
 								echo '压缩图片 TinyImag Key已填写<br/>';
 							}
-							if (empty($moderatecontent['key'])) {
-								echo '图片检查 moderatecontent key未填写，申请地址： <a href="https://moderatecontent.com/" target="_blank">https://moderatecontent.com/</a>';
+							if (empty($config['moderatecontent_key'])) {
+								echo '图片检查 moderatecontent key未填写，申请地址： <a href="https://client.moderatecontent.com" target="_blank">https://client.moderatecontent.com/</a>';
 							} else {
 								echo '图片检查 moderatecontent key已填写';
 							}
-							?></p>
+							?>
+						</p>
+						<p>当前版本：<?php echo $config['version']; ?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion(); ?></a></p>
+						<p><?php
+							$yesterday =  date("Y/m/d/", strtotime("-1 day"));
+							echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday);
+							echo '<br />统计时间： ' . read_total_json('total_time') . '；文件夹：' . read_total_json('dirnum') . '个；托管图片：' . read_total_json('filenum') . '张；占用：' . read_total_json('usage_space') . '；缓存周期：每小时。';
+							?>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -130,7 +154,7 @@ if(isset($_GET['reimg'])){
 			<div class="col-md-4">
 				<div id="delimgurl"></div>
 				<div id="title"></div>
-				<form class="form-condensed" method="get" action="del.php" id="form" name="delForm" onSubmit="getStr();" target="_blank">
+				<form class="form-condensed" method="get" action="../application/del.php" id="form" name="delForm" onSubmit="getStr();" target="_blank">
 					<div class="form-group">
 						<label for="del">
 							删除图片
@@ -144,7 +168,7 @@ if(isset($_GET['reimg'])){
 		</div>
 		<div class="col-md-12">
 			<div class="col-md-4">
-				<form action="../libs/compressing.php" method="post" target="_blank">
+				<form action="../application/compressing.php" method="post" target="_blank">
 					<div class="form-group">
 						<label for="exampleInputInviteCode1">压缩文件夹内图片(格式：2021/05/10/)：</label>
 						<input type="text" class="form-control form-date" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
@@ -192,10 +216,16 @@ if(isset($_GET['reimg'])){
 						<label for="exampleInputInviteCode1" style="color:red">删除所选日期文件夹（删除之后无法恢复！）：</label>
 						<input type="text" class="form-control form-date" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly="">
 					</div>
-
 					<button type="submit" class="btn btn-mini btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复！');">删除目录</button>
 				</form>
 			</div>
+		</div>
+		<div class="col-md-12" style="text-align: center;">
+			<hr>
+			<h4>上传统计（每日更新）</h4>
+			<canvas id="myChart" width="1920" height="400"></canvas>
+			<p>单位：上传/个 占用/Mb 统计时间：<?php echo $char_data['total_time']; ?></p>
+			<p></p>
 		</div>
 		<div class="col-md-12">
 			<hr>
@@ -204,8 +234,8 @@ if(isset($_GET['reimg'])){
 					<button type="button" class="btn" data-toggle="collapse" data-target="#lis_cache">疑似违规的图片<i class="icon icon-hand-down"></i></button>
 				</p>
 				<div class="collapse" id="lis_cache">
-					<p>为了服务器的稳定，仅显示最近20张图片；监黄需要在<code>config.php</code>中开启<code>checkImg</code>属性。</p>
-					<p>key申请地址：<a href="https://moderatecontent.com" target="_blank">https://moderatecontent.com</a></p>
+					<p>为了访问速度，仅显示最近20张图片；监黄需要在<code>config.php</code>中开启<code>checkImg</code>属性。</p>
+					<p>key申请地址：<a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
 					<p>获得key后填入<code>/config/api_key.php</code>-><code>moderatecontent</code>属性</p>
 					<div class="table-responsive">
 						<table class="table table-hover table-bordered table-auto table-condensed table-striped">
@@ -214,7 +244,6 @@ if(isset($_GET['reimg'])){
 									<th>序号</th>
 									<th>缩略图</th>
 									<th>文件名</th>
-									<th>长宽（像素）</th>
 									<th>大小</th>
 									<th>查看图片</th>
 									<th>还原图片</th>
@@ -224,28 +253,26 @@ if(isset($_GET['reimg'])){
 							<tbody>
 								<?php
 								// 获取被隔离的文件
-								@$cache_dir = APP_ROOT . $config['path'] . 'cache/';   							// cache目录
-								@$cache_file = getFile($cache_dir);  											// 获取所有文件
-								@$cache_num = count($cache_file);    											// 统计目录文件个数
-								for ($i = 0; $i < $cache_num and $i < 21; $i++) {								// 循环输出文件
-									$file_cache_path = APP_ROOT . $config['path'] . 'cache/' . $cache_file[$i]; // 图片绝对路径
-									$file_path =  $config['path'] . 'cache/' . $cache_file[$i];					// 图片相对路径
-									@$file_size =  getDistUsed(filesize($file_cache_path));                  	// 图片大小
-									@$filen_name = $cache_file[$i];												// 图片名称
-									@list($width, $height, $type, $attr) = getimagesize($file_cache_path);   	// 图片长、宽、类型、属性
-									$url = $config['imgurl'] . $config['path'] . 'cache/' . $cache_file[$i];    // 图片网络连接
-									$unlink_img = $config['domain'] . '/api/del.php?url=' . $url;               // 图片删除连接
+								@$cache_dir = APP_ROOT . $config['path'] . 'suspic/';   							// cache目录
+								@$cache_file = getFile($cache_dir);  												// 获取所有文件
+								@$cache_num = count($cache_file);    												// 统计目录文件个数
+								for ($i = 0; $i < $cache_num and $i < 21; $i++) {									// 循环输出文件
+									$file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i]; 	// 图片绝对路径
+									$file_path =  $config['path'] . 'suspic/' . $cache_file[$i];					// 图片相对路径
+									@$file_size =  getDistUsed(filesize($file_cache_path));                  		// 图片大小
+									@$filen_name = $cache_file[$i];													// 图片名称
+									$url = $config['imgurl'] . $config['path'] . 'suspic/' . $cache_file[$i];   	// 图片网络连接
+									$unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
 									// 缩略图文件
-									$thumb_cache_file = $config['domain'] . '/libs/thumb.php?img=' . $file_path . '&width=300&height=300';
+									$thumb_cache_file = $config['domain'] . '/application/thumb.php?img=' . $file_path . '&width=300&height=300';
 									echo '
 								<tr>
 									<td>' . $i . '</td>
 									<td><img data-toggle="lightbox" src="' . $thumb_cache_file . '" data-image="' . $thumb_cache_file . '" class="img-thumbnail" ></td>
 									<td>' . $filen_name . '</td>
-									<td>' . $height . '*' . $width . '</td>
 									<td>' . $file_size . '</td>
 									<td><a class="btn btn-mini" href="' . $url  . '" target="_blank">查看原图</a></td>
-									<td><a class="btn btn-mini btn-success" href="?reimg='.$filen_name.'">恢复图片</a></td>
+									<td><a class="btn btn-mini btn-success" href="?reimg=' . $filen_name . '">恢复图片</a></td>
 									<td><a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除图片</a></td>
 								</tr>
 									';
@@ -253,7 +280,7 @@ if(isset($_GET['reimg'])){
 								echo '
 								<span class="label label-primary label-outline">总数：' . $cache_num . '</span>&nbsp;
 								<form action="' . $_SERVER['PHP_SELF'] . '" method="post">
-									<input type="hidden" name="delDir" value="/cache/" readonly="">
+									<input type="hidden" name="delDir" value="/suspic/" readonly="">
 									<button class="btn btn-danger btn-mini" ">删除全部违规图片</button>
 								</form>
 								';
@@ -263,11 +290,22 @@ if(isset($_GET['reimg'])){
 					</div>
 				</div>
 			</div>
+			<div class="col-md-5">
+				<form class="form-inline" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+					<span class="label label-badge label-primary label-outline">已缓存<?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/'); ?>个文件
+						缓存占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?>
+						<button type="submit" class="btn btn-mini btn-primary" name="delDir" value="cache/" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复！');">删除缓存</button></span>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
+<!--[if lt IE 9]>
+  <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/excanvas.js"></script>
+<![endif]-->
 <script>
 	// 动态显示要删除的图片
 	var oBtn = document.getElementById('del');
@@ -293,7 +331,37 @@ if(isset($_GET['reimg'])){
 		forceParse: 0,
 		format: "yyyy/mm/dd/"
 	});
+
+	// 图表格式化
+	// 使用jquery方法获取 2d context 对象
+	var ctx = $("#myChart").get(0).getContext("2d");
+
+	// 使用$.zui.Chart构造Chart实例
+	var myNewChart = new $.zui.Chart(ctx);
+
+	var data = {
+		// labels 数据包含依次在X轴上显示的文本标签
+		labels: [<?php echo rtrim($chart_date, ','); ?>],
+		// labels: ["11月7日", "11月6日", "11月5日", "11月4日", "11月3日", "11月2日", "11月1日", "10月31日", "10月30日", "10月29日", "10月28日", "10月27日"],
+		datasets: [{
+			// 数据集名称，会在图例中显示
+			label: "上传",
+			color: "green",
+			// 数据集
+			data: [<?php echo rtrim($chart_number, ','); ?>]
+		}, {
+			label: "占用",
+			color: "red",
+			data: [<?php echo rtrim($chart_disk, ','); ?>]
+		}]
+	};
+
+	var options = {}; // 图表配置项，可以留空来使用默认的配置
+
+	var myLineChart = $("#myChart").lineChart(data, options);
+
+
 	// Title
 	document.title = "管理中心 - <?php echo $config['title']; ?>";
 </script>
-<?php require_once APP_ROOT . '/libs/footer.php';
+<?php require_once APP_ROOT . '/application/footer.php';

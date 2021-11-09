@@ -1,5 +1,17 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
+// 设置html为utf8
+@header('Content-Type:text/html;charset=utf-8');
+//将时区设置为中国·上海
+@ini_set('date.timezone', 'Asia/Shanghai');
+@date_default_timezone_set('Asia/Shanghai');
+// 修改内存限制 根据服务器配置选择，低于128M容易出现上传失败，你懂得图片挺占用内存的
+@ini_set('memory_limit', '512M');
+// 定义根目录
+@define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
+// 判断当前的系统类型是否为windows
+@define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
+
+require_once APP_ROOT . '/config/config.php';
 
 // 判断GIF图片是否为动态
 function isAnimatedGif($filename)
@@ -89,7 +101,7 @@ function imgName()
 			return trim(com_create_guid(), '{}');
 		}
 
-		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+		return strtolower(sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)));
 	}
 
 	switch ($style) {
@@ -333,9 +345,10 @@ function urlHash($data, $mode)
 // 删除指定文件
 function getDel($url, $type)
 {
-
+	global $config;
 	// url本地化
-	$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
+	//$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
+	$url = htmlspecialchars(str_replace($config['imgurl'], '', $url));   // 过滤html 获取url path
 	$url = urldecode(trim($url));
 
 	if ($type == 'url') {
@@ -401,6 +414,12 @@ function is_online()
  */
 function checkEnv($mode)
 {
+	// 初始化安装
+	if (!file_exists(APP_ROOT . '/install/install.lock') and file_exists(APP_ROOT . '/install/install.php')) {
+		echo '<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>';
+		exit;
+	}
+
 	global $config;
 	if ($mode) {
 		// 扩展检测
@@ -416,8 +435,7 @@ function checkEnv($mode)
 			}
 		}
 		// 检测是否更改默认域名
-		$url = preg_replace('#^(http(s?))?(://)#', '', 'http://192.168.2.100');
-		if (strstr($url, $_SERVER['HTTP_HOST'])) {
+		if (strstr('localhost', $_SERVER['HTTP_HOST'])) {
 			echo '
 		<script>
 		new $.zui.Messager("请修改默认域名，可能会导致图片访问异常！", {type: "black" // 定义颜色主题 
@@ -434,7 +452,7 @@ function checkEnv($mode)
 		</script>
 		';
 		}
-		// 检查环境配置
+		// 上部内容
 		if (!is_file(APP_ROOT . '/config/EasyIamge.lock')) {
 			echo '
 		<div class="modal fade" id="myModal-1">
@@ -446,64 +464,55 @@ function checkEnv($mode)
 				</div>
 				<div class="modal-body">
 					<h4>说明：</h4>
-					<h5>1. 建议使用
-					<font color="red">PHP7.0</font>及以上版本；</h5>
-					<h5>2. 上传失败大部分是由于
-					<font color="red">upload_max_filesize、post_max_size、文件权限</font>设置不正确；</h5>
-					<h5>3. 本程序用到
-					<font color="red">Fileinfo、iconv、zip、mbstring、openssl</font>扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。</h5>
-					<h5>4.
-					<font color="red">zip</font>扩展不是必须的，但会影响文件压缩(不会在首页中检测)。</h5>
-					<h5>5. 上传后必须修改
-					<font color="red">config.php</font>的位置：
-					<font color="red">domain</font>当前网站域名，
-					<font color="red">imgurl</font>当前图片域名，
-					<font color="red">password</font>登录管理密码！</h5>
+					<h5>1. 建议使用<font color="red">PHP7.0</font>及以上版本；</h5>
+					<h5>2. 上传失败大部分是由于<font color="red">upload_max_filesize、post_max_size、文件权限</font>设置不正确；</h5>
+					<h5>3. 本程序用到<font color="red">Fileinfo、GD、openssl</font>扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。</h5>
+					<h5>4. 上传后必须修改<font color="red">当前网站域名、当前图片域名，登录管理密码！</font></h5>
 					<hr />
 					<h4>EasyImage2.0 基础检测：</h4>
-					当前PHP版本：<font color="green">' . phpversion() . '</font>';
-			$quanxian = substr(base_convert(fileperms("file.php"), 10, 8), 3);
-			if (!is_executable('file.php') || $quanxian != '755') {
-				echo '
-					<br/>
-					<font color="red">上传文件权限错误（当前权限：' . $quanxian . '），<br />
-					<b>windows可以无视，linux使用 chmod -R 0755 /所在目录/* 赋予权限</font>';
-			} else {
-				echo '
-					<br/>
-					<font color="green">当前文件可执行</font>';
-			}
-			echo '
-					<br />
-					<font color="green">upload_max_filesize</font>PHP上传最大值：' . ini_get('upload_max_filesize');
-			echo '
-					<br />
-					<font color="green">post_max_size</font>PHP POST上传最大值：' . ini_get('post_max_size') . '
-					<br />';
-			$expand = array('fileinfo', 'iconv', 'gd', 'zip', 'mbstring', 'openssl',);
+					当前PHP版本：<font style="color:green">' . phpversion() . '</font><br/>';
+
+			echo '<font color="green">upload_max_filesize</font> - PHP上传最大值：' . ini_get('upload_max_filesize');
+			echo '<br /><font color="green">post_max_size</font> - POST上传最大值：' . ini_get('post_max_size') . '<br />';
+			// 扩展检测
+			$expand = array('fileinfo', 'gd', 'openssl',);
 			foreach ($expand as $val) {
 				if (extension_loaded($val)) {
 					echo '
-					<font color="green">' . $val . "</font>- 已安装
+					<font color="green">' . $val . "</font> - 已安装
 					<br />";
 				} else {
 					echo "
 					<script language='javascript'>alert('$val - 未安装')</script>";
 					echo '
-					<font color="red">' . $val . "- 未安装</font>
+					<font color="red">' . $val . " - 未安装</font>
 					<br />";
 				}
 			}
-			echo '
-					<hr/>以下是当前PHP所有已安装扩展：
-					<br/>';
-			foreach (get_loaded_extensions() as $val) {
+			// 文件权限检测
+			$quanxian = substr(base_convert(fileperms("file.php"), 10, 8), 3);
+			if (IS_WIN) {
 				echo '
-					<font color="green">' . $val . '</font>，';
+				<font style="color:green">file.php 文件可执行</font><br/>
+				<font style="color:green">/i 目录可读写</font><br/>
+				';
+			}
+			if (!IS_WIN) {
+				if ($quanxian !== '755' and !is_writable(APP_ROOT . '/i/')) {
+					echo '
+				<p style="color:red">file.php 文件不可执行</font>><br/>
+				<p style="color:red">/i 目录可读写</font>><br/>
+				';
+				} else {
+					echo '
+				<font style="color:green">file.php 文件可执行</font><br/>
+				<font style="color:green">/i 目录可读写</font><br/>
+				';
+				}
 			}
 			echo '</div>
 				<div class="modal-footer">
-				<p>安装环境检测弹窗只会第一次打开时展示，会在config目录下自动生成EasyIamge.lock，如需再次展示或更换空间请自行删除EasyIamge.lock！刷新后此提示框消失。</p>
+				<p style="font-weight: bold">安装环境检测弹窗只会第一次打开时展示，会在config目录下自动生成EasyIamge.lock，如需再次展示或更换空间请自行删除EasyIamge.lock！刷新后此提示框消失。</p>
 				</div>
 			</div>
 		</div>
@@ -552,7 +561,7 @@ function getVersion()
 	global $config;
 
 	if ($config['checkEnv']) {
-		require_once APP_ROOT . '/libs/class.version.php';
+		require_once APP_ROOT . '/application/class.version.php';
 		// 获取版本地址
 		$url = "https://api.github.com/repositories/188228357/releases/latest";
 		$getVersion = new getVerson($url);
@@ -603,9 +612,13 @@ function deldir($dir)
 // curl访问网站并返回解码过的json信息
 function get_json($img)
 {
-	global $moderatecontent;
+	global $config;
 
-	$url = $moderatecontent['url'] . $moderatecontent['key'] . '&url=' . $img;
+	if (empty($config['moderatecontent_key'])) {
+		exit;
+	}
+
+	$url = 'https://api.moderatecontent.com/moderate/?key=' . $config['moderatecontent_key'] . '&url=' . $img;
 	$headerArray = array("Content-type:application/json;", "Accept:application/json");
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
@@ -620,19 +633,19 @@ function get_json($img)
 	return $output;
 }
 // 检查图片是否违规
-function checkImg($imageUrl, $mode = true)
+function checkImg($imageUrl)
 {
 	global $config;
 
 	$response = get_json($imageUrl);
 	if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
-		$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-		//$name =  date('Y_m_d').'_'.basename($imageUrl);    			// 文件名 p8vypd.png
+		//$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+		$old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl);;    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
 		$name =  date('Y_m_d') . '_' . basename($imageUrl);    			// 文件名 2021_10_30_p8vypd.png
-		$new_path = APP_ROOT . $config['path'] . 'cache/' . $name;      // 新路径含文件名
-		$cache_dir = APP_ROOT . $config['path'] . 'cache/'; 			// cache路径
+		$new_path = APP_ROOT . $config['path'] . 'suspic/' . $name;     // 新路径含文件名
+		$cache_dir = APP_ROOT . $config['path'] . 'suspic/'; 			// suspic路径
 
-		if (is_dir($cache_dir)) {										// 创建cache目录并移动
+		if (is_dir($cache_dir)) {										// 创建suspic目录并移动
 			rename($old_path, $new_path);
 		} else {
 			mkdir($cache_dir, 0777, true);
@@ -646,8 +659,114 @@ function re_checkImg($name)
 {
 	global $config;
 
-	$now_file = str_replace('_', '/', $name); 						// 当前图片相对位置 2021/10/30/p8vypd.png
-	$now_path_file = APP_ROOT . $config['path'] . 'cache/' . $name; // 当前图片绝对位置 */i/cache/2021_10_30_p8vypd.png
-	$to_file = APP_ROOT . $config['path'] . $now_file; 	 			// 还原图片的绝对位置 */i/2021/10/30/p8vypd.png
+	$fileToPath = str_replace('_', '/', $name); 					// 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
+	$now_path_file = APP_ROOT . $config['path'] . 'suspic/' . $name; // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
+	$to_file = APP_ROOT . $config['path'] . $fileToPath; 	 		// 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
 	rename($now_path_file, $to_file);
+}
+// 创建缩略图
+function creat_cache_images($imgName)
+{
+	require_once __DIR__ . '/class.thumb.php';
+	global $config;
+
+	$old_img_path = APP_ROOT . config_path() . $imgName; 											// 获取要创建缩略图文件的绝对路径
+	$cache_path = APP_ROOT . $config['path'] . 'cache/';											// cache目录的绝对路径
+	if (!isAnimatedGif($old_img_path)) {															// 仅针对非gif创建图片缩略图
+		if (is_dir($cache_path)) {
+			$new_imgName = APP_ROOT . $config['path'] . 'cache/' . date('Y_m_d') . '_' . $imgName; 	// 缩略图缓存的绝对路径
+			Thumb::out($old_img_path, $new_imgName, 300, 300);										// 保存缩略图
+		} else {
+			mkdir($cache_path, 0777, true);															// 创建cache目录
+		}
+	}
+}
+
+// 根据请求网址路径返回缩略图网址
+function back_cache_images($url)
+{
+	global $config;
+	$cache_image_file = str_replace($config['imgurl'], '', $url);
+
+	if (isAnimatedGif(APP_ROOT . $cache_image_file)) { 									// 仅读取非gif的缩略图
+		return $url; 																	// 如果是gif则直接返回url
+	} else {
+		$cache_image_file = str_replace($config['path'], '', $cache_image_file); 		// 将网址中的/i/去除
+		$cache_image_file = str_replace('/', '_', $cache_image_file);					// 将文件的/转换为_
+		$isFile = APP_ROOT . $config['path'] . 'cache/' . $cache_image_file; 			// 缓存文件的绝对路径
+		if (file_exists($isFile)) { 													// 缓存文件是否存在
+			return $config['imgurl'] .  $config['path'] . 'cache/' . $cache_image_file; // 存在则返回缓存文件
+		} else {
+			return $url;																// 不存在直接返回url
+		}
+	}
+}
+
+/**
+ * 获取当前页面完整URL地址
+ * 返回 http://localhost/ww/index.php
+ * https://www.php.cn/php-weizijiaocheng-28181.html
+ * $search 返回指定搜索文字之前的内容(不含搜索文字)
+ */
+
+function get_whole_url($search = null)
+{
+	$sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
+	$php_self = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+	$path_info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
+	$relate_url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
+	$whole_domain =  $sys_protocal . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . $relate_url;
+	if ($search) {
+		// 返回指定符号之前
+		return substr($whole_domain, 0, strrpos($whole_domain, $search));
+	} else {
+		return $whole_domain;
+	}
+}
+
+//写入
+function cache_write($filename, $values, $var = 'config', $format = false)
+{
+	$cachefile = $filename;
+	$cachetext = "<?php\r\n" . '$' . $var . '=' . arrayeval($values, $format) . ";";
+	return writefile($cachefile, $cachetext);
+}
+
+//数组转换成字串 
+function arrayeval($array, $format = false, $level = 0)
+{
+	$space = $line = '';
+	if (!$format) {
+		for ($i = 0; $i <= $level; $i++) {
+			$space .= "\t";
+		}
+		$line = "\n";
+	}
+	$evaluate = 'Array' . $line . $space . '(' . $line;
+	$comma = $space;
+	foreach ($array as $key => $val) {
+		$key = is_string($key) ? '\'' . addcslashes($key, '\'\\') . '\'' : $key;
+		$val = !is_array($val) && (!preg_match('/^\-?\d+$/', $val) || strlen($val) > 12) ? '\'' . addcslashes($val, '\'\\') . '\'' : $val;
+		if (is_array($val)) {
+			$evaluate .= $comma . $key . '=>' . arrayeval($val, $format, $level + 1);
+		} else {
+			$evaluate .= $comma . $key . '=>' . $val;
+		}
+		$comma = ',' . $line . $space;
+	}
+	$evaluate .= $line . $space . ')';
+	return $evaluate;
+}
+
+//写入文件
+function writefile($filename, $writetext, $openmod = 'w')
+{
+	if (false !== $fp = fopen($filename, $openmod)) {
+		flock($fp, 2);
+		fwrite($fp, $writetext);
+		fclose($fp);
+		return true;
+	} else {
+		return false;
+	}
 }

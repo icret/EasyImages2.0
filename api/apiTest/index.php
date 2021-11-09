@@ -1,7 +1,7 @@
 <?php
 echo '<title> - EasyImage2.0</title>';
-require_once '../../libs/function.php';
-require_once APP_ROOT . '/libs/header.php';
+require_once '../../application/function.php';
+require_once APP_ROOT . '/application/header.php';
 require_once APP_ROOT . '/config/api_key.php';
 
 // 如果关闭Api上传并且没有登录的情况下关闭测试接口
@@ -10,7 +10,7 @@ if (!$config['apiStatus'] and !is_online()) {
         new $.zui.Messager("Api关闭，请登录", {type: "danger" // 定义颜色主题 
         }).show();
         // 延时2s跳转			
-        window.setTimeout("window.location=\'/../libs/login.php \'",2000);
+        window.setTimeout("window.location=\'/../application/login.php \'",2000);
         </script>');
 }
 
@@ -35,4 +35,4 @@ if (!$config['apiStatus'] and !is_online()) {
 <script>
     document.title = "API图片上传测试 - <?php echo $config['title']; ?>";
 </script>
-<?php require_once APP_ROOT . '/libs/footer.php';
+<?php require_once APP_ROOT . '/application/footer.php';

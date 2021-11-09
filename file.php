@@ -1,8 +1,8 @@
 
 <?php
-require __DIR__ . '/libs/function.php';
-require APP_ROOT . '/libs/class.upload.php';
-require APP_ROOT . '/libs/WaterMask.php';
+require __DIR__ . '/application/function.php';
+require APP_ROOT . '/application/class.upload.php';
+require APP_ROOT . '/application/WaterMask.php';
 
 $handle = new Upload($_FILES['file'], 'zh_CN');
 
@@ -47,7 +47,7 @@ if ($handle->uploaded) {
                         'pos' => $config['waterPosition'],
                         #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
                         'name' => $handle->file_dst_pathname,
-                        'font' => $config['textFont'],
+                        'font' => APP_ROOT . $config['textFont'],
                         'fontSize' => $config['textSize'],
                         'color' => $config['textColor'],
                     ];
@@ -58,7 +58,7 @@ if ($handle->uploaded) {
                 if (isAnimatedGif($handle->file_src_pathname) === 0) {
                     $arr = [
                         #  水印图片路径（如果不存在将会被当成是字符串水印）
-                        'res' => $config['waterImg'],
+                        'res' => APP_ROOT . $config['waterImg'],
                         #  水印显示位置
                         'pos' => $config['waterPosition'],
                         #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
@@ -82,10 +82,13 @@ if ($handle->uploaded) {
         // 判断PHP版本启用删除
         $ver = substr(PHP_VERSION, 0, 3);
         if ($ver >= '7.0') {
-            $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+            $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
         } else {
             $delUrl = 'PHP≥7.0 才能启用删除！';
         }
+
+        // 创建缩略图
+        @creat_cache_images($handle->file_dst_name);
 
         $reJson = array(
             "result" => 'success',
@@ -106,7 +109,7 @@ if ($handle->uploaded) {
     // 压缩图片 后压缩模式，不影响前台输出速度
     if (!isAnimatedGif($handle->file_dst_pathname))
         if ($config['compress']) {
-            require 'libs/compress/Imagick/class.Imgcompress.php';
+            require 'application/compress/Imagick/class.Imgcompress.php';
             $img = new Imgcompress($handle->file_dst_pathname, 1);
             $img->compressImg($handle->file_dst_pathname);
             // 释放
@@ -116,11 +119,10 @@ if ($handle->uploaded) {
 
     unset($handle);
 
+
     // 图片违规检查
-       
-    if($config['checkImg']){
+    if ($config['checkImg']) {
         require_once APP_ROOT . '/config/api_key.php';
         @checkImg($imageUrl);
-    }   
-  
+    }
 }

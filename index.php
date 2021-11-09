@@ -1,5 +1,5 @@
 <?php
-require_once 'libs/header.php';
+require_once 'application/header.php';
 
 // 公告
 if (!empty($config['tips'])) {
@@ -94,7 +94,7 @@ mustLogin();
     // 上传格式过滤
     filters: { // 只允许上传图片或图标（.ico）
       mime_types: [
-		  {title: '图片',extensions: <?php echo $config['extensions']; ?>},
+		  {title: '图片',extensions:'<?php echo $config['extensions']; ?>'},
       {title: '图标',extensions: 'ico'}
       ],
       prevent_duplicates: true
@@ -133,4 +133,4 @@ mustLogin();
 </script>
 <?php
 checkEnv($config['checkEnv']); // 环境检测
-require_once APP_ROOT . '/libs/footer.php';
+require_once APP_ROOT . '/application/footer.php';

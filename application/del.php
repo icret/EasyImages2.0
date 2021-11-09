@@ -3,8 +3,7 @@
 /**
  * 删除文件页面
  */
-require_once '../libs/header.php';
-require_once APP_ROOT . '/libs/function.php';
+require_once './header.php';
 echo '<div class="col-md-4 col-md-offset-4">
 	<div id="title" style="margin: 10px;"></div>
 
@@ -22,18 +21,14 @@ if (empty($_REQUEST)) {
     <script>
     new $.zui.Messager("没有要删除的图片！", {type: "danger" // 定义颜色主题 
     }).show();
-    // 延时3.5s跳转			
-    // window.setTimeout("window.location=\'/../ \'",3500);
     </script>
     ';
-    header("refresh:3;url=".$config['domain']."");
+    //header("refresh:3;url=".$config['domain']."");
     
 } elseif (isset($_GET['url'])) {
     $img = $_GET['url'];
     echo '
     <div class="col-md-12">
-    <hr />
-	<div style="text-align:center;"><span class="label">图片属性：'.@getimagesize($img)[0].'px X '.@getimagesize($img)[1].'px</span></div>
     <a href="' . $img . '" target="_blank"><img src="' . $img  . '" alt="简单图床-EasyImage" class="img-thumbnail"></a>
     </div>';
 }
@@ -57,14 +52,14 @@ if (is_online()) {
             new $.zui.Messager("请登录后再删除", {type: "danger" // 定义颜色主题 
             }).show();
             // 延时2s跳转			
-            // window.setTimeout("window.location=\'/../libs/login.php \'",2000);
+            window.setTimeout("window.location=\'/../application/login.php \'",2000);
             </script>
 			';
-            header("refresh:2;url=".$config['domain']."/libs/login.php");            
+            //header("refresh:2;url=".$config['domain']."/application/login.php");            
     }
 }
 
-require_once APP_ROOT . '/libs/footer.php';
+require_once APP_ROOT . '/application/footer.php';
 ?>
 <script>
     // 修改网页标题
