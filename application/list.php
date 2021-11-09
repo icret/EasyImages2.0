@@ -25,10 +25,10 @@ if (!$config['showSwitch'] and !is_online()) {
           <div class="card">
               <img data-toggle="lightbox" data-image="' . back_cache_images($imgUrl) . '" src="../public/images/loading.svg" alt="简单图床-EasyImage">              
                 <div class="caption" style="color:#145ccd " >
-                <label>选择<input type="checkbox"  style="zoom:120%;" id="url" name="checkbox" value="' . $imgUrl . '"></label>
-                <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图"></i></a>
-                <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件"><i class="icon icon-trash"></i></a>         
-                <a data-clipboard-demo="" data-clipboard-action="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件"><i class="icon icon-copy"></i></a>
+                <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图"></i>&nbsp;&nbsp;</a>
+                <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件"><i class="icon icon-trash"></i>&nbsp;&nbsp;</a>         
+                <a data-clipboard-demo="" data-clipboard-action="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件"><i class="icon icon-copy"></i>&nbsp;&nbsp;</a>
+                <label><input type="checkbox"  style="zoom:120%;" id="url" name="checkbox" value="' . $imgUrl . '">选择</label>
             </div>            
           </div>
         </div>

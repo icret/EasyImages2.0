@@ -29,9 +29,9 @@ function getLatelyTime($type = '')
     return $result;
 }
 
-$chart_total_fileName = 'total_chart_' . md5_file(APP_ROOT . '/config/config.php');  // 以config.php文件的md5命名
 $total_contents = APP_ROOT . $config['path'];                                       // 获取用户自定义的上传目录
-$chart_total_file = $total_contents . 'cache/total_chart_' . $chart_total_fileName . '.php';    // 文件绝对目录
+$chart_total_fileName = 'total_chart_' . md5_file(APP_ROOT . '/config/config.php');  // 以config.php文件的md5命名
+$chart_total_file = $total_contents . 'cache/' . $chart_total_fileName . '.php';    // 文件绝对目录
 
 function write_chart_total()
 {
@@ -85,7 +85,7 @@ function read_chart_total()
                 }
             }
 
-            return array('date' => $chart_data_date, 'number' => $chart_data_num, 'disk' => $chart_total_disk,'total_time'=>$chart_total_file['total_time']);
+            return array('date' => $chart_data_date, 'number' => $chart_data_num, 'disk' => $chart_total_disk, 'total_time' => $chart_total_file['total_time']);
         }
     } else {
         write_chart_total();

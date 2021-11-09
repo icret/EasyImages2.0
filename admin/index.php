@@ -1,6 +1,6 @@
 <?php
 /*
- * API 页面管理
+ * 快捷操作中心页面
  */
 require_once '../application/header.php';
 require_once APP_ROOT . '/config/api_key.php';
@@ -45,22 +45,26 @@ if (isset($_GET['reimg'])) {
 }
 
 // 统计图表
+// array_reverse($arr,true) 倒叙数组并保持键值关系
 $char_data = read_chart_total();
+if (is_array($char_data)) {
+	$chart_date =  '';
+	foreach (array_reverse($char_data['date'], true) as $value) {
+		$chart_date .= $value;
+	}
+	$chart_date = str_replace(date('Y/'), '', $chart_date); // 删除年份
 
-$chart_date =  '';
-foreach ($char_data['date'] as $value) {
-	$chart_date .= $value;
+	$chart_number = '';
+	foreach (array_reverse($char_data['number'], true) as $value) {
+		$chart_number .= $value;
+	}
+
+	$chart_disk = '';
+	foreach (array_reverse($char_data['disk'], true) as $value) {
+		$chart_disk .= $value;
+	}
 }
 
-$chart_number = '';
-foreach ($char_data['number'] as $value) {
-	$chart_number .= $value;
-}
-
-$chart_disk = '';
-foreach ($char_data['disk'] as $value) {
-	$chart_disk .= $value;
-}
 ?>
 <div class="container">
 	<div class="row">
