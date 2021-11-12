@@ -315,9 +315,7 @@ function getActive($url)
 	$arr = $_SERVER['PHP_SELF'];
 	if (strpos($arr, $url)) {
 		return 'active';
-	} elseif (strpos($arr, $url)) {
-		return 'active';
-	} else {
+	}else {
 		return '';
 	}
 }

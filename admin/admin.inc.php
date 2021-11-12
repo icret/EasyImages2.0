@@ -36,7 +36,7 @@ if (isset($_POST['form'])) {
       <ul class="nav nav-tabs nav-stacked">
         <li class="active"><a href="###" data-target="#tab3Content1" data-toggle="tab">网站设置</a></li>
         <li><a href="###" data-target="#tab3Content2" data-toggle="tab">上传设置</a></li>
-        <li><a href="###" data-target="#tab3Content3" data-toggle="tab">广告设置</a></li>
+        <li><a href="###" data-target="#tab3Content3" data-toggle="tab">拓展设置</a></li>
         <li><a href="###" data-target="#tab3Content4" data-toggle="tab">API 设置</a></li>
         <li><a href="###" data-target="#tab3Content5" data-toggle="tab">安全设置</a></li>
       </ul>
@@ -79,11 +79,13 @@ if (isset($_POST['form'])) {
               <textarea class="form-control" rows="3" name="tips" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['tips']; ?></textarea>
             </div>
             <div class="form-group">
+              <label>页脚信息</label>
+              <textarea class="form-control" rows="3" name="footer" required="required"><?php echo $config['footer']; ?></textarea>
+            </div>
+            <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="static_cdn" value="0">
-                <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) {
-                                                                      echo 'checked="checked"';
-                                                                    } ?>>
+                <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启静态文件CDN</label>
               </div>
             </div>
@@ -102,18 +104,14 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="mustLogin" value="0">
-                <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) {
-                                                                    echo 'checked="checked"';
-                                                                  } ?>>
+                <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启登录上传</label>
               </div>
             </div>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="apiStatus" value="0">
-                <input type="checkbox" name="apiStatus" value="1" <?php if ($config['apiStatus']) {
-                                                                    echo 'checked="checked"';
-                                                                  } ?>>
+                <input type="checkbox" name="apiStatus" value="1" <?php if ($config['apiStatus']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启API上传</label>
               </div>
             </div>
@@ -124,27 +122,13 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <label>文件的命名方式</label>
               <select class="chosen-select form-control" name="imgName">
-                <option value="default" <?php if ($config['imgName'] == 'default') {
-                                          echo 'selected';
-                                        } ?>>将上传时间+随机数转换为36进制 例：vx77yu</option>
-                <option value="date" <?php if ($config['imgName'] == 'date') {
-                                        echo 'selected';
-                                      } ?>>以上传时间 例：192704</option>
-                <option value="unix" <?php if ($config['imgName'] == 'unix') {
-                                        echo 'selected';
-                                      } ?>>以Unix时间 例：1635074840</option>
-                <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') {
-                                          echo 'selected';
-                                        } ?>>基于以微秒计的当前时间 例：6175436c73418</option>
-                <option value="guid" <?php if ($config['imgName'] == 'guid') {
-                                        echo 'selected';
-                                      } ?>>全球唯一标识符 例：6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
-                <option value="md5" <?php if ($config['imgName'] == 'md5') {
-                                      echo 'selected';
-                                    } ?>>md5加密时间 例：3888aa69eb321a2b61fcc63520bf6c82</option>
-                <option value="sha1" <?php if ($config['imgName'] == 'sha1') {
-                                        echo 'selected';
-                                      } ?>>sha1加密微秒 例：654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
+                <option value="default" <?php if ($config['imgName'] == 'default') {echo 'selected';} ?>>将上传时间+随机数转换为36进制 例：vx77yu</option>
+                <option value="date" <?php if ($config['imgName'] == 'date') {echo 'selected';} ?>>以上传时间 例：192704</option>
+                <option value="unix" <?php if ($config['imgName'] == 'unix') {echo 'selected';} ?>>以Unix时间 例：1635074840</option>
+                <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') {echo 'selected';} ?>>基于以微秒计的当前时间 例：6175436c73418</option>
+                <option value="guid" <?php if ($config['imgName'] == 'guid') {echo 'selected';} ?>>全球唯一标识符 例：6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
+                <option value="md5" <?php if ($config['imgName'] == 'md5') {echo 'selected';} ?>>md5加密时间 例：3888aa69eb321a2b61fcc63520bf6c82</option>
+                <option value="sha1" <?php if ($config['imgName'] == 'sha1') {echo 'selected';} ?>>sha1加密微秒 例：654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
               </select>
             </div>
             <div class="form-group">
@@ -158,15 +142,9 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <label>上传水印</label>
               <select class="chosen-select form-control" name="watermark">
-                <option value="0" <?php if (!$config['watermark']) {
-                                    echo 'selected';
-                                  } ?>>关闭水印</option>
-                <option value="1" <?php if ($config['watermark'] == 1) {
-                                    echo 'selected';
-                                  } ?>>文字水印</option>
-                <option value="2" <?php if ($config['watermark'] == 2) {
-                                    echo 'selected';
-                                  } ?>>图片水印</option>
+                <option value="0" <?php if (!$config['watermark']) {echo 'selected';} ?>>关闭水印</option>
+                <option value="1" <?php if ($config['watermark'] == 1) {echo 'selected';} ?>>文字水印</option>
+                <option value="2" <?php if ($config['watermark'] == 2) {echo 'selected';} ?>>图片水印</option>
               </select>
             </div>
             <div class="form-group">
@@ -176,36 +154,15 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <label>水印位置：</label>
               <select class="chosen-select form-control" name="waterPosition">
-                <option value="0" <?php if (!$config['waterPosition']) {
-                                    echo 'selected';
-                                  } ?>>随机位置</option>
-                <option value="1" <?php if ($config['waterPosition'] == 1) {
-                                    echo 'selected';
-                                  } ?>>顶部居左</option>
-                <option value="2" <?php if ($config['waterPosition'] == 2) {
-                                    echo 'selected';
-                                  } ?>>顶部居中</option>
-                <option value="3" <?php if ($config['waterPosition'] == 3) {
-                                    echo 'selected';
-                                  } ?>>顶部居右</option>
-                <option value="4" <?php if ($config['waterPosition'] == 4) {
-                                    echo 'selected';
-                                  } ?>>左边居中</option>
-                <option value="5" <?php if ($config['waterPosition'] == 5) {
-                                    echo 'selected';
-                                  } ?>>图片中心</option>
-                <option value="6" <?php if ($config['waterPosition'] == 6) {
-                                    echo 'selected';
-                                  } ?>>右边居中</option>
-                <option value="7" <?php if ($config['waterPosition'] == 7) {
-                                    echo 'selected';
-                                  } ?>>底部居左</option>
-                <option value="8" <?php if ($config['waterPosition'] == 8) {
-                                    echo 'selected';
-                                  } ?>>底部居中</option>
-                <option value="9" <?php if ($config['waterPosition'] == 9) {
-                                    echo 'selected';
-                                  } ?>>底部居右</option>
+                <option value="0" <?php if (!$config['waterPosition']) {echo 'selected';} ?>>随机位置</option><option value="1" <?php if ($config['waterPosition'] == 1) {echo 'selected';} ?>>顶部居左</option>
+                <option value="2" <?php if ($config['waterPosition'] == 2) {echo 'selected';} ?>>顶部居中</option>
+                <option value="3" <?php if ($config['waterPosition'] == 3) {echo 'selected';} ?>>顶部居右</option>
+                <option value="4" <?php if ($config['waterPosition'] == 4) {echo 'selected';} ?>>左边居中</option>
+                <option value="5" <?php if ($config['waterPosition'] == 5) {echo 'selected';} ?>>图片中心</option>
+                <option value="6" <?php if ($config['waterPosition'] == 6) {echo 'selected';} ?>>右边居中</option>
+                <option value="7" <?php if ($config['waterPosition'] == 7) {echo 'selected';} ?>>底部居左</option>
+                <option value="8" <?php if ($config['waterPosition'] == 8) {echo 'selected';} ?>>底部居中</option>
+                <option value="9" <?php if ($config['waterPosition'] == 9) {echo 'selected';} ?>>底部居右</option>
               </select>
             </div>
             <div class="form-group">
@@ -231,9 +188,7 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="compress" value="0">
-                <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {
-                                                                    echo 'checked="checked"';
-                                                                  } ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
+                <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {echo 'checked="checked"';} ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
                 <label style="font-weight: bold">开启压缩图片-开启后会增加服务器负担</label>
               </div>
             </div>
@@ -270,9 +225,7 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="imgRatio" value="0">
-                <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) {
-                                                                    echo 'checked="checked"';
-                                                                  } ?>>
+                <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启上传后改变图片尺寸（不开启下边不会生效！）</label>
               </div>
             </div>
@@ -295,9 +248,7 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="ad_top" value="0">
-                <input type="checkbox" name="ad_top" value="1" <?php if ($config['ad_top']) {
-                                                                  echo 'checked="checked"';
-                                                                } ?>>
+                <input type="checkbox" name="ad_top" value="1" <?php if ($config['ad_top']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启顶部广告</label>
               </div>
             </div>
@@ -308,9 +259,7 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="ad_bot" value="0">
-                <input type="checkbox" name="ad_bot" value="1" <?php if ($config['ad_bot']) {
-                                                                  echo 'checked="checked"';
-                                                                } ?>>
+                <input type="checkbox" name="ad_bot" value="1" <?php if ($config['ad_bot']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启底部广告</label>
               </div>
             </div>
@@ -345,9 +294,7 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="showSwitch" value="0">
-                <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) {
-                                                                      echo 'checked="checked"';
-                                                                    } ?>>
+                <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启游客预览（广场）</label>
               </div>
             </div>
@@ -359,18 +306,14 @@ if (isset($_POST['form'])) {
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="checkEnv" value="0">
-                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) {
-                                                                    echo 'checked="checked"';
-                                                                  } ?>>
+                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) {echo 'checked="checked"';} ?>>
                 <label style="font-weight: bold">开启PHP插件检测-安全设置检测-版本检测</label>
               </div>
             </div>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="checkImg" value="0">
-                <input type="checkbox" name="checkImg" value="1" <?php if ($config['checkImg']) {
-                                                                    echo 'checked="checked"';
-                                                                  } ?> title="开启后会受服务器到https://moderatecontent.com速度影响，国内不建议开启！">
+                <input type="checkbox" name="checkImg" value="1" <?php if ($config['checkImg']) {echo 'checked="checked"';} ?> title="开启后会受服务器到https://moderatecontent.com速度影响，国内不建议开启！">
                 <label style="font-weight: bold">开启图片监黄</label>
               </div>
             </div>
@@ -382,6 +325,11 @@ if (isset($_POST['form'])) {
               <label>设置是不良图片概率,概率越大准确率越高，当前：</label>
               <label id="checkImg_value"><?php echo $config['checkImg_value']; ?></label><label>%</label>
               <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
+            </div>
+            <div class="form-group">
+              <label>缓存有效期，当前：</label>
+              <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
+              <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1"max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
             </div>
             <div class="form-group">
               <p style="font-weight: bold">当前软件版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span></p>
@@ -398,7 +346,7 @@ if (isset($_POST['form'])) {
 </div>
 </div>
 
-<script type="text/javascript" src="/public/static/jscolor.js"></script>
+<script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor.js"></script>
 <script>
   var eye = document.getElementById("eye");
   var pwd = document.getElementById("pwd");

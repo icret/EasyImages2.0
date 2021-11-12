@@ -5,7 +5,6 @@
 require_once '../application/header.php';
 require_once APP_ROOT . '/config/api_key.php';
 require_once APP_ROOT . '/api/application/apiFunction.php';
-require_once APP_ROOT . '/application/chart.php';
 
 // 检测登录
 if (!is_online()) {
@@ -42,27 +41,6 @@ if (isset($_POST['delDir'])) {
 if (isset($_GET['reimg'])) {
 	$name = $_GET['reimg'];
 	re_checkImg($name);
-}
-
-// 统计图表
-// array_reverse($arr,true) 倒叙数组并保持键值关系
-$char_data = read_chart_total();
-if (is_array($char_data)) {
-	$chart_date =  '';
-	foreach (array_reverse($char_data['date'], true) as $value) {
-		$chart_date .= $value;
-	}
-	$chart_date = str_replace(date('Y/'), '', $chart_date); // 删除年份
-
-	$chart_number = '';
-	foreach (array_reverse($char_data['number'], true) as $value) {
-		$chart_number .= $value;
-	}
-
-	$chart_disk = '';
-	foreach (array_reverse($char_data['disk'], true) as $value) {
-		$chart_disk .= $value;
-	}
 }
 
 ?>
@@ -116,12 +94,6 @@ if (is_array($char_data)) {
 							?>
 						</p>
 						<p>当前版本：<?php echo $config['version']; ?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion(); ?></a></p>
-						<p><?php
-							$yesterday =  date("Y/m/d/", strtotime("-1 day"));
-							echo '今日上传：' . getFileNumber(APP_ROOT . config_path()) . ' 昨日上传：' . getFileNumber(APP_ROOT . $config['path'] . $yesterday);
-							echo '<br />统计时间： ' . read_total_json('total_time') . '；文件夹：' . read_total_json('dirnum') . '个；托管图片：' . read_total_json('filenum') . '张；占用：' . read_total_json('usage_space') . '；缓存周期：每小时。';
-							?>
-						</p>
 					</div>
 				</div>
 			</div>
@@ -224,13 +196,6 @@ if (is_array($char_data)) {
 				</form>
 			</div>
 		</div>
-		<div class="col-md-12" style="text-align: center;">
-			<hr>
-			<h4>上传统计（每日更新）</h4>
-			<canvas id="myChart" width="1920" height="400"></canvas>
-			<p>单位：上传/个 占用/Mb 统计时间：<?php echo $char_data['total_time']; ?></p>
-			<p></p>
-		</div>
 		<div class="col-md-12">
 			<hr>
 			<div class="col-md-7">
@@ -296,9 +261,9 @@ if (is_array($char_data)) {
 			</div>
 			<div class="col-md-5">
 				<form class="form-inline" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
-					<span class="label label-badge label-primary label-outline">已缓存<?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/'); ?>个文件
-						缓存占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?>
-						<button type="submit" class="btn btn-mini btn-primary" name="delDir" value="cache/" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复！');">删除缓存</button></span>
+					<span class="label label-badge label-primary label-outline">已缓存文件：<?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/'); ?>
+						占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?>
+						<button type="submit" class="btn btn-mini btn-primary" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复！');">清理</button></span>
 				</form>
 			</div>
 		</div>
@@ -306,10 +271,6 @@ if (is_array($char_data)) {
 </div>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
-<!--[if lt IE 9]>
-  <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/excanvas.js"></script>
-<![endif]-->
 <script>
 	// 动态显示要删除的图片
 	var oBtn = document.getElementById('del');
@@ -335,36 +296,6 @@ if (is_array($char_data)) {
 		forceParse: 0,
 		format: "yyyy/mm/dd/"
 	});
-
-	// 图表格式化
-	// 使用jquery方法获取 2d context 对象
-	var ctx = $("#myChart").get(0).getContext("2d");
-
-	// 使用$.zui.Chart构造Chart实例
-	var myNewChart = new $.zui.Chart(ctx);
-
-	var data = {
-		// labels 数据包含依次在X轴上显示的文本标签
-		labels: [<?php echo rtrim($chart_date, ','); ?>],
-		// labels: ["11月7日", "11月6日", "11月5日", "11月4日", "11月3日", "11月2日", "11月1日", "10月31日", "10月30日", "10月29日", "10月28日", "10月27日"],
-		datasets: [{
-			// 数据集名称，会在图例中显示
-			label: "上传",
-			color: "green",
-			// 数据集
-			data: [<?php echo rtrim($chart_number, ','); ?>]
-		}, {
-			label: "占用",
-			color: "red",
-			data: [<?php echo rtrim($chart_disk, ','); ?>]
-		}]
-	};
-
-	var options = {}; // 图表配置项，可以留空来使用默认的配置
-
-	var myLineChart = $("#myChart").lineChart(data, options);
-
-
 	// Title
 	document.title = "管理中心 - <?php echo $config['title']; ?>";
 </script>

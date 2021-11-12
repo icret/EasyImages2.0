@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/function.php';
-require_once APP_ROOT.'/application/total_files.php';
- ?>
+require_once APP_ROOT . '/application/total_files.php';
+?>
 
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -62,19 +62,20 @@ require_once APP_ROOT.'/application/total_files.php';
 			<?php
 			if (is_online()) {
 				echo '
-				<li class="' . getActive('admin.inc') . '";>
-					<a href="' . $config['domain'] . '/admin/admin.inc.php' . '">
-					<i class="icon icon-rocket"> 图床设置</i>
-					</a>
-				<li>
-					<a href="' . $config['domain'] . '/admin/index.php' . '">
-					<i class="icon icon-rocket"> 快捷操作</i>
-					</a>
-				</li>
-
+			<li class="dropdown dropdown-hover">
+				<a class="dropdown-toggle" data-toggle="dropdown"><i class="icon icon-cogs"> 设置</i><span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-desktop"> 网站设置</i></a></li>
+					<li class="divider"></li>
+					<li class="' . getActive('tool') . '";><a href="' . $config['domain'] . '/admin/tool.php' . '"><i class="icon icon-rocket"> 快捷工具</i></a></li>
+					<li class="divider"></li>				
+					<li class="' . getActive('info') . '";><a href="' . $config['domain'] . '/admin/info.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
+				</ul>
+			</li>
 				';
 			}
 			?>
+
 		</ul>
 	</div>
 	<!-- 顶部导航栏END -->

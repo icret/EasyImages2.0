@@ -51,28 +51,28 @@
   NProgress.start();
   NProgress.done();
 </script>
-<footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php if($config['ad_bot']){echo $config['ad_bot_info'];} ?>
-  <p><?php echo html_entity_decode($config['customize']); ?></p>
+<footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php if ($config['ad_bot']) {echo $config['ad_bot_info'];} ?>
+<?php echo $config['customize']; ?>
   <hr>
-  <p><a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a><i class="icon icon-smile"></i></p>
-  <div>
-    <!-- 对话框触发按钮 -->
-    <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">
-      <i class="icon icon-qrcode"></i>二维码 </a>
-    <a href="<?php echo $config['domain']; ?>/api/apiTest/" target="_blank"><i class="icon icon-key"></i>API </a>
-    <?php
-    if (is_online()) {     
-      //  <a href="' . $config['domain'] . '/admin/admin.inc.php" target="_blank"><i class="icon icon-rocket"></i>设置 </a>
-      //  <a href="' . $config['domain'] . '/admin/index.php" target="_blank"><i class="icon icon-rocket"></i>快捷操作 </a>       
-      echo '<a href="' . $config['domain'] . '/application/logout.php" ><i class="icon icon-signout"></i>退出 </a>';
-    } else {
-      echo '<a href="' . $config['domain'] . '/application/login.php" ><i class="icon icon-user"></i>登录 </a>';
-    } ?>
-  </div>
-  <?php echo 'Copyright © 2018-' . date('Y'); ?>
-  <a href="https://img.545141.com/" target="_blank">EasyImage</a> By
-  <a href="https://www.545141.com/902.html" target="_blank">Icret</a> Version:<a href="https://github.com/icret/EasyImages2.0" target="_blank"><?php echo $config['version']; ?></a>
-  <a href="/admin/terms.php" target="_blank">DMCA</a>
+
+  <!-- 对话框触发按钮 -->
+  <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">
+    <i class="icon icon-qrcode"></i>二维码 </a>
+  <a href="<?php echo $config['domain']; ?>/api/apiTest/" target="_blank"><i class="icon icon-key"></i>API </a>
+  <?php
+  if (is_online()) {
+    echo '<a href="' . $config['domain'] . '/application/logout.php" ><i class="icon icon-signout"></i>退出 </a>';
+  } else {
+    echo '<a href="' . $config['domain'] . '/application/login.php" ><i class="icon icon-user"></i>登录 </a>';
+  }
+
+  if (isset($config['footer'])) {
+    echo '  <div>' . $config['footer'] . ' </div>';
+  }
+
+  ?>
+
+
 </footer>
 </body>
 

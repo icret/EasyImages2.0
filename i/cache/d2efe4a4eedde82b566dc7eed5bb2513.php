@@ -1,1 +1,0 @@
-{"filename":"d2efe4a4eedde82b566dc7eed5bb2513","date":"2021110910","total_time":"2021-11-09 11:00:16","dirnum":6,"filenum":8,"usage_space":"2.13MB","todayUpload":0,"yestUpload":0}

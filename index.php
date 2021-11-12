@@ -2,7 +2,7 @@
 require_once 'application/header.php';
 
 // 公告
-if (!empty($config['tips'])) {
+if (isset($config['tips'])) {
   echo '<ul style="list-style: none;margin:1px 1px 30px 1px;"><li class="icon icon-bullhorn text-muted"> ' . $config['tips'] . '</li></ul>';
 }
 // 检查登录

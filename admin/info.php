@@ -1,0 +1,131 @@
+<?php
+/*
+ * 统计中心
+ */
+require_once '../application/header.php';
+require_once APP_ROOT . '/config/api_key.php';
+require_once APP_ROOT . '/api/application/apiFunction.php';
+require_once APP_ROOT . '/application/chart.php';
+
+// 检测登录
+if (!is_online()) {
+    checkLogin();
+}
+// 统计图表
+// array_reverse($arr,true) 倒叙数组并保持键值关系
+$char_data = read_chart_total();
+if (is_array($char_data)) {
+    $chart_date =  '';
+    foreach (array_reverse($char_data['date'], true) as $value) {
+        $chart_date .= $value;
+    }
+    $chart_date = str_replace(date('Y/'), '', $chart_date); // 删除年份
+
+    $chart_number = '';
+    foreach (array_reverse($char_data['number'], true) as $value) {
+        $chart_number .= $value;
+    }
+
+    $chart_disk = '';
+    foreach (array_reverse($char_data['disk'], true) as $value) {
+        $chart_disk .= $value;
+    }
+}
+
+?>
+<div class="clo-md-12">
+    <div class="alert alert-warning">统计时间：<?php echo $char_data['total_time']; ?></div>
+</div>
+<div class="col-md-12">
+    <div class="col-md-6">
+        <h4>文件统计（张）</h4>
+        <canvas id="myBarChart" width="960" height="400"></canvas>
+        <p>文件统计（张）</p>
+    </div>
+    <div class="col-md-6">
+        <h4 class=" col-md-offset-2">硬盘统计：（GB）</h4>
+        <canvas id="diskPieChart" width="960" height="400"></canvas>
+        <h4 class=" col-md-offset-2"><?php printf("总空间：%1\$.2f GB 已用：%2\$.2f GB 剩余：%3\$.2f GB", disk_total_space('.') / 1024 / 1024 / 1024, (disk_total_space('.') - disk_free_space('.')) / 1024 / 1024 / 1024, disk_free_space('.') / 1024 / 1024 / 1024); ?></h4>
+    </div>
+</div>
+<div class="col-sm-12" style="text-align: center;">
+<hr/>
+    <h4>最近30上传趋势与空间占用（上传/张 占用/MB）</h4>
+    <canvas id="myChart" width="1080" height="200"></canvas>
+</div>
+
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
+<!--[if lt IE 9]>
+  <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/excanvas.js"></script>
+<![endif]-->
+<script>
+    // 文件统计-柱状图
+    var data = {
+        labels: ["今日上传", "昨日上传", "累计上传", "缓存文件", "可疑图片", "已创建文件夹"],
+        datasets: [{
+            label: "文件统计",
+            color: 'green',
+            data: [<?php echo str_replace('"', '', $char_data['number'][0] .  $char_data['number'][1]  . read_total_json('filenum') . ',' . getFileNumber(APP_ROOT . $config['path'] . 'cache/') . ',' . getFileNumber(APP_ROOT . $config['path'] . 'suspic/') . ',' . read_total_json('dirnum')); ?>]
+        }]
+    };
+
+    var options = {
+        responsive: true
+    }; // 图表配置项，可以留空来使用默认的配置
+    var myBarChart = $('#myBarChart').barChart(data, options);
+
+
+    // 最近30上传趋势与空间占用-折线图
+    // 使用jquery方法获取 2d context 对象
+    var ctx = $("#myChart").get(0).getContext("2d");
+
+    // 使用$.zui.Chart构造Chart实例
+    var myNewChart = new $.zui.Chart(ctx);
+
+    var data = {
+        // labels 数据包含依次在X轴上显示的文本标签
+        labels: [<?php echo rtrim($chart_date, ','); ?>],
+        datasets: [{
+            // 数据集名称，会在图例中显示
+            label: "上传",
+            color: "green",
+            // 数据集
+            data: [<?php echo rtrim($chart_number, ','); ?>]
+        }, {
+            label: "占用",
+            color: "red",
+            data: [<?php echo rtrim($chart_disk, ','); ?>]
+        }]
+    };
+
+    var options = {}; // 图表配置项，可以留空来使用默认的配置
+
+    var myLineChart = $("#myChart").lineChart(data, options);
+
+
+    // 硬盘统计-饼状图
+    var data = [{
+        value: <?php echo round(disk_free_space('.') / 1024 / 1024 / 1024, 2); ?>,
+        color: "green", // 使用颜色名称
+        label: "剩余空间"
+    }, {
+        value: <?php echo round((disk_total_space('.') - disk_free_space('.')) / 1024 / 1024 / 1024, 2); ?>,
+
+        color: "red", // 自定义颜色
+        // highlight: "#FF5A5E", // 自定义高亮颜色
+        label: "已用空间"
+    }];
+
+    // 图表配置项，可以留空来使用默认的配置
+    var options = {
+        scaleShowLabels: true, // 展示标签
+    };
+
+    // 创建饼图
+    var myPieChart = $("#diskPieChart").pieChart(data, options);
+
+    // Title
+    document.title = "图床统计信息 - <?php echo $config['title']; ?>";
+</script>
+
+<?php require_once APP_ROOT . '/application/footer.php';

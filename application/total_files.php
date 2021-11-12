@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 统计文件
  *
@@ -31,7 +32,10 @@ function total_files($file)
     closedir($dir);
 }
 
-$totalJsonName =  strval(md5_file(APP_ROOT . '/config/config.php')); // 以config.php文件的md5命名
+$total_file_path = APP_ROOT . $config['path']; // 获取用户自定义的上传目录
+$totalJsonMD5 =  strval(md5_file(APP_ROOT . '/config/config.php')); // 以config.php文件的md5命名
+$totalJsonName = $total_file_path . "cache/total-files-$totalJsonMD5.php";       // 文件绝对目录
+
 
 function creat_json() // 创建json文件
 {
@@ -39,15 +43,17 @@ function creat_json() // 创建json文件
     global $filen;
     global $totalJsonName;
     global $config;
-    $total_file_path = APP_ROOT . $config['path'];
+    global $total_file_path;
+    global $totalJsonMD5;
+
     total_files($total_file_path);
     $usage_space = getDistUsed(getDirectorySize(APP_ROOT . $config['path']));
     $todayUpload = getFileNumber(APP_ROOT . config_path()); // 今日上传数量
     $yestUpload = getFileNumber(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day"))); // 昨日上传数量
 
     $totalJsonInfo = [
-        'filename'    => $totalJsonName,                     // 文件名称
-        'date'        => date('YmdH', strtotime('-1 hour')), // 识别日期格式
+        'filename'    => $totalJsonMD5,                     // 统计文件名称
+        'date'        => date('YmdH'),                       // 识别日期格式
         'total_time'  => date('Y-m-d H:i:s'),                // 统计时间
         'dirnum'      => $dirn,                              // 文件夹数量
         'filenum'     => $filen,                             // 文件数量
@@ -57,30 +63,32 @@ function creat_json() // 创建json文件
     ];
     $totalJsonInfo = json_encode($totalJsonInfo, true);
     if (is_dir($total_file_path . 'cache/')) {
-        $totalJsonFile = fopen($total_file_path . "cache/$totalJsonName.php", 'w+');
-        fwrite($totalJsonFile, $totalJsonInfo);
-        fclose($totalJsonFile);
+        file_put_contents($totalJsonName, $totalJsonInfo);
     } else {
         mkdir($total_file_path . 'cache/', 0777, true);  // 创建cache目录
+        file_put_contents($totalJsonName, $totalJsonInfo);
     }
 }
-
 function read_total_json($total) // 读取json文件
 {
-    global $config;
     global $totalJsonFile;
     global $totalJsonName;
+    global $config;
+    $cache_freq = $config['cache_freq'];
 
-    $totalJsonPath = APP_ROOT . $config['path'] . 'cache/' . $totalJsonName . '.php'; // 文件的路径
-
-    if (file_exists($totalJsonPath)) {
-        $totalJsonFile = file_get_contents($totalJsonPath);
+    if (file_exists($totalJsonName)) {
+        $totalJsonFile = file_get_contents($totalJsonName);
         $totalJsonFile = json_decode($totalJsonFile, true);
-        if ($totalJsonFile['date'] !== date('YmdH', strtotime('-1 hour'))) {
-            creat_json();
-        }
     } else {
         creat_json();
+        $totalJsonFile = file_get_contents($totalJsonName);
+        $totalJsonFile = json_decode($totalJsonFile, true);
+    }
+
+    if ((date('YmdH') - $totalJsonFile['date']) > $cache_freq) {
+        creat_json();
+        $totalJsonFile = file_get_contents($totalJsonName);
+        $totalJsonFile = json_decode($totalJsonFile, true);
     }
 
     return $totalJsonFile[$total];

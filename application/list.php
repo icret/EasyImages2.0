@@ -1,52 +1,37 @@
 <?php
 require_once __DIR__ . '/header.php';
+echo '<div class="col-md-12">';
 if (!$config['showSwitch'] and !is_online()) {
   echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
 } else {
-  $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
-  $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path)); // 过滤非日期，删除空格
-
-  $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];
-  $keyNum = preg_replace("/[^0-9]/", "", trim($keyNum));                       // 过滤非数字，删除空格
-  
-  $fileArr = getFile(APP_ROOT . config_path($path));                           // 统计当日上传数量
-
+  $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                // 获取指定目录
+  $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));  // 过滤非日期，删除空格
+  $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];         // 获取指定浏览数量
+  $keyNum = preg_replace("/[^0-9]/", "", trim($keyNum));                        // 过滤非数字，删除空格
+  $fileArr = getFile(APP_ROOT . config_path($path));                            // 统计当日上传数量
+  echo '
+    <ul id="dowebok">
+      <div class="cards listNum" >';
   if ($fileArr[0]) {
-    echo '<div class="cards-condensed listNum">';
     foreach ($fileArr as $key => $value) {
       if ($key < $keyNum) {
         $imgUrl = $config['imgurl'] . config_path($path) . $value;
         // 会导致速度变慢
         // $re_img = str_replace($config['imgurl'], '', $imgUrl); // 图片相对路径 /i/2021/11/03/hg82t4.jpg
         // <p>' . @getimagesize($imgUrl)[0] . 'x' . @getimagesize($imgUrl)[1] . 'px ' . getDistUsed(filesize(APP_ROOT . $re_img)) . '</p>
-        if (is_online()) {
-          echo '
-        <div class="col-md-4 col-sm-6 col-lg-3">
+        echo '
+        <div class="col-md-4 col-sm-6 col-lg-3">        
           <div class="card">
-              <img data-toggle="lightbox" data-image="' . back_cache_images($imgUrl) . '" src="../public/images/loading.svg" alt="简单图床-EasyImage">              
-                <div class="caption" style="color:#145ccd " >
-                <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图"></i>&nbsp;&nbsp;</a>
-                <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件"><i class="icon icon-trash"></i>&nbsp;&nbsp;</a>         
-                <a data-clipboard-demo="" data-clipboard-action="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件"><i class="icon icon-copy"></i>&nbsp;&nbsp;</a>
-                <label><input type="checkbox"  style="zoom:120%;" id="url" name="checkbox" value="' . $imgUrl . '">选择</label>
-            </div>            
+            <li><img data-image="' . back_cache_images($imgUrl) . '" src="../public/images/loading.svg" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
+            <div class="bottom">
+              <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图" style="margin-left:10px;"></i></a>
+              <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+              <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
+              <label style="margin-left:10px;"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '" > 选择</label>
+            </div> 
           </div>
         </div>
 				';
-        } else {
-          echo '
-          <div class="col-md-4 col-sm-6 col-lg-3">
-          <div class="card">
-                <img data-toggle="lightbox" data-image="' . back_cache_images($imgUrl) . '" src="../public/images/loading.svg" alt="简单图床-EasyImage">        
-                <div class="caption" style="color:#145ccd " >
-                <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图"></i></a>
-                <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件"><i class="icon icon-trash"></i></a>         
-                <a data-clipboard-demo="" data-clipboard-action="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件"><i class="icon icon-copy"></i></a>
-            </div>            
-          </div>
-        </div>
-				';
-        }
       }
     }
     echo '</div>';
@@ -54,23 +39,31 @@ if (!$config['showSwitch'] and !is_online()) {
 
     echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~！</div>';
   }
+  echo '</ul>';
 }
-/*
-$yesterday = date("Y/m/d/", strtotime("-1 day"));
-// 昨日日期
-$todayUpload = getFileNumber(APP_ROOT . config_path());
-// 今日上传数量
-$yesterdayUpload = getFileNumber(APP_ROOT . $config['path'] . $yesterday);
-// 昨日上传数量
-
-$spaceUsed = getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__));
-// 占用空间
-*/
 // 当前日期全部上传
 $allUploud = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
 $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 @$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
 ?>
+</div>
+
+<script src="<?php static_cdn(); ?>/public/static/lazyload.js"></script>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
+<script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
+<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+
+<style>
+  .card .bottom {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+</style>
 <style>
   /** 返回顶部*/
   * {
@@ -119,16 +112,14 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
     z-index: 11;
   }
 </style>
-<script src="<?php static_cdn(); ?>/public/static/lazyload.js"></script>
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 
 <div class="col-md-12">
+  <hr />
   <div class="col-md-8">
     <a href="list.php?<?php echo http_build_query($httpUrl); ?>"><span class="label label-info  label-outline"> 当前<?php echo $allUploud; ?>张</span></a>
     <a href="list.php"><span class="label label-success label-outline">今日<?php echo read_total_json('todayUpload'); ?>张</span></a><a href="list.php?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>"><span class="label label-danger  label-outline">昨日<?php echo read_total_json('yestUpload'); ?>张</span></a>
     <?php for ($x = 2; $x <= 5; $x++) {
-      /** 倒推日期显示上传图片 */ echo '<a href="list.php?date=' . date('Y/m/d/', strtotime("-{$x} day")) . '"> <span class="label label-danger  label-outline"> ' . date('m月d日', strtotime("-{$x} day")) . '</a>';
+      /** 倒推日期显示上传图片 */ echo '<a href="list.php?date=' . date('Y/m/d/', strtotime("-{$x} day")) . '"> <span class="label label-danger  label-outline"> ' . date('m月d日', strtotime("-{$x} day")) . '</span></a>';
     }
     if (is_online()) {
       echo '
@@ -146,8 +137,7 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
   <div class="col-md-4">
     <form class="form-inline" action="list.php" method="get">
       <div class="form-group">
-        <!--<label for="exampleInputInviteCode3">按日期</label>-->
-        <input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="">
+        <input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="readonly">
       </div>
       <button type="submit" class="btn btn-primary">按日期</button>
     </form>
@@ -158,18 +148,27 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
   <div style="opacity:0;display: block;" class="level-2"></div>
   <div class="level-3"></div>
 </div>
+
 <script>
+  //viewjs
+  var viewer = new Viewer(document.getElementById('dowebok'), {
+    url: 'data-original',
+    backdrop: true
+  });
+
   // 复制url
-  var clipboardDemos = new ClipboardJS('[data-clipboard-demo]');
-  clipboardDemos.on('success', function(e) {
+  var clipboard = new Clipboard('.copy');
+  clipboard.on('success', function(e) {
     new $.zui.Messager("复制成功！", {
       type: "success" // 定义颜色主题 
     }).show();
+
   });
-  clipboardDemos.on('error', function(e) {
-    console.error('Action:', e.action);
-    console.error('Trigger:', e.trigger);
-    showTooltip(e.trigger, fallbackMessage(e.action));
+  clipboard.on('error', function(e) {
+    document.querySelector('.copy');
+    new $.zui.Messager("复制失败！", {
+      type: "danger" // 定义颜色主题 
+    }).show();
   });
 
   // 取消/全选文件
@@ -221,6 +220,7 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
 
       });
   }
+
   // 返回顶部
   $(function() {
     var e = $("#rocket-to-top"),
@@ -285,8 +285,14 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
             "slow");
       });
   });
-</script>
-<script type="text/javascript">
+  //懒加载
+  var lazy = new Lazy({
+    onload: function(elem) {
+      console.log(elem)
+    },
+    delay: 300
+  })
+
   // 按日期浏览
   $(".form-date").datetimepicker({
     weekStart: 1,
@@ -300,12 +306,5 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
   });
   // 更改网页标题
   document.title = "图床广场 今日上传<?php echo read_total_json('todayUpload'); ?>张 昨日<?php echo read_total_json('yestUpload'); ?>张 - <?php echo $config['title']; ?> "
-  //懒加载
-  var lazy = new Lazy({
-    onload: function(elem) {
-      console.log(elem)
-    },
-    delay: 300
-  })
 </script>
 <?php require_once APP_ROOT . '/application/footer.php';

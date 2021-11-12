@@ -45,7 +45,7 @@ $config=Array
       <a href="https://app.cloudcone.com/?ref=3521" target="_blank"><img src="/public/images/ad.jpg" /></a>
   </div>
   ',
-	'showSwitch'=>1,
+	'showSwitch'=>0,
 	'listNumber'=>20,
 	'customize'=>'    <!-- 统计代码-->
     <script>
@@ -64,18 +64,28 @@ $config=Array
     <!--自定义代码举例：打赏、QQ邮箱、QQ群 可删除
     <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
     <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=cR0UHB4fGBwxAABfEh4c">
-      <i class="icon icon-envelope-alt">联系邮箱 </i></span>
+      <i class="icon icon-envelope-alt">联系邮箱 </i>
     </a> 
     <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f">
-        <i class="icon icon-qq">加入QQ群</i></span>
+        <i class="icon icon-qq">加入QQ群</i>
     </a>
     <a target="_blank" href="/master.zip"><i class="icon icon-download-alt">下载源码</i></a>
  --> ',
 	'checkEnv'=>1,
 	'checkImg'=>0,
 	'checkImg_value'=>50,
-	'version'=>'2.4.0',
+	'version'=>'2.4.1',
 	'form'=>'',
+	'cache_freq'=>2,
 	'TinyImag_key'=>'',
-	'moderatecontent_key'=>''
+	'moderatecontent_key'=>'',
+	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
+  <i class="icon icon-smile"></i> <br/>
+
+Copyright © 2018-2021
+<a href="https://img.545141.com/" target="_blank"> EasyImage</a> By
+<a href="https://www.545141.com/902.html" target="_blank"> Icret</a> Version:
+<a href="https://github.com/icret/EasyImages2.0" target="_blank"> 2.4.0</a>
+<a href="/admin/terms.php" target="_blank"> DMCA</a>
+'
 	);
