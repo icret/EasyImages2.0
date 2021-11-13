@@ -31,182 +31,232 @@ if (is_array($char_data)) {
         $chart_disk .= $value;
     }
 }
-
 ?>
-
 <style>
     .autoshadow {
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
+        border: 1px;
         margin: 0px 0px 10px 10px;
-        width: 130px;
+        width: 101px;
         height: 80px;
         text-align: center;
     }
+
+    .autoshadow:hover {
+        width: 105px;
+        height: 80px;
+        border: 2px;
+        box-shadow: 3px 2px 3px 2px rgba(19, 17, 36, 0.5);
+    }
 </style>
 <div class="row">
-
     <div class="clo-md-12">
         <div class="alert alert-warning">统计时间：<?php echo $char_data['total_time']; ?></div>
     </div>
     <div class="col-md-12">
-        <div class="col-md-2 alert  alert-success autoshadow">今日上传
-            <hr />
-            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
-        </div>
-        <div class="col-md-2 alert  alert-success autoshadow">昨日上传
-            <hr />
-            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
-        </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
-            累计上传
-            <hr />
-            <?php printf("%u 张", read_total_json('filenum')); ?>
-        </div>
-
-        <div class="col-md-2 alert alert-primary autoshadow">
-            缓存文件
-            <hr />
-            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'cache/')); ?>
-        </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
-            可疑图片
-            <hr />
-            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
-        </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
-            文件夹
-            <hr />
-            <?php printf("%d 个", read_total_json('dirnum')); ?>
-        </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
-            占用存储
-            <hr />
-            <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
-        </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
-            剩余空间
-            <hr />
-            <?php echo getDistUsed(disk_free_space('.')); ?>
-        </div>
-    </div>
-
-
-    <div class="col-md-22">
         <div class="col-md-6">
-            <h4>文件统计（张）</h4>
-            <canvas id="myBarChart" width="960" height="400"></canvas>
+            <div class="col-md-2 alert  alert-success autoshadow">今日上传
+                <hr />
+                <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
+            </div>
+            <div class="col-md-2 alert  alert-success autoshadow">昨日上传
+                <hr />
+                <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
+            </div>
+            <div class="col-md-2 alert alert-primary autoshadow">
+                累计上传
+                <hr />
+                <?php printf("%u 张", read_total_json('filenum')); ?>
+            </div>
+
+            <div class="col-md-2 alert alert-primary autoshadow">
+                缓存文件
+                <hr />
+                <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'cache/')); ?>
+            </div>
+            <div class="col-md-2 alert alert-primary autoshadow">
+                可疑图片
+                <hr />
+                <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
+            </div>
+            <div class="col-md-2 alert alert-primary autoshadow">
+                文件夹
+                <hr />
+                <?php printf("%d 个", read_total_json('dirnum')); ?>
+            </div>
+            <div class="col-md-2 alert alert-primary autoshadow">
+                占用存储
+                <hr />
+                <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
+            </div>
+            <div class="col-md-2 alert alert-primary autoshadow">
+                剩余空间
+                <hr />
+                <?php echo getDistUsed(disk_free_space('.')); ?>
+            </div>
         </div>
         <div class="col-md-6">
-            <h4 class=" col-md-offset-2">硬盘统计：（GB）</h4>
-            <canvas id="diskPieChart" width="960" height="400"></canvas>
+            <div id="myPieChart" style="width:300px;height: 300px;"></div>
         </div>
     </div>
-    <div class="col-sm-12" style="text-align: center;">
+    <div class="col-md-12">
         <hr />
-        <h4>最近30上传趋势与空间占用（上传/张 占用/MB）</h4>
-        <h4 class="text-danger hidden-lg">手机请启用横屏浏览</h4>
-        <canvas id="myChart" width="1080" height="200"></canvas>
+        <div id="myLineChart" style="width: 100%;height: 300px;"></div>
+        <h4 style="text-align: center;">最近30日上传趋势与空间占用</h4>
     </div>
 </div>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
-<!--[if lt IE 9]>
-  <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/excanvas.js"></script>
-<![endif]-->
+
+
+<script src="<?php static_cdn(); ?>/public/static/echarts/echarts.common.min.js"></script>
 <script>
-    // 文件统计-柱状图
-    var data = {
-        labels: ["今日上传", "昨日上传", "累计上传", "缓存文件", "可疑图片", "已创建文件夹"],
-        datasets: [{
-            label: "文件统计",
-            color: 'green',
-            data: [<?php echo str_replace('"', '', $char_data['number'][0] .  $char_data['number'][1]  . read_total_json('filenum') . ',' . getFileNumber(APP_ROOT . $config['path'] . 'cache/') . ',' . getFileNumber(APP_ROOT . $config['path'] . 'suspic/') . ',' . read_total_json('dirnum')); ?>]
-        }]
+    // 文件统计-折线图
+    var myChart = echarts.init(document.getElementById('myLineChart'));
+    window.onresize = function() {
+        myChart.resize();
     };
 
-    var options = {
-        responsive: true,
+    var LineChart = {
+        color: ['#EA644A', '#38B03F'],
+        title: {
+            // text: '最近30日上传趋势与空间占用'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data: ['上传', '占用']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [<?php echo rtrim($chart_date, ','); ?>],
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%']
+        },
+        dataZoom: [{ // 放大镜
+                type: 'inside',
+                start: 50,
+                end: 100
+            },
+            {
+                start: 0,
+                end: 10
+            }
+        ],
+        series: [{
+                name: '占用',
+                type: 'line',
+                stack: 'x',
+                smooth: true,
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [<?php echo rtrim($chart_disk, ','); ?>],
+            }, {
+                name: '上传',
+                type: 'line',
+                stack: 'x',
+                smooth: true,
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [<?php echo rtrim($chart_number, ','); ?>],
+            },
 
-        scaleShowLabels: true, // 展示标签
-        scaleLabelPlacement: "outside",
-        // Interpolated JS string - 坐标刻度格式化文本
-        scaleLabel: "<%=value%>",
-        scaleShowLabels: true,
-        //Boolean - 是否启用缩放动画
-        animateScale: true,
-        // Number - 自定义坐标网格时起始刻度值
-        scaleStartValue: 0,
-        // Boolean - 是否启用响应式设计，在窗口尺寸变化时进行重绘
-        responsive: true,
+        ]
     };
-    var myBarChart = $('#myBarChart').barChart(data, options);
-
-
-
-    // 最近30上传趋势与空间占用-折线图    
-    var ctx = $("#myChart").get(0).getContext("2d");
-
-    // 使用$.zui.Chart构造Chart实例
-    var myNewChart = new $.zui.Chart(ctx);
-
-    var data = {
-        // labels 数据包含依次在X轴上显示的文本标签
-        labels: [<?php echo rtrim($chart_date, ','); ?>],
-        datasets: [{
-            // 数据集名称，会在图例中显示
-            label: "上传",
-            color: "green",
-            // 数据集
-            data: [<?php echo rtrim($chart_number, ','); ?>]
-        }, {
-            label: "占用",
-            color: "red",
-            data: [<?php echo rtrim($chart_disk, ','); ?>]
-        }]
-    };
-
-    var options = {
-        //Boolean - 是否启用缩放动画
-        animateScale: true,
-        // Number - 自定义坐标网格时起始刻度值
-        scaleStartValue: 0,
-        // Boolean - 是否启用响应式设计，在窗口尺寸变化时进行重绘
-        responsive: true,
-    };
-
-    var myLineChart = $("#myChart").lineChart(data, options);
+    myChart.setOption(LineChart);
 
 
     // 硬盘统计-饼状图
-    var data = [{
-        value: <?php echo round(disk_free_space('.') / 1024 / 1024 / 1024, 2); ?>,
-        color: "green", // 使用颜色名称
-        label: "剩余空间"
-    }, {
-        value: <?php echo round((disk_total_space('.') - disk_free_space('.')) / 1024 / 1024 / 1024, 2); ?>,
+    var myChart = echarts.init(document.getElementById('myPieChart'));
 
-        color: "red", // 自定义颜色
-        // highlight: "#FF5A5E", // 自定义高亮颜色
-        label: "已用空间"
-    }];
-    var options = {
-        scaleShowLabels: true, // 展示标签
-        scaleLabelPlacement: "outside",
-        // Interpolated JS string - 坐标刻度格式化文本
-        scaleLabel: "<%=value%>GB",
-        scaleShowLabels: true,
-        //Boolean - 是否启用缩放动画
-        animateScale: true,
-        // Number - 自定义坐标网格时起始刻度值
-        scaleStartValue: 0,
-        // Boolean - 是否启用响应式设计，在窗口尺寸变化时进行重绘
-        responsive: true,
+    myPieChart = {
+        color: ['#38B03F', '#353535'],
+        title: {
+            // text: '硬盘使用统计：（GB）',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} GB ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['剩余空间', '已用空间']
+        },
+        series: [{
+            name: '硬盘使用：',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [{
+                    value: <?php echo  round(disk_free_space('.') / 1024 / 1024 / 1024, 2); ?>,
+                    name: '剩余空间',
+                },
+                {
+                    value: <?php echo round((disk_total_space('.') - disk_free_space('.')) / 1024 / 1024 / 1024, 2); ?>,
+                    name: '已用空间'
+                },
+            ],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
     };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(myPieChart);
 
-    // 创建饼图
-    var myPieChart = $("#diskPieChart").pieChart(data, options);
+    let currentIndex = -1;
 
-    // Title
-    document.title = "图床统计信息 - <?php echo $config['title']; ?>";
+    setInterval(function() {
+        var dataLen = myPieChart.series[0].data.length;
+        // 取消之前高亮的图形
+        myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: currentIndex
+        });
+        currentIndex = (currentIndex + 1) % dataLen;
+        // 高亮当前图形
+        myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: currentIndex
+        });
+        // 显示 tooltip
+        myChart.dispatchAction({
+            type: 'showTip',
+            seriesIndex: 0,
+            dataIndex: currentIndex
+        });
+    }, 1000);
 </script>
 
 <?php require_once APP_ROOT . '/application/footer.php';
