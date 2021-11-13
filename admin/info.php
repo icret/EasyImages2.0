@@ -33,26 +33,81 @@ if (is_array($char_data)) {
 }
 
 ?>
-<div class="clo-md-12">
-    <div class="alert alert-warning">统计时间：<?php echo $char_data['total_time']; ?></div>
-</div>
-<div class="col-md-12">
-    <div class="col-md-6">
-        <h4>文件统计（张）</h4>
-        <canvas id="myBarChart" width="960" height="400"></canvas>
-    </div>
-    <div class="col-md-6">
-        <h4 class=" col-md-offset-2">硬盘统计：（GB）</h4>
-        <canvas id="diskPieChart" width="960" height="400"></canvas>
-    </div>
-</div>
-<div class="col-sm-12" style="text-align: center;">
-    <hr />
-    <h4>最近30上传趋势与空间占用（上传/张 占用/MB）</h4>
-    <h4 class="text-danger hidden-lg">手机请启用横屏浏览</h4>
-    <canvas id="myChart" width="1080" height="200"></canvas>
-</div>
 
+<style>
+    .autoshadow {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
+        margin: 0px 0px 10px 10px;
+        width: 130px;
+        height: 80px;
+        text-align: center;
+    }
+</style>
+<div class="row">
+
+    <div class="clo-md-12">
+        <div class="alert alert-warning">统计时间：<?php echo $char_data['total_time']; ?></div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-2 alert  alert-success autoshadow">今日上传
+            <hr />
+            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
+        </div>
+        <div class="col-md-2 alert  alert-success autoshadow">昨日上传
+            <hr />
+            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
+        </div>
+        <div class="col-md-2 alert alert-primary autoshadow">
+            累计上传
+            <hr />
+            <?php printf("%u 张", read_total_json('filenum')); ?>
+        </div>
+
+        <div class="col-md-2 alert alert-primary autoshadow">
+            缓存文件
+            <hr />
+            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'cache/')); ?>
+        </div>
+        <div class="col-md-2 alert alert-primary autoshadow">
+            可疑图片
+            <hr />
+            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
+        </div>
+        <div class="col-md-2 alert alert-primary autoshadow">
+            文件夹
+            <hr />
+            <?php printf("%d 个", read_total_json('dirnum')); ?>
+        </div>
+        <div class="col-md-2 alert alert-primary autoshadow">
+            占用存储
+            <hr />
+            <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
+        </div>
+        <div class="col-md-2 alert alert-primary autoshadow">
+            剩余空间
+            <hr />
+            <?php echo getDistUsed(disk_free_space('.')); ?>
+        </div>
+    </div>
+
+
+    <div class="col-md-22">
+        <div class="col-md-6">
+            <h4>文件统计（张）</h4>
+            <canvas id="myBarChart" width="960" height="400"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h4 class=" col-md-offset-2">硬盘统计：（GB）</h4>
+            <canvas id="diskPieChart" width="960" height="400"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-12" style="text-align: center;">
+        <hr />
+        <h4>最近30上传趋势与空间占用（上传/张 占用/MB）</h4>
+        <h4 class="text-danger hidden-lg">手机请启用横屏浏览</h4>
+        <canvas id="myChart" width="1080" height="200"></canvas>
+    </div>
+</div>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
 <!--[if lt IE 9]>
   <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/excanvas.js"></script>
