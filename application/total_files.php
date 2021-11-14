@@ -34,8 +34,7 @@ function total_files($file)
 
 $total_file_path = APP_ROOT . $config['path']; // 获取用户自定义的上传目录
 $totalJsonMD5 =  strval(md5_file(APP_ROOT . '/config/config.php')); // 以config.php文件的md5命名
-$totalJsonName = $total_file_path . "cache/total-files-$totalJsonMD5.php";       // 文件绝对目录
-
+$totalJsonName = APP_ROOT  . "/admin/logs/counts/total-files-$totalJsonMD5.php";       // 文件绝对目录
 
 function creat_json() // 创建json文件
 {

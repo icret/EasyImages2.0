@@ -305,13 +305,6 @@ if (isset($_POST['form'])) {
             </div>
             <div class="form-group">
               <div class="switch">
-                <input type="hidden" name="checkEnv" value="0">
-                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) {echo 'checked="checked"';} ?>>
-                <label style="font-weight: bold">开启PHP插件检测-安全设置检测-版本检测</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="switch">
                 <input type="hidden" name="checkImg" value="0">
                 <input type="checkbox" name="checkImg" value="1" <?php if ($config['checkImg']) {echo 'checked="checked"';} ?> title="开启后会受服务器到https://moderatecontent.com速度影响，国内不建议开启！">
                 <label style="font-weight: bold">开启图片监黄</label>
@@ -332,7 +325,24 @@ if (isset($_POST['form'])) {
               <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1"max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
             </div>
             <div class="form-group">
-              <p style="font-weight: bold">当前软件版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span></p>
+              <div class="switch">
+                <input type="hidden" name="checkEnv" value="0">
+                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) {echo 'checked="checked"';} ?>>
+                <label style="font-weight: bold">开启PHP插件检测-安全设置检测-版本检测</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="switch">
+                <input type="hidden" name="upload_logs" value="0">
+                <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) {echo 'checked="checked"';} ?> title="日志每月保存一个文件；经过测试每月二十万条数据并不影响速度！">
+                <label style="font-weight: bold">开启上传日志</label>
+              </div>
+            </div>            
+            <div class="form-group">
+              <p style="font-weight: bold">
+              当前版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span>
+              Github：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a>
+              </p>
             </div>
             <div class="form-group">
               <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">

@@ -107,8 +107,8 @@ if ($handle->uploaded) {
     }
 
     // 压缩图片 后压缩模式，不影响前台输出速度
-    if (!isAnimatedGif($handle->file_dst_pathname))
-        if ($config['compress']) {
+    if ($config['compress']) {
+        if (!isAnimatedGif($handle->file_dst_pathname)) {
             require 'application/compress/Imagick/class.Imgcompress.php';
             $img = new Imgcompress($handle->file_dst_pathname, 1);
             $img->compressImg($handle->file_dst_pathname);
@@ -116,9 +116,15 @@ if ($handle->uploaded) {
             ob_flush();
             flush();
         }
+    }
 
     unset($handle);
 
+    // 上传日志控制
+    if ($config['upload_logs'] == true) {
+        require_once APP_ROOT . '/application/write-log.php';
+        @write_log($imageUrl);
+    }
 
     // 图片违规检查
     if ($config['checkImg']) {

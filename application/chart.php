@@ -31,7 +31,7 @@ function getLatelyTime($type = '')
 
 $total_contents = APP_ROOT . $config['path'];                                // 获取用户自定义的上传目录
 $chart_total_file_md5 = strval(md5_file(APP_ROOT . '/config/config.php'));  // 以config.php文件的md5命名
-$chart_total_file = $total_contents . "cache/chart-$chart_total_file_md5.php";       // 文件绝对目录
+$chart_total_file = APP_ROOT . "/admin/logs/counts/chart-$chart_total_file_md5.php";       // 文件绝对目录
 
 function write_chart_total()
 {
@@ -54,7 +54,7 @@ function write_chart_total()
         // 统计每日占用空间
         $count_contents['chart_disk'][] = [$count_day[$i] => getDirectorySize($total_contents . $count_day[$i])];
     }
-    
+
     $count_contents = json_encode($count_contents, true); // serialize存储文件
     file_put_contents($chart_total_file, $count_contents);  // 存储文件
 }

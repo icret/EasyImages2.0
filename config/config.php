@@ -45,7 +45,7 @@ $config=Array
       <a href="https://app.cloudcone.com/?ref=3521" target="_blank"><img src="/public/images/ad.jpg" /></a>
   </div>
   ',
-	'showSwitch'=>0,
+	'showSwitch'=>1,
 	'listNumber'=>20,
 	'customize'=>'    <!-- 统计代码-->
     <script>
@@ -74,9 +74,10 @@ $config=Array
 	'checkEnv'=>1,
 	'checkImg'=>0,
 	'checkImg_value'=>50,
-	'version'=>'2.4.1',
-	'form'=>'',
+	'upload_logs'=>0,
 	'cache_freq'=>2,
+	'version'=>'2.4.2',
+	'form'=>'',
 	'TinyImag_key'=>'',
 	'moderatecontent_key'=>'',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>

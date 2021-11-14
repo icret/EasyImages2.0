@@ -16,9 +16,9 @@ class getVerson
 
     public function readJson()
     {
-        if (file_exists(__DIR__ . '/../i/cache/verson.json')) {
-            $file = fopen(__DIR__ . '/../i/cache/verson.json', 'r');
-            $test = fread($file, filesize(__DIR__ . '/../i/cache/verson.json'));
+        if (file_exists(__DIR__ . '/../admin/logs/verson/verson.json')) {
+            $file = fopen(__DIR__ . '/../admin/logs/verson/verson.json', 'r');
+            $test = fread($file, filesize(__DIR__ . '/../admin/logs/verson/verson.json'));
             $verson = json_decode($test, true);
             return $verson['tag_name'];
             fclose($file);
@@ -32,7 +32,7 @@ class getVerson
 
         $verson = $this->geturl($this->url);
         $verson = json_decode($verson, true);
-        $file = fopen(__DIR__ . '/../i/cache/verson.json', 'w+');
+        $file = fopen(__DIR__ . '/../admin/logs/verson/verson.json', 'w+');
         fwrite($file, $verson);
         fclose($file);
     }
