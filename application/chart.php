@@ -55,8 +55,13 @@ function write_chart_total()
         $count_contents['chart_disk'][] = [$count_day[$i] => getDirectorySize($total_contents . $count_day[$i])];
     }
 
-    $count_contents = json_encode($count_contents, true); // serialize存储文件
+    if(!is_dir(APP_ROOT.'/admin/logs/counts/')){
+        mkdir(APP_ROOT.'/admin/logs/counts/',0755,true);
+    }
+
+    $count_contents = json_encode($count_contents, true);
     file_put_contents($chart_total_file, $count_contents);  // 存储文件
+
 }
 
 function read_chart_total()

@@ -57,7 +57,6 @@ function real_ip()
  */
 function write_log($file, $cacheFile = null)
 {
-    global $config;
     $name = trim(basename($file), " \t\n\r\0\x0B");  // 图片名称
     $log = array($name => array(
         'date' => date('Y-m-d H:i:s'),               // 上传日期
@@ -69,8 +68,13 @@ function write_log($file, $cacheFile = null)
 
     $logFileName = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
 
+    // 创建日志文件夹
+    if(!is_dir(APP_ROOT.'/admin/logs/upload/')){
+        mkdir(APP_ROOT.'/admin/logs/upload',0755,true);
+    }
+
     // 写入禁止浏览器直接访问
-    if (is_file($logFileName) == false) {
+    if (!is_file($logFileName)){
         $php_code = '<?php exit;?>';
         file_put_contents($logFileName, $php_code);
     }

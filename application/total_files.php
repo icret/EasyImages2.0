@@ -61,10 +61,10 @@ function creat_json() // 创建json文件
         'yestUpload'  => $yestUpload                         // 昨日上传数量
     ];
     $totalJsonInfo = json_encode($totalJsonInfo, true);
-    if (is_dir($total_file_path . 'cache/')) {
+    if (is_dir(APP_ROOT.'/admin/logs/counts/')) {
         file_put_contents($totalJsonName, $totalJsonInfo);
     } else {
-        mkdir($total_file_path . 'cache/', 0777, true);  // 创建cache目录
+        mkdir(APP_ROOT.'/admin/logs/counts/', 0777, true);  // 创建cache目录
         file_put_contents($totalJsonName, $totalJsonInfo);
     }
 }

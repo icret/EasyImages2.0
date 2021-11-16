@@ -30,6 +30,11 @@ class getVerson
     public function downJson()
     {
 
+        if(!is_dir(__DIR__.'/../admin/logs/verson/'))
+        {
+            mkdir(__DIR__.'/../admin/logs/verson/',0755,true);
+        }
+
         $verson = $this->geturl($this->url);
         $verson = json_decode($verson, true);
         $file = fopen(__DIR__ . '/../admin/logs/verson/verson.json', 'w+');

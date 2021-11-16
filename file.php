@@ -122,7 +122,7 @@ if ($handle->uploaded) {
 
     // 上传日志控制
     if ($config['upload_logs'] == true) {
-        require_once APP_ROOT . '/application/write-log.php';
+        require_once APP_ROOT . '/application/logs-write.php';
         @write_log($imageUrl);
     }
 

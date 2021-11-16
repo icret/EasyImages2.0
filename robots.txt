@@ -3,3 +3,4 @@ User-agent: *
 Disallow: 
 Disallow: /config/
 Disallow: /admin/
+Disallow: /install/

@@ -37,7 +37,7 @@ function getID($token)
     } else {
         return ('没有这个用户ID');
     }
-};
+}
 
 // 通过ID查找用户Token
 function getIDToken($id)
@@ -49,5 +49,5 @@ function getIDToken($id)
             return $value;
         }
     }
-};
+}
 

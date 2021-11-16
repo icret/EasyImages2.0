@@ -638,7 +638,7 @@ function checkImg($imageUrl)
 	$response = get_json($imageUrl);
 	if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
 		//$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-		$old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl);;    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+		$old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl);            // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
 		$name =  date('Y_m_d') . '_' . basename($imageUrl);    			// 文件名 2021_10_30_p8vypd.png
 		$new_path = APP_ROOT . $config['path'] . 'suspic/' . $name;     // 新路径含文件名
 		$cache_dir = APP_ROOT . $config['path'] . 'suspic/'; 			// suspic路径
@@ -668,15 +668,15 @@ function creat_cache_images($imgName)
 	require_once __DIR__ . '/class.thumb.php';
 	global $config;
 
-	$old_img_path = APP_ROOT . config_path() . $imgName; 											// 获取要创建缩略图文件的绝对路径
-	$cache_path = APP_ROOT . $config['path'] . 'cache/';											// cache目录的绝对路径
-	if (!isAnimatedGif($old_img_path)) {															// 仅针对非gif创建图片缩略图
-		if (is_dir($cache_path)) {
+	$old_img_path = APP_ROOT . config_path() . $imgName; 											       // 获取要创建缩略图文件的绝对路径
+	$cache_path = APP_ROOT . $config['path'] . 'cache/';											       // cache目录的绝对路径
+
+    if(!is_dir($cache_path)){                                                                              // 创建cache目录
+        mkdir($cache_path, 0777, true);
+    }
+	if (!isAnimatedGif($old_img_path)) {															       // 仅针对非gif创建图片缩略图
 			$new_imgName = APP_ROOT . $config['path'] . 'cache/' . date('Y_m_d') . '_' . $imgName; 	// 缩略图缓存的绝对路径
-			Thumb::out($old_img_path, $new_imgName, 300, 300);										// 保存缩略图
-		} else {
-			mkdir($cache_path, 0777, true);															// 创建cache目录
-		}
+			Thumb::out($old_img_path, $new_imgName, 300, 300);									// 保存缩略图
 	}
 }
 

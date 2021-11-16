@@ -25,7 +25,7 @@
 // | This script is free to use, don't abuse.                               |
 // +------------------------------------------------------------------------+
 
-//namespace Verot\Upload;
+// namespace Verot\Upload;
 
 if (!defined('IMG_WEBP')) define('IMG_WEBP', 32);
 
@@ -2956,7 +2956,7 @@ class Upload {
     function imageunset($im) {
         if (is_resource($im)) {
             imagedestroy($im);
-        } else if (is_object($im) && $im instanceOf \GdImage) {
+        } else if (is_object($im) && $im instanceOf GdImage) {
             unset($im);
         }
     }
