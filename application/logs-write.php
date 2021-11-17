@@ -53,9 +53,9 @@ function real_ip()
 
 /**
  * 写日志
- * 日志格式：图片名称->上传时间（北京时间）->IP地址->浏览器信息->文件相对路径->cache文件相对路径
+ * 日志格式：图片名称->上传时间（Asia/Shanghai）->IP地址->浏览器信息->文件相对路径->图片的MD5
  */
-function write_log($file, $cacheFile = null)
+function write_log($file, $imgMD5)
 {
     $name = trim(basename($file), " \t\n\r\0\x0B");  // 图片名称
     $log = array($name => array(
@@ -63,7 +63,7 @@ function write_log($file, $cacheFile = null)
         'ip' => real_ip(),                           // 上传ip
         'user_agent' => $_SERVER['HTTP_USER_AGENT'], //浏览器信息
         'path' => $file,                             // 文件相对路径
-        'cache' => $cacheFile,                       // 文件缓存相对位置
+        'md5' => $imgMD5,                       // 文件缓存相对位置
     ));
 
     $logFileName = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
@@ -74,8 +74,8 @@ function write_log($file, $cacheFile = null)
     }
 
     // 写入禁止浏览器直接访问
-    if (!is_file($logFileName)){
-        $php_code = '<?php exit;?>';
+    if (filesize($logFileName)==0){
+        $php_code = '<?php /** {图片名称{date:上传日期(Asia/Shanghai),ip:上传者IP,user_agent:上传者浏览器信息,path:图片相对路径,md5:图片的MD5}} */ exit;?>';
         file_put_contents($logFileName, $php_code);
     }
 

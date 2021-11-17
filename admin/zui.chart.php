@@ -108,9 +108,9 @@ if (is_array($char_data)) {
         <canvas id="myChart" width="1080" height="200"></canvas>
     </div>
 </div>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.4.0/public/static/zui/lib/chart/zui.chart.min.js"></script>
 <!--[if lt IE 9]>
-  <script src="<?php static_cdn(); ?>/public/static/zui/lib/chart/excanvas.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.4.0/public/static/zui/lib/chart/excanvas.js"></script>
 <![endif]-->
 <script>
     // 文件统计-柱状图

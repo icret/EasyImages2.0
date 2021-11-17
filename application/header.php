@@ -21,9 +21,7 @@ require_once APP_ROOT . '/application/total_files.php';
 	<link href="<?php static_cdn(); ?>/public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
 	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js?v1.9.2"></script>
-	<script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
 	<script src="<?php static_cdn(); ?>/public/static/qrcode.min.js?v2.0"></script>
-	<script src="<?php static_cdn(); ?>/public/static/hm.js"></script>
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js?vv1.5.5"></script>
 	<script src="<?php static_cdn(); ?>/public/static/nprogress.min.js"></script>
 	<style>

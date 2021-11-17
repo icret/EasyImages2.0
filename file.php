@@ -117,14 +117,13 @@ if ($handle->uploaded) {
             flush();
         }
     }
-
-    unset($handle);
-
     // 上传日志控制
     if ($config['upload_logs'] == true) {
         require_once APP_ROOT . '/application/logs-write.php';
-        @write_log($imageUrl);
+        @write_log(config_path() . $handle->file_dst_name,md5_file(APP_ROOT.config_path() . $handle->file_dst_name));
     }
+
+    unset($handle);
 
     // 图片违规检查
     if ($config['checkImg']) {
