@@ -11,6 +11,18 @@ require_once APP_ROOT . '/application/chart.php';
 if (!is_online()) {
     checkLogin();
 }
+// 删除统计文件
+if (isset($_POST['del_total'])) {
+    @deldir($_POST['del_total']);
+    echo '
+		<script>
+		new $.zui.Messager("删除统计成功！", {type: "success" // 定义颜色主题 
+		}).show();
+		</script>
+		';
+    // 延时1s刷新
+    Header("refresh:1;url=counts.php");
+}
 // 统计图表
 // array_reverse($arr,true) 倒叙数组并保持键值关系
 $char_data = read_chart_total();
@@ -51,7 +63,13 @@ if (is_array($char_data)) {
 </style>
 <div class="row">
     <div class="clo-md-12">
-        <div class="alert alert-warning">统计时间：<?php echo $char_data['total_time']; ?></div>
+        <div class="alert alert-warning">
+            <form action="counts.php" method="post">
+                <span>统计时间：<?php echo $char_data['total_time']; ?></span>
+                <input type="hidden" name="del_total" value="<?php echo APP_ROOT . '/admin/logs/counts/'; ?>">
+                <button class="btn btn-mini btn-danger">重新统计</button>
+            </form>
+        </div>
     </div>
     <div class="col-md-12">
         <div class="col-md-6">

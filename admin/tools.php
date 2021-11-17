@@ -100,7 +100,7 @@ if (isset($_GET['reimg'])) {
 		</div>
 		<div class="col-md-12">
 			<div class="col-md-4">
-				<form class="form-condensed" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+				<form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
 					<label for="exampleInputMoney1">
 						新Token需按要求填入
 						<code>/config/api_key.php</code>
@@ -115,7 +115,7 @@ if (isset($_GET['reimg'])) {
 			</div>
 			<div class="col-md-4">
 				<form></form>
-				<form class="form-condensed" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+				<form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
 					<div class="form-group">
 						<label for="exampleInputAccount6">根据ID/Token查找用户信息</label>
 						<input type="text" name="radio-value" id="exampleInputAccount6" class="form-control" placeholder="输入信息" value="<?php echo @$radio_value; ?>">
@@ -187,7 +187,7 @@ if (isset($_GET['reimg'])) {
 				</table>
 			</div>
 			<div class="col-md-4">
-				<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+				<form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
 					<div class="form-group">
 						<label for="exampleInputInviteCode1" style="color:red">删除所选日期文件夹（删除之后无法恢复！）：</label>
 						<input type="text" class="form-control form-date" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly="">
@@ -248,7 +248,7 @@ if (isset($_GET['reimg'])) {
 								}
 								echo '
 								<span class="label label-primary label-outline">总数：' . $cache_num . '</span>&nbsp;
-								<form action="' . $_SERVER['PHP_SELF'] . '" method="post">
+								<form action="' . $_SERVER['SCRIPT_NAME'] . '" method="post">
 									<input type="hidden" name="delDir" value="/suspic/" readonly="">
 									<button class="btn btn-danger btn-mini" ">删除全部违规图片</button>
 								</form>
@@ -260,10 +260,10 @@ if (isset($_GET['reimg'])) {
 				</div>
 			</div>
 			<div class="col-md-5">
-				<form class="form-inline" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
-					<span class="label label-badge label-primary label-outline">已缓存文件：<?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/'); ?>
-						占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?>
-						<button type="submit" class="btn btn-mini btn-primary" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复！');">清理</button></span>
+				<form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+					<span class="label label-badge label-primary label-outline">已缓存文件：<?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumb/'); ?>
+						占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumb/')); ?>
+						<button type="submit" class="btn btn-mini btn-primary" name="delDir" value="thumb/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复！');">清理</button></span>
 				</form>
 			</div>
 		</div>

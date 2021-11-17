@@ -66,6 +66,9 @@ RewriteRule config/(.*).(php)$ – [F]
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
+* 2021-11-17 v2.4.3
+- 增加登录验证码
+
 * 2021-11-14 v2.4.2
 - 增加上传日志
 

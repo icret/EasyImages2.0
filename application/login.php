@@ -4,14 +4,24 @@
  */
 require_once 'function.php';
 require_once APP_ROOT . '/application/header.php';
-// 提交登录
-if (isset($_POST['password'])) {
-	checkLogin();
-	header("refresh:2;url=" . $config['domain'] . "");
+
+header("Content-Type: text/html;charset=utf-8");
+if (isset($_REQUEST['code'])) {
+	session_start();
+
+	if ($_REQUEST['code'] == $_SESSION['code']) {
+		// 提交登录
+		if (isset($_POST['password'])) {
+			checkLogin();
+			header("refresh:2;url=" . $config['domain'] . "");
+		}
+	} else {
+		echo '<script> alert("验证码错误");</script>';
+	}
 }
 
 ?>
-<form class="form-horizontal" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return md5_post()">
+<form class="form-horizontal" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
 	<div class="form-group">
 		<label for="account" class="col-sm-2">账号</label>
 		<div class="has-success col-md-3 col-sm-5">
@@ -25,6 +35,15 @@ if (isset($_POST['password'])) {
 		</div>
 		<input type="hidden" name="password" id="md5_password">
 	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2">验证码</label>
+		<div class="has-success col-md-3 col-sm-5">
+			<label><img src="<?php echo $config["domain"]."/application/captcha.php";?>" onClick="this.src='<?php echo $config["domain"]."/application/captcha.php";?>?nocache='+Math.random()" title="点击换一张" width="150px" height="40px" /></label>
+			<input class="form-control" type="text" name="code" value="" placeholder="请输入上方4位数验证码 - 注意大小写" />
+		</div>
+	</div>
+
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<div class="checkbox">
@@ -53,5 +72,4 @@ if (isset($_POST['password'])) {
 </script>
 
 <?php
-
 require_once APP_ROOT . '/application/footer.php';

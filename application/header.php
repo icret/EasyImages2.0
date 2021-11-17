@@ -67,9 +67,9 @@ require_once APP_ROOT . '/application/total_files.php';
 				<ul class="dropdown-menu">
 					<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-desktop"> 网站设置</i></a></li>
 					<li class="divider"></li>
-					<li class="' . getActive('tool') . '";><a href="' . $config['domain'] . '/admin/tool.php' . '"><i class="icon icon-rocket"> 快捷工具</i></a></li>
+					<li class="' . getActive('tools') . '";><a href="' . $config['domain'] . '/admin/tools.php' . '"><i class="icon icon-rocket"> 快捷工具</i></a></li>
 					<li class="divider"></li>				
-					<li class="' . getActive('info') . '";><a href="' . $config['domain'] . '/admin/info.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
+					<li class="' . getActive('info') . '";><a href="' . $config['domain'] . '/admin/counts.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
 				</ul>
 			</li>
 				';

@@ -44,7 +44,7 @@ if (isset($_POST['form'])) {
     <div class="col-xs-9">
       <div class="tab-content col-xs-9">
         <div class="tab-pane fade active in" id="tab3Content1">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
             <div class="form-group">
               <label>网站域名,末尾不加"/" </label>
               <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -100,7 +100,7 @@ if (isset($_POST['form'])) {
           </form>
         </div>
         <div class="tab-pane fade" id="tab3Content2">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="mustLogin" value="0">
@@ -244,7 +244,7 @@ if (isset($_POST['form'])) {
           </form>
         </div>
         <div class="tab-pane fade" id="tab3Content3">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="ad_top" value="0">
@@ -278,7 +278,7 @@ if (isset($_POST['form'])) {
           </form>
         </div>
         <div class="tab-pane fade " id="tab3Content4">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
             <div class="form-group">
               <label>TinyImag Key 申请地址：<a href="https://tinypng.com/developers" target="_blank">https://tinypng.com/developers</a></label>
               <input type="text" class="form-control input-sm" name="TinyImag_key" value="<?php echo $config['TinyImag_key']; ?>" title="开启后会受服务器到https://tinypng.com 速度影响，国内不建议开启！" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -290,7 +290,7 @@ if (isset($_POST['form'])) {
           </form>
         </div>
         <div class="tab-pane fade" id="tab3Content5">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="showSwitch" value="0">

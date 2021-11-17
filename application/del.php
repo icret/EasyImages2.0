@@ -7,7 +7,7 @@ require_once './header.php';
 echo '<div class="col-md-4 col-md-offset-4">
 	<div id="title" style="margin: 10px;"></div>
 
-        <form class="form-inline" method="get" action="' . $_SERVER['PHP_SELF'] . '" id="form" name="delForm" onSubmit="getStr();">
+        <form class="form-inline" method="get" action="' . $_SERVER['SCRIPT_NAME'] . '" id="form" name="delForm" onSubmit="getStr();">
             <div class="form-group">
                 <label for="exampleInputInviteCode3">删除图片-格式：</label>
                 <input type="text" class="form-control" id="exampleInputInviteCode3" name="url" placeholder="https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg">

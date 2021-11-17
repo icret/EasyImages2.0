@@ -1,16 +1,5 @@
 <?php
-// 设置html为utf8
-@header('Content-Type:text/html;charset=utf-8');
-//将时区设置为中国·上海
-@ini_set('date.timezone', 'Asia/Shanghai');
-@date_default_timezone_set('Asia/Shanghai');
-// 修改内存限制 根据服务器配置选择，低于128M容易出现上传失败，你懂得图片挺占用内存的
-@ini_set('memory_limit', '512M');
-// 定义根目录
-@define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
-// 判断当前的系统类型是否为windows
-@define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
-
+require_once __DIR__.'/../config/base.php';
 require_once APP_ROOT . '/config/config.php';
 
 // 判断GIF图片是否为动态
@@ -312,7 +301,7 @@ function getDistUsed($number)
 // 根据url填写active
 function getActive($url)
 {
-	$arr = $_SERVER['PHP_SELF'];
+	$arr = $_SERVER['SCRIPT_NAME'];
 	if (strpos($arr, $url)) {
 		return 'active';
 	}else {
@@ -345,7 +334,6 @@ function getDel($url, $type)
 {
 	global $config;
 	// url本地化
-	//$url = htmlspecialchars(parse_url($url)['path']);   // 过滤html 获取url path
 	$url = htmlspecialchars(str_replace($config['imgurl'], '', $url));   // 过滤html 获取url path
 	$url = urldecode(trim($url));
 
@@ -669,13 +657,13 @@ function creat_cache_images($imgName)
 	global $config;
 
 	$old_img_path = APP_ROOT . config_path() . $imgName; 											       // 获取要创建缩略图文件的绝对路径
-	$cache_path = APP_ROOT . $config['path'] . 'cache/';											       // cache目录的绝对路径
+	$cache_path = APP_ROOT . $config['path'] . 'thumb/';											       // cache目录的绝对路径
 
     if(!is_dir($cache_path)){                                                                              // 创建cache目录
         mkdir($cache_path, 0777, true);
     }
 	if (!isAnimatedGif($old_img_path)) {															       // 仅针对非gif创建图片缩略图
-			$new_imgName = APP_ROOT . $config['path'] . 'cache/' . date('Y_m_d') . '_' . $imgName; 	// 缩略图缓存的绝对路径
+			$new_imgName = APP_ROOT . $config['path'] . 'thumb/' . date('Y_m_d') . '_' . $imgName; 	// 缩略图缓存的绝对路径
 			Thumb::out($old_img_path, $new_imgName, 300, 300);									// 保存缩略图
 	}
 }
@@ -691,9 +679,9 @@ function back_cache_images($url)
 	} else {
 		$cache_image_file = str_replace($config['path'], '', $cache_image_file); 		// 将网址中的/i/去除
 		$cache_image_file = str_replace('/', '_', $cache_image_file);					// 将文件的/转换为_
-		$isFile = APP_ROOT . $config['path'] . 'cache/' . $cache_image_file; 			// 缓存文件的绝对路径
+		$isFile = APP_ROOT . $config['path'] . 'thumb/' . $cache_image_file; 			// 缓存文件的绝对路径
 		if (file_exists($isFile)) { 													// 缓存文件是否存在
-			return $config['imgurl'] .  $config['path'] . 'cache/' . $cache_image_file; // 存在则返回缓存文件
+			return $config['imgurl'] .  $config['path'] . 'thumb/' . $cache_image_file; // 存在则返回缓存文件
 		} else {
 			return $url;																// 不存在直接返回url
 		}
@@ -710,7 +698,7 @@ function back_cache_images($url)
 function get_whole_url($search = null)
 {
 	$sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
-	$php_self = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+	$php_self = $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME'];
 	$path_info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
 	$relate_url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
 	$whole_domain =  $sys_protocal . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . $relate_url;
