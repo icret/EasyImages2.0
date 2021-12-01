@@ -52,13 +52,13 @@ if ($state !== 'checked') {
             <div class="form-group">
                 <label class="col-sm-2">网站域名,末尾不加"/"</label>
                 <div class="col-md-6 col-sm-10">
-                    <input type="url" class="form-control" name="domain" value="" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')" placeholder="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的！" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的！">
+                    <input type="url" class="form-control" name="domain" value="<?php echo get_whole_url('/install/install.php'); ?>" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')" placeholder="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的！" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的！">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2">图片链接域名,末尾不加"/"</label>
                 <div class="col-md-6 col-sm-10">
-                    <input type="text" class="form-control" name="imgurl" value="" required="required" placeholder="给图片的域名，末尾不加/，如果没有请填写和上边的一样即可" onkeyup="this.value=this.value.replace(/\s/g,'')" placeholder="图片域名">
+                    <input type="text" class="form-control" name="imgurl" value="<?php echo get_whole_url('/install/install.php'); ?>" required="required" placeholder="给图片的域名，末尾不加/，如果没有请填写和上边的一样即可" onkeyup="this.value=this.value.replace(/\s/g,'')" placeholder="图片域名">
                 </div>
             </div>
             <div class="form-group">
