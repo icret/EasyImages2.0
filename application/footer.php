@@ -67,15 +67,12 @@
   }
 
   if (isset($config['footer'])) {
-    echo '<div>' . $config['footer'] . ' 
-  Copyright © 2018-'.date('Y').'
-	<a href="https://img.545141.com/" target="_blank"> EasyImage</a> By
-	<a href="https://www.545141.com" target="_blank"> Icret</a> Version:
-	<a href="https://github.com/icret/EasyImages2.0" target="_blank"> '. $config['version'].'</a>
-	<a href="/admin/terms.php" target="_blank"> DMCA</a>    
-  </div>';
+    echo '  <div>' . $config['footer'] . ' </div>';
   }
-?>
+
+  ?>
+
+
 </footer>
 </body>
 

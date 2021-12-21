@@ -28,6 +28,7 @@ require_once APP_ROOT . '/application/header.php';
           <h4>服务条款</h4>
           <hr>
           <p>访问我们网站除主页和本“条款”页面以外的任何页面，即表示您同意这些使用条款和我们的隐私政策。如果您不同意，请不要使用我们的网站。</p>
+          <p>您使用我们的网站进行除简单访问/查看之外的任何事情（即上传、下载、评论等），不仅构成您的同意，而且构成您的电子签名，这意味着您受这些条款的合同约束，并且通过我们的隐私政策。</p>
           <ol>
             <li>您使用我们的网站进行除简单访问/查看之外的任何事情（即上传、下载、评论等），不仅构成您的同意，而且构成您的电子签名，这意味着您受这些条款的合同约束，并且通过我们的隐私政策。</li>
             <li>我们保留在使用过多带宽或以其他方式滥用系统的用户帐户上禁用直接链接的权利。
@@ -91,9 +92,5 @@ require_once APP_ROOT . '/application/header.php';
     </div>
   </div>
 </div>
-<script>
-// Title
-	document.title = "服务条款 - <?php echo $config['title']; ?>";
-</script>
 <?php
 require_once APP_ROOT . '/application/footer.php';
