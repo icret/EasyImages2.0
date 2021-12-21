@@ -81,12 +81,5 @@ $config=Array
 	'TinyImag_key'=>'',
 	'moderatecontent_key'=>'',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
-  <i class="icon icon-smile"></i> <br/>
-
-Copyright © 2018-2021
-<a href="https://img.545141.com/" target="_blank"> EasyImage</a> By
-<a href="https://www.545141.com/902.html" target="_blank"> Icret</a> Version:
-<a href="https://github.com/icret/EasyImages2.0" target="_blank"> 2.4.0</a>
-<a href="/admin/terms.php" target="_blank"> DMCA</a>
-'
+  <i class="icon icon-smile"></i> <br/>'
 	);
