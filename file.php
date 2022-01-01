@@ -84,50 +84,36 @@ if ($handle->uploaded) {
         if ($ver >= '7.0') {
             $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
         } else {
-            $delUrl = 'PHP≥7.0 才能启用删除！';
+            $delUrl = 'PHP≥7.0 才能启用删除!';
         }
-
-        // 创建缩略图
-        @creat_cache_images($handle->file_dst_name);
 
         $reJson = array(
             "result" => 'success',
-            "url" => $imageUrl,
-            "del" =>  $delUrl,
+            "url"    => $imageUrl,
+            "del"    => $delUrl,
         );
         echo json_encode($reJson);
         $handle->clean();
     } else {
         // 上传错误 返回错误信息
         $reJson = array(
-            "result" => 'failed',
-            "message" => $handle->error,
+            "result"    =>  'failed',
+            "message"   =>  $handle->error,
+            "log"       =>  $handle->log,
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
     }
 
-    // 压缩图片 后压缩模式，不影响前台输出速度
-    if ($config['compress']) {
-        if (!isAnimatedGif($handle->file_dst_pathname)) {
-            require 'application/compress/Imagick/class.Imgcompress.php';
-            $img = new Imgcompress($handle->file_dst_pathname, 1);
-            $img->compressImg($handle->file_dst_pathname);
-            // 释放
-            ob_flush();
-            flush();
-        }
-    }
     // 上传日志控制
-    if ($config['upload_logs'] == true) {
+    if ($config['upload_logs']) {
         require_once APP_ROOT . '/application/logs-write.php';
-        @write_log(config_path() . $handle->file_dst_name,md5_file(APP_ROOT.config_path() . $handle->file_dst_name));
+        @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+    }
+
+    // 创建缩略图
+    if ($config['thumbnail']) {
+        @creat_thumbnail_images($handle->file_dst_name);
     }
 
     unset($handle);
-
-    // 图片违规检查
-    if ($config['checkImg']) {
-        require_once APP_ROOT . '/config/api_key.php';
-        @checkImg($imageUrl);
-    }
 }

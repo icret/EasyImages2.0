@@ -23,14 +23,18 @@ $config=Array
 	'waterImg'=>'/public/images/watermark.png',
 	'extensions'=>'bmp,jpg,png,tif,gif,pcx,tga,svg,webp,jpeg,tga,svg,ico',
 	'compress'=>0,
+	'thumbnail'=>0,
 	'imgConvert'=>'',
 	'maxWidth'=>10240,
 	'maxHeight'=>10240,
 	'minWidth'=>5,
 	'minHeight'=>5,
 	'imgRatio'=>0,
-	'image_x'=>1000,
+	'image_x'=>800,
 	'image_y'=>800,
+	'imgRatio_quality'=>60,
+	'imgRatio_crop'=>1,
+	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
 	'ad_top'=>0,
@@ -47,7 +51,7 @@ $config=Array
   ',
 	'showSwitch'=>1,
 	'listNumber'=>20,
-	'customize'=>'    <!-- 统计代码-->
+	'customize'=>'    <!-- 百度统计代码-->
     <script>
     var _hmt = _hmt || [];
     (function() {
@@ -56,30 +60,18 @@ $config=Array
       var s = document.getElementsByTagName("script")[0]; 
       s.parentNode.insertBefore(hm, s);
     })();
-    </script>
-
-    <!-- 自定义js举例：非img.545141.com跳转 
-    <img style="display:none" src=" " onerror=\'this.onerror=null;var currentDomain="img."+"545141." + "com"; var str1=currentDomain; str2="docu"+"ment.loca"+"tion.host"; str3=eval(str2) ;if( str1!=str3 ){ do_action = "loca" + "tion." + "href = loca" + "tion.href" + ".rep" + "lace(docu" +"ment"+".loca"+"tion.ho"+"st," + "currentDomain" + ")";eval(do_action) }\' />		
-    -->
-    <!--自定义代码举例：打赏、QQ邮箱、QQ群 可删除
-    <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
-    <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=cR0UHB4fGBwxAABfEh4c">
-      <i class="icon icon-envelope-alt">联系邮箱 </i>
-    </a> 
-    <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f">
-        <i class="icon icon-qq">加入QQ群</i>
-    </a>
-    <a target="_blank" href="/master.zip"><i class="icon icon-download-alt">下载源码</i></a>
- --> ',
+    </script>',
 	'checkEnv'=>1,
 	'checkImg'=>0,
 	'checkImg_value'=>50,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
-	'version'=>'2.4.3',
+	'version'=>'2.4.4',
 	'form'=>'',
 	'TinyImag_key'=>'',
 	'moderatecontent_key'=>'',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
-  <i class="icon icon-smile"></i> <br/>'
+  <i class="icon icon-smile"></i> <br/>',
+	'imgRatio_save_headers'=>1,
+	'imgRatio_value'=>10
 	);

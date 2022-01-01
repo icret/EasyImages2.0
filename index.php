@@ -105,7 +105,7 @@ mustLogin();
     limitFilesCount: <?php echo $config['maxUploadFiles']; ?>,
     // 自动上传失败的文件
     autoResetFails: true,
-    <?php imgRatio(); ?>
+    <?php echo imgRatio(); ?>,
     responseHandler : function(responseObject, file) {
       var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
       console.log(responseObject.response); // 输出log
@@ -126,7 +126,7 @@ mustLogin();
         var del = document.getElementById("del");
         del.innerHTML += obj.del + "\n";
       } else {
-        return '上传失败，服务器返回错误：' + obj.message;
+        return '上传失败，服务器返回错误:' + obj.message;
       }
 
     }

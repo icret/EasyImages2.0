@@ -88,7 +88,7 @@ if ($handle->uploaded) {
         header('Content-type:text/json');
         // 上传成功后返回json数据
         $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
-        $delUrl = $config['domain']  . '/api/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
 
         $reJson = array(
             "result" => 'success',
@@ -100,22 +100,22 @@ if ($handle->uploaded) {
     } else {
         // 上传错误 返回错误信息
         $reJson = array(
-            "result" => 'failed',
-            "message" => $handle->error,
+            "result"    =>  'failed',
+            "message"   =>  $handle->error,
+            "log"       =>  $handle->log,
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
     }
 
-    // 压缩图片 后压缩模式，不影响前台输出速度
-    if (!isAnimatedGif($handle->file_dst_pathname))
-        if ($config['compress']) {
-            require '../application/compress/Imagick/class.Imgcompress.php';
-            $img = new Imgcompress($handle->file_dst_pathname, 1);
-            $img->compressImg($handle->file_dst_pathname);
-            // 释放
-            ob_flush();
-            flush();
-        }
+    // 上传日志控制
+    if ($config['upload_logs']) {
+        require_once APP_ROOT . '/application/logs-write.php';
+        @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, "API upload");
+    }
 
+    // 创建缩略图
+    if ($config['thumbnail']) {
+        @creat_thumbnail_images($handle->file_dst_name);
+    }
     unset($handle);
 }

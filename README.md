@@ -20,40 +20,36 @@
 - [x] 支持设置图片指定宽/高
 - [x] 支持限制最低宽度/高度上传
 - [x] 支持设置广告
-- [x] 图片监黄
-- [x] 支持开启/关闭api上传
-- [x] 在线管理图片(增、删、改、查)
-- [x] 支持网站统计 请将统计代码放入:public/static/hm.js
-- [x] 更多·····
+- [x] 支持自定义
+- [x] 支持图片监黄
+- [x] 支持API
+- [x] 在线管理图片
+- [x] 支持网站统计
+- [x] 支持更多···
 
-#### 安装文档
+#### 使用注意：
 
-[https://www.kancloud.cn/easyimage/easyimage](https://www.kancloud.cn/easyimage/easyimage)
-
-#### 注意：
-
-1. 第一次访问会检查环境并在config目录下生成EasyImage.lock
-2. 请将所有文件赋予0755权限或www权限
-3. 上传后必须修改config.php的位置：
-   - domain 当前网站域名
-   - imgurl 当前图片域名
-   - password 登录管理密码！
-4. 如果无法登陆管理界面或上传图片，请检查扩展或者使用phpinfo检查。
-5. 可以使用浏览器的 F12调试模式->console查看错误
-6. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
-7. 下载源码后可以删除一些文件：README.md,LICENSE
-8. 欢迎加群：[623688684](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
+1. 请将所有文件赋予0755权限或www权限
+2. 宝塔面板请删除域名文件夹内的user.ini文件
+3. 可以使用浏览器的 F12调试模式->console查看错误
+4. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
+5. 第一使用会执行安装程序并生成install.lock，如果出错可以删除install目录
+6. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
+7. 安装成功后务必修改默认密码
+8. 第一次访问会检查环境并在config目录下生成EasyImage.lock
+9. 欢迎加群：[623688684](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
 #### 安全配置
- - Apache配置文件默认设置上传目录不可运行 
+
+- Apache环境在上传目录添加配置文件.htaccess，使上传目录不可运行PHP程序（默认存在)
 
 ```Apache
-RewriteEngine on RewriteCond % !^$
-RewriteRule i/(.*).(php)$ – [F]
-RewriteRule public/(.*).(php)$ – [F]
-RewriteRule config/(.*).(php)$ – [F]
+<FilesMatch "\.(?i:php|php3|php4|php5)">
+Order allow,deny
+Deny from all
+</FilesMatch>
 ```
- - Nginx请在Nginx配置：
+- Nginx环境限制上传目录禁止运行PHP程序：
 
 ```Nginx
  # 禁止运行php的目录
@@ -64,7 +60,30 @@ RewriteRule config/(.*).(php)$ – [F]
 ```
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
+ #### 帮助文档
+
+[https://www.kancloud.cn/easyimage/easyimage](https://www.kancloud.cn/easyimage/easyimage)
+[https://www.kancloud.cn/easyimage/easyimage](简单图床问题反馈)
+
+ #### 程序升级
+
+- 保存好config.php文件和上传目录文件
+- 如果自定义过API的Token请保存api_key.php文件
+- 将新程序下载至网站目录解压覆盖，然后将保存的文件替换既完成升级
+
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+
+* 2021-12-25 v2.4.4
+- 更改favicon.ico
+- 修复缩略图数量统计
+- 增加缩略图生成开关
+- 日志增加更多文件信息
+- 前端增加裁剪和压缩质量
+- 上传失败将会输出更多信息
+- 修复上传设置中错误和页面显示
+- 调整网站设置->上传设置的排序
+- 将快捷操作中心转移到网站设置中
+- 增加简单图床chrome浏览器插件，可自行配置网站->[EasyImage-Browser-Extension](https://github.com/icret/EasyImage-Browser-Extension)
 
 * 2021-11-17 v2.4.3
 - 增加登录验证码

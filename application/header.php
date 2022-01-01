@@ -59,17 +59,9 @@ require_once APP_ROOT . '/application/total_files.php';
 			</li>
 			<?php
 			if (is_online()) {
-				echo '
-			<li class="dropdown dropdown-hover">
-				<a class="dropdown-toggle" data-toggle="dropdown"><i class="icon icon-cogs"> 设置</i><span class="caret"></span></a>
-				<ul class="dropdown-menu">
-					<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-desktop"> 网站设置</i></a></li>
-					<li class="divider"></li>
-					<li class="' . getActive('tools') . '";><a href="' . $config['domain'] . '/admin/tools.php' . '"><i class="icon icon-rocket"> 快捷工具</i></a></li>
-					<li class="divider"></li>				
-					<li class="' . getActive('counts') . '";><a href="' . $config['domain'] . '/admin/counts.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
-				</ul>
-			</li>
+				echo '				
+				<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"> 网站设置</i></a></li>					
+				<li class="' . getActive('counts') . '";><a href="' . $config['domain'] . '/admin/counts.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
 				';
 			}
 			?>

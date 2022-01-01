@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/../config/base.php';
+require_once __DIR__ . '/../config/base.php';
 require_once APP_ROOT . '/config/config.php';
 
 // 判断GIF图片是否为动态
@@ -304,7 +304,7 @@ function getActive($url)
 	$arr = $_SERVER['SCRIPT_NAME'];
 	if (strpos($arr, $url)) {
 		return 'active';
-	}else {
+	} else {
 		return '';
 	}
 }
@@ -406,10 +406,9 @@ function checkEnv($mode)
 		exit;
 	}
 
-	if($mode){
-		require_once __DIR__.'/check.php';
+	if ($mode) {
+		require_once __DIR__ . '/check.php';
 	}
-
 }
 
 
@@ -418,17 +417,29 @@ function imgRatio()
 {
 	global $config;
 	if ($config['imgRatio']) {
-		$image_x =  $config['image_x'];
-		$image_y =  $config['image_y'];
-		echo '
+
+		if ($config['imgRatio_crop'] === 1) {
+			$imgRatio_crop = 'true';
+		} else {
+			$imgRatio_crop = 'false';
+		}
+
+		if ($config['imgRatio_preserve_headers'] === 1) {
+			$imgRatio_preserve_headers = 'true';
+		} else {
+			$imgRatio_preserve_headers = 'false';
+		}
+
+		return '
 		resize:{
-			width: ' . $image_x . ',
-			height: ' . $image_y . ',
-			preserve_headers: false,	// 是否保留图片的元数据
-		},
-		';
+			width: ' . $config['image_x'] . ',
+			height: ' . $config['image_y'] . ',
+			crop: ' . $imgRatio_crop . ',
+			quality:' . $config['imgRatio_quality'] . ',
+			preserve_headers: ' . $imgRatio_preserve_headers . ',
+		}';
 	} else {
-		return null;
+		return 'resize:{}';
 	}
 }
 
@@ -490,7 +501,7 @@ function deldir($dir)
 }
 
 // curl访问网站并返回解码过的json信息
-function get_json($img)
+function moderatecontent_json($img)
 {
 	global $config;
 
@@ -517,7 +528,7 @@ function checkImg($imageUrl)
 {
 	global $config;
 
-	$response = get_json($imageUrl);
+	$response = moderatecontent_json($imageUrl);
 	if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
 		//$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
 		$old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl);            // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
@@ -545,37 +556,37 @@ function re_checkImg($name)
 	rename($now_path_file, $to_file);
 }
 // 创建缩略图
-function creat_cache_images($imgName)
+function creat_thumbnail_images($imgName)
 {
 	require_once __DIR__ . '/class.thumb.php';
 	global $config;
 
 	$old_img_path = APP_ROOT . config_path() . $imgName; 											       // 获取要创建缩略图文件的绝对路径
-	$cache_path = APP_ROOT . $config['path'] . 'thumb/';											       // cache目录的绝对路径
+	$cache_path = APP_ROOT . $config['path'] . 'thumbnails/';											       // cache目录的绝对路径
 
-    if(!is_dir($cache_path)){                                                                              // 创建cache目录
-        mkdir($cache_path, 0777, true);
-    }
+	if (!is_dir($cache_path)) {                                                                              // 创建cache目录
+		mkdir($cache_path, 0777, true);
+	}
 	if (!isAnimatedGif($old_img_path)) {															       // 仅针对非gif创建图片缩略图
-			$new_imgName = APP_ROOT . $config['path'] . 'thumb/' . date('Y_m_d') . '_' . $imgName; 	// 缩略图缓存的绝对路径
-			Thumb::out($old_img_path, $new_imgName, 300, 300);									// 保存缩略图
+		$new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName; 	// 缩略图缓存的绝对路径
+		Thumb::out($old_img_path, $new_imgName, 300, 300);									// 保存缩略图
 	}
 }
 
 // 根据请求网址路径返回缩略图网址
-function back_cache_images($url)
+function return_thumbnail_images($url)
 {
 	global $config;
 	$cache_image_file = str_replace($config['imgurl'], '', $url);
 
-	if (isAnimatedGif(APP_ROOT . $cache_image_file)) { 									// 仅读取非gif的缩略图
+	if (isAnimatedGif(APP_ROOT . $cache_image_file)) { 							// 仅读取非gif的缩略图
 		return $url; 																	// 如果是gif则直接返回url
 	} else {
-		$cache_image_file = str_replace($config['path'], '', $cache_image_file); 		// 将网址中的/i/去除
-		$cache_image_file = str_replace('/', '_', $cache_image_file);					// 将文件的/转换为_
-		$isFile = APP_ROOT . $config['path'] . 'thumb/' . $cache_image_file; 			// 缓存文件的绝对路径
+		$cache_image_file = str_replace($config['path'], '', $cache_image_file); // 将网址中的/i/去除
+		$cache_image_file = str_replace('/', '_', $cache_image_file);		// 将文件的/转换为_
+		$isFile = APP_ROOT . $config['path'] . 'thumbnails/' . $cache_image_file; 			// 缓存文件的绝对路径
 		if (file_exists($isFile)) { 													// 缓存文件是否存在
-			return $config['imgurl'] .  $config['path'] . 'thumb/' . $cache_image_file; // 存在则返回缓存文件
+			return $config['imgurl'] .  $config['path'] . 'thumbnails/' . $cache_image_file; // 存在则返回缓存文件
 		} else {
 			return $url;																// 不存在直接返回url
 		}
