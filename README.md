@@ -61,9 +61,8 @@ Deny from all
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
  #### 帮助文档
-
-[https://www.kancloud.cn/easyimage/easyimage](https://www.kancloud.cn/easyimage/easyimage)
-[https://www.kancloud.cn/easyimage/easyimage](简单图床问题反馈)
+- [简单图床-EasyImage2.0 使用手册](https://www.kancloud.cn/easyimage/easyimage)
+- [简单图床问题反馈](https://www.kancloud.cn/easyimage/easyimage)
 
  #### 程序升级
 
