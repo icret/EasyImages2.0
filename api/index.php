@@ -1,20 +1,15 @@
 <?php
 require_once __DIR__ . './../application/function.php';
-require_once APP_ROOT . '/api/application/apiFunction.php';
+require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/class.upload.php';
 require_once APP_ROOT . '/application/WaterMask.php';
 require_once APP_ROOT . '/config/api_key.php';
 
-// 检查是否开启api上传
-if ($config['apiStatus']) {
-    header('Access-Control-Allow-Origin:*');
-} else {
-    exit('API closed');
-}
+header('Access-Control-Allow-Origin:*');
+$token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
 
 // 检查api合法性
-checkToken($_POST['token']);
-$token = $_POST['token'];
+check_api($token);
 
 $handle = new Upload($_FILES['image'], 'zh_CN');
 
@@ -91,20 +86,25 @@ if ($handle->uploaded) {
         $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
 
         $reJson = array(
-            "result" => 'success',
-            "url" => $imageUrl,
-            "del" =>  $delUrl,
+            "result" => "success",
+            "code"   => 200,
+            "url"    => $imageUrl,
+            "del"    => $delUrl,
         );
-        echo json_encode($reJson);
+        echo json_encode($reJson,JSON_UNESCAPED_UNICODE);
         $handle->clean();
     } else {
-        // 上传错误 返回错误信息
+        // 上传错误 code:403 客户端文件有问题
         $reJson = array(
-            "result"    =>  'failed',
+            "result"    =>  "failed",
+            "code"      =>  403,
             "message"   =>  $handle->error,
-            "log"       =>  $handle->log,
+            //"log"       =>  $handle->log,
         );
-        echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
+
+        unset($handle);
+        header('Content-Type:application/json; charset=utf-8');
+        exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
     // 上传日志控制

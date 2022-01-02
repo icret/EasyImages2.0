@@ -6,7 +6,7 @@
 require_once __DIR__ . '/../application/function.php';
 require_once APP_ROOT . '/application/header.php';
 require_once APP_ROOT . '/config/api_key.php';
-require_once APP_ROOT . '/api/application/apiFunction.php';
+require_once APP_ROOT . '/api/function_API.php';
 
 if (!is_online()) {
   echo '

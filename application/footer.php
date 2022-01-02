@@ -65,7 +65,6 @@
   <!-- 对话框触发按钮 -->
   <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">
     <i class="icon icon-qrcode"></i>二维码 </a>
-  <a href="<?php echo $config['domain']; ?>/api/apiTest/" target="_blank"><i class="icon icon-key"></i>API </a>
   <?php
   if (is_online()) {
     echo '<a href="' . $config['domain'] . '/application/logout.php" ><i class="icon icon-signout"></i>退出 </a>';
