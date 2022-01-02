@@ -274,12 +274,12 @@ if (isset($_POST['radio'])) {
               </div>
             </div>
             <div class="form-group">
-              <label>上传前改变图片尺寸->更改后的宽度：</label><label id="image_x"><?php echo $config['image_x']; ?></label><label>像素</label>
-              <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="100" max="10240" step="100" onchange="document.getElementById('image_x').innerHTML=value">
+              <label>图片裁剪的宽度(设置0则不生效)->更改后的宽度：</label><label id="image_x"><?php echo $config['image_x']; ?></label><label>像素</label>
+              <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="10240" step="100" onchange="document.getElementById('image_x').innerHTML=value">
             </div>
             <div class="form-group">
-              <label>上传前改变图片尺寸->更改后的高度：</label><label id="image_y"><?php echo $config['image_y']; ?></label><label>像素</label>
-              <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="100" max="10240" step="100" onchange="document.getElementById('image_y').innerHTML=value">
+              <label>图片裁剪的高度(设置0则不生效)->更改后的高度：</label><label id="image_y"><?php echo $config['image_y']; ?></label><label>像素</label>
+              <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="10240" step="100" onchange="document.getElementById('image_y').innerHTML=value">
             </div>
             <div class="form-group">
               <div class="switch">
@@ -292,11 +292,11 @@ if (isset($_POST['radio'])) {
               <div class="switch">
                 <input type="hidden" name="imgRatio_preserve_headers" value="0">
                 <input type="checkbox" name="imgRatio_preserve_headers" value="1" <?php if ($config['imgRatio_preserve_headers']) {echo 'checked="checked"';} ?>>
-                <label style="font-weight: bold">压缩后是否保留图片原始数据</label>
+                <label style="font-weight: bold">开启保留图片原始数据</label>
               </div>
             </div>
             <div class="form-group">
-              <label>上传前图片压缩率控制(仅支持JPG)->更改后的压缩率：</label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
+              <label>上传前压缩图片(仅支持JPG)->更改后的压缩率：</label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
               <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">              
             </div>
             <div class="form-group">

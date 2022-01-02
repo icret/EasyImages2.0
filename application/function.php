@@ -113,7 +113,7 @@ function imgName()
 			return sha1(microtime());
 			break;
 		default:
-			return base_convert(date('His') . mt_rand(1024, 10240), 10, 36);	// 将上传时间+随机数转换为36进制 例：vx77yu
+			return base_convert(date('His') . mt_rand(1024, 9999), 10, 36);	// 将上传时间+随机数转换为36进制 例：vx77yu
 	}
 }
 
@@ -417,7 +417,7 @@ function imgRatio()
 {
 	global $config;
 	if ($config['imgRatio']) {
-echo $config['imgRatio'];
+
 		if ($config['imgRatio_crop'] === 1) {
 			$imgRatio_crop = 'true';
 		} else {
@@ -430,10 +430,22 @@ echo $config['imgRatio'];
 			$imgRatio_preserve_headers = 'false';
 		}
 
+		if ($config['image_x'] != 0) {
+			$image_x = "width:" . $config['image_x'];
+		} else {
+			$image_x = null;
+		}
+
+		if ($config['image_y'] != 0) {
+			$image_y =  "height:" . $config['image_y'];
+		} else {
+			$image_y = null;
+		}
+
 		return '
 		resize:{
-			width: ' . $config['image_x'] . ',
-			height: ' . $config['image_y'] . ',
+			' . $image_x . ',
+			' . $image_y . ',
 			crop: ' . $imgRatio_crop . ',
 			quality:' . $config['imgRatio_quality'] . ',
 			preserve_headers: ' . $imgRatio_preserve_headers . ',
@@ -662,12 +674,13 @@ function writefile($filename, $writetext, $openmod = 'w')
 	}
 }
 
-function get_online_thumbnail($imgUrl){
+function get_online_thumbnail($imgUrl)
+{
 	global $config;
-	if($config['thumbnail']){
+	if ($config['thumbnail']) {
 		$imgUrl = str_replace($config['imgurl'], '', $imgUrl);
-		return $config['domain'].'/application/thumb.php?img='.$imgUrl.'&width=300&height=300';
-	}else{
+		return $config['domain'] . '/application/thumb.php?img=' . $imgUrl . '&width=300&height=300';
+	} else {
 		return $imgUrl;
 	}
 }
