@@ -417,7 +417,7 @@ function imgRatio()
 {
 	global $config;
 	if ($config['imgRatio']) {
-
+echo $config['imgRatio'];
 		if ($config['imgRatio_crop'] === 1) {
 			$imgRatio_crop = 'true';
 		} else {
@@ -439,7 +439,7 @@ function imgRatio()
 			preserve_headers: ' . $imgRatio_preserve_headers . ',
 		}';
 	} else {
-		return 'resize:{}';
+		return "file_data_name:'file'";
 	}
 }
 
@@ -659,5 +659,15 @@ function writefile($filename, $writetext, $openmod = 'w')
 		return true;
 	} else {
 		return false;
+	}
+}
+
+function get_online_thumbnail($imgUrl){
+	global $config;
+	if($config['thumbnail']){
+		$imgUrl = str_replace($config['imgurl'], '', $imgUrl);
+		return $config['domain'].'/application/thumb.php?img='.$imgUrl.'&width=300&height=300';
+	}else{
+		return $imgUrl;
 	}
 }

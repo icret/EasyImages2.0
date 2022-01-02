@@ -1,13 +1,21 @@
-![简单图床示例](https://i1.100024.xyz/i/2020/12/31/ulmtho.png
- "简单图床示例")
-![简单图床示例](https://i1.100024.xyz/i/2020/12/31/ulmjmn.png
- "简单图床示例")
-
 ## EasyImage 简单图床 2.0
-> 支持多文件上传,简单无数据库,返回图片url,markdown,bbscode,html的一款图床程序
-演示地址： [https://img.545141.com](https://img.545141.com"https://img.545141.com")
+> 始于2018年7月，支持多文件上传,简单无数据库,返回图片url,markdown,bbscode,html的一款图床程序
+演示地址：[https://img.545141.com](https://img.545141.com) 
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](http://www.mycodes.net/48/4925.htm "PHP多图长传程序2.4.3")
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
+>
+<hr />
+
+[![PHP](https://img.shields.io/badge/PHP->=5.6-orange.svg)](http://php.net)
+[![Release](https://img.shields.io/github/v/release/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/releases)
+[![Issues](https://img.shields.io/github/issues/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/issues)
+[![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
+[![License](https://img.shields.io/badge/license-GPL_V3.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
+
+[演示](https://img.545141.com) &nbsp;
+[Chrome 拓展](https://github.com/icret/EasyImages2.0-chrome-extension) &nbsp;
+[使用手册](https://www.kancloud.cn/easyimage/easyimage) &nbsp;
+[问题反馈](https://www.kancloud.cn/easyimage/easyimage)
 
 <hr />
 
@@ -79,9 +87,11 @@ Deny from all
 - 日志增加更多文件信息
 - 前端增加裁剪和压缩质量
 - 上传失败将会输出更多信息
+- 修复前端压缩图片不能关闭问题
 - 修复上传设置中错误和页面显示
 - 调整网站设置->上传设置的排序
 - 将快捷操作中心转移到网站设置中
+- 修复因生成缩略图导致的前端数据返回失败
 - 增加简单图床chrome浏览器插件，可自行配置网站->[EasyImage-Browser-Extension](https://github.com/icret/EasyImage-Browser-Extension)
 
 * 2021-11-17 v2.4.3

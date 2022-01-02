@@ -1,0 +1,41 @@
+{
+  "url": "https://api.github.com/repos/icret/EasyImages2.0/releases/56245194",
+  "assets_url": "https://api.github.com/repos/icret/EasyImages2.0/releases/56245194/assets",
+  "upload_url": "https://uploads.github.com/repos/icret/EasyImages2.0/releases/56245194/assets{?name,label}",
+  "html_url": "https://github.com/icret/EasyImages2.0/releases/tag/2.4.4",
+  "id": 56245194,
+  "author": {
+    "login": "icret",
+    "id": 16373024,
+    "node_id": "MDQ6VXNlcjE2MzczMDI0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/16373024?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/icret",
+    "html_url": "https://github.com/icret",
+    "followers_url": "https://api.github.com/users/icret/followers",
+    "following_url": "https://api.github.com/users/icret/following{/other_user}",
+    "gists_url": "https://api.github.com/users/icret/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/icret/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/icret/subscriptions",
+    "organizations_url": "https://api.github.com/users/icret/orgs",
+    "repos_url": "https://api.github.com/users/icret/repos",
+    "events_url": "https://api.github.com/users/icret/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/icret/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "node_id": "RE_kwDOCzgjBc4DWjvK",
+  "tag_name": "2.4.4",
+  "target_commitish": "master",
+  "name": "EasyImage2.0 简单图床 ver:2.4.4",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2022-01-01T07:46:02Z",
+  "published_at": "2022-01-01T07:48:16Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/icret/EasyImages2.0/tarball/2.4.4",
+  "zipball_url": "https://api.github.com/repos/icret/EasyImages2.0/zipball/2.4.4",
+  "body": "* 2021-12-25 v2.4.4\r\n- 更改favicon.ico\r\n- 修复缩略图数量统计\r\n- 增加缩略图生成开关\r\n- 日志增加更多文件信息\r\n- 前端增加裁剪和压缩质量\r\n- 上传失败将会输出更多信息\r\n- 修复上传设置中错误和页面显示\r\n- 调整网站设置->上传设置的排序\r\n- 将快捷操作中心转移到网站设置中\r\n- 增加简单图床chrome浏览器插件，可自行配置网站->[EasyImage-Browser-Extension](https://github.com/icret/EasyImage-Browser-Extension)"
+}

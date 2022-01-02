@@ -90,16 +90,17 @@ mustLogin();
     max_file_size: <?php echo $config['maxSize']; ?>,
     // 分片上传 0为不分片 分片容易使图片上传失败
     chunk_size: 0,
-    //点击文件列表上传文件
+    // 点击文件列表上传文件
     browseByClickList: true,
+    // 预览图尺寸
+    previewImageSize:{'width': 80, 'height': 80},
     // 上传格式过滤
     filters: { // 只允许上传图片或图标（.ico）
       mime_types: [
-		  {title: '图片',extensions:'<?php echo $config['extensions']; ?>'},
-      {title: '图标',extensions: 'ico'}
+		{title: '图片',extensions:'<?php echo $config['extensions']; ?>'},
+		{title: '图标',extensions: 'ico'}
       ],
       prevent_duplicates: true
-
     },
     // 限制文件上传数目
     limitFilesCount: <?php echo $config['maxUploadFiles']; ?>,
@@ -107,10 +108,10 @@ mustLogin();
     autoResetFails: true,
     <?php echo imgRatio(); ?>,
     responseHandler : function(responseObject, file) {
-      var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
-      console.log(responseObject.response); // 输出log
-      if (obj.result === 'success') {
 
+      var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
+      console.log(obj); // 输出log
+      if (obj.result === 'success') {
         var links = document.getElementById("links");
         links.innerHTML += obj.url + "\n";
 

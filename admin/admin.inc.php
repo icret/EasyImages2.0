@@ -243,7 +243,7 @@ if (isset($_POST['radio'])) {
               <div class="switch">
                 <input type="hidden" name="thumbnail" value="0">
                 <input type="checkbox" name="thumbnail" value="1" <?php if ($config['thumbnail']) {echo 'checked="checked"';} ?> title=" 开启缩略图后会影响前端上传速度和服务器开销">
-                <label style="font-weight: bold">开启缩略图-会影响前端上传速度和服务器开销</label>
+                <label style="font-weight: bold">开启缩略图-会增加服务器开销</label>
               </div>
             </div>
             <div class="form-group">

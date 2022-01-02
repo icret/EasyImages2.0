@@ -73,6 +73,13 @@ if ($handle->uploaded) {
         }
     }
 
+    /*
+    // 创建缩略图 开启后会个别返回文件失败，暂时没找到替代方案，如果启用此项目，需要将list.php中的get_online_thumbnail改成return_thumbnail_images函数
+    if ($config['thumbnail']) {
+        @creat_thumbnail_images($handle->file_dst_name);
+    }
+    */
+    
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
@@ -112,11 +119,6 @@ if ($handle->uploaded) {
     if ($config['upload_logs']) {
         require_once APP_ROOT . '/application/logs-write.php';
         @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
-    }
-
-    // 创建缩略图
-    if ($config['thumbnail']) {
-        @creat_thumbnail_images($handle->file_dst_name);
     }
 
     unset($handle);
