@@ -360,8 +360,8 @@ if (isset($_POST['radio'])) {
             </form>
           </p>          
           <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-            <span class="label label-primary label-outline">已缓存文件：<?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumb/'); ?>占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumb/')); ?></span>
-            <button type="submit" class="btn btn-primary" name="delDir" value="thumb/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复！');">清理缓存</button>
+            <span class="label label-primary label-outline">已缓存文件：<?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/'); ?>占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?></span>
+            <button type="submit" class="btn btn-primary" name="delDir" value="thumbnails/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复！');">清理缓存</button>
 				  </form>
           <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">

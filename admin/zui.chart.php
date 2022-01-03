@@ -66,7 +66,7 @@ if (is_array($char_data)) {
         <div class="col-md-2 alert alert-primary autoshadow">
             缓存文件
             <hr />
-            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'thumb/')); ?>
+            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/')); ?>
         </div>
         <div class="col-md-2 alert alert-primary autoshadow">
             可疑图片
