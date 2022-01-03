@@ -18,7 +18,8 @@
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V3.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 
->本人善写bug，发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues)  追求稳定请下载 ![稳定版](https://github.com/icret/EasyImages2.0/releases)
+>本人善写bug 发现bug可提交 [Issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
+<hr />
 
 #### 功能支持：
 
@@ -36,11 +37,12 @@
 - [x] 支持网站统计
 - [x] 支持更多···
 
+#### 界面演示
+
 ![简单图床 - 上传界面](https://i1.100024.xyz/i/2020/12/31/ulmtho.png)
 ![简单图床 - 广场界面](https://i1.100024.xyz/i/2020/12/31/2.png)
 ![简单图床 - 后台界面](https://i1.100024.xyz/i/2020/12/31/3.png)
 ![简单图床 - 统计界面](https://i1.100024.xyz/i/2020/12/31/4.png)
-
 
 #### 使用注意：
 
@@ -276,8 +278,9 @@ RewriteRule config/(.*).(php)$ – [F]
 
 </details>
 
-<br />
+
 不建议再使用 [EasyImage 1.6.4版本](https://github.com/icret/easyImages)
+
 <hr />
 
 #### 兼容性
