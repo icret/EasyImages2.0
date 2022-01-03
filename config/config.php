@@ -67,12 +67,10 @@ $config=Array
 	'checkImg_value'=>50,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
-	'version'=>'2.4.4',
+	'version'=>'2.4.4 bate',
 	'form'=>'',
 	'TinyImag_key'=>'',
 	'moderatecontent_key'=>'',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
-  <i class="icon icon-smile"></i> <br/>',
-	'imgRatio_save_headers'=>1,
-	'imgRatio_value'=>10
+  <i class="icon icon-smile"></i> <br/>'
 	);

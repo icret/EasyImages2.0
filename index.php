@@ -45,29 +45,29 @@ mustLogin();
           <a href="#" data-target="#tab2Content5" data-toggle="tab">删除</a>
         </li>
       </ul>
-      <div class="tab-content"  style="text-align:right">
+      <div class="tab-content" style="text-align:right">
         <div class="tab-pane fade active in" id="tab2Content1">
-          <textarea class="form-control" style="text-align: center;min-height: 100px;" id="links" readonly></textarea>
+          <textarea class="form-control" rows="5" id="links" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-repeat"></i> 刷新</button>
           <button id="btnLinks" class="btn copyBtn1" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
         <div class="tab-pane fade" id="tab2Content2">
-          <textarea class="form-control" style="text-align: center;min-height: 100px;" id="bbscode" readonly></textarea>
+          <textarea class="form-control" rows="5" id="bbscode" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-repeat"></i> 刷新</button>
           <button id="btnBbscode" class="btn copyBtn2" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
         <div class="tab-pane fade" id="tab2Content3">
-          <textarea class="form-control" style="text-align: center;min-height: 100px;" id="markdown" readonly></textarea>
+          <textarea class="form-control" rows="5" id="markdown" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-repeat"></i> 刷新</button>
           <button id="btnMarkDown" class="btn copyBtn3" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
         <div class="tab-pane fade" id="tab2Content4">
-          <textarea class="form-control" style="text-align: center;min-height: 100px;" id="html" readonly></textarea>
+          <textarea class="form-control" rows="5" id="html" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-repeat"></i> 刷新</button>
           <button id="btnHtml" class="btn copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
         <div class="tab-pane fade" id="tab2Content5">
-          <pre><textarea class="form-control" style="text-align: left;min-height: 100px;" id="del"  readonly></textarea></pre>
+          <pre><textarea class="form-control" rows="5" id="del"  readonly></textarea></pre>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-repeat"></i> 刷新</button>
           <button id="btndel" class="btn copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
@@ -78,7 +78,7 @@ mustLogin();
 </div>
 </table>
 
-<script src="<?php static_cdn();?>/public/static/EasyImage.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
 <script>
   $('#upShowID').uploader({
@@ -93,12 +93,20 @@ mustLogin();
     // 点击文件列表上传文件
     browseByClickList: true,
     // 预览图尺寸
-    previewImageSize:{'width': 80, 'height': 80},
+    previewImageSize: {
+      'width': 80,
+      'height': 80
+    },
     // 上传格式过滤
     filters: { // 只允许上传图片或图标（.ico）
-      mime_types: [
-		{title: '图片',extensions:'<?php echo $config['extensions']; ?>'},
-		{title: '图标',extensions: 'ico'}
+      mime_types: [{
+          title: '图片',
+          extensions: '<?php echo $config['extensions']; ?>'
+        },
+        {
+          title: '图标',
+          extensions: 'ico'
+        }
       ],
       prevent_duplicates: true
     },
@@ -107,7 +115,7 @@ mustLogin();
     // 自动上传失败的文件
     autoResetFails: true,
     <?php echo imgRatio(); ?>,
-    responseHandler : function(responseObject, file) {
+    responseHandler: function(responseObject, file) {
 
       var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
       console.log(obj); // 输出log

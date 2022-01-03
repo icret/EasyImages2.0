@@ -112,199 +112,200 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
     z-index: 11;
   }
 </style>
-
 <div class="col-md-12">
   <hr />
   <div class="col-md-8">
-    <a href="list.php?<?php echo http_build_query($httpUrl); ?>"><span class="label label-info  label-outline"> 当前<?php echo $allUploud; ?>张</span></a>
-    <a href="list.php"><span class="label label-success label-outline">今日<?php echo read_total_json('todayUpload'); ?>张</span></a><a href="list.php?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>"><span class="label label-danger  label-outline">昨日<?php echo read_total_json('yestUpload'); ?>张</span></a>
-    <?php for ($x = 2; $x <= 5; $x++) {
-      /** 倒推日期显示上传图片 */ echo '<a href="list.php?date=' . date('Y/m/d/', strtotime("-{$x} day")) . '"> <span class="label label-danger  label-outline"> ' . date('m月d日', strtotime("-{$x} day")) . '</span></a>';
-    }
-    if (is_online()) {
-      echo '
-      <div class="btn-group" style="padding:5px">
-      <button class="btn btn-mini" type="button" onclick="opcheckboxed(\'checkbox\', \'checkall\')">全选</button>
-      <button class="btn btn-mini" type="button" onclick="opcheckboxed(\'checkbox\', \'reversecheck\')">反选</button>
-      <button class="btn btn-mini btn-primary" type="button" onclick="opcheckboxed(\'checkbox\', \'uncheckall\')">取消</button>
-      <button class="btn btn-mini btn-danger" type="button" onclick="fun()">删除</button>
+    <div class="btn-group">
+      <a href="list.php?<?php echo http_build_query($httpUrl); ?>"><button class="btn btn-danger btn-mini">当前<?php echo $allUploud; ?>张</button></a>
+      <a href="list.php"><button class="btn btn-primary btn-mini">今日<?php echo read_total_json('todayUpload'); ?>张</button></a>
+      <a href="list.php?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>"><button class="btn btn-mini">昨日<?php echo read_total_json('yestUpload'); ?>张</button></a>
+      <?php
+      for ($x = 2; $x <= 5; $x++) {
+        // 倒推日期显示上传图片
+        echo '<a href="list.php?date=' . date('Y/m/d/', strtotime("-{$x} day")) . '"> <button class="btn btn-mini">' . date('m月d日', strtotime("-{$x} day")) . '</button></a>';
+      }
+      echo '</div>';
+      if (is_online()) {
+        echo '
+        <div class="btn-group" style="padding:5px">
+          <button class="btn btn-mini" type="button" onclick="opcheckboxed(\'checkbox\', \'checkall\')">全选</button>
+          <button class="btn btn-mini" type="button" onclick="opcheckboxed(\'checkbox\', \'reversecheck\')">反选</button>
+          <button class="btn btn-mini btn-primary" type="button" onclick="opcheckboxed(\'checkbox\', \'uncheckall\')">取消</button>
+          <button class="btn btn-mini btn-danger" type="button" onclick="fun()">删除</button>
+        </div>';
+      } ?>
     </div>
-    ';
-    }
-
-    ?>
+    <div class="col-md-4">
+      <form class="form-inline" action="list.php" method="get">
+        <div class="form-group">
+          <input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="readonly">
+        </div>
+        <button type="submit" class="btn btn-primary">按日期</button>
+      </form>
+    </div>
   </div>
-  <div class="col-md-4">
-    <form class="form-inline" action="list.php" method="get">
-      <div class="form-group">
-        <input type="text" class="form-control form-date" value="<?php echo date('Y/m/d/'); ?>" name="date" readonly="readonly">
-      </div>
-      <button type="submit" class="btn btn-primary">按日期</button>
-    </form>
+  <!-- 返回顶部 -->
+  <div style="display: none;" id="rocket-to-top">
+    <div style="opacity:0;display: block;" class="level-2"></div>
+    <div class="level-3"></div>
   </div>
-</div>
-<!-- 返回顶部 -->
-<div style="display: none;" id="rocket-to-top">
-  <div style="opacity:0;display: block;" class="level-2"></div>
-  <div class="level-3"></div>
-</div>
 
-<script>
-  //viewjs
-  var viewer = new Viewer(document.getElementById('dowebok'), {
-    url: 'data-original',
-    backdrop: true
-  });
+  <script>
+    //viewjs
+    var viewer = new Viewer(document.getElementById('dowebok'), {
+      url: 'data-original',
+      backdrop: true
+    });
 
-  // 复制url
-  var clipboard = new Clipboard('.copy');
-  clipboard.on('success', function(e) {
-    new $.zui.Messager("复制成功！", {
-      type: "success" // 定义颜色主题 
-    }).show();
+    // 复制url
+    var clipboard = new Clipboard('.copy');
+    clipboard.on('success', function(e) {
+      new $.zui.Messager("复制成功！", {
+        type: "success" // 定义颜色主题 
+      }).show();
 
-  });
-  clipboard.on('error', function(e) {
-    document.querySelector('.copy');
-    new $.zui.Messager("复制失败！", {
-      type: "danger" // 定义颜色主题 
-    }).show();
-  });
+    });
+    clipboard.on('error', function(e) {
+      document.querySelector('.copy');
+      new $.zui.Messager("复制失败！", {
+        type: "danger" // 定义颜色主题 
+      }).show();
+    });
 
-  // 取消/全选文件
-  function opcheckboxed(objName, type) {
-    var objNameList = document.getElementsByName(objName);
-    if (null != objNameList) {
-      for (var i = 0; i < objNameList.length; i++) {
-        if (objNameList[i].checked == true) {
-          if (type != 'checkall') { // 非全选
-            objNameList[i].checked = false;
-          }
-        } else {
-          if (type != 'uncheckall') { // 非取消全选
-            objNameList[i].checked = true;
+    // 取消/全选文件
+    function opcheckboxed(objName, type) {
+      var objNameList = document.getElementsByName(objName);
+      if (null != objNameList) {
+        for (var i = 0; i < objNameList.length; i++) {
+          if (objNameList[i].checked == true) {
+            if (type != 'checkall') { // 非全选
+              objNameList[i].checked = false;
+            }
+          } else {
+            if (type != 'uncheckall') { // 非取消全选
+              objNameList[i].checked = true;
+            }
           }
         }
       }
     }
-  }
-  //获取所有的 checkbox 属性的 input标签
-  function fun() {
-    confirm('确认要删除？\n* 删除文件夹后将无法恢复！');
-    obj = document.getElementsByName("checkbox");
-    check_val = [];
-    for (k in obj) {
-      //判断复选框是否被选中
-      if (obj[k].checked)
-        //获取被选中的复选框的值
-        check_val.push(obj[k].value);
-      console.log(check_val);
-    }
-    $.post("./post_del.php", {
-        'del_url_array': check_val
-      },
-      function(data) {
-        if (data.search('success') > 0) {
-          new $.zui.Messager("删除成功，请刷新浏览器；如果开启了CDN，请等待缓存失效!", {
-            type: "success" // 定义颜色主题 
-          }).show();
-          // 延时2秒刷新
-          window.setTimeout(function() {
-            window.location.reload();
-          }, 1500)
-        } else {
-          new $.zui.Messager("文件不存在", {
-            type: "danger" // 定义颜色主题 
-          }).show();
-        }
-
-      });
-  }
-
-  // 返回顶部
-  $(function() {
-    var e = $("#rocket-to-top"),
-      t = $(document).scrollTop(),
-      n,
-      r,
-      i = !0;
-    $(window).scroll(function() {
-        var t = $(document).scrollTop();
-        t == 0 ? e.css("background-position") == "0px 0px" ? e.fadeOut("slow") : i && (i = !1, $(".level-2").css("opacity", 1), e.delay(100).animate({
-            marginTop: "-1000px"
-          },
-          "normal",
-          function() {
-            e.css({
-                "margin-top": "-125px",
-                display: "none"
-              }),
-              i = !0
-          })) : e.fadeIn("slow")
-      }),
-      e.hover(function() {
-          $(".level-2").stop(!0).animate({
-            opacity: 1
-          })
+    //获取所有的 checkbox 属性的 input标签
+    function fun() {
+      confirm('确认要删除？\n* 删除文件夹后将无法恢复！');
+      obj = document.getElementsByName("checkbox");
+      check_val = [];
+      for (k in obj) {
+        //判断复选框是否被选中
+        if (obj[k].checked)
+          //获取被选中的复选框的值
+          check_val.push(obj[k].value);
+        console.log(check_val);
+      }
+      $.post("./post_del.php", {
+          'del_url_array': check_val
         },
-        function() {
-          $(".level-2").stop(!0).animate({
-            opacity: 0
-          })
-        }),
-      $(".level-3").click(function() {
-        function t() {
-          var t = e.css("background-position");
-          if (e.css("display") == "none" || i == 0) {
-            clearInterval(n),
-              e.css("background-position", "0px 0px");
-            return
+        function(data) {
+          if (data.search('success') > 0) {
+            new $.zui.Messager("删除成功，请刷新浏览器；如果开启了CDN，请等待缓存失效!", {
+              type: "success" // 定义颜色主题 
+            }).show();
+            // 延时2秒刷新
+            window.setTimeout(function() {
+              window.location.reload();
+            }, 1500)
+          } else {
+            new $.zui.Messager("文件不存在", {
+              type: "danger" // 定义颜色主题 
+            }).show();
           }
-          switch (t) {
-            case "0px 0px":
-              e.css("background-position", "-298px 0px");
-              break;
-            case "-298px 0px":
-              e.css("background-position", "-447px 0px");
-              break;
-            case "-447px 0px":
-              e.css("background-position", "-596px 0px");
-              break;
-            case "-596px 0px":
-              e.css("background-position", "-745px 0px");
-              break;
-            case "-745px 0px":
-              e.css("background-position", "-298px 0px");
-          }
-        }
-        if (!i) return;
-        n = setInterval(t, 50),
-          $("html,body").animate({
-              scrollTop: 0
-            },
-            "slow");
-      });
-  });
-  //懒加载
-  var lazy = new Lazy({
-    onload: function(elem) {
-      console.log(elem)
-    },
-    delay: 300
-  })
 
-  // 按日期浏览
-  $(".form-date").datetimepicker({
-    weekStart: 1,
-    todayBtn: 1,
-    autoclose: 1,
-    todayHighlight: 1,
-    startView: 2,
-    minView: 2,
-    forceParse: 0,
-    format: "yyyy/mm/dd/"
-  });
-  // 更改网页标题
-  document.title = "图床广场 今日上传<?php echo read_total_json('todayUpload'); ?>张 昨日<?php echo read_total_json('yestUpload'); ?>张 - <?php echo $config['title']; ?> "
-</script>
-<?php require_once APP_ROOT . '/application/footer.php';
+        });
+    }
+
+    // 返回顶部
+    $(function() {
+      var e = $("#rocket-to-top"),
+        t = $(document).scrollTop(),
+        n,
+        r,
+        i = !0;
+      $(window).scroll(function() {
+          var t = $(document).scrollTop();
+          t == 0 ? e.css("background-position") == "0px 0px" ? e.fadeOut("slow") : i && (i = !1, $(".level-2").css("opacity", 1), e.delay(100).animate({
+              marginTop: "-1000px"
+            },
+            "normal",
+            function() {
+              e.css({
+                  "margin-top": "-125px",
+                  display: "none"
+                }),
+                i = !0
+            })) : e.fadeIn("slow")
+        }),
+        e.hover(function() {
+            $(".level-2").stop(!0).animate({
+              opacity: 1
+            })
+          },
+          function() {
+            $(".level-2").stop(!0).animate({
+              opacity: 0
+            })
+          }),
+        $(".level-3").click(function() {
+          function t() {
+            var t = e.css("background-position");
+            if (e.css("display") == "none" || i == 0) {
+              clearInterval(n),
+                e.css("background-position", "0px 0px");
+              return
+            }
+            switch (t) {
+              case "0px 0px":
+                e.css("background-position", "-298px 0px");
+                break;
+              case "-298px 0px":
+                e.css("background-position", "-447px 0px");
+                break;
+              case "-447px 0px":
+                e.css("background-position", "-596px 0px");
+                break;
+              case "-596px 0px":
+                e.css("background-position", "-745px 0px");
+                break;
+              case "-745px 0px":
+                e.css("background-position", "-298px 0px");
+            }
+          }
+          if (!i) return;
+          n = setInterval(t, 50),
+            $("html,body").animate({
+                scrollTop: 0
+              },
+              "slow");
+        });
+    });
+    //懒加载
+    var lazy = new Lazy({
+      onload: function(elem) {
+        console.log(elem)
+      },
+      delay: 300
+    })
+
+    // 按日期浏览
+    $(".form-date").datetimepicker({
+      weekStart: 1,
+      todayBtn: 1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+      minView: 2,
+      forceParse: 0,
+      format: "yyyy/mm/dd/"
+    });
+    // 更改网页标题
+    document.title = "图床广场 今日上传<?php echo read_total_json('todayUpload'); ?>张 昨日<?php echo read_total_json('yestUpload'); ?>张 - <?php echo $config['title']; ?> "
+  </script>
+  <?php require_once APP_ROOT . '/application/footer.php';
