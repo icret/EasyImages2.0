@@ -1,7 +1,7 @@
 ## EasyImage 简单图床 2.0
 > 始于2018年7月，支持多文件上传,简单无数据库,返回图片url,markdown,bbscode,html的一款图床程序
 演示地址：[https://img.545141.com](https://img.545141.com) 
-之前一直用的图床程序是:[PHP多图长传程序2.4.3](http://www.mycodes.net/48/4925.htm "PHP多图长传程序2.4.3")
+之前一直用的图床程序是:[PHP多图长传程序2.4.3](https://www.jb51.net/codes/40544.html)
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
 >
 <hr />
@@ -9,13 +9,15 @@
 [![PHP](https://img.shields.io/badge/PHP->=5.6-orange.svg)](http://php.net)
 [![Release](https://img.shields.io/github/v/release/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/releases)
 [![Issues](https://img.shields.io/github/issues/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/issues)
+[![stargazers](https://img.shields.io/github/stars/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/stargazers)
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V3.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 
 [演示](https://img.545141.com) &nbsp;
-[Chrome 拓展](https://github.com/icret/EasyImages2.0-chrome-extension) &nbsp;
+[Chrome 拓展](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
 [使用手册](https://www.kancloud.cn/easyimage/easyimage) &nbsp;
-[问题反馈](https://www.kancloud.cn/easyimage/easyimage)
+[问题反馈](https://support.qq.com/products/367633) &nbsp;
+[QQ群](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
 <hr />
 
@@ -81,9 +83,9 @@ Deny from all
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
 * 2022-1-3 v2.4.4 beta
-- 添加更改网站配色
+- 增加更改网站配色
 - 增加一些提示
-- 优化部分代码
+- 修复开启前端压缩导致的上传图片异常
 
 * 2021-12-25 v2.4.4
 - 更改favicon.ico
