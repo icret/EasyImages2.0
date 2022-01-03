@@ -4,7 +4,12 @@
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](https://www.jb51.net/codes/40544.html)
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
 >
-<hr />
+
+[演示](https://img.545141.com) &nbsp;
+[Chrome 拓展](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
+[使用手册](https://www.kancloud.cn/easyimage/easyimage) &nbsp;
+[问题反馈](https://support.qq.com/products/367633) &nbsp;
+[QQ群](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
 [![PHP](https://img.shields.io/badge/PHP->=5.6-orange.svg)](http://php.net)
 [![Release](https://img.shields.io/github/v/release/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/releases)
@@ -13,13 +18,7 @@
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V3.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 
-[演示](https://img.545141.com) &nbsp;
-[Chrome 拓展](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
-[使用手册](https://www.kancloud.cn/easyimage/easyimage) &nbsp;
-[问题反馈](https://support.qq.com/products/367633) &nbsp;
-[QQ群](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
-
-<hr />
+>本人善写bug，发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues)  追求稳定请下载 ![稳定版](https://github.com/icret/EasyImages2.0/releases)
 
 #### 功能支持：
 
@@ -36,6 +35,15 @@
 - [x] 在线管理图片
 - [x] 支持网站统计
 - [x] 支持更多···
+
+![简单图床 - EasyImage](https://i1.100024.xyz/i/2020/12/31/ulmtho.png =300x300)
+
+![简单图床 - EasyImage](https://i1.100024.xyz/i/2020/12/31/2.png =300x300)
+
+![简单图床 - EasyImage](https://i1.100024.xyz/i/2020/12/31/3.png =300x300)
+
+![简单图床 - EasyImage](https://i1.100024.xyz/i/2020/12/31/4.png =300x300)
+
 
 #### 使用注意：
 
@@ -70,14 +78,10 @@ Deny from all
 ```
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
- #### 帮助文档
-- [简单图床-EasyImage2.0 使用手册](https://www.kancloud.cn/easyimage/easyimage)
-- [简单图床问题反馈](https://www.kancloud.cn/easyimage/easyimage)
-
  #### 程序升级
 
-- 保存好config.php文件和上传目录文件
-- 如果自定义过API的Token请保存api_key.php文件
+- 保存好config.php文件和上传目录
+- 如果增加过Token请保存api_key.php文件
 - 将新程序下载至网站目录解压覆盖，然后将保存的文件替换既完成升级
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
