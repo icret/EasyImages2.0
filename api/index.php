@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . './../application/function.php';
+require_once __DIR__ . '/../application/function.php';
 require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/class.upload.php';
 require_once APP_ROOT . '/application/WaterMask.php';
@@ -84,14 +84,14 @@ if ($handle->uploaded) {
         // 上传成功后返回json数据
         $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
         $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
-
         $reJson = array(
             "result" => "success",
             "code"   => 200,
             "url"    => $imageUrl,
+            "thumb"  => $config['domain'] . '/application/thumb.php?img=' . config_path() . $handle->file_dst_name . '&width=300&height=300',
             "del"    => $delUrl,
         );
-        echo json_encode($reJson,JSON_UNESCAPED_UNICODE);
+        echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean();
     } else {
         // 上传错误 code:403 客户端文件有问题
@@ -102,8 +102,6 @@ if ($handle->uploaded) {
             //"log"       =>  $handle->log,
         );
 
-        unset($handle);
-        header('Content-Type:application/json; charset=utf-8');
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
@@ -113,9 +111,5 @@ if ($handle->uploaded) {
         @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, "API upload");
     }
 
-    // 创建缩略图
-    if ($config['thumbnail']) {
-        @creat_thumbnail_images($handle->file_dst_name);
-    }
     unset($handle);
 }
