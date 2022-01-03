@@ -79,7 +79,7 @@ if ($handle->uploaded) {
         @creat_thumbnail_images($handle->file_dst_name);
     }
     */
-    
+
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
