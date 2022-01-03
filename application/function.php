@@ -79,10 +79,9 @@ function config_path($path = null)
 }
 
 // 图片命名规则
-function imgName()
+function imgName($source = null)
 {
 	global $config;
-	$style = $config['imgName'];
 
 	function create_guid()	// guid生成函数
 	{
@@ -93,7 +92,11 @@ function imgName()
 		return strtolower(sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)));
 	}
 
-	switch ($style) {
+	switch ($config['imgName']) {
+		case "source":	// 以上传文件名称 例：微信图片_20211228214754
+			// 过滤非法名称 $source = preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/","",$source);
+			return $source;
+			break;
 		case "date":	// 以上传时间 例：192704
 			return date("His");
 			break;
@@ -431,13 +434,13 @@ function imgRatio()
 		}
 
 		if ($config['image_x'] != 0) {
-			$image_x = "width:" . $config['image_x'].',';
+			$image_x = "width:" . $config['image_x'] . ',';
 		} else {
 			$image_x = null;
 		}
 
 		if ($config['image_y'] != 0) {
-			$image_y =  "height:" . $config['image_y'].',';
+			$image_y =  "height:" . $config['image_y'] . ',';
 		} else {
 			$image_y = null;
 		}

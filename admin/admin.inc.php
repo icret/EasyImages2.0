@@ -182,7 +182,8 @@ if (isset($_POST['radio'])) {
             <div class="form-group">
               <label>文件的命名方式</label>
               <select class="chosen-select form-control" name="imgName">
-                <option value="default" <?php if ($config['imgName'] == 'default') {echo 'selected';} ?>>默认 - 将上传时间+随机数转换为36进制 例：vx77yu</option>
+                <option value="default" <?php if ($config['imgName'] == 'default') {echo 'selected';} ?>>默认 - 以上传时间+4位随机数转换为36进制 例：vx77yu</option>
+                <option value="source" <?php if ($config['imgName'] == 'source') {echo 'selected';} ?>>以上传文件名称 例：微信图片_20211228214754</option>
                 <option value="date" <?php if ($config['imgName'] == 'date') {echo 'selected';} ?>>以上传时间 例：192704</option>
                 <option value="unix" <?php if ($config['imgName'] == 'unix') {echo 'selected';} ?>>以Unix时间 例：1635074840</option>
                 <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') {echo 'selected';} ?>>基于以微秒计的当前时间 例：6175436c73418</option>
