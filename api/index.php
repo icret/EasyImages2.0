@@ -17,7 +17,7 @@ if ($handle->uploaded) {
     // 允许上传的mime类型
     $handle->allowed = array('image/*');
     // 文件命名
-    $handle->file_new_name_body = imgName() . '_' . getID($token);
+    $handle->file_new_name_body = imgName($handle->file_src_name_body) . '_' . getID($token);
     // 最大上传限制
     $handle->file_max_sizes = $config['maxSize'];
     // 最大宽度
@@ -31,12 +31,13 @@ if ($handle->uploaded) {
     // 转换图片为指定格式
     $handle->image_convert = $config['imgConvert'];
 
-    //等比例缩减图片
+    /* 等比例缩减图片 放到前端了
     if ($config['imgRatio']) {
         $handle->image_resize = true;
         $handle->image_x = $config['image_x'];
         $handle->image_y = $config['image_y'];
     }
+    */
     // 存储图片路径:images/201807/
     $handle->process('../' . config_path());
 
