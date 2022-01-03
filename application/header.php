@@ -17,6 +17,7 @@ require_once APP_ROOT . '/application/total_files.php';
 	<link rel="dns-prefetch" href="<?php echo $config['imgurl']; ?>" />
 	<link rel="dns-prefetch" href="<?php echo $config['static_cdn_url']; ?>" />
 	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
+	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme'];?>.css?v1" rel="stylesheet">
 	<link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
 	<link href="<?php static_cdn(); ?>/public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>

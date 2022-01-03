@@ -36,6 +36,7 @@ $config=Array
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
+	'theme'=>'default',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
 	'ad_top'=>0,
 	'ad_top_info'=>'  <div id="ad" class="col-md-12" align="center" style="padding:5px;">

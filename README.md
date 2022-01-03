@@ -80,6 +80,11 @@ Deny from all
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
+* 2022-1-3 v2.4.4 beta
+- 添加更改网站配色
+- 增加一些提示
+- 优化部分代码
+
 * 2021-12-25 v2.4.4
 - 更改favicon.ico
 - 修复缩略图数量统计

@@ -91,7 +91,7 @@ if (isset($_POST['radio'])) {
               <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
             </div>
             <div class="form-group">
-              <label>图片链接域名,末尾不加"/"</label>
+              <label>图片链接域名,末尾不加"/"，如果只有一个域名请与上边一致</label>
               <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，A、B需绑定到同一空间下,如果不变的话，下边2个填写成一样的！">
             </div>
             <div class="form-group">
@@ -122,6 +122,21 @@ if (isset($_POST['radio'])) {
             <div class="form-group">
               <label>页脚信息</label>
               <textarea class="form-control" rows="3" name="footer" required="required"><?php echo $config['footer']; ?></textarea>
+            </div>
+            <div class="form-group">
+              <label>更改网站配色</label>
+              <select class="chosen-select form-control" name="theme">
+                <option value="default" <?php if ($config['theme'] == 'default') {echo 'selected';} ?>>默认配色</option>
+                <option value="red" <?php if ($config['theme'] == 'red') {echo 'selected';} ?>>红色</option>                
+                <option value="green" <?php if ($config['theme'] == 'green') {echo 'selected';} ?>>绿色</option>
+                <option value="blue" <?php if ($config['theme'] == 'blue') {echo 'selected';} ?>>蓝色</option>
+                <option value="bluegrey" <?php if ($config['theme'] == 'bluegrey') {echo 'selected';} ?>>蓝灰</option>
+                <option value="indigo" <?php if ($config['theme'] == 'indigo') {echo 'selected';} ?>>靛青</option>    
+                <option value="brown" <?php if ($config['theme'] == 'brown') {echo 'selected';} ?>>棕色</option>
+                <option value="yellow" <?php if ($config['theme'] == 'yellow') {echo 'selected';} ?>>黄色</option>                
+                <option value="purple" <?php if ($config['theme'] == 'purple') {echo 'selected';} ?>>紫色</option>
+                <option value="black" <?php if ($config['theme'] == 'black') {echo 'selected';} ?>>黑色</option>
+              </select>
             </div>
             <div class="form-group">
               <div class="switch">
@@ -161,7 +176,7 @@ if (isset($_POST['radio'])) {
               <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全，参考：https://www.545141.com/981.html 或 README.md">
             </div>
             <div class="form-group">
-              <label>允许上传的图片扩展名,请以英文,分割</label>
+              <label>允许上传的图片扩展名,请以英文<code>,</code>分割,最后一个扩展名后边不要加<code>,</code></label>
               <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
             </div>
             <div class="form-group">
@@ -233,20 +248,6 @@ if (isset($_POST['radio'])) {
               </select>
             </div>
             <div class="form-group">
-              <div class="switch">
-                <input type="hidden" name="compress" value="0">
-                <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {echo 'checked="checked"';} ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
-                <label style="font-weight: bold">开启压缩图片-会增加服务器负担</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="switch">
-                <input type="hidden" name="thumbnail" value="0">
-                <input type="checkbox" name="thumbnail" value="1" <?php if ($config['thumbnail']) {echo 'checked="checked"';} ?> title=" 开启缩略图后会影响前端上传速度和服务器开销">
-                <label style="font-weight: bold">开启缩略图-会增加服务器开销</label>
-              </div>
-            </div>
-            <div class="form-group">
               <label>最大上传宽度->更改后的宽度：</label><label id="maxWidth"><?php echo $config['maxWidth']; ?></label><label>像素</label>
               <input type="range" class="form-control" name="maxWidth" value="<?php echo $config['maxWidth']; ?>" min="1024" max="102400" step="1024" onchange="document.getElementById('maxWidth').innerHTML=value">
             </div>
@@ -266,38 +267,54 @@ if (isset($_POST['radio'])) {
               <label>允许上传的最小高度->更改后的高度：</label><label id="minHeight"><?php echo $config['minHeight']; ?></label><label>像素</label>
               <input type="range" class="form-control" name="minHeight" value="<?php echo $config['minHeight']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minHeight').innerHTML=value">
             </div>
+            <h3 class="with-padding bg-success" style="text-align: center;">前端压缩 - 优点：服务器无压力 缺点：略微增加客户端压力</h3>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="imgRatio" value="0">
                 <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) {echo 'checked="checked"';} ?>>
-                <label style="font-weight: bold">开启上传前修改图片（控制以下五项）</label>
+                <label style="font-weight: bold">开启前端修改图片（控制以下五项，不开启下边五项不生效）</label>
               </div>
             </div>
             <div class="form-group">
-              <label>图片裁剪的宽度(设置0则不生效)->更改后的宽度：</label><label id="image_x"><?php echo $config['image_x']; ?></label><label>像素</label>
+              <label>裁剪的宽度(设置0则不生效)->更改后的宽度：</label><label id="image_x"><?php echo $config['image_x']; ?></label><label>像素</label>
               <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="10240" step="100" onchange="document.getElementById('image_x').innerHTML=value">
             </div>
             <div class="form-group">
-              <label>图片裁剪的高度(设置0则不生效)->更改后的高度：</label><label id="image_y"><?php echo $config['image_y']; ?></label><label>像素</label>
+              <label>裁剪的高度(设置0则不生效)->更改后的高度：</label><label id="image_y"><?php echo $config['image_y']; ?></label><label>像素</label>
               <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="10240" step="100" onchange="document.getElementById('image_y').innerHTML=value">
             </div>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="imgRatio_crop" value="0">
                 <input type="checkbox" name="imgRatio_crop" value="1" <?php if ($config['imgRatio_crop']) {echo 'checked="checked"';} ?>>
-                <label style="font-weight: bold">开启上传前裁剪</label>
+                <label style="font-weight: bold">上传前裁剪</label>
               </div>
             </div>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="imgRatio_preserve_headers" value="0">
                 <input type="checkbox" name="imgRatio_preserve_headers" value="1" <?php if ($config['imgRatio_preserve_headers']) {echo 'checked="checked"';} ?>>
-                <label style="font-weight: bold">开启保留图片原始数据</label>
+                <label style="font-weight: bold">保留图片原始数据</label>
               </div>
             </div>
             <div class="form-group">
-              <label>上传前压缩图片(仅支持JPG)->更改后的压缩率：</label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
+              <label>图片压缩率(仅支持JPG)->更改后的压缩率：</label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
               <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">              
+            </div>
+            <h3 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点：避免客户端欺骗 缺点：增加服务器压力</h3>
+            <div class="form-group">
+              <div class="switch">
+                <input type="hidden" name="compress" value="0">
+                <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {echo 'checked="checked"';} ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
+                <label style="font-weight: bold">压缩图片 - 会增加服务器负担</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="switch">
+                <input type="hidden" name="thumbnail" value="0">
+                <input type="checkbox" name="thumbnail" value="1" <?php if ($config['thumbnail']) {echo 'checked="checked"';} ?> title=" 开启缩略图后会影响前端上传速度和服务器开销">
+                <label style="font-weight: bold">缩略图 - 会增加服务器压力</label>
+              </div>
             </div>
             <div class="form-group">
               <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">

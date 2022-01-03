@@ -431,21 +431,21 @@ function imgRatio()
 		}
 
 		if ($config['image_x'] != 0) {
-			$image_x = "width:" . $config['image_x'];
+			$image_x = "width:" . $config['image_x'].',';
 		} else {
 			$image_x = null;
 		}
 
 		if ($config['image_y'] != 0) {
-			$image_y =  "height:" . $config['image_y'];
+			$image_y =  "height:" . $config['image_y'].',';
 		} else {
 			$image_y = null;
 		}
 
 		return '
 		resize:{
-			' . $image_x . ',
-			' . $image_y . ',
+			' . $image_x . '
+			' . $image_y . '
 			crop: ' . $imgRatio_crop . ',
 			quality:' . $config['imgRatio_quality'] . ',
 			preserve_headers: ' . $imgRatio_preserve_headers . ',
@@ -673,7 +673,7 @@ function writefile($filename, $writetext, $openmod = 'w')
 		return false;
 	}
 }
-
+// 在线输出缩略图
 function get_online_thumbnail($imgUrl)
 {
 	global $config;
