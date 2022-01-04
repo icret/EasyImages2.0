@@ -35,7 +35,7 @@
 - [x] 支持API
 - [x] 在线管理图片
 - [x] 支持网站统计
-- [x] 支持更多···
+- [x] 更多支持···
 
 #### 界面演示
 
@@ -46,18 +46,20 @@
 
 #### 使用注意：
 
-1. 请将所有文件赋予0755权限或www权限
-2. 可以使用浏览器的 F12调试模式->console查看错误
-3. 如果对php不太熟悉的话，不要将图床程序放置于二级目录
-4. 宝塔面板请关闭防跨站或删除域名文件夹内的user.ini文件
-5. 第一使用会执行安装程序并生成install.lock，如果出错可以删除install目录
-6. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
-7. 安装成功后务必修改默认密码
-8. 第一次访问会检查环境并在config目录下生成EasyImage.lock
+1. 请将所有文件赋予`0755`或`www`权限
+2. 对`PHP`不太熟悉的请不要将图床程序放置于二级目录
+3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如宝塔面板
+4. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
+5. 第一使用会执行安装程序并生成`install.lock` 如果出错可以删除`install`目录再使用
+6. 第一次访问会检查环境并在`config`目录下生成`EasyImage.lock`
+7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
+8. 出现`undefined function imagecreatefromwebp()`是因为GD没安装webp
+9. 出现`upload File size exceeds the maximum value` 调整`PHP`上传大小
+10. 出现`Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
 
 #### 安全配置
 
-- Apache环境在上传目录添加配置文件.htaccess，使上传目录不可运行PHP程序（默认存在)
+- Apache环境在上传目录添加配置文件`.htaccess` 使上传目录不可运行PHP程序（默认存在)
 
 ```Apache
 <FilesMatch "\.(?i:php|php3|php4|php5)">
@@ -65,10 +67,10 @@ Order allow,deny
 Deny from all
 </FilesMatch>
 ```
-- Nginx环境限制上传目录禁止运行PHP程序：
+- Nginx环境限制上传目录禁止运行`PHP`程序：
 
 ```Nginx
- # 禁止运行php的目录
+    # 禁止运行php的目录
     location ~* ^/(i|public|config)/.*\.(php|php5)$
     {
      deny all;
@@ -85,11 +87,14 @@ Deny from all
 
 
 * 2022-1-3 v2.4.4 beta
+- 更新上传格式
 - 增加后台设置提示
 - 增加更改网站配色
+- 增加缩略图索引格式
 - 增加以源文件名称命名
-- 增加两种缩略图生成方式
+- 增加缩略图两种生成方式和开关
 - 修复开启前端压缩导致的上传图片异常
+
 
 * 2021-12-25 v2.4.4
 - 更改favicon.ico
