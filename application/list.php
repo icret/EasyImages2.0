@@ -22,7 +22,7 @@ if (!$config['showSwitch'] and !is_online()) {
         echo '
         <div class="col-md-4 col-sm-6 col-lg-3">        
           <div class="card">
-            <li><img data-image="' . get_online_thumbnail($imgUrl) . '" src="../public/images/loading.svg" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
+            <li><img data-image="' . creat_thumbnail_by_list($imgUrl) . '" src="../public/images/loading.svg" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
             <div class="bottom">
               <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图" style="margin-left:10px;"></i></a>
               <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件" style="margin-left:10px;"><i class="icon icon-copy"></i></a>

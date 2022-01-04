@@ -78,8 +78,7 @@ Deny from all
 
  #### 程序升级
 
-- 保存好config.php文件和上传目录
-- 如果增加过Token请保存api_key.php文件
+- 保存config目录和上传目录
 - 将新程序下载至网站目录解压覆盖，然后将保存的文件替换既完成升级
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
@@ -89,6 +88,7 @@ Deny from all
 - 增加后台设置提示
 - 增加更改网站配色
 - 增加以源文件名称命名
+- 增加两种缩略图生成方式
 - 修复开启前端压缩导致的上传图片异常
 
 * 2021-12-25 v2.4.4

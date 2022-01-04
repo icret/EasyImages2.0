@@ -608,6 +608,86 @@ function return_thumbnail_images($url)
 	}
 }
 
+// 在线输出缩略图
+function get_online_thumbnail($imgUrl)
+{
+	global $config;
+	if ($config['thumbnail']) {
+		$imgUrl = str_replace($config['imgurl'], '', $imgUrl);
+		return $config['domain'] . '/application/thumb.php?img=' . $imgUrl . '&width=300&height=300';
+	} else {
+		return $imgUrl;
+	}
+}
+
+/**
+ * 用户浏览广场的时候生成缩略图，由此解决上传生成缩略图时服务器超时响应
+ * @param $imgUrl 源图片网址
+ * @return string 缩略图地址
+ */
+function creat_thumbnail_by_list($imgUrl)
+{
+	global $config;
+
+	// 关闭生成和输出缩略图浏览
+	if ($config['thumbnail'] === 0) {
+		return $imgUrl;
+	}
+	// 如果是实时生成
+    if ($config['thumbnail'] === 1) {
+        return get_online_thumbnail($imgUrl);
+    }
+
+
+	// 将网址图片转换为相对路径
+	$pathName = str_replace($config['imgurl'], '', $imgUrl);
+
+	// 图片绝对路径
+	$abPathName = APP_ROOT . $pathName;
+
+	// 如果图像是gif则直接返回网址
+	if (isAnimatedGif($abPathName)) {
+
+		return $imgUrl;
+	} else {
+
+		// 将网址中的/i/去除
+		$pathName = str_replace($config['path'], '', $pathName);
+
+		// 将文件的/转换为_
+		$pathName = str_replace('/', '_', $pathName);
+
+		// 缓存文件是否存在
+		if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $pathName)) {
+			// 存在则返回缓存文件
+			return $config['imgurl'] . $config['path'] . 'thumbnails/' . $pathName;
+		} else {
+			// 创建缓存文件并输出文件链接
+			require_once __DIR__ . '/class.thumb.php';
+
+			// 获取文件名
+			$imgName = basename($imgUrl);
+
+			// cache目录的绝对路径
+			$cache_path = APP_ROOT . $config['path'] . 'thumbnails/';
+
+			// 创建cache目录
+			if (!is_dir($cache_path)) {
+				mkdir($cache_path, 0777, true);
+			}
+
+			// 缩略图缓存的绝对路径
+			$new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName;
+
+			// 创建并保存缩略图
+			Thumb::out($abPathName, $new_imgName, 300, 300);
+
+			// 输出缩略图
+			return $new_imgName;
+		}
+	}
+}
+
 /**
  * 获取当前页面完整URL地址
  * 返回 http://localhost/ww/index.php
@@ -674,16 +754,5 @@ function writefile($filename, $writetext, $openmod = 'w')
 		return true;
 	} else {
 		return false;
-	}
-}
-// 在线输出缩略图
-function get_online_thumbnail($imgUrl)
-{
-	global $config;
-	if ($config['thumbnail']) {
-		$imgUrl = str_replace($config['imgurl'], '', $imgUrl);
-		return $config['domain'] . '/application/thumb.php?img=' . $imgUrl . '&width=300&height=300';
-	} else {
-		return $imgUrl;
 	}
 }

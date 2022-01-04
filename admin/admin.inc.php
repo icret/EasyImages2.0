@@ -307,14 +307,21 @@ if (isset($_POST['radio'])) {
               <div class="switch">
                 <input type="hidden" name="compress" value="0">
                 <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {echo 'checked="checked"';} ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
-                <label style="font-weight: bold">压缩图片 - 会增加服务器负担</label>
+                <label style="font-weight: bold">后端压缩图片 - 效果好于前端</label>
               </div>
             </div>
             <div class="form-group">
-              <div class="switch">
-                <input type="hidden" name="thumbnail" value="0">
-                <input type="checkbox" name="thumbnail" value="1" <?php if ($config['thumbnail']) {echo 'checked="checked"';} ?> title=" 开启缩略图后会影响前端上传速度和服务器开销">
-                <label style="font-weight: bold">缩略图 - 会增加服务器压力</label>
+              <div>
+                <label>缩略图生成 - 关闭缩略图无任何服务器开销但增加输出流量，浏览生成要比实时生成更好</label>
+              </div>
+              <div class="radio-primary">
+                <input type="radio" name="thumbnail" value="0" <?php if($config['thumbnail']===0){echo 'checked="checked"';}?> id="thumbnail0"><label for="thumbnail0"> 关闭缩略图生成 - 广场直接输出上传图片</label>
+              </div>
+              <div class="radio-primary">
+                <input type="radio" name="thumbnail" value="1" <?php if($config['thumbnail']===1){echo 'checked="checked"';}?> id="thumbnail1"><label for="thumbnail1"> 实时生成 - 每次都会请求服务器，不会影响广场页面布局但会增加服务器开销</label>
+              </div>
+              <div class="radio-primary">
+                <input type="radio" name="thumbnail" value="2" <?php if($config['thumbnail']===2){echo 'checked="checked"';}?> id="thumbnail2"><label for="thumbnail2"> 客户浏览广场时生成 - 每日首张缩略图会使首次访问广场页面布局异常[刷新即可]</label>
               </div>
             </div>
             <div class="form-group">
@@ -397,11 +404,11 @@ if (isset($_POST['radio'])) {
                 <label for="exampleInputInviteCode1">压缩文件夹内图片(格式：2021/05/10/)：</label>
                 <input type="text" class="form-control form-date" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
               </div>
-              <div class="radio">
-                <label><input type="radio" name="type" value="Imgcompress" checked="checked"> 使用本地压缩(默认上传已压缩，不需重复压缩)</label>
+              <div class="radio-primary">
+                <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress"> 使用本地压缩(默认上传已压缩，不需重复压缩)</label>
               </div>
-              <div class="radio">
-              <label><input type="radio" name="type" value="TinyImg"> 使用TinyImag压缩（需要申请key)                        </label>
+              <div class="radio-primary">
+                <input type="radio" name="type" value="TinyImg" id="TinyImg"><label for="TinyImg"> 使用TinyImag压缩（需要申请key)</label>
               </div>
               <div>
                 <label>* 如果页面长时间没有响应，表示正面正在压缩！</label>
@@ -532,11 +539,12 @@ if (isset($_POST['radio'])) {
                         $url = $config['imgurl'] . $config['path'] . 'suspic/' . $cache_file[$i];   	// 图片网络连接
                         $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
                         // 缩略图文件
-                        $thumb_cache_file = $config['domain'] . '/application/thumb.php?img=' . $file_path . '&width=300&height=300';
+//                        $thumb_cache_file = $config['domain'] . '/application/thumb.php?img=' . $file_path . '&width=300&height=300';
+
                         echo '
 						    <tr>
 							    <td>' . $i . '</td>
-								<td><img data-toggle="lightbox" src="' . $thumb_cache_file . '" data-image="' . $thumb_cache_file . '" class="img-thumbnail" ></td>
+								<td><img data-toggle="lightbox" src="' . get_online_thumbnail($file_path) . '" data-image="' . get_online_thumbnail($file_path) . '" class="img-thumbnail" ></td>
 								<td>' . $filen_name . '</td>
 								<td>' . $file_size . '</td>
 								<td><a class="btn btn-mini" href="' . $url  . '" target="_blank">查看原图</a></td>
