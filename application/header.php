@@ -53,7 +53,7 @@ require_once APP_ROOT . '/application/total_files.php';
 			</li>
 			<li class="<?php echo getActive('list'); ?>">
 				<a href="<?php echo $config['domain']; ?>/application/list.php?date=<?php echo date('Y/m/d/') ?>&num=<?php echo $config['listNumber']; ?>">
-					<i class="icon icon-list"> 广场</i>
+					<i class="icon icon-th"> 广场</i>
 					<span class="label label-badge label-success">
 						<?php echo getFileNumber(APP_ROOT . config_path()); ?></span>
 				</a>

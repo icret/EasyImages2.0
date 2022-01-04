@@ -239,7 +239,7 @@ function getFile($dir)
 				//去掉"“.”、“..”以及带“.xxx”后缀的文件
 				if ($file != "." && $file != ".." && strpos($file, ".")) {
 					$fileArray[$i] = $file;
-					if ($i == 100) {
+					if ($i == 1000) {
 						break;
 					}
 					$i++;
@@ -660,6 +660,11 @@ function creat_thumbnail_by_list($imgUrl)
 			// 存在则返回缓存文件
 			return $config['imgurl'] . $config['path'] . 'thumbnails/' . $imgName;
 		} else {
+
+			// PHP老他妈缺图像扩展支持，不是缺webp就是缺ico，总不能都他妈装上吧，直接把这些二货扩展名忽略
+			if (!in_array(pathinfo(basename($pathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg'))) {
+				return $imgUrl;
+			}
 
 			// 不存在则创建缓存文件并输出文件链接
 			require_once __DIR__ . '/class.thumb.php';

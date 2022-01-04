@@ -94,6 +94,7 @@ Deny from all
 - 增加以源文件名称命名
 - 增加缩略图两种生成方式和开关
 - 修复开启前端压缩导致的上传图片异常
+- 屏蔽因缺少PHP扩展而不能生成缩略图的格式
 
 
 * 2021-12-25 v2.4.4
@@ -268,6 +269,8 @@ RewriteRule config/(.*).(php)$ – [F]
 
 <details><summary><mark><font color=darkred>与1.6.4版本差别</font></mark></summary>
 
+##### 不建议再使用 [EasyImage 1.6.4版本](https://github.com/icret/easyImages)
+
 - 在继承上个版本（[1.6.4](https://github.com/icret/easyImages "1.6.4")）的基础上进行了全新优化
 - 修复上传经常失败的问题
 - 删除一些不常用但会增加功耗的过程 （删除的在下边会有标记）
@@ -284,17 +287,13 @@ RewriteRule config/(.*).(php)$ – [F]
 
 </details>
 
-
-不建议再使用 [EasyImage 1.6.4版本](https://github.com/icret/easyImages)
-
-<hr />
-
 #### 兼容性
-PHP推荐使用PHP7.0及以上版本,需要PHP支持Fileinfo、iconv、zip、mbstring、openssl 扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。
 
-文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要 HTML5 支持）来添加上传文件，支持上传大图片，优先使用 HTML5，旧的浏览器自动使用Flash和Silverlight的方式兼容。
+- `PHP>5.6`,推荐使用`PHP7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
+- 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要`HTML5`支持）来添加上传文件，支持上传大图片，优先使用`HTML5`旧得浏览器自动使用`Flash和Silverlight`的方式兼容
+
 <hr />
 
  - 感谢: [verot](https://github.com/verot/class.upload.php "verot" )提供非常好用的class.upload.php上传类
- - 感谢: [ZUI](https://github.com/easysoft/zui "ZUI" ) 提供css框架
- - 本源码遵循 GNU Public License
+ - 感谢: [ZUI](https://github.com/easysoft/zui "ZUI" ) 提供前端框架
+ - [使用 GPL-3.0 开源许可协议](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)

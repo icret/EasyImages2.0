@@ -56,7 +56,7 @@ if (!is_file(APP_ROOT . '/config/EasyIamge.lock')) {
     echo '<font color="green">upload_max_filesize</font> - PHP上传最大值：' . ini_get('upload_max_filesize');
     echo '<br /><font color="green">post_max_size</font> - POST上传最大值：' . ini_get('post_max_size') . '<br />';
     // 扩展检测
-    $expand = array('fileinfo', 'gd', 'openssl',);
+    $expand = array('fileinfo', 'gd', 'openssl','imagick');
     foreach ($expand as $val) {
         if (extension_loaded($val)) {
             echo '

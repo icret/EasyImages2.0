@@ -196,10 +196,11 @@ if (isset($_POST['radio'])) {
               <label>转换图片为指定格式<?php echo $config['imgConvert']; ?></label>
               <select class="chosen-select form-control" name="imgConvert">
                 <option value=""    <?php if (empty($config['imgConvert'])) {echo 'selected';} ?>>不转换</option>
-                <option value="png" <?php if ($config['imgConvert']=='png') {echo 'selected';} ?>>png</option>
-                <option value="jpeg"<?php if ($config['imgConvert']=='jpeg') {echo 'selected';} ?>>jpeg</option>
-                <option value="gif" <?php if ($config['imgConvert']=='gif') {echo 'selected';} ?>>gif</option>
-                <option value="bmp" <?php if ($config['imgConvert']=='bmp') {echo 'selected';} ?>>bmp</option>
+                <option value="webp" <?php if ($config['imgConvert']=='webp') {echo 'selected';} ?>>WEBP</option>
+                <option value="png" <?php if ($config['imgConvert']=='png') {echo 'selected';} ?>>PNG</option>
+                <option value="jpeg"<?php if ($config['imgConvert']=='jpeg') {echo 'selected';} ?>>JPG</option>
+                <option value="gif" <?php if ($config['imgConvert']=='gif') {echo 'selected';} ?>>GIF</option>
+                <option value="bmp" <?php if ($config['imgConvert']=='bmp') {echo 'selected';} ?>>BMP</option>
               </select>
             </div>
             <div class="form-group">
@@ -307,7 +308,7 @@ if (isset($_POST['radio'])) {
               <div class="switch">
                 <input type="hidden" name="compress" value="0">
                 <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {echo 'checked="checked"';} ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
-                <label style="font-weight: bold">后端压缩图片 - 效果好于前端</label>
+                <label style="font-weight: bold">后端压缩上传图片 - 效果好于前端 增加服务器开销</label>
               </div>
             </div>
             <div class="form-group">
@@ -321,7 +322,7 @@ if (isset($_POST['radio'])) {
                 <input type="radio" name="thumbnail" value="1" <?php if($config['thumbnail']===1){echo 'checked="checked"';}?> id="thumbnail1"><label for="thumbnail1"> 实时生成 - 每次都会请求服务器，不会影响广场页面布局但会增加服务器开销</label>
               </div>
               <div class="radio-primary">
-                <input type="radio" name="thumbnail" value="2" <?php if($config['thumbnail']===2){echo 'checked="checked"';}?> id="thumbnail2"><label for="thumbnail2"> 客户浏览广场时生成 - 每日首张缩略图会使首次访问广场页面布局异常[刷新即可]</label>
+                <input type="radio" name="thumbnail" value="2" <?php if($config['thumbnail']===2){echo 'checked="checked"';}?> id="thumbnail2"><label for="thumbnail2"> 客户浏览广场时生成 - 每日首张缩略图生成会使广场页面代码布局异常[刷新即可]</label>
               </div>
             </div>
             <div class="form-group">
