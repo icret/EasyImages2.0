@@ -629,15 +629,14 @@ function creat_thumbnail_by_list($imgUrl)
 {
 	global $config;
 
-	// 关闭生成和输出缩略图浏览
+	// 关闭缩略图
 	if ($config['thumbnail'] === 0) {
 		return $imgUrl;
 	}
-	// 如果是实时生成
-    if ($config['thumbnail'] === 1) {
-        return get_online_thumbnail($imgUrl);
-    }
-
+	// 实时生成
+	if ($config['thumbnail'] === 1) {
+		return get_online_thumbnail($imgUrl);
+	}
 
 	// 将网址图片转换为相对路径
 	$pathName = str_replace($config['imgurl'], '', $imgUrl);
@@ -647,7 +646,6 @@ function creat_thumbnail_by_list($imgUrl)
 
 	// 如果图像是gif则直接返回网址
 	if (isAnimatedGif($abPathName)) {
-
 		return $imgUrl;
 	} else {
 
@@ -655,20 +653,18 @@ function creat_thumbnail_by_list($imgUrl)
 		$pathName = str_replace($config['path'], '', $pathName);
 
 		// 将文件的/转换为_
-		$pathName = str_replace('/', '_', $pathName);
+		$imgName = str_replace('/', '_', $pathName);
 
 		// 缓存文件是否存在
-		if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $pathName)) {
+		if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
 			// 存在则返回缓存文件
-			return $config['imgurl'] . $config['path'] . 'thumbnails/' . $pathName;
+			return $config['imgurl'] . $config['path'] . 'thumbnails/' . $imgName;
 		} else {
-			// 创建缓存文件并输出文件链接
+
+			// 不存在则创建缓存文件并输出文件链接
 			require_once __DIR__ . '/class.thumb.php';
 
-			// 获取文件名
-			$imgName = basename($imgUrl);
-
-			// cache目录的绝对路径
+			// thumbnails目录的绝对路径
 			$cache_path = APP_ROOT . $config['path'] . 'thumbnails/';
 
 			// 创建cache目录
@@ -677,7 +673,9 @@ function creat_thumbnail_by_list($imgUrl)
 			}
 
 			// 缩略图缓存的绝对路径
-			$new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName;
+			// $imgName 是不带/i/的相对路径
+
+			$new_imgName = $cache_path . $imgName;
 
 			// 创建并保存缩略图
 			Thumb::out($abPathName, $new_imgName, 300, 300);
