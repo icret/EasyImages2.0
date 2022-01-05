@@ -1,7 +1,9 @@
 <?php
 require_once 'header.php';
 
-if (isset($_COOKIE['admin']) and $_COOKIE['admin'] == md5($config['password'])) {
+$config_user = $config['user'];
+
+if (isset($_COOKIE[$config_user ]) and $_COOKIE[$config_user] == $config['password']) {
     setcookie("admin", null, time() - 1, '/');
     header("Refresh:2;url=../index.php");
     echo '

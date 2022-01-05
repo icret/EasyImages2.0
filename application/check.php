@@ -25,7 +25,7 @@ if (strstr('localhost', $_SERVER['HTTP_HOST'])) {
     ';
 }
 // 检测是否修改默认密码
-if ($config['password'] === 'admin@123') {
+if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     echo '
     <script>
     new $.zui.Messager("请修改默认密码，否则会有泄露风险！", {type: "warning" // 定义颜色主题 

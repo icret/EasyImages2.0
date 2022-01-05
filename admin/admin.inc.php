@@ -1,6 +1,7 @@
 <?php
 /*
- * 登录页面
+ * 简单图床设置页面
+ * 2022-1-5 15:34:34
  */
 
 require_once __DIR__ . '/../application/function.php';
@@ -85,7 +86,7 @@ if (isset($_POST['radio'])) {
     <div class="col-xs-9">
       <div class="tab-content col-xs-9">
         <div class="tab-pane fade active in" id="Content1">
-          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
             <div class="form-group">
               <label>网站域名,末尾不加"/" </label>
               <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -93,15 +94,6 @@ if (isset($_POST['radio'])) {
             <div class="form-group">
               <label>图片链接域名,末尾不加"/"，如果只有一个域名请与上边一致</label>
               <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，A、B需绑定到同一空间下,如果不变的话，下边2个填写成一样的！">
-            </div>
-            <div class="form-group">
-              <label>登录上传和后台管理密码,管理用户名为：admin,更改后会立即生效</label>
-              <div class="input-group">
-                <input type="password" class="form-control" name="password" required="required" value="<?php echo $config['password']; ?>" id="pwd" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                <span class="input-group-btn">
-                  <button class="btn btn-default" type="button"><i class="icon icon-eye-close" onclick="showhide()" id="eye"></i></button>
-                </span>
-              </div>
             </div>
             <div class="form-group">
               <label>网站标题</label>
@@ -139,6 +131,18 @@ if (isset($_POST['radio'])) {
               </select>
             </div>
             <div class="form-group">
+              <div class="form-group">
+                <div class="switch">
+                    <input type="hidden" name="showSwitch" value="0">
+                    <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) {echo 'checked="checked"';} ?>>
+                    <label style="font-weight: bold">开启游客浏览（广场）</label>
+                </div>
+              </div>
+              <div class="form-group">
+              <label>默认游客浏览数量，当前：</label>
+              <label id="listNumber"><?php echo $config['listNumber']; ?></label><label>张</label>
+              <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" title="可在网址后填写参数实时更改预览数量 如：https://img.545141.com/application/list.php?num=3">
+            </div>
               <div class="switch">
                 <input type="hidden" name="static_cdn" value="0">
                 <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) {echo 'checked="checked"';} ?>>
@@ -150,7 +154,21 @@ if (isset($_POST['radio'])) {
               <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
             </div>
             <div class="form-group">
-              <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">
+              <div>
+                <label>缩略图生成方式 - 关闭缩略图无任何服务器开销但增加输出流量，浏览生成要比实时生成更好</label>
+              </div>
+              <div class="radio-primary">
+                <input type="radio" name="thumbnail" value="0" <?php if($config['thumbnail']===0){echo 'checked="checked"';}?> id="thumbnail0"><label for="thumbnail0"> 关闭 - 广场直接输出上传图片，输出流量增加</label>
+              </div>
+              <div class="radio-primary">
+                <input type="radio" name="thumbnail" value="1" <?php if($config['thumbnail']===1){echo 'checked="checked"';}?> id="thumbnail1"><label for="thumbnail1"> 实时生成 - 每次浏览都请求服务器，不会影响广场页面布局但会影响服务器性能</label>
+              </div>
+              <div class="radio-primary">
+                <input type="radio" name="thumbnail" value="2" <?php if($config['thumbnail']===2){echo 'checked="checked"';}?> id="thumbnail2"><label for="thumbnail2"> 客户浏览广场时生成 - 每日首张缩略图生成会使广场页面代码布局异常[刷新即可]</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
             </div>
             <button type="submit" class="btn btn-primary">保存</button>
           </form>
@@ -269,7 +287,7 @@ if (isset($_POST['radio'])) {
               <label>允许上传的最小高度->更改后的高度：</label><label id="minHeight"><?php echo $config['minHeight']; ?></label><label>像素</label>
               <input type="range" class="form-control" name="minHeight" value="<?php echo $config['minHeight']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minHeight').innerHTML=value">
             </div>
-            <h3 class="with-padding bg-success" style="text-align: center;">前端压缩 - 优点：服务器无压力 缺点：略微增加客户端压力</h3>
+            <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:略增加客户端压力,压缩仅支持JPG</h4>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="imgRatio" value="0">
@@ -303,30 +321,16 @@ if (isset($_POST['radio'])) {
               <label>图片压缩率(仅支持JPG)->更改后的压缩率：</label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
               <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">              
             </div>
-            <h3 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点：避免客户端欺骗 缺点：增加服务器压力</h3>
+            <h4 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点:避免客户端欺骗,效果更好 缺点:增加服务器压力</h4>
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="compress" value="0">
                 <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) {echo 'checked="checked"';} ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向">
-                <label style="font-weight: bold">后端压缩上传图片 - 效果好于前端 增加服务器开销</label>
+                <label style="font-weight: bold">后端压缩上传图片 - 更多图片格式的支持</label>
               </div>
             </div>
             <div class="form-group">
-              <div>
-                <label>缩略图生成 - 关闭缩略图无任何服务器开销但增加输出流量，浏览生成要比实时生成更好</label>
-              </div>
-              <div class="radio-primary">
-                <input type="radio" name="thumbnail" value="0" <?php if($config['thumbnail']===0){echo 'checked="checked"';}?> id="thumbnail0"><label for="thumbnail0"> 关闭缩略图生成 - 广场直接输出上传图片</label>
-              </div>
-              <div class="radio-primary">
-                <input type="radio" name="thumbnail" value="1" <?php if($config['thumbnail']===1){echo 'checked="checked"';}?> id="thumbnail1"><label for="thumbnail1"> 实时生成 - 每次都会请求服务器，不会影响广场页面布局但会增加服务器开销</label>
-              </div>
-              <div class="radio-primary">
-                <input type="radio" name="thumbnail" value="2" <?php if($config['thumbnail']===2){echo 'checked="checked"';}?> id="thumbnail2"><label for="thumbnail2"> 客户浏览广场时生成 - 每日首张缩略图生成会使广场页面代码布局异常[刷新即可]</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">
+              <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
             </div>
             <button type="submit" class="btn btn-primary">保存</button>
           </form>
@@ -341,7 +345,7 @@ if (isset($_POST['radio'])) {
               </div>
             </div>
             <div class="form-group">
-              <label>顶部广告内容 支持html代码</label>
+              <label>顶部广告内容 仅支持html代码</label>
               <textarea class="form-control" rows="5" name="ad_top_info"><?php echo $config['ad_top_info']; ?></textarea>
             </div>
             <div class="form-group">
@@ -352,7 +356,7 @@ if (isset($_POST['radio'])) {
               </div>
             </div>
             <div class="form-group">
-              <label>底部广告内容 支持html代码</label>
+              <label>底部广告内容 仅支持html代码</label>
               <textarea class="form-control" rows="5" name="ad_bot_info"><?php echo $config['ad_bot_info']; ?></textarea>
             </div>
             <div class="form-group">
@@ -360,7 +364,7 @@ if (isset($_POST['radio'])) {
               <textarea class="form-control" rows="7" name="customize"><?php echo $config['customize']; ?></textarea>
             </div>
             <div class="form-group">
-              <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">
+              <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
             </div>
             <button type="submit" class="btn btn-primary">保存</button>
           </form>
@@ -389,16 +393,6 @@ if (isset($_POST['radio'])) {
             <span class="label label-primary label-outline">已缓存文件：<?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/'); ?>占用<?php echo getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?></span>
             <button type="submit" class="btn btn-primary" name="delDir" value="thumbnails/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复！');">清理缓存</button>
 				  </form>
-          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group">
-                    <label>利用Tinypng压缩图片 TinyImag Key 申请地址：<a href="https://tinypng.com/developers" target="_blank">https://tinypng.com/developers</a></label>
-                    <input type="text" class="form-control input-sm" name="TinyImag_key" value="<?php echo $config['TinyImag_key']; ?>" title="开启后会受服务器到https://tinypng.com 速度影响，国内不建议开启！" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div>
-                <div class="form-group">
-                    <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">
-                </div>
-                <button type="submit" class="btn btn-primary">保存</button>
-          </form>
           <p>
             <form action="../application/compressing.php" method="post" target="_blank">
               <div class="form-group">
@@ -406,21 +400,39 @@ if (isset($_POST['radio'])) {
                 <input type="text" class="form-control form-date" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
               </div>
               <div class="radio-primary">
-                <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress"> 使用本地压缩(默认上传已压缩，不需重复压缩)</label>
+                <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress"> 使用本地压缩(如果开启上传压缩，不需重复压缩)</label>
               </div>
               <div class="radio-primary">
-                <input type="radio" name="type" value="TinyImg" id="TinyImg"><label for="TinyImg"> 使用TinyImag压缩（需要申请key)</label>
+                <input type="radio" name="type" value="TinyImg" id="TinyImg"><label for="TinyImg"> 使用TinyImag压缩（需要申请key，填入分类API/Token的TinyImag Key中)</label>
               </div>
               <div>
                 <label>* 如果页面长时间没有响应，表示正面正在压缩！</label>
                 <label>两种压缩均为不可逆，并且非常占用硬件资源。</label>
               </div>
-              <button type="submit" class="btn  btn-mini btn-success">开始压缩</button>
+              <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
             </form>
           </p>
         </div>
         <div class="tab-pane fade " id="Content5">
-            <b>生成Token 新Token需按要求填入<code>/config/api_key.php</code>才生效</b>
+        <b>外部KEY,请根据需要申请并填写</b>
+          <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
+            <div class="form-group">
+              <label for="TinyImag" title="申请地址:https://tinypng.com/developers"><a href="https://tinypng.com/developers" target="_blank">TinyImag Key</a></label>
+              <input type="text" class="form-control input-sm" id="TinyImag" name="TinyImag_key" value="<?php echo $config['TinyImag_key']; ?>"  placeholder="填入压缩图片Key" title="开启后会受服务器到https://tinypng.com 速度影响，国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
+              <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
+            </div>
+            <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
+            <button type="submit" class="btn btn-mini btn-primary">保存</button>
+          </form>
+          <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
+            <div class="form-group">
+              <label for="moderatecontent_key" title="申请地址:https://client.moderatecontent.com"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
+              <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片监黄Key" title="开启后会受服务器到https://moderatecontent.com 速度影响，国内不建议开启！" onkeyup="this.value=this.value.replace(/\s/g,'')">
+            </div>
+            <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
+            <button type="submit" class="btn btn-mini btn-primary">保存</button>
+          </form>
+            <b>生成API Token 新Token需按要求填入<code>/config/api_key.php</code>才生效</b>
             <form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="input-group">
                     <span class="input-group-addon">Generate token</span>
@@ -450,29 +462,39 @@ if (isset($_POST['radio'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content6">
-          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+          <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
             <div class="form-group">
-              <div class="switch">
-                <input type="hidden" name="showSwitch" value="0">
-                <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) {echo 'checked="checked"';} ?>>
-                <label style="font-weight: bold">开启游客预览（广场）</label>
+              <div class="input-control has-icon-left">
+                <input type="text" name="user" id="account" class="form-control" placeholder="更改登录用户名">
+                <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
+              </div>             
+              <div class="input-control has-icon-left" style="margin-top: 10px;">
+                <input type="text" name="password" id="password" class="form-control" placeholder="更改登录密码">
+                <input type="hidden" name="password" id="md5_password">
+                <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
               </div>
             </div>
             <div class="form-group">
-              <label>默认预览数量，当前：</label>
-              <label id="listNumber"><?php echo $config['listNumber']; ?></label><label>张</label>
-              <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" title="可在网址后填写参数实时更改预览数量 如：https://img.545141.com/application/list.php?num=3">
+              <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
             </div>
+            <button type="submit" class="btn btn btn-primary">更改 账号/密码</button>
+            <div class="alert alert-primary with-icon" style="margin-top: 5px;">
+              <i class="icon-info-sign"></i>
+              <div class="content">
+                <p>更改后会立即生效并重新登录，请务必牢记密码！</p>
+                <p>如果忘记用户名可以打开-><code>/config/config.php</code>文件->找到user对应的键值->填入</p>
+                <p>如果忘记密码请将密码->转换成MD5小写-><a href="https://md5jiami.bmcx.com/" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
+              </div>
+            </div>
+          </form>
+          
+            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
             <div class="form-group">
               <div class="switch">
                 <input type="hidden" name="checkImg" value="0">
                 <input type="checkbox" name="checkImg" value="1" <?php if ($config['checkImg']) {echo 'checked="checked"';} ?> title="开启后会受服务器到https://moderatecontent.com速度影响，国内不建议开启！">
-                <label style="font-weight: bold">开启图片监黄</label>
+                <label style="font-weight: bold">开启图片监黄(需要申请key，填入分类API/Token的Moderate Key中)</label>
               </div>
-            </div>
-            <div class="form-group">
-              <label>图片监黄key 申请地址：<a href="https://client.moderatecontent.com" target="_blank">https://client.moderatecontent.com</a></label>
-              <input type="text" class="form-control input-sm" name="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" title="开启后会受服务器到https://moderatecontent.com 速度影响，国内不建议开启！" onkeyup="this.value=this.value.replace(/\s/g,'')">
             </div>
             <div class="form-group">
               <label>设置是不良图片概率,概率越大准确率越高，当前：</label>
@@ -500,12 +522,12 @@ if (isset($_POST['radio'])) {
             </div>
             <div class="form-group">
               <p style="font-weight: bold">
-              当前版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span>
-              Github：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a>
+                当前版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span>
+                Github：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a>         
               </p>
             </div>
             <div class="form-group">
-              <input type="hidden" class="form-control" name="form" value="" placeholder="隐藏的保存">
+              <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
             </div>
             <button type="submit" class="btn btn-primary">保存</button>
           </form>
@@ -513,7 +535,7 @@ if (isset($_POST['radio'])) {
         <div class="tab-pane fade" id="Content7">
             <p>为了访问速度，仅显示最近20张图片；监黄需要在安全设置->开启图片监黄。</p>
             <p>key申请地址：<a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
-            <p>获得key后填入安全设置->图片监黄key </p>
+            <p>获得key后打开->API/Token->Moderate Key->填入 </p>
             <table class="table table-hover table-bordered table-auto table-condensed table-striped">
                 <thead>
                     <tr>
@@ -612,19 +634,15 @@ if (isset($_POST['radio'])) {
 <script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor.js"></script>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/md5.min.js"></script>
 <script>
-  
-  // 密码隐藏
-  var eye = document.getElementById("eye");
-  var pwd = document.getElementById("pwd");
-  function showhide() {
-    if (pwd.type == "password") {
-      pwd.type = "text";
-      eye.className = 'icon icon-eye-open'
-    } else {
-      pwd.type = "password";
-      eye.className = 'icon icon-eye-close'
-    }
+  // 将密码以md5加密方式发送
+  function md5_post() {
+    var password = document.getElementById('password');
+    var md5pwd = document.getElementById('md5_password');
+    md5pwd.value = md5(password.value);
+    //可以校验判断表单内容，true就是通过提交，false，阻止提交
+    return true;
   }
   // jscolor
   jscolor.presets.default = {

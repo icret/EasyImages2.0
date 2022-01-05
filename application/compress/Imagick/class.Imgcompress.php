@@ -95,7 +95,7 @@ class Imgcompress
     private function _saveImage($dstImgName)
     {
         if (empty($dstImgName)) return false;
-        $allowImgs = array('.jpg', '.jpeg', '.png', '.bmp', '.wbmp', '.gif');   //如果目标图片名有后缀就用目标图片扩展名 后缀，如果没有，则用源图的扩展名
+        $allowImgs = array('.jpg', '.jpeg', '.png', '.bmp', '.wbmp', '.gif','webp');   //如果目标图片名有后缀就用目标图片扩展名 后缀，如果没有，则用源图的扩展名
         $dstExt = strrchr($dstImgName, ".");
         $sourseExt = strrchr($this->src, ".");
         if (!empty($dstExt)) $dstExt = strtolower($dstExt);

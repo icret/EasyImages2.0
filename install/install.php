@@ -22,7 +22,7 @@ if ($state !== 'checked') {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="EasyIamge 2.0 即将完成安装！" />
     <meta name="description" content="EasyIamge 2.0 即将完成安装！" />
-    <link rel="shortcut icon" href="./../public/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="./../favicon.ico" type="image/x-icon" />
     <link href="./../public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
     <script src="./../public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
     <script src="./../public/static/zui/js/zui.min.js?v1.9.2"></script>
@@ -62,7 +62,13 @@ if ($state !== 'checked') {
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 ">登录上传和后台管理密码</label>
+                <label class="col-sm-2 ">管理账号</label>
+                <div class="col-md-6 col-sm-10">
+                    <input type="text" class="form-control" name="user" value="" placeholder="请以大小写英文或数字输入管理员账号" onkeyup="this.value=this.value.replace(/[^\w\.\/]/ig,'')">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 ">管理密码</label>
                 <span class="message">请输入8~18位密码</span>
                 <div class="col-md-6 col-sm-10 register">
                     <input type="text" class="form-control inp" name="password" value="" required="required" placeholder="请使用英文输入法输入密码并不小于8位数" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -92,7 +98,6 @@ if ($state !== 'checked') {
     </div>
 
 
-
     <script>
         var password = document.querySelector('.inp');
         var message = document.querySelector('.message');
@@ -107,9 +112,9 @@ if ($state !== 'checked') {
             }
         }
     </script>
+
+
     <!-- install bottom HTML start -->
-
-
     <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">

@@ -81,7 +81,6 @@
 	<a href="/admin/terms.php" target="_blank"> DMCA</a>    
   </div>';
   }
-
   ?>
 </footer>
 </body>

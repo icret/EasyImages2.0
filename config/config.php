@@ -7,7 +7,8 @@ $config=Array
 	'tips'=>'本站仅做演示用,不定时清理图片，单文件≤5M，每次上传≤30张',
 	'domain'=>'http://localhost',
 	'imgurl'=>'http://localhost',
-	'password'=>'admin@123',
+	'user'=>'admin',
+	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
 	'apiStatus'=>0,
 	'path'=>'/i/',
@@ -23,21 +24,25 @@ $config=Array
 	'waterImg'=>'/public/images/watermark.png',
 	'extensions'=>'gif,jpeg,png,tif,bmp,tif,svg,webp,jpg,tga,svg,ico',
 	'compress'=>0,
-	'thumbnail'=>2,
+	'thumbnail'=>0,
 	'imgConvert'=>'',
 	'maxWidth'=>10240,
 	'maxHeight'=>10240,
 	'minWidth'=>5,
 	'minHeight'=>5,
 	'imgRatio'=>0,
-	'image_x'=>2500,
-	'image_y'=>2700,
+	'image_x'=>800,
+	'image_y'=>800,
 	'imgRatio_quality'=>80,
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
 	'theme'=>'default',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
+	'TinyImag_key'=>'',
+	'moderatecontent_key'=>'',
+	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
+  <i class="icon icon-smile"></i> <br/>',
 	'ad_top'=>0,
 	'ad_top_info'=>'  <div id="ad" class="col-md-12" align="center" style="padding:5px;">
     <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
@@ -50,7 +55,7 @@ $config=Array
       <a href="https://app.cloudcone.com/?ref=3521" target="_blank"><img src="/public/images/ad.jpg" /></a>
   </div>
   ',
-	'showSwitch'=>1,
+	'showSwitch'=>0,
 	'listNumber'=>20,
 	'customize'=>'    <!-- 百度统计代码-->
     <script>
@@ -63,14 +68,10 @@ $config=Array
     })();
     </script>',
 	'checkEnv'=>1,
-	'checkImg'=>0,
+	'checkImg'=>1,
 	'checkImg_value'=>50,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
-	'version'=>'2.4.4 bate',
-	'form'=>'',
-	'TinyImag_key'=>'',
-	'moderatecontent_key'=>'',
-	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
-  <i class="icon icon-smile"></i> <br/>'
+	'version'=>'2.4.5 bate',
+	'form'=>'2022-01-05 18:27:18'
 	);

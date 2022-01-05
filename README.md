@@ -56,6 +56,7 @@
 8. 出现`undefined function imagecreatefromwebp()`是因为GD没安装webp
 9. 出现`upload File size exceeds the maximum value` 调整`PHP`上传大小
 10. 出现`Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
+11. 出现`Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
 
 #### 安全配置
 
@@ -86,11 +87,17 @@ Deny from all
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
 
-* 2022-1-3 v2.4.4 beta
+* 2022-1-3 v2.4.5 beta
+- 更新安装代码
+- 更改前端样式
 - 更新上传格式
+- 重构了密码验证
+- 使用md5存储密码
 - 增加后台设置提示
 - 增加更改网站配色
 - 增加缩略图索引格式
+- 调整后台分类及位置
+- 增加在线修改账号密码
 - 增加以源文件名称命名
 - 增加缩略图两种生成方式和开关
 - 修复开启前端压缩导致的上传图片异常
@@ -289,7 +296,7 @@ RewriteRule config/(.*).(php)$ – [F]
 
 #### 兼容性
 
-- `PHP>5.6`,推荐使用`PHP7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
+- 最低`PHP 5.6`,推荐`PHP 7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
 - 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要`HTML5`支持）来添加上传文件，支持上传大图片，优先使用`HTML5`旧得浏览器自动使用`Flash和Silverlight`的方式兼容
 
 <hr />

@@ -67,7 +67,7 @@ if (is_array($char_data)) {
             <form action="counts.php" method="post">
                 <span>统计时间：<?php echo $char_data['total_time']; ?></span>
                 <input type="hidden" name="del_total" value="<?php echo APP_ROOT . '/admin/logs/counts/'; ?>">
-                <button class="btn btn-mini btn-danger">重新统计</button>
+                <button class="btn btn-mini btn-primary"><i class="icon icon-spin icon-refresh"></i>重新统计</button>
             </form>
         </div>
     </div>

@@ -12,10 +12,11 @@ function isAnimatedGif($filename)
 }
 
 // 校验登录
+/*
 function checkLogin()
 {
 	global $config;
-	$md5Pwd = md5($config['password']);
+	$md5Pwd = $config['password'];
 	if (isset($_POST['password'])) {	// 获取登录密码
 		$postPW = $_POST['password'];
 		if ($md5Pwd == $postPW) {	// 登录密码正确
@@ -31,8 +32,10 @@ function checkLogin()
 			//exit(include __DIR__ . '/login.php');
 			exit(header("refresh:1;"));
 		}
+
 	} elseif (isset($_COOKIE['admin'])) {	// cookie正确
 		if ($_COOKIE['admin'] == $md5Pwd) {
+
 		} else {	// cookie错误
 			echo '
 			<script> new $.zui.Messager("密码已更改，请重新登录", {type: "special" // 定义颜色主题 
@@ -48,7 +51,72 @@ function checkLogin()
 		exit(include __DIR__ . '/login.php');
 	}
 }
+*/
+function checkLogin()
+{
+	global $config;
+	// 获取配置密码 配置密码为md5加密
+	$config_password = $config['password'];
+	$config_user = $config['user'];
 
+	// 如果存在post并且通过设置cookie
+	if (isset($_POST['user'])) {
+		$postUser = $_POST['user'];
+		if ($postUser === $config_user) {
+			if (isset($_POST['password'])) {
+				$postPWD = $_POST['password'];
+				if ($postPWD === $config_password) {
+					setcookie($postUser, $postPWD, time() + 3600 * 24 * 14, '/');
+					echo '
+                        <script> 
+                            new $.zui.Messager("登录成功", {type: "primary" // 定义颜色主题 
+                            }).show();
+                        </script>';
+					header("refresh:2;url=" . $config['domain'] . "");
+				} else {
+					echo '
+                        <script> 
+                        new $.zui.Messager("密码错误", {type: "danger" // 定义颜色主题
+                        }).show();
+                        </script>';
+					exit(header("refresh:1;"));
+				}
+			}
+		} else {
+			echo '
+			<script> 
+                $.zui.Messager("用户名错误", {type: "danger" // 定义颜色主题
+            	}).show();
+            </script>';
+			exit(header("refresh:2;"));
+		}
+	}
+
+	// 存在cookie 但是cookie错误
+	if (isset($_COOKIE[$config_user])) {
+		$cookieAdmin = $_COOKIE[$config_user];
+		if ($cookieAdmin != $config_password) {
+			echo '
+                <script> 
+                new $.zui.Messager("密码已更改，请重新登录", {type: "special" // 定义颜色主题 
+                }).show();
+                </script>';
+			//header('loction:login.php');
+			exit(include __DIR__ . '/login.php');
+		}
+	}
+
+	// 无cookie
+	if (empty($_COOKIE[$config_user])) {
+		echo '
+            <script>
+            new $.zui.Messager("请登录后再上传！", {type: "danger" // 定义颜色主题 
+            }).show();
+            </script>';
+		//header('loction:login.php');
+		exit(include __DIR__ . '/login.php');
+	}
+}
 // 仅允许登录后上传
 function mustLogin()
 {
@@ -384,8 +452,9 @@ function getDel($url, $type)
 function is_online()
 {
 	global $config;
-	$md5Pwd = md5($config['password']);
-	if (empty($_COOKIE['admin']) || $_COOKIE['admin'] != $md5Pwd) {
+	$config_user = $config['user'];
+	$config_password = $config['password'];
+	if (empty($_COOKIE[$config_user]) || $_COOKIE[$config_user] != $config_password) {
 		echo false;
 	} else {
 		return true;
