@@ -54,13 +54,13 @@ if (isset($_REQUEST['code'])) {
 	<div class="form-group">
 		<label for="account" class="col-sm-2">账号</label>
 		<div class="has-success col-md-3 col-sm-5">
-			<input type="text" name="user" id="account" class="form-control" value="admin" placeholder="请输入登录账号">
+			<input type="text" name="user" id="account" class="form-control" value="" placeholder="请输入登录账号">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="password" class="col-sm-2">密码</label>
 		<div class="has-success col-md-3 col-sm-5">
-			<input type="password" name="password" id="password" class="form-control" value="admin@123" placeholder="请输入登录密码">
+			<input type="password" name="password" id="password" class="form-control" value="" placeholder="请输入登录密码">
 		</div>
 		<input type="hidden" name="password" id="md5_password">
 	</div>
