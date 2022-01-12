@@ -60,7 +60,7 @@
   */
 </script>
 <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php if ($config['ad_bot']) {echo $config['ad_bot_info'];} ?>
-  <?php echo $config['customize']; ?>
+    <?php if($config['customize']){echo $config['customize'];}?>
   <hr>
   <!-- 对话框触发按钮 -->
   <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">

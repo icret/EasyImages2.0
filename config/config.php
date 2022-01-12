@@ -5,8 +5,8 @@ $config=Array
 	'keywords'=>'简单图床,easyimage,无数据库图床,PHP多图长传程序,自适应页面,HTML5,markdown,bbscode,一键复制',
 	'description'=>'简单图床EasyImage是一款支持多文件上传的无数据库图床,可以完美替代PHP多图上传程序，最新html5自适应页面兼容手机电脑，上传后返回图片直链，markdown图片，论坛贴图bbscode链接，简单方便支持一键复制，支持多域名，api上传。',
 	'tips'=>'本站仅做演示用,不定时清理图片，单文件≤5M，每次上传≤30张',
-	'domain'=>'http://localhost',
-	'imgurl'=>'http://localhost',
+	'domain'=>'http://192.168.2.100',
+	'imgurl'=>'http://192.168.2.100',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
@@ -24,7 +24,7 @@ $config=Array
 	'waterImg'=>'/public/images/watermark.png',
 	'extensions'=>'gif,jpeg,png,tif,bmp,tif,svg,webp,jpg,tga,svg,ico',
 	'compress'=>0,
-	'thumbnail'=>0,
+	'thumbnail'=>1,
 	'imgConvert'=>'',
 	'maxWidth'=>10240,
 	'maxHeight'=>10240,
@@ -37,7 +37,7 @@ $config=Array
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
-	'theme'=>'default',
+	'theme'=>'red',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
 	'TinyImag_key'=>'',
 	'moderatecontent_key'=>'',
@@ -55,7 +55,7 @@ $config=Array
       <a href="https://app.cloudcone.com/?ref=3521" target="_blank"><img src="/public/images/ad.jpg" /></a>
   </div>
   ',
-	'showSwitch'=>0,
+	'showSwitch'=>1,
 	'listNumber'=>20,
 	'customize'=>'    <!-- 百度统计代码-->
     <script>
@@ -66,12 +66,24 @@ $config=Array
       var s = document.getElementsByTagName("script")[0]; 
       s.parentNode.insertBefore(hm, s);
     })();
-    </script>',
+    </script>
+ <!-- 自定义js举例：非img.545141.com跳转
+<script type= "text/javascript" >rthost=window.location.host;if(rthost!="img.545141.com"){top.location.href="https://img.545141.com/"};</script>-->  
+    <!--自定义代码举例：打赏、QQ邮箱、QQ群 可删除
+    <iframe src="https://img.545141.com/sponsor/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
+    <a target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=cR0UHB4fGBwxAABfEh4c">
+      <i class="icon icon-envelope-alt">联系邮箱 </i>
+    </a> 
+    <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f">
+        <i class="icon icon-qq">加入QQ群</i>
+    </a>
+    <a target="_blank" href="/master.zip"><i class="icon icon-download-alt">下载源码</i></a>-->',
 	'checkEnv'=>1,
 	'checkImg'=>1,
 	'checkImg_value'=>50,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
+	'first_show'=>1,
 	'version'=>'2.4.5 bate',
-	'form'=>'2022-01-05 18:27:18'
+	'form'=>'2022-01-13 02:26:57'
 	);

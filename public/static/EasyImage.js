@@ -9,6 +9,9 @@ copyBtn.onclick = function () {
     try {
         if (document.execCommand('copy', false, null)) {
             //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary" // 定义颜色主题 
+            }).show();
             console.log("复制成功");
         } else {
             //fail info
@@ -27,6 +30,9 @@ copyBtn.onclick = function () {
     try {
         if (document.execCommand('copy', false, null)) {
             //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary" // 定义颜色主题 
+            }).show();
             console.log("复制成功");
         } else {
             //fail info
@@ -45,6 +51,9 @@ copyBtn.onclick = function () {
     try {
         if (document.execCommand('copy', false, null)) {
             //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary" // 定义颜色主题 
+            }).show();
             console.log("复制成功");
         } else {
             //fail info
@@ -63,6 +72,9 @@ copyBtn.onclick = function () {
     try {
         if (document.execCommand('copy', false, null)) {
             //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary" // 定义颜色主题 
+            }).show();
             console.log("复制成功");
         } else {
             //fail info
@@ -81,6 +93,9 @@ copyBtn.onclick = function () {
     try {
         if (document.execCommand('copy', false, null)) {
             //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary" // 定义颜色主题 
+            }).show();
             console.log("复制成功");
         } else {
             //fail info

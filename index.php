@@ -29,44 +29,44 @@ mustLogin();
     </div>
     <div class="col-md-10 col-md-offset-1">
       <ul class="nav nav-tabs">
-        <li class="active">
+        <li <?php if($config['first_show']==1){echo 'class="active"';}?>>
           <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"> 直链</i></a>
         </li>
-        <li>
+        <li <?php if($config['first_show']==2){echo 'class="active"';}?>>
           <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"> 论坛代码</i></a>
         </li>
-        <li>
+        <li <?php if($config['first_show']==3){echo 'class="active"';}?>>
           <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"> MarkDown</i></a>
         </li>
-        <li>
+        <li <?php if($config['first_show']==4){echo 'class="active"';}?>>
           <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"> HTML</i></a>
         </li>
-        <li>
+        <li <?php if($config['first_show']==5){echo 'class="active"';}?>>
           <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"> 删除</i></a>
         </li>
       </ul>
       <div class="tab-content" style="text-align:right">
-        <div class="tab-pane fade active in" id="tab2Content1">
+        <div class="tab-pane fade <?php if($config['first_show']==1){echo 'active in';}?>" id="tab2Content1">
           <textarea class="form-control" rows="5" id="links" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
           <button id="btnLinks" class="btn copyBtn1" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
-        <div class="tab-pane fade" id="tab2Content2">
+        <div class="tab-pane fade <?php if($config['first_show']==2){echo 'active in';}?>" id="tab2Content2">
           <textarea class="form-control" rows="5" id="bbscode" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
           <button id="btnBbscode" class="btn copyBtn2" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
-        <div class="tab-pane fade" id="tab2Content3">
+        <div class="tab-pane fade <?php if($config['first_show']==3){echo 'active in';}?>" id="tab2Content3">
           <textarea class="form-control" rows="5" id="markdown" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
           <button id="btnMarkDown" class="btn copyBtn3" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
-        <div class="tab-pane fade" id="tab2Content4">
+        <div class="tab-pane fade <?php if($config['first_show']==4){echo 'active in';}?>" id="tab2Content4">
           <textarea class="form-control" rows="5" id="html" readonly></textarea>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
           <button id="btnHtml" class="btn copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
         </div>
-        <div class="tab-pane fade" id="tab2Content5">
+        <div class="tab-pane fade <?php if($config['first_show']==5){echo 'active in';}?>" id="tab2Content5">
           <pre><textarea class="form-control" rows="5" id="del"  readonly></textarea></pre>
           <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
           <button id="btndel" class="btn copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
