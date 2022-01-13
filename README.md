@@ -71,10 +71,9 @@ Deny from all
 - Nginx环境限制上传目录禁止运行`PHP`程序：
 
 ```Nginx
-    # 禁止运行php的目录
-    location ~* ^/(i|public|config)/.*\.(php|php5)$
-    {
-     deny all;
+    # 禁止运行php的目录 "i"是你的上传图片目录
+    location ~ /(i)/.*.(php|php5)?$ {
+        deny all;
     }
 ```
  - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
@@ -86,7 +85,7 @@ Deny from all
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
-* 2022-1-13 v2.4.5 beta 2
+* 2022-1-13 v2.4.5
 - 修复一处权限问题
 - 修复恢复可疑图片
 - 增加复制提示
