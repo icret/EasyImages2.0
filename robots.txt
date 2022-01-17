@@ -1,6 +1,6 @@
-# robots.txt
+#robots.txt
 User-agent: *
-Disallow: 
-Disallow: /config/
-Disallow: /admin/
-Disallow: /install/
+Allow: /
+Disallow: /admin
+Disallow: /config
+Disallow: /install

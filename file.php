@@ -87,11 +87,10 @@ if ($handle->uploaded) {
         $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
 
         // 判断PHP版本启用删除
-        $ver = substr(PHP_VERSION, 0, 3);
-        if ($ver >= '7.0') {
+        if (PHP_VERSION >= '7') {
             $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
         } else {
-            $delUrl = 'PHP≥7.0 才能启用删除!';
+            $delUrl = "Sever PHP version lower 7.0 and does't support deletion";
         }
 
         $reJson = array(

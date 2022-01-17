@@ -7,7 +7,7 @@
 
 [演示](https://img.545141.com) &nbsp;
 [Chrome 拓展](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
-[使用手册](https://www.kancloud.cn/easyimage/easyimage) &nbsp;
+[使用手册](https://www.kancloud.cn/easyimage/easyimage/) &nbsp;
 [问题反馈](https://support.qq.com/products/367633) &nbsp;
 [QQ群](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
@@ -16,7 +16,7 @@
 [![Issues](https://img.shields.io/github/issues/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/issues)
 [![stargazers](https://img.shields.io/github/stars/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/stargazers)
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
-[![License](https://img.shields.io/badge/license-GPL_V3.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 
 >本人善写bug 发现bug可提交 [Issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 <hr />
@@ -80,7 +80,7 @@ Deny from all
 
  #### 程序升级
 
-- 保存config目录和上传目录
+- 保存`config`目录和`上传目录`
 - 将新程序下载至网站目录解压覆盖，然后将保存的文件替换既完成升级
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>

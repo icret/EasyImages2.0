@@ -71,8 +71,9 @@ if (isset($_GET['reimg'])) {
                 <h5>本人仅为程序开源创作，如非法网站使用与本人无关，请勿用于非法用途；</h5>
                 <h5>请为本人博客<a class="alert-link" href="https://www.545141.com/" target="_blank">www.545141.com</a>加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：<a class="alert-link" href="https://www.545141.com/">本人博客</a>，邮箱等）。</h5>
                 <p>
-                    <a href="https://img.545141.com/" target="_blank"><button type="button" class="btn btn-success btn-mini"><i class="icon icon-unlink"></i> 演示网站</button></a>
-                    <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-primary btn-mini"><i class="icon icon-bug"></i> 问题反馈</button></a>
+                    <a href="https://img.545141.com/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-unlink"></i> 演示网站</button></a>
+                    <a href="https://www.kancloud.cn/easyimage/easyimage" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
+                    <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-bug"></i> 问题反馈</button></a>
                     <button type="button" class="btn btn-danger btn-mini" data-scroll-inside="true" data-moveable="true" data-width="300px" data-height="250px" data-icon="heart" data-title="您的赞美是我开发的动力！" data-iframe="https://img.545141.com/sponsor/index.html" data-toggle="modal"><i class="icon icon-heart-empty"></i> 打赏作者</button>
                 </p>
             </div>
@@ -688,14 +689,14 @@ if (isset($_GET['reimg'])) {
                             <hr />
                             <p><?php
                                 if (empty($config['TinyImag_key'])) {
-                                    echo '压缩图片 TinyImag Key未填写，申请地址：<a href="https://tinypng.com/developers" target="_blank">https://tinypng.com/developers</a><br/>';
+                                    echo '<i class="icon icon-times" title="图片压缩TinyImag未填写">TinyImag Key</i><br />';
                                 } else {
-                                    echo '压缩图片 TinyImag Key已填写<br/>';
+                                    echo '<i class="icon icon-check" title="图片压缩TinyImag已填写">TinyImag Key</i><br/>';
                                 }
                                 if (empty($config['moderatecontent_key'])) {
-                                    echo '图片检查 moderatecontent key未填写，申请地址： <a href="https://client.moderatecontent.com" target="_blank">https://client.moderatecontent.com/</a>';
+                                    echo '<i class="icon icon-times" title="图片审查moderatecontent未填写">moderatecontent key</i><br />';
                                 } else {
-                                    echo '图片检查 moderatecontent key已填写';
+                                    echo '<i class="icon icon-check" title="图片审查moderatecontent已填写">Moderatecontent Key</i><br/>';
                                 }
                                 ?>
                             </p>

@@ -84,7 +84,14 @@ if ($handle->uploaded) {
         header('Content-type:text/json');
         // 上传成功后返回json数据
         $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
-        $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+
+        // 判断PHP版本启用删除
+        if (PHP_VERSION >= '7') {
+            $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        } else {
+            $delUrl = "Sever PHP version lower 7.0 and does't support deletion";
+        }
+
         $reJson = array(
             "result" => "success",
             "code"   => 200,

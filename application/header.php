@@ -62,7 +62,7 @@ require_once APP_ROOT . '/application/total_files.php';
 			if (is_online()) {
 				echo '				
 				<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"> 网站设置</i></a></li>					
-				<li class="' . getActive('counts') . '";><a href="' . $config['domain'] . '/admin/counts.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
+				<li class="' . getActive('chart') . '";><a href="' . $config['domain'] . '/admin/chart.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
 				';
 			}
 			?>

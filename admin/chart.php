@@ -16,7 +16,7 @@ if (isset($_POST['del_total'])) {
     @deldir($_POST['del_total']);
     echo '
 		<script>
-		new $.zui.Messager("删除统计成功！", {type: "success" // 定义颜色主题 
+		new $.zui.Messager("重新统计成功！", {type: "success" // 定义颜色主题 
 		}).show();
 		</script>
 		';
@@ -72,61 +72,88 @@ if (is_array($char_data)) {
         </div>
     </div>
     <div class="col-md-12 col-xs-12">
-        <div class="col-md-6 col-xs-12">
-            <div class="col-md-3 col-xs-3 alert  alert-success autoshadow">今日上传
-                <hr />
-                <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
-            </div>
-            <div class="col-md-3 col-xs-3 alert  alert-success autoshadow">昨日上传
-                <hr />
-                <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
-            </div>
-            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
-                累计上传
-                <hr />
-                <?php printf("%u 张", read_total_json('filenum')); ?>
-            </div>
-
-            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
-                缓存文件
-                <hr />
-                <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/')); ?>
-            </div>
-            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
-                可疑图片
-                <hr />
-                <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
-            </div>
-            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
-                文件夹
-                <hr />
-                <?php printf("%d 个", read_total_json('dirnum')); ?>
-            </div>
-            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
-                占用存储
-                <hr />
-                <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
-            </div>
-            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
-                剩余空间
-                <hr />
-                <?php echo getDistUsed(disk_free_space('.')); ?>
-            </div>
+        <div class="col-xs-3 alert  alert-success autoshadow">今日上传
+            <hr />
+            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
         </div>
-        <div class="col-md-6 col-xs-12">
-            <div id="myPieChart" style="width:300px;height: 300px;"></div>
+        <div class="col-xs-3 alert  alert-success autoshadow">昨日上传
+            <hr />
+            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            累计上传
+            <hr />
+            <?php printf("%u 张", read_total_json('filenum')); ?>
+        </div>
+
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            缓存文件
+            <hr />
+            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/')); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            可疑图片
+            <hr />
+            <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            文件夹
+            <hr />
+            <?php printf("%d 个", read_total_json('dirnum')); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            占用存储
+            <hr />
+            <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            剩余空间
+            <hr />
+            <?php echo getDistUsed(disk_free_space('.')); ?>
         </div>
     </div>
     <div class="col-md-12 col-xs-12">
         <hr />
+        <div class="col-md-6 col-xs-12">
+            <span>硬盘使用量</span>
+            <div id="Piedisk" style="width:350px;height: 350px;"></div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div id="myPieChart" style="width:350px;height: 350px;"></div>
+        </div>
+    </div>
+    <div class="col-md-12 col-xs-12">
+        <hr />
+        <span>最近30日上传趋势与空间占用</span>
         <div id="myLineChart" style="width: 100%;height: 300px;"></div>
-        <h4 style="text-align: center;">最近30日上传趋势与空间占用</h4>
     </div>
 </div>
-
-
-<script src="<?php static_cdn(); ?>/public/static/echarts/echarts.common.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/echarts/echarts.min.js"></script>
 <script>
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('Piedisk'));
+
+    // 指定图表的配置项和数据
+    var Piedisk = {
+        tooltip: {
+            formatter: "{a} <br/>{b} : {c}%"
+        },
+        series: [{
+            name: '硬盘使用量',
+            type: 'gauge',
+            detail: {
+                valueAnimation: true,
+                formatter: '{value}%'
+            },
+            data: [{
+                value: <?php echo ceil((disk_total_space('.') - disk_free_space('.')) / disk_total_space('.') * 100); ?>,
+                name: '已使用'
+            }]
+        }]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(Piedisk);
+
     // 文件统计-折线图
     var myChart = echarts.init(document.getElementById('myLineChart'));
     window.onresize = function() {
