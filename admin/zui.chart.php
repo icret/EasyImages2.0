@@ -11,6 +11,18 @@ require_once APP_ROOT . '/application/chart.php';
 if (!is_online()) {
     checkLogin();
 }
+// 删除统计文件
+if (isset($_POST['del_total'])) {
+    @deldir($_POST['del_total']);
+    echo '
+		<script>
+		new $.zui.Messager("删除统计成功！", {type: "success" // 定义颜色主题 
+		}).show();
+		</script>
+		';
+    // 延时1s刷新
+    Header("refresh:1;url=counts.php");
+}
 // 统计图表
 // array_reverse($arr,true) 倒叙数组并保持键值关系
 $char_data = read_chart_total();
@@ -38,52 +50,57 @@ if (is_array($char_data)) {
     .autoshadow {
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
         margin: 0px 0px 10px 10px;
-        width: 130px;
+        width: 90px;
         height: 80px;
         text-align: center;
     }
 </style>
 <div class="row">
-
-    <div class="clo-md-12">
-        <div class="alert alert-warning">统计时间：<?php echo $char_data['total_time']; ?></div>
+    <div class="clo-md-12 col-xs-12">
+        <div class="alert alert-warning">
+            <form action="counts.php" method="post">
+                <span>统计时间：<?php echo $char_data['total_time']; ?></span>
+                <input type="hidden" name="del_total" value="<?php echo APP_ROOT . '/admin/logs/counts/'; ?>">
+                <button class="btn btn-mini btn-primary"><i class="icon icon-spin icon-refresh"></i>重新统计</button>
+            </form>
+        </div>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-2 alert  alert-success autoshadow">今日上传
+    <div class="col-md-12 col-xs-12">
+        <div class="col-md-2 col-xs-2 alert alert-success autoshadow">今日上传
             <hr />
             <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
         </div>
-        <div class="col-md-2 alert  alert-success autoshadow">昨日上传
+        <div class="col-md-2 col-xs-2 alert alert-success autoshadow">昨日上传
             <hr />
             <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
         </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
+        <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             累计上传
             <hr />
             <?php printf("%u 张", read_total_json('filenum')); ?>
         </div>
 
-        <div class="col-md-2 alert alert-primary autoshadow">
+        <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             缓存文件
             <hr />
             <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/')); ?>
         </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
+        <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             可疑图片
             <hr />
             <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
         </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
+        <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             文件夹
             <hr />
             <?php printf("%d 个", read_total_json('dirnum')); ?>
         </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
+        <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             占用存储
             <hr />
             <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
         </div>
-        <div class="col-md-2 alert alert-primary autoshadow">
+        <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             剩余空间
             <hr />
             <?php echo getDistUsed(disk_free_space('.')); ?>
@@ -91,17 +108,17 @@ if (is_array($char_data)) {
     </div>
 
 
-    <div class="col-md-22">
-        <div class="col-md-6">
+    <div class="col-md-12  col-xs-12">
+        <div class="col-md-6  col-xs-12">
             <h4>文件统计（张）</h4>
             <canvas id="myBarChart" width="960" height="400"></canvas>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6  col-xs-12">
             <h4 class=" col-md-offset-2">硬盘统计：（GB）</h4>
             <canvas id="diskPieChart" width="960" height="400"></canvas>
         </div>
     </div>
-    <div class="col-sm-12" style="text-align: center;">
+    <div class="col-sm-12  col-xs-12" style="text-align: center;">
         <hr />
         <h4>最近30上传趋势与空间占用（上传/张 占用/MB）</h4>
         <h4 class="text-danger hidden-lg">手机请启用横屏浏览</h4>

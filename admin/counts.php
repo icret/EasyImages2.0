@@ -49,7 +49,7 @@ if (is_array($char_data)) {
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
         border: 1px;
         margin: 0px 0px 10px 10px;
-        width: 101px;
+        width: 90px;
         height: 80px;
         text-align: center;
     }
@@ -71,53 +71,53 @@ if (is_array($char_data)) {
             </form>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-6">
-            <div class="col-md-2 alert  alert-success autoshadow">今日上传
+    <div class="col-md-12 col-xs-12">
+        <div class="col-md-6 col-xs-12">
+            <div class="col-md-3 col-xs-3 alert  alert-success autoshadow">今日上传
                 <hr />
                 <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
             </div>
-            <div class="col-md-2 alert  alert-success autoshadow">昨日上传
+            <div class="col-md-3 col-xs-3 alert  alert-success autoshadow">昨日上传
                 <hr />
                 <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
             </div>
-            <div class="col-md-2 alert alert-primary autoshadow">
+            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
                 累计上传
                 <hr />
                 <?php printf("%u 张", read_total_json('filenum')); ?>
             </div>
 
-            <div class="col-md-2 alert alert-primary autoshadow">
+            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
                 缓存文件
                 <hr />
                 <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/')); ?>
             </div>
-            <div class="col-md-2 alert alert-primary autoshadow">
+            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
                 可疑图片
                 <hr />
                 <?php printf("%u 张", getFileNumber(APP_ROOT . $config['path'] . 'suspic/')); ?>
             </div>
-            <div class="col-md-2 alert alert-primary autoshadow">
+            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
                 文件夹
                 <hr />
                 <?php printf("%d 个", read_total_json('dirnum')); ?>
             </div>
-            <div class="col-md-2 alert alert-primary autoshadow">
+            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
                 占用存储
                 <hr />
                 <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
             </div>
-            <div class="col-md-2 alert alert-primary autoshadow">
+            <div class="col-md-3 col-xs-3 alert alert-primary autoshadow">
                 剩余空间
                 <hr />
                 <?php echo getDistUsed(disk_free_space('.')); ?>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-12">
             <div id="myPieChart" style="width:300px;height: 300px;"></div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 col-xs-12">
         <hr />
         <div id="myLineChart" style="width: 100%;height: 300px;"></div>
         <h4 style="text-align: center;">最近30日上传趋势与空间占用</h4>
