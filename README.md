@@ -307,4 +307,4 @@ RewriteRule config/(.*).(php)$ – [F]
 
  - 感谢: [verot](https://github.com/verot/class.upload.php "verot" )提供非常好用的class.upload.php上传类
  - 感谢: [ZUI](https://github.com/easysoft/zui "ZUI" ) 提供前端框架
- - [使用 GPL-3.0 开源许可协议](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
+ - [使用 GPL-2.0 开源许可协议](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
