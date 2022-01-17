@@ -108,7 +108,8 @@ function checkPASS($name)
     $checkres = array($phpEnv, $fileinfo, $gd, $i_wjj, $file_php);
 
     if (in_array(false, $checkres)) {
-        echo '<a href="./index.php" ><button class="btn btn-lg btn-danger" type="button">请满足上述要求后点击刷新</button></a>';
+        echo '<p class="text-danger">如果你的PHP版本较低或者不想安装上述PHP扩展请删除<code>install</code>目录</p>
+        <a href="./index.php" ><button class="btn btn-lg btn-danger" type="button">请满足上述要求后点击刷新</button></a>';
     } else {
         echo '
     <form action="install.php" method="post">

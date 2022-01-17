@@ -42,4 +42,15 @@ if (isset($_POST['del_install'])) {
   }
 }
 
+// 删除多余文件
+if (isset($_POST['del_extra_files'])) {
+  if ($_POST['del_extra_files'] == "del") {
+    @unlink(APP_ROOT . '/CODE_OF_CONDUCT.md');
+    @unlink(APP_ROOT . '/LICENSE');
+    @unlink(APP_ROOT . '/README.md');
+    @unlink(APP_ROOT . '/config/EasyIamge.lock');
+    @deldir(APP_ROOT . "/.github/");
+  }
+}
+
 //exit(header("Location:/../application/login.php")); // 跳转主页

@@ -84,6 +84,9 @@ if ($state !== 'checked') {
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
+                            <input type="checkbox" name="del_extra_files" value="del" checked><span style="font-weight: bold;color:green;" title="删除Github/Gitee下载的多余文件">删除多余文件</span>
+                        </label>
+                        <label>
                             <input type="checkbox" name="del_install" value="del"><span style="font-weight: bold;color:red;">删除安装目录</span>
                         </label>
                     </div>
