@@ -2,7 +2,6 @@
 require_once __DIR__ . '/function.php';
 require_once APP_ROOT . '/application/total_files.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="zh-cn">
 
@@ -16,12 +15,12 @@ require_once APP_ROOT . '/application/total_files.php';
 	<link rel="shortcut icon" href="<?php echo $config['domain']; ?>/favicon.ico" type="image/x-icon" />
 	<link rel="dns-prefetch" href="<?php echo $config['imgurl']; ?>" />
 	<link rel="dns-prefetch" href="<?php echo $config['static_cdn_url']; ?>" />
-	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css?v1.9.2" rel="stylesheet">
-	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme'];?>.css?v1" rel="stylesheet">
-	<link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css?v1.9.2" rel="stylesheet">
+	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css?v1.10.0" rel="stylesheet">
+	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme']; ?>.css?v1" rel="stylesheet">
+	<link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css?v1.10.0" rel="stylesheet">
 	<link href="<?php static_cdn(); ?>/public/static/nprogress.min.css?v0.2.0" rel="stylesheet">
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
-	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js?v1.9.2"></script>
+	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js?v1.10.0"></script>
 	<script src="<?php static_cdn(); ?>/public/static/qrcode.min.js?v2.0"></script>
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js?vv1.5.5"></script>
 	<script src="<?php static_cdn(); ?>/public/static/nprogress.min.js"></script>
@@ -38,6 +37,11 @@ require_once APP_ROOT . '/application/total_files.php';
 			}
 		}
 	</style>
+	<!--[if lt IE 9]>
+    <script src="public/static/zui/lib/ieonly/html5shiv.js"></script>
+    <script src="public/static/zui/lib/ieonly/respond.js"></script>
+    <script src="public/static/zui/lib/ieonly/excanvas.js"></script>
+  <![endif]-->
 </head>
 
 <body class="container">
@@ -66,7 +70,6 @@ require_once APP_ROOT . '/application/total_files.php';
 				';
 			}
 			?>
-
 		</ul>
 	</div>
 	<!-- 顶部导航栏END -->

@@ -79,7 +79,7 @@ mustLogin();
 </table>
 
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js?v1.9.2"></script>
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js?v1.10.0"></script>
 <script>
   $('#upShowID').uploader({
     // 自动上传
