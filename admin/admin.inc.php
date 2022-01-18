@@ -614,7 +614,7 @@ if (isset($_GET['reimg'])) {
                     <div class="tab-pane fade" id="Content7">
                         <p>为了访问速度，仅显示最近20张图片；监黄需要在安全设置->开启图片监黄。</p>
                         <p>key申请地址：<a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
-                        <p>获得key后打开->API/Token->Moderate Key->填入 </p>
+                        <p>获得key后打开->API 设置->Moderate Key->填入 </p>
                         <table class="table table-hover table-bordered table-auto table-condensed table-striped">
                             <thead>
                             <tr>

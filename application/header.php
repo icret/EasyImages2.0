@@ -48,16 +48,16 @@ require_once APP_ROOT . '/application/total_files.php';
 	<?php if ($config['ad_top']) {
 		echo $config['ad_top_info'];
 	} ?>
-	<div class="md-lg-12 header-dividing">
+	<div class="page-header">
 		<ul class="nav nav-pills">
 			<li class="<?php echo getActive('index'); ?>">
 				<a href="<?php echo $config['domain']; ?>/index.php">
-					<i class="icon icon-home"> 首页</i>
+					<i class="icon icon-home"></i> 首页
 				</a>
 			</li>
 			<li class="<?php echo getActive('list'); ?>">
 				<a href="<?php echo $config['domain']; ?>/application/list.php?date=<?php echo date('Y/m/d/') ?>&num=<?php echo $config['listNumber']; ?>">
-					<i class="icon icon-th"> 广场</i>
+					<i class="icon icon-th"></i> 广场
 					<span class="label label-badge label-success">
 						<?php echo getFileNumber(APP_ROOT . config_path()); ?></span>
 				</a>
@@ -65,8 +65,8 @@ require_once APP_ROOT . '/application/total_files.php';
 			<?php
 			if (is_online()) {
 				echo '				
-				<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"> 网站设置</i></a></li>					
-				<li class="' . getActive('chart') . '";><a href="' . $config['domain'] . '/admin/chart.php' . '"><i class="icon icon-pie-chart"> 上传统计</i></a></li>
+				<li class="' . getActive('admin.inc') . '";><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"></i> 设置</a></li>					
+				<li class="' . getActive('chart') . '";><a href="' . $config['domain'] . '/admin/chart.php' . '"><i class="icon icon-pie-chart"></i> 统计</a></li>
 				';
 			}
 			?>

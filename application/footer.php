@@ -55,9 +55,7 @@
   console.log('%c图床演示网站： https://img.545141.com/ \n本程序由 Icret 独自开发并完全开源，碰到收费发布的请不要轻易付款；\n本人仅为程序开源创作，如非法网站使用与本人无关，请勿用于非法用途；\n作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）。\n请为本人博客 https://www.545141.com/ 加上链接，谢谢尊重！%c ', 'color: #eaad1a; padding:5px 0; border:1px solid #448ef6; font-size:12px;', '');
 </script>
 <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px"><?php if ($config['ad_bot']) { echo $config['ad_bot_info'];} ?>
-  <?php if ($config['customize']) {
-    echo $config['customize'];
-  } ?>
+  <?php if ($config['customize']) { echo $config['customize'];} ?>
   <hr>
   <!-- 对话框触发按钮 -->
   <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal"><i class="icon icon-qrcode"></i>二维码 </a>

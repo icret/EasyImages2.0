@@ -27,22 +27,22 @@ mustLogin();
           <i class="icon icon-pause"></i>暂停上传</button>
       </div>
     </div>
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-10 col-md-offset-1 col-xs-12">
       <ul class="nav nav-tabs">
         <li <?php if($config['first_show']==1){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"> 直链</i></a>
+          <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"></i> 直链</a>
         </li>
         <li <?php if($config['first_show']==2){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"> 论坛代码</i></a>
+          <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"></i> 论坛代码</a>
         </li>
         <li <?php if($config['first_show']==3){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"> MarkDown</i></a>
+          <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"></i> MarkDown</a>
         </li>
         <li <?php if($config['first_show']==4){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"> HTML</i></a>
+          <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"></i> HTML</a>
         </li>
         <li <?php if($config['first_show']==5){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"> 删除</i></a>
+          <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"></i> 删除</a>
         </li>
       </ul>
       <div class="tab-content" style="text-align:right">
