@@ -16,12 +16,12 @@ if (isset($_POST['del_total'])) {
     @deldir($_POST['del_total']);
     echo '
 		<script>
-		new $.zui.Messager("重新统计成功！", {type: "success" // 定义颜色主题 
+		new $.zui.Messager("重新统计成功!", {type: "success" // 定义颜色主题 
 		}).show();
 		</script>
 		';
     // 延时1s刷新
-    Header("refresh:1;url=counts.php");
+    Header("refresh:1;url=chart.php");
 }
 // 统计图表
 // array_reverse($arr,true) 倒叙数组并保持键值关系
@@ -58,8 +58,8 @@ if (is_array($char_data)) {
 <div class="row">
     <div class="clo-md-12 col-xs-12">
         <div class="alert alert-warning">
-            <form action="counts.php" method="post">
-                <span>统计时间：<?php echo $char_data['total_time']; ?></span>
+            <form action="chart.php" method="post">
+                <span>统计时间:<?php echo $char_data['total_time']; ?></span>
                 <input type="hidden" name="del_total" value="<?php echo APP_ROOT . '/admin/logs/counts/'; ?>">
                 <button class="btn btn-mini btn-primary"><i class="icon icon-spin icon-refresh"></i>重新统计</button>
             </form>
@@ -114,7 +114,7 @@ if (is_array($char_data)) {
             <canvas id="myBarChart" width="960" height="400"></canvas>
         </div>
         <div class="col-md-6  col-xs-12">
-            <h4 class=" col-md-offset-2">硬盘统计：（GB）</h4>
+            <h4 class=" col-md-offset-2">硬盘统计:（GB）</h4>
             <canvas id="diskPieChart" width="960" height="400"></canvas>
         </div>
     </div>

@@ -16,12 +16,12 @@ if (isset($_POST['del_total'])) {
     @deldir($_POST['del_total']);
     echo '
 		<script>
-		new $.zui.Messager("重新统计成功！", {type: "success" // 定义颜色主题 
+		new $.zui.Messager("重新统计成功!", {type: "success" // 定义颜色主题 
 		}).show();
 		</script>
 		';
     // 延时1s刷新
-    Header("refresh:1;url=counts.php");
+    Header("refresh:1;url=chart.php");
 }
 // 统计图表
 // array_reverse($arr,true) 倒叙数组并保持键值关系
@@ -64,8 +64,8 @@ if (is_array($char_data)) {
 <div class="row">
     <div class="clo-md-12">
         <div class="alert alert-warning">
-            <form action="counts.php" method="post">
-                <span>统计时间：<?php echo $char_data['total_time']; ?></span>
+            <form action="chart.php" method="post">
+                <span>统计时间:<?php echo $char_data['total_time']; ?></span>
                 <input type="hidden" name="del_total" value="<?php echo APP_ROOT . '/admin/logs/counts/'; ?>">
                 <button class="btn btn-mini btn-primary"><i class="icon icon-spin icon-refresh"></i>重新统计</button>
             </form>
@@ -146,7 +146,7 @@ if (is_array($char_data)) {
                 formatter: '{value}%'
             },
             data: [{
-                value: <?php echo ceil((disk_total_space('.') - disk_free_space('.')) / disk_total_space('.') * 100); ?>,
+                value: <?php echo round((disk_total_space('.') - disk_free_space('.')) / disk_total_space('.') * 100,2); ?>,
                 name: '已使用'
             }]
         }]
@@ -240,7 +240,7 @@ if (is_array($char_data)) {
     myPieChart = {
         color: ['#38B03F', '#353535'],
         title: {
-            // text: '硬盘使用统计：（GB）',
+            // text: '硬盘使用统计:（GB）',
             left: 'center'
         },
         tooltip: {
@@ -253,7 +253,7 @@ if (is_array($char_data)) {
             data: ['剩余空间', '已用空间']
         },
         series: [{
-            name: '硬盘使用：',
+            name: '硬盘使用:',
             type: 'pie',
             radius: '55%',
             center: ['50%', '60%'],
