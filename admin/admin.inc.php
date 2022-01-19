@@ -680,7 +680,7 @@ if (isset($_GET['reimg'])) {
                             <p>PHP上传限制：<?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
                             <p>POST上传限制：<?php echo ini_get('post_max_size'); ?></p>
                             <p>PHP最长执行时间：<?PHP echo get_cfg_var("max_execution_time") . "秒 "; ?></p>
-                            <p>PHP允许占用内存：<?PHP echo get_cfg_var("memory_limit") . "M "; ?></p>
+                            <p>PHP允许占用内存：<?PHP echo get_cfg_var("memory_limit"); ?></p>
                             <h5>我的信息</h5>
                             <hr />
                             <p>浏览器：<?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
