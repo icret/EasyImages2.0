@@ -531,73 +531,9 @@ if (isset($_GET['reimg'])) {
                                 <label>输入黑/白名单IP 每个IP以英文,结尾 支持IP段</label>
                                 <textarea class="form-control" rows="5" name="check_ip_list" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
                             </div>
-                            <div class="form-group">                          
+                            <div class="form-group">
                                 <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if($config['check_ip_model']==0){echo 'checked';}?>> 黑名单模式</label>
                                 <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if($config['check_ip_model']==1){echo 'checked';}?>> 白名单模式</label>
-                            </div>
-                            <div class="form-group">
-                                <div class="switch">
-                                    <input type="hidden" name="checkEnv" value="0">
-                                    <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) {echo 'checked="checked"';} ?>>
-                                    <label style="font-weight: bold">开启PHP插件检测-安全设置检测-版本检测</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="switch">
-                                    <input type="hidden" name="upload_logs" value="0">
-                                    <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) {echo 'checked="checked"';} ?> title="日志每月保存一个文件；经过测试每月二十万条数据并不影响速度！">
-                                    <label style="font-weight: bold">开启上传日志</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
-                            </div>
-                            <button type="submit" class="btn btn-primary">保存</button>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="Content6">
-                        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
-                            <div class="form-group">
-                                <div class="input-control has-icon-left">
-                                    <input type="text" name="user" id="account" class="form-control" placeholder="更改管理账号 - 不填则保持默认">
-                                    <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
-                                </div>
-                                <div class="input-control has-icon-left" style="margin-top: 10px;">
-                                    <input type="text" name="password" id="password" class="form-control" placeholder="更改管理密码 - 不填则保持默认">
-                                    <input type="hidden" name="password" id="md5_password">
-                                    <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
-                            </div>
-                            <button type="submit" class="btn btn btn-primary">更改管理 账号/密码</button>
-                            <div class="alert alert-primary with-icon" style="margin-top: 5px;">
-                                <i class="icon-info-sign"></i>
-                                <div class="content">
-                                    <p>更改后会立即生效并重新登录，请务必牢记账号和密码！</p>
-                                    <p>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到user对应的键值->填入</p>
-                                    <p>如果忘记密码请将密码->转换成MD5小写-><a href="https://md5jiami.bmcx.com/" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
-                                </div>
-                            </div>
-                        </form>
-                        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
-                            <div class="form-group">
-                                <div class="switch">
-                                    <input type="hidden" name="checkImg" value="0">
-                                    <input type="checkbox" name="checkImg" value="1" <?php if ($config['checkImg']) {echo 'checked="checked"';} ?> title="开启后会受服务器到https://moderatecontent.com速度影响，国内不建议开启！">
-                                    <label style="font-weight: bold">开启图片监黄(需要申请key，填入分类API/Token的Moderate Key中)</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>设置是不良图片概率,概率越大准确率越高，当前：</label>
-                                <label id="checkImg_value"><?php echo $config['checkImg_value']; ?></label><label>%</label>
-                                <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
-                            </div>
-                            <div class="form-group">
-                                <label>缓存有效期，当前：</label>
-                                <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
-                                <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1"max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
                             </div>
                             <div class="form-group">
                                 <div class="switch">

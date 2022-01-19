@@ -37,7 +37,7 @@ $config=Array
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
-	'theme'=>'default',
+	'theme'=>'red',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
 	'TinyImag_key'=>'',
 	'moderatecontent_key'=>'',
@@ -77,5 +77,5 @@ $config=Array
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.4.6 beta',
-	'form'=>'2022-01-20 01:31:54'
+	'form'=>'2022-01-20 02:15:29'
 	);
