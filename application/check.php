@@ -9,7 +9,9 @@ foreach ($expand as $val) {
     if (!extension_loaded($val)) {
         echo '
         <script>
-        new $.zui.Messager("扩展:' . $val . '- 未安装,可能导致图片上传失败！请尽快修复。", {type: "black" // 定义颜色主题 
+        new $.zui.Messager("扩展:' . $val . '- 未安装,可能导致图片上传失败！请尽快修复。", {
+			type: "black", // 定义颜色主题
+			icon: "exclamation-sign" // 定义消息图标
         }).show();
         </script>
     ';

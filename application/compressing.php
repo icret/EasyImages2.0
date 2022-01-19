@@ -22,7 +22,9 @@ if (isset($_POST['folder'])) {
     $folder =  '..' . $config['path'] . $getFolder;
 
     if (!is_dir($folder)) {
-        exit($folder . '<script> new $.zui.Messager("没有这个文件夹！", {type: "danger" // 定义颜色主题 
+        exit($folder . '<script> new $.zui.Messager("没有这个文件夹！", {
+			type: "danger", // 定义颜色主题 
+			icon: "exclamation-sign" // 定义消息图标
 			}).show();</script>');
     }
 
@@ -32,7 +34,9 @@ if (isset($_POST['folder'])) {
     compress($folder, $type, $source);
 
     echo '
-    <script> new $.zui.Messager("压缩完毕！", {type: "success" // 定义颜色主题 
+    <script> new $.zui.Messager("压缩完毕！", {
+		type: "success", // 定义颜色主题 
+		icon: "ok-sign" // 定义消息图标
 	}).show();</script>';
 }
 // 压缩后

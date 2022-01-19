@@ -19,12 +19,16 @@ $path = '/i/cache/';
 
 if (deldir($path)) {
     echo '
-    <script> new $.zui.Messager("删除成功！", {type: "success" // 定义颜色主题 
+    <script> new $.zui.Messager("删除成功！", {
+		type: "success", // 定义颜色主题
+		icon: "ok-sign" // 定义消息图标
     }).show();</script>';
     header("refresh:1;"); // 1s后刷新当前页面
 } else {
     echo '
-    <script> new $.zui.Messager("删除失败！", {type: "danger" // 定义颜色主题 
+    <script> new $.zui.Messager("删除失败！", {
+		type: "danger", // 定义颜色主题 
+		icon: "exclamation-sign" // 定义消息图标
     }).show();</script>';
     header("refresh:1;"); // 1s后刷新当前页面
 }

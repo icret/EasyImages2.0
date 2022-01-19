@@ -85,6 +85,10 @@ Deny from all
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
+* 2022-1-19 v2.4.6 beta
+- 增加图片信息页面
+- 视图优化
+
 * 2022-1-13 v2.4.5
 - 修复一处权限问题
 - 修复恢复可疑图片

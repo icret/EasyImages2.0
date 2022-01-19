@@ -9,7 +9,7 @@ echo '<div class="col-md-4 col-md-offset-4">
 
         <form class="form-inline" method="get" action="' . $_SERVER['SCRIPT_NAME'] . '" id="form" name="delForm" onSubmit="getStr();">
             <div class="form-group">
-                <label for="exampleInputInviteCode3">删除图片-格式：</label>
+                <label for="exampleInputInviteCode3">删除图片-格式:</label>
                 <input type="text" class="form-control" id="exampleInputInviteCode3" name="url" placeholder="https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg">
             </div>
             <button type="submit" class="btn btn-danger">删除</button>
@@ -19,7 +19,9 @@ echo '<div class="col-md-4 col-md-offset-4">
 if (empty($_REQUEST)) {
     echo '
     <script>
-    new $.zui.Messager("没有要删除的图片！", {type: "danger" // 定义颜色主题 
+    new $.zui.Messager("没有要删除的图片!", {
+        type: "danger", // 定义颜色主题 
+		icon: "exclamation-sign" // 定义消息图标
     }).show();
     </script>
     ';
@@ -49,7 +51,9 @@ if (is_online()) {
     if (isset($_GET['url'])) {
         echo '
 			<script>
-            new $.zui.Messager("请登录后再删除", {type: "danger" // 定义颜色主题 
+            new $.zui.Messager("请登录后再删除", {
+				type: "danger", // 定义颜色主题
+				icon: "exclamation-sign" // 定义消息图标
             }).show();
             // 延时2s跳转			
             window.setTimeout("window.location=\'/../application/login.php \'",2000);

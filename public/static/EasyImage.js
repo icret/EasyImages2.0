@@ -10,7 +10,8 @@ copyBtn.onclick = function () {
         if (document.execCommand('copy', false, null)) {
             //success info
             new $.zui.Messager("复制成功", {
-                type: "primary" // 定义颜色主题 
+                type: "primary", // 定义颜色主题 
+                icon: 'ok-sign' // 定义消息图标
             }).show();
             console.log("复制成功");
         } else {
@@ -31,7 +32,8 @@ copyBtn.onclick = function () {
         if (document.execCommand('copy', false, null)) {
             //success info
             new $.zui.Messager("复制成功", {
-                type: "primary" // 定义颜色主题 
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
             }).show();
             console.log("复制成功");
         } else {
@@ -52,7 +54,8 @@ copyBtn.onclick = function () {
         if (document.execCommand('copy', false, null)) {
             //success info
             new $.zui.Messager("复制成功", {
-                type: "primary" // 定义颜色主题 
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
             }).show();
             console.log("复制成功");
         } else {
@@ -73,7 +76,8 @@ copyBtn.onclick = function () {
         if (document.execCommand('copy', false, null)) {
             //success info
             new $.zui.Messager("复制成功", {
-                type: "primary" // 定义颜色主题 
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
             }).show();
             console.log("复制成功");
         } else {
@@ -94,7 +98,8 @@ copyBtn.onclick = function () {
         if (document.execCommand('copy', false, null)) {
             //success info
             new $.zui.Messager("复制成功", {
-                type: "primary" // 定义颜色主题 
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
             }).show();
             console.log("复制成功");
         } else {

@@ -26,8 +26,9 @@ if (!$config['showSwitch'] and !is_online()) {
             <div class="bottom">
               <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图" style="margin-left:10px;"></i></a>
               <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+              <a href="/application/info.php?img=' . $imgUrl . '" title="Exif信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
               <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
-              <label style="margin-left:10px;"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '" > 选择</label>
+              <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '" > 选择</label>
             </div> 
           </div>
         </div>
@@ -37,7 +38,7 @@ if (!$config['showSwitch'] and !is_online()) {
     echo '</div>';
   } else {
 
-    echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~！</div>';
+    echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
   }
   echo '</ul>';
 }
@@ -118,11 +119,11 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
     <div class="btn-group">
       <a href="list.php?<?php echo http_build_query($httpUrl); ?>"><button class="btn btn-danger btn-mini">当前<?php echo $allUploud; ?>张</button></a>
       <a href="list.php"><button class="btn btn-primary btn-mini">今日<?php echo read_total_json('todayUpload'); ?>张</button></a>
-      <a href="list.php?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>"><button class="btn btn-mini">昨日<?php echo read_total_json('yestUpload'); ?>张</button></a>
+      <a href="list.php?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>"><button class="btn btn-mini hidden-xs inline-block">昨日<?php echo read_total_json('yestUpload'); ?>张</button></a>
       <?php
       for ($x = 2; $x <= 5; $x++) {
         // 倒推日期显示上传图片
-        echo '<a href="list.php?date=' . date('Y/m/d/', strtotime("-{$x} day")) . '"> <button class="btn btn-mini">' . date('m月d日', strtotime("-{$x} day")) . '</button></a>';
+        echo '<a href="list.php?date=' . date('Y/m/d/', strtotime("-{$x} day")) . '"> <button class="btn btn-mini hidden-xs inline-block">' . date('m月d日', strtotime("-{$x} day")) . '</button></a>';
       }
       echo '</div>';
       if (is_online()) {
@@ -160,15 +161,17 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
     // 复制url
     var clipboard = new Clipboard('.copy');
     clipboard.on('success', function(e) {
-      new $.zui.Messager("复制成功！", {
-        type: "success" // 定义颜色主题 
+      new $.zui.Messager("复制直链成功", {
+        type: "success", // 定义颜色主题 
+        icon: "ok-sign" // 定义消息图标
       }).show();
 
     });
     clipboard.on('error', function(e) {
       document.querySelector('.copy');
-      new $.zui.Messager("复制失败！", {
-        type: "danger" // 定义颜色主题 
+      new $.zui.Messager("复制失败", {
+        type: "danger", // 定义颜色主题 
+        icon: "exclamation-sign" // 定义消息图标
       }).show();
     });
 
@@ -191,7 +194,7 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
     }
     //获取所有的 checkbox 属性的 input标签
     function fun() {
-      confirm('确认要删除？\n* 删除文件夹后将无法恢复！');
+      confirm('确认要删除？\n* 删除文件夹后将无法恢复!');
       obj = document.getElementsByName("checkbox");
       check_val = [];
       for (k in obj) {
@@ -206,8 +209,9 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
         },
         function(data) {
           if (data.search('success') > 0) {
-            new $.zui.Messager("删除成功，请刷新浏览器；如果开启了CDN，请等待缓存失效!", {
-              type: "success" // 定义颜色主题 
+            new $.zui.Messager("删除成功", {
+              type: "success", // 定义颜色主题 
+              icon: "ok-sign" // 定义消息图标
             }).show();
             // 延时2秒刷新
             window.setTimeout(function() {
@@ -215,7 +219,8 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
             }, 1500)
           } else {
             new $.zui.Messager("文件不存在", {
-              type: "danger" // 定义颜色主题 
+              type: "danger", // 定义颜色主题 
+              icon: "exclamation-sign" // 定义消息图标
             }).show();
           }
 
@@ -303,7 +308,9 @@ $allUploud = getFileNumber(APP_ROOT . $config['path'] . $allUploud);
       startView: 2,
       minView: 2,
       forceParse: 0,
-      format: "yyyy/mm/dd/"
+      pickerPosition: "top-right",
+      format: "yyyy/mm/dd/",
+      endDate: new Date() // 只能选当前日期之前
     });
     // 更改网页标题
     document.title = "图床广场 今日上传<?php echo read_total_json('todayUpload'); ?>张 昨日<?php echo read_total_json('yestUpload'); ?>张 - <?php echo $config['title']; ?> "

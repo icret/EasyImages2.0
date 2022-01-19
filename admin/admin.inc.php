@@ -11,7 +11,9 @@ require_once APP_ROOT . '/api/function_API.php';
 
 if (!is_online()) {
     echo '
-  <script> new $.zui.Messager("请登录后再修改！", {type: "danger" // 定义颜色主题 
+  <script> new $.zui.Messager("请登录后再修改！", {
+	  type: "danger", // 定义颜色主题 
+	  icon: "exclamation-sign" // 定义消息图标
   }).show();</script>';
   require_once APP_ROOT . '/application/login.php';
   exit;
@@ -25,7 +27,8 @@ if (isset($_POST['form'])) {
     echo '
   <script>
   new $.zui.Messager("保存成功", {
-    type: "primary" // 定义颜色主题 
+    type: "primary", // 定义颜色主题 
+    icon: "ok-sign" // 定义消息图标
   }).show();
   </script>  
   ';
@@ -36,12 +39,16 @@ if (isset($_POST['delDir'])) {
     $delDir = APP_ROOT . $config['path'] . $_POST['delDir'];
     if (deldir($delDir)) {
         echo '
-		<script> new $.zui.Messager("删除成功！", {type: "success" // 定义颜色主题 
+		<script> new $.zui.Messager("删除成功！", {
+			type: "success", // 定义颜色主题 
+			icon: "ok-sign" // 定义消息图标
 		}).show();</script>';
         header("refresh:1;"); // 1s后刷新当前页面
     } else {
         echo '
-		<script> new $.zui.Messager("删除失败！", {type: "danger" // 定义颜色主题 
+		<script> new $.zui.Messager("删除失败！", {
+			type: "danger", // 定义颜色主题 
+			icon: "exclamation-sign" // 定义消息图标
 		}).show();</script>';
         header("refresh:1;"); // 1s后刷新当前页面
     }
@@ -124,7 +131,7 @@ if (isset($_GET['reimg'])) {
                                 <textarea class="form-control" rows="3" name="footer" required="required"><?php echo $config['footer']; ?></textarea>
                             </div>
                             <div class="form-group">
-                                <label>网站配色</label>
+                                <label>网站配色 颜色对应配置文件位于<code>/public/static/zui/theme/</code>文件夹</label>
                                 <select class="chosen-select form-control" name="theme">
                                     <option value="default" <?php if ($config['theme'] == 'default') {echo 'selected';} ?>>默认配色</option>
                                     <option value="red" <?php if ($config['theme'] == 'red') {echo 'selected';} ?>>红色</option>
@@ -473,11 +480,11 @@ if (isset($_GET['reimg'])) {
                         <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
                             <div class="form-group">
                                 <div class="input-control has-icon-left">
-                                    <input type="text" name="user" id="account" class="form-control" placeholder="更改管理账号 - 不填则保持默认">
+                                    <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user'];?>" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
                                     <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                                 </div>
                                 <div class="input-control has-icon-left" style="margin-top: 10px;">
-                                    <input type="text" name="password" id="password" class="form-control" placeholder="更改管理密码 - 不填则保持默认">
+                                    <input type="text" name="password" id="password" class="form-control" value="<?php echo $config['password'];?>" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
                                     <input type="hidden" name="password" id="md5_password">
                                     <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                                 </div>
@@ -495,7 +502,6 @@ if (isset($_GET['reimg'])) {
                                 </div>
                             </div>
                         </form>
-
                         <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
                             <div class="form-group">
                                 <div class="switch">
@@ -510,7 +516,7 @@ if (isset($_GET['reimg'])) {
                                 <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
                             </div>
                             <div class="form-group">
-                                <label>缓存有效期，当前：</label>
+                                <label>统计缓存有效期，当前：</label>
                                 <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
                                 <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1"max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
                             </div>
@@ -566,7 +572,6 @@ if (isset($_GET['reimg'])) {
                                 </div>
                             </div>
                         </form>
-
                         <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
                             <div class="form-group">
                                 <div class="switch">
@@ -640,22 +645,17 @@ if (isset($_GET['reimg'])) {
                                 @$filen_name = $cache_file[$i];													// 图片名称
                                 $url = $config['imgurl'] . $config['path'] . 'suspic/' . $cache_file[$i];   	// 图片网络连接
                                 $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
-                                // 缩略图文件
-//                        $thumb_cache_file = $config['domain'] . '/application/thumb.php?img=' . $file_path . '&width=300&height=300';
-
                                 echo '
-						    <tr>
-							    <td>' . $i . '</td>
-								<td><img data-toggle="lightbox" src="' . get_online_thumbnail($file_path) . '" data-image="' . get_online_thumbnail($file_path) . '" class="img-thumbnail" ></td>
-								<td>' . $filen_name . '</td>
-								<td>' . $file_size . '</td>
-								<td><a class="btn btn-mini" href="' . $url  . '" target="_blank">查看原图</a></td>
-								<td><a class="btn btn-mini btn-success" href="?reimg=' . $filen_name . '">恢复图片</a></td>
-								<td><a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除图片</a></td>
-							</tr>
-							';
-                            }
-                            ?>
+                                <tr>
+                                    <td>' . $i . '</td>
+                                    <td><img data-toggle="lightbox" src="' . get_online_thumbnail($file_path) . '" data-image="' . get_online_thumbnail($file_path) . '" class="img-thumbnail" ></td>
+                                    <td>' . $filen_name . '</td>
+                                    <td>' . $file_size . '</td>
+                                    <td><a class="btn btn-mini" href="' . $url  . '" target="_blank">查看原图</a></td>
+                                    <td><a class="btn btn-mini btn-success" href="?reimg=' . $filen_name . '">恢复图片</a></td>
+                                    <td><a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除图片</a></td>
+                                </tr>
+							';}?>
                             </tbody>
                         </table>
                         <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME'];?>" method="post">
@@ -726,7 +726,6 @@ if (isset($_GET['reimg'])) {
         </div>
     </div>
     </div>
-
     <script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor.js"></script>
     <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
@@ -778,7 +777,7 @@ if (isset($_GET['reimg'])) {
         });
 
         // 更改网页标题
-        document.title = "配置中心 - EasyImage2.0 简单图床"
+        document.title = "图床设置 - <?php echo $config['title']; ?> "
 
         $('[data-tab]').on('shown.zui.tab', function(e) {
             console.clear()

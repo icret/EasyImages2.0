@@ -16,7 +16,9 @@ if (isset($_POST['del_total'])) {
     @deldir($_POST['del_total']);
     echo '
 		<script>
-		new $.zui.Messager("重新统计成功!", {type: "success" // 定义颜色主题 
+		new $.zui.Messager("重新统计成功!", {
+			type: "success", // 定义颜色主题 
+			icon: "ok-sign" // 定义消息图标
 		}).show();
 		</script>
 		';

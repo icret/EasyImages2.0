@@ -29,14 +29,18 @@ function checkLogin()
                     setcookie($postUser, $postPWD, time() + 3600 * 24 * 14, '/');
                     echo '
                         <script> 
-                            new $.zui.Messager("登录成功", {type: "primary" // 定义颜色主题 
+                            new $.zui.Messager("登录成功", {
+								type: "primary", // 定义颜色主题 
+								icon: "ok-sign" // 定义消息图标
                             }).show();
                         </script>';
                     header("refresh:2;url=" . $config['domain'] . "");
                 } else {
                     echo '
                         <script> 
-                        new $.zui.Messager("密码错误", {type: "danger" // 定义颜色主题
+                        new $.zui.Messager("密码错误", {
+							type: "danger", // 定义颜色主题
+							icon: "exclamation-sign" // 定义消息图标
                         }).show();
                         </script>';
                     exit(header("refresh:1;"));
@@ -58,7 +62,9 @@ function checkLogin()
         if ($cookieAdmin != $config_password) {
             echo '
                 <script> 
-                new $.zui.Messager("密码已更改，请重新登录", {type: "special" // 定义颜色主题 
+                new $.zui.Messager("密码已更改，请重新登录", {
+					type: "special", // 定义颜色主题 
+					icon: "exclamation-sign" // 定义消息图标
                 }).show();
                 </script>';
             //header('loction:login.php');
@@ -159,7 +165,7 @@ function static_cdn()
         echo $config['domain'];
     }
 }
-
+/*
 // 获取允许上传的扩展名
 function getExtensions()
 {
@@ -170,6 +176,7 @@ function getExtensions()
     }
     return rtrim($mime, ',');
 }
+*/
 
 // 获取目录大小 如果目录文件较多将很费时
 function getDirectorySize($path)
@@ -344,7 +351,9 @@ function getDel($url, $type)
         if (@unlink($url)) {
             echo '
 			<script>
-            new $.zui.Messager("删除成功，请刷新浏览器；如果开启了CDN，请等待缓存失效!", {type: "success" // 定义颜色主题 
+            new $.zui.Messager("删除成功", {
+                type: "success", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
             }).show();
 			// 延时2s跳转			
             // window.setTimeout("window.location=\'/../ \'",3500);
@@ -353,7 +362,9 @@ function getDel($url, $type)
         } else {
             echo '
 			<script>
-            new $.zui.Messager("删除失败", {type: "black" // 定义颜色主题 
+            new $.zui.Messager("删除失败", {
+                type: "black", // 定义颜色主题 
+                icon: "exclamation-sign" // 定义消息图标
             }).show();
             </script>
 			';
@@ -361,7 +372,9 @@ function getDel($url, $type)
     } else {
         echo '
 		<script>
-		new $.zui.Messager("文件不存在", {type: "danger" // 定义颜色主题 
+		new $.zui.Messager("文件不存在", {
+            type: "danger", // 定义颜色主题 
+            icon: "question-sign" // 定义消息图标
 		}).show();
 		</script>
 		';
@@ -396,7 +409,7 @@ function checkEnv($mode)
 {
     // 初始化安装
     if (!file_exists(APP_ROOT . '/install/install.lock') and file_exists(APP_ROOT . '/install/install.php')) {
-        exit ('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');
+        exit('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');
     }
 
     if ($mode) {

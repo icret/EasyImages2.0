@@ -13,7 +13,7 @@ $config=Array
 	'apiStatus'=>0,
 	'path'=>'/i/',
 	'imgName'=>'default',
-	'maxSize'=>52428800,
+	'maxSize'=>5242880,
 	'maxUploadFiles'=>30,
 	'watermark'=>0,
 	'waterText'=>'简单图床 - img.545141.com',
@@ -74,5 +74,5 @@ $config=Array
 	'cache_freq'=>2,
 	'first_show'=>1,
 	'version'=>'2.4.5',
-	'form'=>'2022-01-18 16:49:36'
+	'form'=>'2022-01-19 16:48:54'
 	);
