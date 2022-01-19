@@ -1,15 +1,9 @@
 <?php
+
 require_once __DIR__ . '/function.php';
-require_once __DIR__ . '/real_ip.php';
-/**
- * 写日志
- * 日志格式：图片名称->源文件名称->上传时间（Asia/Shanghai）->IP地址->浏览器信息->文件相对路径->图片的MD5
- * $filePath 文件相对路径
- * $sourceName 源文件名称
- * $absolutePath 图片的绝对路径
- * $fileSize 图片的大小
- */
-function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "Web upload")
+
+// 压缩图片与图片鉴黄
+function process($filePath, $absolutePath)
 {
     global $config;
     // 压缩图片 后压缩模式，不影响前台输出速度
@@ -28,12 +22,22 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "We
     if ($config['checkImg']) {
         require_once APP_ROOT . '/config/api_key.php';
         @checkImg($config['imgurl'] . $filePath);
-        // 检查通过
-        $checkImg = "Images Passed";
-    } else {
-        // 未开通
-        $checkImg = "Check Closed";
     }
+}
+
+/**
+ * 写日志
+ * 日志格式：图片名称->源文件名称->上传时间（Asia/Shanghai）->IP地址->浏览器信息->文件相对路径->图片的MD5
+ * $filePath 文件相对路径
+ * $sourceName 源文件名称
+ * $absolutePath 图片的绝对路径
+ * $fileSize 图片的大小
+ */
+function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "Web upload")
+{
+    global $config;
+
+    $checkImg = $config['checkImg'] == true ? "Images Passed" : "Check Closed";
 
     $name = trim(basename($filePath), " \t\n\r\0\x0B"); // 当前图片名称
     $log = array($name => array(

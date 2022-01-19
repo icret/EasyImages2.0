@@ -68,11 +68,14 @@ $config=Array
     })();
     </script>',
 	'checkEnv'=>1,
-	'checkImg'=>1,
+	'checkImg'=>0,
 	'checkImg_value'=>50,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
 	'first_show'=>1,
-	'version'=>'2.4.5',
-	'form'=>'2022-01-19 16:48:54'
+	'check_ip'=>0,
+	'check_ip_model'=>0,
+	'check_ip_list'=>'',
+	'version'=>'2.4.6 beta',
+	'form'=>'2022-01-20 01:31:54'
 	);

@@ -502,7 +502,7 @@ if (isset($_GET['reimg'])) {
                                 </div>
                             </div>
                         </form>
-                        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
+                        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                             <div class="form-group">
                                 <div class="switch">
                                     <input type="hidden" name="checkImg" value="0">
@@ -522,6 +522,21 @@ if (isset($_GET['reimg'])) {
                             </div>
                             <div class="form-group">
                                 <div class="switch">
+                                    <input type="hidden" name="check_ip" value="0">
+                                    <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) {echo 'checked="checked"';} ?>>
+                                    <label style="font-weight: bold">开启黑/白IP名单上传</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>输入黑/白名单IP 每个IP以英文,结尾 支持IP段</label>
+                                <textarea class="form-control" rows="5" name="check_ip_list" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
+                            </div>
+                            <div class="form-group">                          
+                                <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if($config['check_ip_model']==0){echo 'checked';}?>> 黑名单模式</label>
+                                <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if($config['check_ip_model']==1){echo 'checked';}?>> 白名单模式</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="switch">
                                     <input type="hidden" name="checkEnv" value="0">
                                     <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) {echo 'checked="checked"';} ?>>
                                     <label style="font-weight: bold">开启PHP插件检测-安全设置检测-版本检测</label>
@@ -533,12 +548,6 @@ if (isset($_GET['reimg'])) {
                                     <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) {echo 'checked="checked"';} ?> title="日志每月保存一个文件；经过测试每月二十万条数据并不影响速度！">
                                     <label style="font-weight: bold">开启上传日志</label>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <p style="font-weight: bold">
-                                    当前版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span>
-                                    Github：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a>
-                                </p>
                             </div>
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
@@ -603,12 +612,6 @@ if (isset($_GET['reimg'])) {
                                     <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) {echo 'checked="checked"';} ?> title="日志每月保存一个文件；经过测试每月二十万条数据并不影响速度！">
                                     <label style="font-weight: bold">开启上传日志</label>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <p style="font-weight: bold">
-                                    当前版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span>
-                                    Github：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a>
-                                </p>
                             </div>
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
@@ -687,7 +690,8 @@ if (isset($_GET['reimg'])) {
                             <p>我的IP：<?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
                             <h5>图床信息</h5>
                             <hr />
-                            <p><?php
+                            <p>
+                                <?php
                                 if (empty($config['TinyImag_key'])) {
                                     echo '<i class="icon icon-times" title="图片压缩TinyImag未填写">TinyImag Key</i><br />';
                                 } else {
@@ -699,8 +703,8 @@ if (isset($_GET['reimg'])) {
                                     echo '<i class="icon icon-check" title="图片审查moderatecontent已填写">Moderatecontent Key</i><br/>';
                                 }
                                 ?>
+                                当前版本：<span class="label label-badge label-outline"><?php echo $config['version']; ?></span> Github：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a>
                             </p>
-                            <p>当前版本：<?php echo $config['version']; ?>，Github版本：<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><?php echo getVersion(); ?></a></p>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="Content9">
@@ -713,7 +717,6 @@ if (isset($_GET['reimg'])) {
                                 <label class="radio-inline"><input type="radio" name="first_show" value="4" <?php if($config['first_show']==4){echo 'checked';}?>><i class="icon icon-html5"> HTML</i></label>
                                 <label class="radio-inline"><input type="radio" name="first_show" value="5" <?php if($config['first_show']==5){echo 'checked';}?>><i class="icon icon-trash"> 删除</i></label>
                             </div>
-
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s") ;?>" placeholder="隐藏的保存">
                             </div>

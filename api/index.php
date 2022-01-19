@@ -11,6 +11,18 @@ $token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非
 // 检查api合法性
 check_api($token);
 
+// 黑/白IP名单上传
+if ($config['check_ip']) {
+    if (checkIP(null, $config['check_ip_list'], $config['check_ip_model'])) {
+        // 上传错误 code:403 未授权IP
+        exit(json_encode(array(
+            "result"    =>  "failed",
+            "code"      =>  403,
+            "message"   =>  "黑名单内或白名单外用户不允许上传",
+        )));
+    }
+}
+
 $handle = new Upload($_FILES['image'], 'zh_CN');
 
 if ($handle->uploaded) {
@@ -113,11 +125,14 @@ if ($handle->uploaded) {
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
-    // 上传日志控制
+    // 后续处理
+    require_once APP_ROOT . '/application/process.php';
+    // 日志
     if ($config['upload_logs']) {
-        require_once APP_ROOT . '/application/logs-write.php';
-        @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, "API upload");
+        @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
     }
+    // 压缩|鉴黄
+    process(config_path() . $handle->file_dst_name, $handle->file_dst_pathname);
 
     unset($handle);
 }
