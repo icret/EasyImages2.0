@@ -4,7 +4,7 @@ require_once 'header.php';
 $config_user = $config['user'];
 
 if (isset($_COOKIE[$config_user ]) and $_COOKIE[$config_user] == $config['password']) {
-    setcookie("admin", null, time() - 1, '/');
+    setcookie($config['user'], null, time() - 1, '/');
     header("Refresh:2;url=../index.php");
     echo '
     <script>
