@@ -472,28 +472,24 @@ function getVersion()
     if ($config['checkEnv']) {
 
         require_once APP_ROOT . '/application/class.version.php';
+        // 获取版本地址
+        $url = "https://api.github.com/repositories/188228357/releases/latest";
+        $getVersion = new getVerson($url);
 
-        if (file_get_contents('https://github.com/icret/EasyImages2.0')) {
-            // 判断服务器是否可以访问GitHub
-            // 获取版本地址
-            $url = "https://api.github.com/repositories/188228357/releases/latest";
-            $getVersion = new getVerson($url);
+        $now = date('dH'); // 当前日期时间
+        $get_ver_day = array('1006', '2501');   // 检测日期的时间
 
-            $now = date('dH'); // 当前日期时间
-            $get_ver_day = array('1006', '2501');   // 检测日期的时间
-
-            foreach ($get_ver_day as $day) {
-                if (empty($getVersion->readJson())) { // 不存在就下载
-                    $getVersion->downJson();
-                } else if ($day == $now) { // 是否在需要更新的日期
-                    $getVersion->downJson();
-                    /*
+        foreach ($get_ver_day as $day) {
+            if (empty($getVersion->readJson())) { // 不存在就下载
+                $getVersion->downJson();
+            } else if ($day == $now) { // 是否在需要更新的日期
+                $getVersion->downJson();
+                /*
             } elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
                 return null;
             */
-                } else { // 返回版本
-                    return $getVersion->readJson();
-                }
+            } else { // 返回版本
+                return $getVersion->readJson();
             }
         }
     }
