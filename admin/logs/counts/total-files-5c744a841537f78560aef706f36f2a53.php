@@ -1,1 +1,0 @@
-{"filename":"5c744a841537f78560aef706f36f2a53","date":"2022012002","total_time":"2022-01-20 02:21:40","dirnum":3,"filenum":2,"usage_space":"36.58KB","todayUpload":1,"yestUpload":0}
