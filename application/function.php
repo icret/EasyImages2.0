@@ -161,8 +161,6 @@ function static_cdn()
     global $config;
     if ($config['static_cdn']) {
         echo $config['static_cdn_url'];
-    } else {
-        echo $config['domain'];
     }
 }
 /*
