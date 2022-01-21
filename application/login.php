@@ -48,7 +48,6 @@ if (isset($_REQUEST['code'])) {
         </script>';
 	}
 }
-
 ?>
 <form class="form-horizontal" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
 	<div class="form-group">
@@ -72,7 +71,6 @@ if (isset($_REQUEST['code'])) {
 			<input class="form-control" type="text" name="code" value="" placeholder="请输入上方4位数验证码 - 注意大小写" />
 		</div>
 	</div>
-
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<div class="checkbox">
@@ -88,7 +86,6 @@ if (isset($_REQUEST['code'])) {
 		</div>
 	</div>
 </form>
-
 <script src="<?php static_cdn(); ?>/public/static/md5.min.js"></script>
 <script>
 	function md5_post() {
@@ -99,6 +96,5 @@ if (isset($_REQUEST['code'])) {
 		return true;
 	}
 </script>
-
 <?php
 require_once APP_ROOT . '/application/footer.php';
