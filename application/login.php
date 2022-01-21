@@ -49,6 +49,10 @@ if (isset($_REQUEST['code'])) {
 	}
 }
 
+if (isset($_GET['install'])) {
+	header('Location: login.php');
+}
+
 ?>
 <form class="form-horizontal" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
 	<div class="form-group">
