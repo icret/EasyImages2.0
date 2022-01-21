@@ -712,7 +712,8 @@ if (isset($_GET['reimg'])) {
             startView: 2,
             minView: 2,
             forceParse: 0,
-            format: "yyyy/mm/dd/"
+            format: "yyyy/mm/dd/",
+            endDate: new Date() // 只能选当前日期之前
         });
 
         // 更改网页标题
