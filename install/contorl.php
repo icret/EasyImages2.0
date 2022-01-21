@@ -9,6 +9,7 @@ if (isset($_POST['password'])) {
   if ($_POST['password'] == $_POST['repassword']) {
 
     $config['password'] = md5($_POST['password']);
+    $config['user'] = $_POST['user'];
   } else {
 
     exit('<script>window.alert("两次密码不一致请重新输入！");location.href="./index.php";</script>');
@@ -50,6 +51,7 @@ if (isset($_POST['del_extra_files'])) {
     @unlink(APP_ROOT . '/README.md');
     @unlink(APP_ROOT . '/config/EasyIamge.lock');
     @deldir(APP_ROOT . "/.github/");
+    @deldir(APP_ROOT . "/.git/");
   }
 }
 
