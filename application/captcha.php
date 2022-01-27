@@ -1,49 +1,61 @@
 <?php
 session_start(); //设置session
 
-$width = 150; //设置图片宽为300像素
-$height = 40; //设置图片高为40像素
+require __DIR__ . "/function.php";
 
-$image = imagecreatetruecolor($width, $height); //设置验证码大小的函数
-$bgcolor = imagecolorallocate($image, 255, 255, 255); //验证码颜色RGB为(255,255,255)#ffffff
-imagefill($image, 0, 0, $bgcolor); //区域填充
+//创建背景画布
+$img_w = 270;
+/*宽*/
+$img_h = 50;
 
-$cap_code = "";
-for ($i = 0; $i < 4; $i++) {
-	$fontsize = 12; //设置字体大小
-	$fontcolor = imagecolorallocate($image, rand(0, 120), rand(0, 120), rand(0, 120));
-	//数字越大，颜色越浅，这里是深颜色0-120
-	$data = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'; //添加字符串
-	$fontcontent = substr($data, rand(0, strlen($data)), 1); //去除值，字符串截取方法
-	$cap_code .= $fontcontent; //.=连续定义变量
-
-	$x = ($i * 150 / 4) + rand(5, 10);
-	$y = rand(5, 10);
-	//设置坐标
-
-	imagestring($image, $fontsize, $x, $y, $fontcontent, $fontcolor);
+$img = imagecreatetruecolor($img_w, $img_h);
+$bg_color = imagecolorallocate($img, 0xcc, 0xcc, 0xcc);
+imagefill($img, 0, 0, $bg_color);
+//生成验证码
+$count = 4;
+$code = "";
+/*生成的验证码内容范围*/
+$charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+$str_len = strlen($charset) - 1;
+/*for循环打印输出验证码*/
+for ($i = 0; $i < $count; $i++) {
+    $code .= $charset[rand(0, $str_len)];
 }
 
-$_SESSION['code'] = $cap_code; //存到session
+/*strtolower函数将输入的验证码自动转换为小写，用户不需要特意区分大小写*/
+$_SESSION['code'] = strtolower($code);
 
-//设置干扰元素，设置雪花点
+/*字体大小*/
+$font_size = 24;
+
+/*字体文件位置*/
+$fontfile = APP_ROOT . $config['textFont'];
+for ($i = 0; $i < $count; $i++) {
+    $font_color = imagecolorallocate($img, mt_rand(0, 100), mt_rand(0, 50), mt_rand(0, 255));
+    imagettftext(
+        $img,
+        $font_size,
+        mt_rand(0, 20) - mt_rand(0, 25),
+        ($img_w * $i / 4) + mt_rand(0, 15),
+        mt_rand($img_h / 2, $img_h),
+        $font_color,
+        realpath($fontfile),
+        $code[$i]
+    );
+}
+/*背景干扰点点*/
 for ($i = 0; $i < 300; $i++) {
-	$inputcolor = imagecolorallocate($image, rand(50, 200), rand(20, 200), rand(50, 200));
-	//设置颜色，20-200颜色比数字浅，不干扰阅读
-	imagesetpixel($image, rand(1, 149), rand(1, 39), $inputcolor);
-	//画一个单一像素的元素
+    $color = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+    imagesetpixel($img, mt_rand(0, $img_w), mt_rand(0, $img_h), $color);
+}
+/*干扰线条*/
+for ($i = 0; $i < 5; $i++) {
+    $color = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+    imageline($img, mt_rand(0, $img_w), 0, mt_rand(0, $img_h), $img_h, $color);
+    imagesetpixel($img, mt_rand(0, $img_w), mt_rand(0, $img_h), $color);
 }
 
-//增加干扰元素，设置横线(先设置线的颜色，在设置横线)
-for ($i = 0; $i < 4; $i++) {
-	$linecolor = imagecolorallocate($image, rand(20, 220), rand(20, 220), rand(20, 220));
-	//设置线的颜色
-
-	imageline($image, rand(1, 149), rand(1, 39), rand(1, 299), rand(1, 149), $linecolor);
-}
-
-//因为有些浏览器，访问的content-type会是文本型，所以我们需要设置成图片的格式类型
-header('Content-Type:image/png');
-
-imagepng($image); //建立png函数
+// 因为有些浏览器，访问的content-type会是文本型，所以我们需要设置成图片的格式类型
+header("content-type:image/png");
+imagepng($img); //建立png函数
 imagedestroy($image);

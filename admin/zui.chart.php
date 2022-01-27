@@ -7,9 +7,13 @@ require_once APP_ROOT . '/config/api_key.php';
 require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/chart.php';
 
+// 检测是否开启统计
+if (!$config['chart_on']) exit(header('Location: ' . $config['domain'] . '?chart#closed'));
+
 // 检测登录
-if (!is_online()) {
+if (!is_who_login('admin')) {
     checkLogin();
+    exit(require_once APP_ROOT . '/application/footer.php');
 }
 // 删除统计文件
 if (isset($_POST['del_total'])) {
@@ -45,9 +49,7 @@ if (is_array($char_data)) {
         $chart_disk .= $value;
     }
 }
-
 ?>
-
 <style>
     .autoshadow {
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
@@ -81,7 +83,6 @@ if (is_array($char_data)) {
             <hr />
             <?php printf("%u 张", read_total_json('filenum')); ?>
         </div>
-
         <div class="col-md-2 col-xs-2 alert alert-primary autoshadow">
             缓存文件
             <hr />
@@ -108,8 +109,6 @@ if (is_array($char_data)) {
             <?php echo getDistUsed(disk_free_space('.')); ?>
         </div>
     </div>
-
-
     <div class="col-md-12  col-xs-12">
         <div class="col-md-6  col-xs-12">
             <h4>文件统计（张）</h4>
@@ -159,8 +158,6 @@ if (is_array($char_data)) {
     };
     var myBarChart = $('#myBarChart').barChart(data, options);
 
-
-
     // 最近30上传趋势与空间占用-折线图    
     var ctx = $("#myChart").get(0).getContext("2d");
 
@@ -193,7 +190,6 @@ if (is_array($char_data)) {
     };
 
     var myLineChart = $("#myChart").lineChart(data, options);
-
 
     // 硬盘统计-饼状图
     var data = [{

@@ -4,6 +4,12 @@ require __DIR__ . '/application/function.php';
 require APP_ROOT . '/application/class.upload.php';
 require APP_ROOT . '/application/WaterMask.php';
 
+// 检查登录
+if ($config['mustLogin']) {
+    checkLogin();
+    exit;
+}
+
 // 黑/白IP名单上传
 if ($config['check_ip']) {
     if (checkIP(null, $config['check_ip_list'], $config['check_ip_model'])) {
@@ -98,11 +104,16 @@ if ($handle->uploaded) {
         // 上传成功后返回json数据
         $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
 
-        // 判断PHP版本启用删除
-        if (PHP_VERSION >= '7') {
-            $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        // 关闭上传后显示加密删除链接
+        if ($config['show_user_hash_del']) {
+            // 判断PHP版本启用删除
+            if (PHP_VERSION >= '7') {
+                $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+            } else {
+                $delUrl = "Sever PHP version lower 7.0";
+            }
         } else {
-            $delUrl = "Sever PHP version lower 7.0 and does't support deletion";
+            $delUrl = "Admin closed delete";
         }
 
         $reJson = array(
@@ -119,7 +130,6 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  400,
             "message"   =>  $handle->error,
-            //"log"       =>  $handle->log,
         );
         unset($handle);
         header('Content-Type:application/json; charset=utf-8');

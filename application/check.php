@@ -9,7 +9,7 @@ foreach ($expand as $val) {
     if (!extension_loaded($val)) {
         echo '
         <script>
-        new $.zui.Messager("扩展:' . $val . '- 未安装,可能导致图片上传失败！请尽快修复。", {
+        new $.zui.Messager("扩展:' . $val . '- 未安装,可能导致图片上传失败! 请尽快修复。", {
 			type: "black", // 定义颜色主题
 			icon: "exclamation-sign" // 定义消息图标
         }).show();
@@ -18,10 +18,10 @@ foreach ($expand as $val) {
     }
 }
 // 检测是否更改默认域名
-if (strstr('localhost', $_SERVER['HTTP_HOST'])) {
+if (strstr('localhost|127.0.0.1', $_SERVER['HTTP_HOST'])) {
     echo '
     <script>
-    new $.zui.Messager("请修改默认域名，可能会导致图片访问异常！", {type: "black" // 定义颜色主题 
+    new $.zui.Messager("请修改默认域名，可能会导致网站访问异常! ", {type: "black" // 定义颜色主题 
     }).show();
     </script>
     ';
@@ -30,7 +30,7 @@ if (strstr('localhost', $_SERVER['HTTP_HOST'])) {
 if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     echo '
     <script>
-    new $.zui.Messager("请修改默认密码，否则会有泄露风险！", {type: "warning" // 定义颜色主题 
+    new $.zui.Messager("请修改默认密码，否则会有泄露风险! ", {type: "warning" // 定义颜色主题 
     }).show();
     </script>
     ';
@@ -43,7 +43,7 @@ if (!is_file(APP_ROOT . '/config/EasyIamge.lock')) {
             <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                <i class="icon icon-heart">	</i><a href="https://www.545141.com/846.html" target="_blank">简单图床-EasyImage2.0</a> 安装环境检测</h4>
+                <i class="icon icon-heart">	</i><a href="https://blog.png.cm/846.html" target="_blank">简单图床-EasyImage2.0</a> 安装环境检测</h4>
             </div>
             <div class="modal-body">
                 <h4>说明:</h4>
@@ -100,7 +100,8 @@ if (!is_file(APP_ROOT . '/config/EasyIamge.lock')) {
         </div>
     </div>
 </div>
-        <script>$("#myModal-1").modal({
+        <script>
+        $("#myModal-1").modal({
             keyboard: true,
             moveable: true,
             backdrop: "static",//点击空白处不关闭对话框

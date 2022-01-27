@@ -97,18 +97,23 @@ if ($handle->uploaded) {
         // 上传成功后返回json数据
         $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
 
-        // 判断PHP版本启用删除
-        if (PHP_VERSION >= '7') {
-            $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+        // 关闭上传后显示加密删除链接
+        if ($config['show_user_hash_del']) {
+            // 判断PHP版本启用删除
+            if (PHP_VERSION >= '7') {
+                $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+            } else {
+                $delUrl = "Sever PHP version lower 7.0";
+            }
         } else {
-            $delUrl = "Sever PHP version lower 7.0 and does't support deletion";
+            $delUrl = "Admin closed delete";
         }
 
         $reJson = array(
             "result" => "success",
             "code"   => 200,
             "url"    => $imageUrl,
-            "thumb"  => $config['domain'] . '/application/thumb.php?img=' . config_path() . $handle->file_dst_name . '&width=300&height=300',
+            "thumb"  => $config['domain'] . '/application/thumb.php?img=' . config_path() . $handle->file_dst_name . '&width=258&height=258',
             "del"    => $delUrl,
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
@@ -119,7 +124,6 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  403,
             "message"   =>  $handle->error,
-            //"log"       =>  $handle->log,
         );
 
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));

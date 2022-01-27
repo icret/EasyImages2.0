@@ -1,8 +1,13 @@
 <?php
 require_once __DIR__ . '/../config/base.php';
 require_once APP_ROOT . '/config/config.php';
+require_once APP_ROOT . '/config/config.guest.php';
 
-// 判断GIF图片是否为动态
+/**
+ * 判断GIF图片是否为动态
+ * @param $filename string 文件
+ * @return int
+ */
 function isAnimatedGif($filename)
 {
     $fp = fopen($filename, 'rb');
@@ -11,55 +16,29 @@ function isAnimatedGif($filename)
     return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? 0 : 1;
 }
 
-// 校验登录
+/**
+ * 校验登录
+ */
 function checkLogin()
 {
+    global $guestConfig;
     global $config;
-    // 获取配置密码 配置密码为md5加密
-    $config_password = $config['password'];
-    $config_user = $config['user'];
 
-    // 如果存在post并且通过设置cookie
-    if (isset($_POST['user'])) {
-        $postUser = $_POST['user'];
-        if ($postUser === $config_user) {
-            if (isset($_POST['password'])) {
-                $postPWD = $_POST['password'];
-                if ($postPWD === $config_password) {
-                    setcookie($postUser, $postPWD, time() + 3600 * 24 * 14, '/');
-                    echo '
-                        <script> 
-                            new $.zui.Messager("登录成功", {
-								type: "primary", // 定义颜色主题 
-								icon: "ok-sign" // 定义消息图标
-                            }).show();
-                        </script>';
-                    header("refresh:2;url=" . $config['domain'] . "");
-                } else {
-                    echo '
-                        <script> 
-                        new $.zui.Messager("密码错误", {
-							type: "danger", // 定义颜色主题
-							icon: "exclamation-sign" // 定义消息图标
-                        }).show();
-                        </script>';
-                    exit(header("refresh:1;"));
-                }
-            }
-        } else {
-            echo '
-			<script> 
-                $.zui.Messager("用户名错误", {type: "danger" // 定义颜色主题
-            	}).show();
+    // 无cookie
+    if (empty($_COOKIE['auth'])) {
+        echo '
+            <script>
+            new $.zui.Messager("请登录后再上传!", {type: "danger" // 定义颜色主题 
+            }).show();
             </script>';
-            exit(header("refresh:2;"));
-        }
+        header("refresh:1;url=" . $config['domain'] . "/admin/index.php");
     }
-    // 存在cookie 但是cookie错误
-    if (isset($_COOKIE[$config_user])) {
-        $cookieAdmin = $_COOKIE[$config_user];
 
-        if ($cookieAdmin != $config_password) {
+    // 存在cookie 但是cookie错误
+    if (isset($_COOKIE['auth'])) {
+        $getCOK = unserialize($_COOKIE['auth']);
+
+        if (!$getCOK) {
             echo '
                 <script> 
                 new $.zui.Messager("密码已更改，请重新登录", {
@@ -67,24 +46,25 @@ function checkLogin()
 					icon: "exclamation-sign" // 定义消息图标
                 }).show();
                 </script>';
-            //header('loction:login.php');
-            exit(include __DIR__ . '/login.php');
+            header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
         }
-    }
 
-    // 无cookie
-    if (empty($_COOKIE[$config_user])) {
-        echo '
-            <script>
-            new $.zui.Messager("请登录后再上传！", {type: "danger" // 定义颜色主题 
-            }).show();
-            </script>';
-        //header('loction:login.php');
-        exit(include __DIR__ . '/login.php');
+        if ($getCOK[1] != $config['password'] && $getCOK[1] !== $guestConfig[$getCOK[0]]) {
+            echo '
+                <script> 
+                new $.zui.Messager("密码已更改，请重新登录", {
+					type: "special", // 定义颜色主题 
+					icon: "exclamation-sign" // 定义消息图标
+                }).show();
+                </script>';
+            exit(header("refresh:2;url=" . $config['domain'] . "/admin/index.php"));
+        }
     }
 }
 
-// 仅允许登录后上传
+/**
+ * 仅允许登录后上传
+ */
 function mustLogin()
 {
     global $config;
@@ -93,7 +73,11 @@ function mustLogin()
     }
 }
 
-// 检查配置文件中目录是否存在是否可写并创建相应目录
+/**
+ * 检查配置文件中目录是否存在是否可写并创建相应目录
+ * @param null $path 要创建的路径
+ * @return string
+ */
 function config_path($path = null)
 {
     global $config;
@@ -109,11 +93,14 @@ function config_path($path = null)
     if (!is_writable($img_path)) {
         @chmod($img_path, 0755);
     }
-
     return $img_path;
 }
 
-// 图片命名规则
+/**
+ * 图片命名规则
+ * @param null $source 源文件名称
+ * @return false|int|string|null
+ */
 function imgName($source = null)
 {
     global $config;
@@ -155,12 +142,16 @@ function imgName($source = null)
     }
 }
 
-// 静态文件CDN
+/**
+ * 静态文件CDN
+ */
 function static_cdn()
 {
     global $config;
     if ($config['static_cdn']) {
         echo $config['static_cdn_url'];
+    } else {
+        echo $config['domain'];
     }
 }
 /*
@@ -176,7 +167,11 @@ function getExtensions()
 }
 */
 
-// 获取目录大小 如果目录文件较多将很费时
+/**
+ * 获取目录大小 如果目录文件较多将很费时
+ * @param $path string 路径
+ * @return int
+ */
 function getDirectorySize($path)
 {
     $bytestotal = 0;
@@ -208,11 +203,13 @@ function getFileNumber($dir)
     return $num;
 }
 
-/* 
+/**
  * 图片展示页面
  * getDir()取文件夹列表，getFile()取对应文件夹下面的文件列表,二者的区别在于判断有没有“.”后缀的文件，其他都一样
  * 获取文件目录列表,该方法返回数组
- * 调用方法getDir("./dir")……
+ * @param $dir string 路径
+ * @return mixed
+ * @example getDir("./dir")
  */
 function getDir($dir)
 {
@@ -232,7 +229,11 @@ function getDir($dir)
     return $dirArray;
 }
 
-// 获取文件列表
+/**
+ * 获取文件列表
+ * @param $dir string 目录
+ * @return mixed
+ */
 function getFile($dir)
 {
     $fileArray[] = NULL;
@@ -256,10 +257,47 @@ function getFile($dir)
     return $fileArray;
 }
 
-/* 递归函数实现遍历指定文件下的目录与文件数量
+/**
+ * 获取文件夹文件列表或数量
+ * @param string $dir_fileName_suffix 获取文件列表：目录+文件名*:全匹配+文件后缀 *: 全匹配 {jpg,png,gif}:匹配指定格式
+ *                                    递归文件数量：目录
+ * @example get_file_by_glob(__DIR__ . '/i/thumbnails/*.*', $type = 'list'); // 获取目录文件列表
+ * @example get_file_by_glob(__DIR__ . '/i/',  $type = 'number');            // 递归获取文件夹数量
+ * @param string $type list|number 返回列表还是数量
+ * @return array|int  返回数组|数量
+ */
+function get_file_by_glob($dir_fileName_suffix, $type = 'list')
+{
+
+    $glob = glob($dir_fileName_suffix, GLOB_BRACE);
+
+    // 获取所有文件
+    if ($type == 'list') {
+        foreach ($glob as $v) {
+            if (is_file($v)) $res[] =  basename($v);
+        }
+    }
+
+    if ($type == 'number') {
+        $res = 0;
+        $glob = glob($dir_fileName_suffix); //把该路径下所有的文件存到一个数组里面;
+        foreach ($glob as $v) {
+            if (is_file($v)) {
+                $res++;
+            } else {
+                $res += get_file_by_glob($v . "/*", $type = 'number');
+            }
+        }
+    }
+    return $res;
+}
+
+/**
+ * 递归函数实现遍历指定文件下的目录与文件数量
  * 用来统计一个目录下的文件和目录的个数
  * echo "目录数为:{$dirn}<br>";
  * echo "文件数为:{$filen}<br>";
+ * @param $file string 目录
  */
 function getdirnum($file)
 {
@@ -281,9 +319,12 @@ function getdirnum($file)
     closedir($dir);
 }
 
-/* 把文件或目录的大小转化为容易读的方式
+/**
+ * 把文件或目录的大小转化为容易读的方式
  * disk_free_space  - 磁盘可用空间(比如填写D盘某文件夹，则会现在D盘剩余空间）
  * disk_total_space — 磁盘总空间(比如填写D盘某文件夹，则会现在D盘总空间）
+ * @param $number
+ * @return string
  */
 function getDistUsed($number)
 {
@@ -303,16 +344,21 @@ function getDistUsed($number)
     return $number . $dw;
 }
 
-// 根据url填写active
+/**
+ * 根据url填写active
+ * @param $url string 要过滤的链接
+ * @return string
+ */
 function getActive($url)
 {
     $arr = $_SERVER['SCRIPT_NAME'];
     if (strpos($arr, $url)) {
-        return 'active';
+        return 'class="active;"';
     }
 }
 
-/* 加密/解密图片路径
+/**
+ * 加密/解密图片路径
  * @param string $data 要加密的内容
  * @param int $mode =1或0  1解密 0加密
  */
@@ -328,7 +374,11 @@ function urlHash($data, $mode)
     }
 }
 
-// 删除指定文件
+/**
+ * 删除指定文件
+ * @param $url string 文件
+ * @param $type string 模式
+ */
 function getDel($url, $type)
 {
     global $config;
@@ -381,17 +431,24 @@ function getDel($url, $type)
     clearstatcache();
 }
 
-// 获取登录状态
-function is_online()
+/**
+ * 判断是否此用户登录
+ * @param $user string 需要判断的用户名
+ * @return bool 是|否
+ */
+function is_who_login($user)
 {
     global $config;
-    $config_user = $config['user'];
-    $config_password = $config['password'];
-    if (empty($_COOKIE[$config_user]) || $_COOKIE[$config_user] != $config_password) {
-        return false;
-    } else {
-        return true;
+    global $guestConfig;
+    $getCOK = unserialize($_COOKIE['auth']);
+    if (!$getCOK) return false;
+    if ($user == 'admin') {
+        if ($getCOK[1] == $config['password']) return true;
     }
+    if ($user == 'guest') {
+        if ($getCOK[0] !== $guestConfig[$getCOK[0]]) return true;
+    }
+    return false;
 }
 
 /**
@@ -402,6 +459,7 @@ function is_online()
  * 检测是否更改默认域名
  *
  * 检测是否修改默认密码
+ * @param $mode bool 是否开启检测
  */
 function checkEnv($mode)
 {
@@ -415,8 +473,10 @@ function checkEnv($mode)
     }
 }
 
-
-// 前端改变图片长宽
+/**
+ * 前端改变图片长宽
+ * @return string 裁剪参数
+ */
 function imgRatio()
 {
     global $config;
@@ -461,8 +521,8 @@ function imgRatio()
 
 /**
  * 定时获取GitHub 最新版本
+ * @return mixed|null 读取版本信息
  */
-
 function getVersion()
 {
     global $config;
@@ -495,7 +555,11 @@ function getVersion()
     return null;
 }
 
-// 删除非空目录
+/**
+ * 删除非空目录
+ * @param $dir string 要删除的目录
+ * @return bool true|false
+ */
 function deldir($dir)
 {
     if (file_exists($dir)) {
@@ -517,7 +581,13 @@ function deldir($dir)
     }
 }
 
-// curl访问网站并返回解码过的json信息
+
+/**
+ * 图片监黄curl 访问网站并返回解码过的json信息
+ * @param $img string 图片url
+ * @param null $url 访问的网址
+ * @return mixed
+ */
 function moderatecontent_json($img, $url = null)
 {
     global $config;
@@ -541,7 +611,10 @@ function moderatecontent_json($img, $url = null)
     return $output;
 }
 
-// 检查图片是否违规
+/**
+ * 检查图片是否违规
+ * @param $imageUrl string 图片url
+ */
 function checkImg($imageUrl)
 {
     global $config;
@@ -563,7 +636,10 @@ function checkImg($imageUrl)
     }
 }
 
-// 还原被审查的图片
+/**
+ * 还原被审查的图片
+ * @param $name string 要还原的图片
+ */
 function re_checkImg($name)
 {
     global $config;
@@ -574,7 +650,10 @@ function re_checkImg($name)
     rename($now_path_file, $to_file);
 }
 
-// 创建缩略图
+/**
+ * 创建缩略图
+ * @param $imgName string 需要创建缩略图的名称
+ */
 function creat_thumbnail_images($imgName)
 {
     require_once __DIR__ . '/class.thumb.php';
@@ -588,11 +667,15 @@ function creat_thumbnail_images($imgName)
     }
     if (!isAnimatedGif($old_img_path)) {                                                                   // 仅针对非gif创建图片缩略图
         $new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName;    // 缩略图缓存的绝对路径
-        Thumb::out($old_img_path, $new_imgName, 300, 300);                                    // 保存缩略图
+        Thumb::out($old_img_path, $new_imgName, 258, 258);                                    // 保存缩略图
     }
 }
 
-// 根据请求网址路径返回缩略图网址
+/**
+ * 根据请求网址路径返回缩略图网址
+ * @param $url string 图片链接
+ * @return string
+ */
 function return_thumbnail_images($url)
 {
     global $config;
@@ -612,13 +695,17 @@ function return_thumbnail_images($url)
     }
 }
 
-// 在线输出缩略图
+/**
+ * 在线输出缩略图
+ * @param $imgUrl string 图片链接
+ * @return string 缩略图链接
+ */
 function get_online_thumbnail($imgUrl)
 {
     global $config;
     if ($config['thumbnail']) {
         $imgUrl = str_replace($config['imgurl'], '', $imgUrl);
-        return $config['domain'] . '/application/thumb.php?img=' . $imgUrl . '&width=300&height=300';
+        return $config['domain'] . '/application/thumb.php?img=' . $imgUrl . '&width=258&height=258';
     } else {
         return $imgUrl;
     }
@@ -632,6 +719,8 @@ function get_online_thumbnail($imgUrl)
 function creat_thumbnail_by_list($imgUrl)
 {
     global $config;
+
+    ini_set('max_execution_time', '60');  // 脚本运行的时间（以秒为单位）0不限制
 
     // 关闭缩略图
     if ($config['thumbnail'] === 0) {
@@ -662,7 +751,8 @@ function creat_thumbnail_by_list($imgUrl)
         // 缓存文件是否存在
         if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
             // 存在则返回缓存文件
-            return $config['imgurl'] . $config['path'] . 'thumbnails/' . $imgName;
+            $tumImgUrl = $config['imgurl'] . $config['path'] . 'thumbnails/' . $imgName;
+            return $tumImgUrl;
         } else {
 
             // PHP老他妈缺图像扩展支持，不是缺webp就是缺ico，总不能都他妈装上吧，直接把这些二货扩展名忽略
@@ -687,23 +777,26 @@ function creat_thumbnail_by_list($imgUrl)
             $new_imgName = $cache_path . $imgName;
 
             // 创建并保存缩略图
-            Thumb::out($abPathName, $new_imgName, 300, 300);
+            Thumb::out($abPathName, $new_imgName, 258, 258);
 
             // 输出缩略图
-            return $new_imgName;
+            // return $new_imgName;
+            return $imgUrl;
         }
     }
 }
 
-/* 获取当前页面完整URL地址
- * 返回 http://localhost/ww/index.php
+
+/**
+ * 获取当前页面完整URL地址
  * https://www.php.cn/php-weizijiaocheng-28181.html
- * $search 返回指定搜索文字之前的内容(不含搜索文字)
+ * @param null $search string 返回指定搜索文字之前的内容(不含搜索文字)
+ * @return false|string 返回读取网址
  */
 function get_whole_url($search = null)
 {
     $sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
-    $php_self = $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME'];
+    $php_self = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME'];
     $path_info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
     $relate_url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
     $whole_domain = $sys_protocal . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . $relate_url;
@@ -715,7 +808,14 @@ function get_whole_url($search = null)
     }
 }
 
-// 配置写入
+/**
+ * 配置写入
+ * @param $filename string 要存储的源文件名称
+ * @param $values array 获取到的数组
+ * @param string $var 源文件的数组名称
+ * @param bool $format 不知道啥作用
+ * @return bool
+ */
 function cache_write($filename, $values, $var = 'config', $format = false)
 {
     $cachefile = $filename;
@@ -723,7 +823,13 @@ function cache_write($filename, $values, $var = 'config', $format = false)
     return writefile($cachefile, $cachetext);
 }
 
-// 数组转换成字串
+/**
+ * 数组转换成字串
+ * @param array $array 要转换的数组
+ * @param bool $format 不知道啥作用
+ * @param int $level 层级
+ * @return string
+ */
 function arrayeval($array, $format = false, $level = 0)
 {
     $space = $line = '';
@@ -749,7 +855,13 @@ function arrayeval($array, $format = false, $level = 0)
     return $evaluate;
 }
 
-// 配置写入文件
+/**
+ * 配置写入文件
+ * @param $filename string 要写入的文件名
+ * @param $writetext array 要写入的文字
+ * @param string $openmod 写文件模式
+ * @return bool
+ */
 function writefile($filename, $writetext, $openmod = 'w')
 {
     if (false !== $fp = fopen($filename, $openmod)) {
@@ -762,12 +874,10 @@ function writefile($filename, $writetext, $openmod = 'w')
     }
 }
 
-/*
+/**
  * 获得用户的真实IP地址
- * <br />来源：ecshop
- * <br />$_SERVER和getenv的区别，getenv不支持IIS的isapi方式运行的php
- * @access  public
- * @return  string
+ * 来源：ecshop
+ * @return  mixed|string string
  */
 function real_ip()
 {
@@ -812,15 +922,15 @@ function real_ip()
     return $realip;
 }
 
-/*
+/**
  * IP黑白名单检测，支持IP段检测
  * @param string $ipNow 要检测的IP
  * @param string|array $ipList  白名单IP或者黑名单IP
  * @return boolean false|true true:白名单模式，false:黑名单模式
+ * @return bool
  */
 function checkIP($ipNow = null, $ipList = null, $model = false)
 {
-    // global $config;
     $ipNow = isset($ipNow) ?: real_ip();
 
     // 将IP文本转换为数组

@@ -10,7 +10,7 @@ require_once APP_ROOT . '/config/api_key.php';
 
 /**
  * @param string $floder 文件夹
- * @param string 压缩方式Imgcompress / TinyImag
+ * @param string 压缩方式Imgcompress / TinyPng
  */
 function compress($floder, $type = 'Imgcompress', $source = '')
 {
@@ -20,11 +20,12 @@ function compress($floder, $type = 'Imgcompress', $source = '')
     if ($type == 'Imgcompress') {
 
         $pic = getFile($floder);    // 文件夹路径
+        $percent = $config['compress_ratio'] / 100; // 压缩率
         foreach ($pic as $value) {
             $boxImg = $floder . $value;
             // 跳过动态图片
             if (!isAnimatedGif($boxImg)) {
-                $img = new Imgcompress($boxImg, 1);
+                $img = new Imgcompress($boxImg, $percent);
                 $img->compressImg($boxImg);
                 echo '<pre>' . $boxImg . '</pre><br />';
                 // 释放
@@ -33,13 +34,13 @@ function compress($floder, $type = 'Imgcompress', $source = '')
         }
     }
 
-    if ($type == 'TinyImg') {
-        if (empty($config['TinyImag_key'])) {
-            exit('请先申请TinyImag key并保存再试！');
+    if ($type == 'TinyPng') {
+        if (empty($config['TinyPng_key'])) {
+            exit('请先申请TinyPng key并保存再试!');
         }
         $folder =  '..' . $config['path'] . $source;
         $tinyImg = new TinyImg();
-        $key = $config['TinyImag_key'];
+        $key = $config['TinyPng_key'];
         $input = $folder; //这个文件夹下的文件会被压缩
         $output = $folder; //压缩的结果会被保存到这个文件夹中
         $tinyImg->compressImgsFolder($key, $input, $output);

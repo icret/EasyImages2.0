@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__ . "/header.php";
 
+if (!$config['show_exif_info']) exit(header('Location: ' . $config['domain'] . '?exif#closed'));
+
 // 获取图片
 if (isset($_GET['img'])) {
 
@@ -28,19 +30,19 @@ clearstatcache();
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <a href="<?php echo $img; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo $img; ?>" id="img1" width="50%" height="50%" class="img-rounded" alt=" <?php echo basename($img); ?>"></a>
+        <a href="<?php echo $config['imgurl'] . $img; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo $config['imgurl'] . $img; ?>" id="img1" width="50%" height="50%" class="img-rounded" alt=" <?php echo basename($img); ?>"></a>
     </div>
     <div class="col-md-6">
-        <h4>图像名称: <?php echo pathinfo($img, PATHINFO_FILENAME); ?></h4>
-        <h4>图像类型: <?php echo pathinfo($img, PATHINFO_EXTENSION); ?></h4>
-        <h4>图像宽高: <span id="wh"></span>px</h4>
-        <h4>图像大小: <?php echo getDistUsed($imgSize); ?></h4>
+        <h4>图片名称: <?php echo pathinfo($img, PATHINFO_FILENAME); ?></h4>
+        <h4>图片类型: <?php echo pathinfo($img, PATHINFO_EXTENSION); ?></h4>
+        <h4>图片宽高: <span id="wh"></span>px</h4>
+        <h4>图片大小: <?php echo getDistUsed($imgSize); ?></h4>
         <h4>上传时间: <?php echo date("Y-m-d H:i:s", $upTime); ?></h4>
         <h4>使用设备: <span id="makeAndModel"></span></h4>
         <div class="col-md-12">
             <p>
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseExample">更多Exif信息 <i class="icon icon-caret-down"></i></button>
-                <a class="btn btn-primary btn-sm" href="<?php echo  $getIMG; ?>" target="_blank">下载图片 <i class="icon icon-download-alt"></i></a>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseExample">Exif 信息 <i class="icon icon-caret-down"></i></button>
+                <a class="btn btn-primary btn-sm" href="<?php echo  $getIMG; ?>" target="_blank">查看图片 <i class="icon icon-picture"></i></a>
                 <a class="btn btn-primary btn-sm" href="/application/del.php?url=<?php echo  $getIMG; ?>" target="_blank">删除图片 <i class="icon icon-trash"></i></a>
             </p>
             <div class="collapse" id="collapseExample">
@@ -141,7 +143,7 @@ clearstatcache();
         });
     }
     // 更改网页标题
-    document.title = "图片<?php echo basename($img); ?>的Exif信息 - <?php echo $config['title']; ?> "
+    document.title = "图片<?php echo basename($img); ?>的Exif信息 - <?php echo $config['title']; ?>"
 </script>
 <?php
 include_once __DIR__ . "/footer.php";

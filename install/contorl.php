@@ -52,6 +52,6 @@ if (isset($_POST['del_extra_files'])) {
 echo '
 <script>  
 window.alert("安装成功，即将为您跳转到登陆界面！");
-location.href="../application/login.php";  
+location.href="../admin/index.php";  
 </script>  
 ';

@@ -1,0 +1,36 @@
+/**
+ * Marquee by javascript
+ * @authors richard chen
+ * @date    2014-06-12
+ * @version 1.0
+ * @editor Icret for EasyImage2.0
+ * @date 2022-1-26 03:36:32
+ */
+.marquee {
+    width: 350px;
+    height: 30px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    line-height: 30px;
+}
+
+.marquee .wrap {
+    width: 350px;
+    height: 30px;
+    float: left;
+    overflow: hidden;
+    position: relative;
+}
+
+.marquee #marquee2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.marquee #marquee2 a {
+    display: block;
+    font-size: 14px;
+    overflow: hidden;
+    color: #666;
+}

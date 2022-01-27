@@ -1,85 +1,90 @@
 <?php
 require_once 'application/header.php';
-
 // 公告
-if (isset($config['tips'])) {
-  echo '<ul style="list-style: none;margin:1px 1px 30px 1px;"><li class="icon icon-bullhorn text-muted"> ' . $config['tips'] . '</li></ul>';
-}
+if (!empty($config['tips'])) echo '
+<div class="marquee">
+<div class="wrap">
+  <div id="marquee2">
+    ' . $config['tips'] . '
+  </div>
+</div>
+</div>
+';
+
 // 检查登录
 mustLogin();
 ?>
 
-<div class="container">
-  <div class="col-md-12">
-    <div id='upShowID' class="uploader col-md-10 col-md-offset-1" data-ride="uploader" data-url="file.php">
-      <div class="uploader-message text-center">
-        <div class="content"></div>
-        <button type="button" class="close">×</button>
-      </div>
-      <div class="uploader-files file-list file-list-lg" data-drag-placeholder="Ctrl+V粘贴/选择文件/将图片直接拖拽至此处"></div>
-      <div class="uploader-actions">
-        <div class="uploader-status pull-right text-muted"></div>
-        <button type="button" class="btn btn-link uploader-btn-browse">
-          <i class="icon icon-plus"></i>选择文件</button>
-        <button type="button" class="btn btn-link uploader-btn-start">
-          <i class="icon icon-cloud-upload"></i>开始上传</button>
-        <button type="button" class="btn btn-link uploader-btn-stop">
-          <i class="icon icon-pause"></i>暂停上传</button>
-      </div>
+<div class="col-md-12">
+  <div id='upShowID' class="uploader col-md-10 col-md-offset-1" data-ride="uploader" data-url="file.php">
+    <div class="uploader-message text-center">
+      <div class="content"></div>
+      <button type="button" class="close">x</button>
     </div>
-    <div class="col-md-10 col-md-offset-1 col-xs-12">
-      <ul class="nav nav-tabs">
-        <li <?php if($config['first_show']==1){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"></i> 直链</a>
-        </li>
-        <li <?php if($config['first_show']==2){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"></i> 论坛代码</a>
-        </li>
-        <li <?php if($config['first_show']==3){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"></i> MarkDown</a>
-        </li>
-        <li <?php if($config['first_show']==4){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"></i> HTML</a>
-        </li>
-        <li <?php if($config['first_show']==5){echo 'class="active"';}?>>
-          <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"></i> 删除</a>
-        </li>
-      </ul>
-      <div class="tab-content" style="text-align:right">
-        <div class="tab-pane fade <?php if($config['first_show']==1){echo 'active in';}?>" id="tab2Content1">
-          <textarea class="form-control" rows="5" id="links" readonly></textarea>
-          <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-          <button id="btnLinks" class="btn copyBtn1" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
-        </div>
-        <div class="tab-pane fade <?php if($config['first_show']==2){echo 'active in';}?>" id="tab2Content2">
-          <textarea class="form-control" rows="5" id="bbscode" readonly></textarea>
-          <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-          <button id="btnBbscode" class="btn copyBtn2" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
-        </div>
-        <div class="tab-pane fade <?php if($config['first_show']==3){echo 'active in';}?>" id="tab2Content3">
-          <textarea class="form-control" rows="5" id="markdown" readonly></textarea>
-          <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-          <button id="btnMarkDown" class="btn copyBtn3" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
-        </div>
-        <div class="tab-pane fade <?php if($config['first_show']==4){echo 'active in';}?>" id="tab2Content4">
-          <textarea class="form-control" rows="5" id="html" readonly></textarea>
-          <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-          <button id="btnHtml" class="btn copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
-        </div>
-        <div class="tab-pane fade <?php if($config['first_show']==5){echo 'active in';}?>" id="tab2Content5">
-          <pre><textarea class="form-control" rows="5" id="del"  readonly></textarea></pre>
-          <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-          <button id="btndel" class="btn copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
-        </div>
+    <div class="uploader-files file-list file-list-lg" data-drag-placeholder="Ctrl+V粘贴/选择文件/将图片直接拖拽至此处" style="min-height: 160px; border-style: dashed;"></div>
+    <div class="uploader-actions">
+      <div class="uploader-status pull-right text-muted"></div>
+      <button type="button" class="btn btn-link uploader-btn-browse">
+        <i class="icon icon-plus"></i>选择文件</button>
+      <button type="button" class="btn btn-link uploader-btn-start">
+        <i class="icon icon-cloud-upload"></i>开始上传</button>
+      <button type="button" class="btn btn-link uploader-btn-stop">
+        <i class="icon icon-pause"></i>暂停上传</button>
+    </div>
+  </div>
+  <div class="col-md-10 col-md-offset-1">
+    <ul class="nav nav-tabs">
+      <li <?php if ($config['upload_first_show'] == 1) echo 'class="active"'; ?>>
+        <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"></i> 直链</a>
+      </li>
+      <li <?php if ($config['upload_first_show'] == 2) echo 'class="active"'; ?>>
+        <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"></i> 论坛代码</a>
+      </li>
+      <li <?php if ($config['upload_first_show'] == 3) echo 'class="active"'; ?>>
+        <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"></i> MarkDown</a>
+      </li>
+      <li <?php if ($config['upload_first_show'] == 4) echo 'class="active"'; ?>>
+        <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"></i> HTML</a>
+      </li>
+      <li <?php if ($config['upload_first_show'] == 5) echo 'class="active"'; ?>>
+        <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"></i> 删除</a>
+      </li>
+    </ul>
+    <div class="tab-content" style="text-align:right;">
+      <div class="tab-pane fade <?php if ($config['upload_first_show'] == 1) echo 'active in';  ?>" id="tab2Content1">
+        <textarea class="form-control" rows="5" id="links" readonly></textarea>
+        <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
+        <button id="btnLinks" class="btn copyBtn1" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+      </div>
+      <div class="tab-pane fade <?php if ($config['upload_first_show'] == 2) echo 'active in'; ?>" id="tab2Content2">
+        <textarea class="form-control" rows="5" id="bbscode" readonly></textarea>
+        <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
+        <button id="btnBbscode" class="btn copyBtn2" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+      </div>
+      <div class="tab-pane fade <?php if ($config['upload_first_show'] == 3) echo 'active in'; ?>" id="tab2Content3">
+        <textarea class="form-control" rows="5" id="markdown" readonly></textarea>
+        <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
+        <button id="btnMarkDown" class="btn copyBtn3" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+      </div>
+      <div class="tab-pane fade <?php if ($config['upload_first_show'] == 4) echo 'active in';  ?>" id="tab2Content4">
+        <textarea class="form-control" rows="5" id="html" readonly></textarea>
+        <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
+        <button id="btnHtml" class="btn copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+      </div>
+      <div class="tab-pane fade <?php if ($config['upload_first_show'] == 5) echo 'active in';  ?>" id="tab2Content5">
+        <pre><textarea class="form-control" rows="5" id="del"  readonly></textarea></pre>
+        <button class="btn" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
+        <button id="btndel" class="btn copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
       </div>
     </div>
   </div>
 </div>
-</div>
 </table>
-
+<link href="<?php static_cdn(); ?>/public/static/marquee/marquee.css" rel="stylesheet">
+<link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/marquee/marquee.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js?v1.10.0"></script>
 <script>
   $('#upShowID').uploader({
     // 自动上传
@@ -137,10 +142,27 @@ mustLogin();
       } else {
         return '上传失败，服务器返回错误:' + obj.message;
       }
-
     }
   });
+  // 公告
+  (function() {
+    new Marquee({
+      // 要滚动的元素
+      elem: document.getElementById("marquee2"),
+      // 每次滚动的步长(px)，默认0
+      step: 30,
+      // 滚动效果执行时间(ms)，默认400
+      stepInterval: 400,
+      // 每次滚动间隔时间(ms)，默认3000
+      interval: 3000,
+      // 滚动方向，up、down、left、right，默认为"left" 当前只支持上下
+      dir: 'up',
+      // 是否自动滚动，默认为true
+      autoPlay: true,
+      // 是否在鼠标滑过低级元素时暂停滚动，默认为true
+      hoverPause: true
+    });
+  })();
 </script>
 <?php
 require_once APP_ROOT . '/application/footer.php';
-checkEnv($config['checkEnv']); // 环境检测

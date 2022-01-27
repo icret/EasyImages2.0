@@ -16,8 +16,8 @@ if (!file_exists($src)) {
     exit('image does not exist');
 }
 
-$w = isset($_GET['width']) ? $_GET['width'] : 200; // 预生成缩略图的宽
+$w = isset($_GET['width']) ? $_GET['width'] : 258; // 预生成缩略图的宽
 
-$h = isset($_GET['height']) ? $_GET['height'] : 200; // 预生成缩略图的高
+$h = isset($_GET['height']) ? $_GET['height'] : 258; // 预生成缩略图的高
 
 Thumb::show($src, $w, $h);

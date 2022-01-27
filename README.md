@@ -1,11 +1,11 @@
 ## EasyImage 简单图床 2.0
 > 始于2018年7月，支持多文件上传,简单无数据库,返回图片url,markdown,bbscode,html的一款图床程序
-演示地址：[https://img.545141.com](https://img.545141.com) 
+演示地址：[https://png.cm/](https://png.cm/) 
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](https://www.jb51.net/codes/40544.html)
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
 >
 
-[演示](https://img.545141.com) &nbsp;
+[演示](https://png.cm/) &nbsp;
 [Chrome 拓展](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
 [使用手册](https://www.kancloud.cn/easyimage/easyimage/) &nbsp;
 [问题反馈](https://support.qq.com/products/367633) &nbsp;
@@ -18,10 +18,9 @@
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 
->本人善写bug 发现bug可提交 [Issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
-<hr />
+>本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
-#### 功能支持：
+## 功能支持：
 
 - [x] 支持仅登录后上传
 - [x] 支持设置图片质量
@@ -36,32 +35,41 @@
 - [x] 支持图片监黄
 - [x] 支持自定义代码
 - [x] 支持上传IP黑白名单
+- [x] 支持创建仅上传用户
 - [x] 更多支持请安装尝试···
 
-#### 界面演示
+## 使用注意：
 
-![简单图床 - 上传界面](https://i1.100024.xyz/i/2020/12/31/ulmtho.png)
-![简单图床 - 广场界面](https://i1.100024.xyz/i/2020/12/31/2.png)
-![简单图床 - 后台界面](https://i1.100024.xyz/i/2020/12/31/3.png)
-![简单图床 - 统计界面](https://i1.100024.xyz/i/2020/12/31/4.png)
-
-#### 使用注意：
-
-1. 请将所有文件赋予`0755`或`www`权限
+1. 请将所有文件赋予`0755`和`www`权限
 2. 对`PHP`不太熟悉的请不要将图床程序放置于二级目录
 3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如宝塔面板
 4. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
-5. 第一使用会执行安装程序并生成`install.lock` 如果出错可以删除`install`目录再使用
+5. 第一使用会执行安装程序并生成`install.lock` 不执行安装可以删除`install`目录
 6. 第一次访问会检查环境并在`config`目录下生成`EasyImage.lock`
 7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
 8. 出现`undefined function imagecreatefromwebp()`是因为GD没安装webp
 9. 出现`upload File size exceeds the maximum value` 调整`PHP`上传大小
 10. 出现`Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
 11. 出现`Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
+12. 不出验证码: 权限问题见问题1/CDN缓存了/开防火墙了
 
-#### 安全配置
+## 安装
 
-- Apache环境在上传目录添加配置文件`.htaccess` 使上传目录不可运行PHP程序（默认存在)
+- windows:
+- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip) | [稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web目录
+
+- Linux:
+
+- `git clone https://github.com/icret/EasyImages2.0.git` 至web目录赋予www:www和0755权限
+
+ ## 程序升级
+ 
+- 备份`config`目录和`上传目录`
+- 将新程序下载至网站目录解压覆盖，然后将备份的文件替换既完成升级
+
+## 安全配置
+
+- Apache环境在上传目录添加配置文件`.htaccess` 使上传目录不可运行PHP程序（默认已经存在)
 
 ```Apache
 <FilesMatch "\.(?i:php|php3|php4|php5)">
@@ -69,24 +77,41 @@ Order allow,deny
 Deny from all
 </FilesMatch>
 ```
-- Nginx环境限制上传目录禁止运行`PHP`程序：
+- Nginx环境禁止多个目录运行`PHP`程序：
 
 ```Nginx
-    # 禁止运行php的目录 "i"是你的上传图片目录
-    location ~ /(i)/.*.(php|php5)?$ {
-        deny all;
+    # "i|public"是你要禁止的目录 放到listen段落之后才生效
+    location ~* ^/(i|public)/.*\.(php|php5)$
+   {
+      deny all;
     }
 ```
- - 或者参考：[https://www.545141.com/981.html](https://www.545141.com/981.html)
 
- #### 程序升级
+- Lighthttpd环境禁止多个目录运行`PHP`程序：
 
-- 保存`config`目录和`上传目录`
-- 将新程序下载至网站目录解压覆盖，然后将保存的文件替换既完成升级
+```Lighthttpd
+$HTTP["url"] =~ "^/(i|public)/" {
+	fastcgi.server = ()
+}
+```
+ - 或者参考：[https://blog.png.cm/981.html](https://blog.png.cm/981.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
-* 2022-1-19 v2.4.6 beta
+* 2022-1-27 v2.4.7
+- 优化页面排版
+- 更改部分命名
+- 增加后端压缩率
+- 增加可以显示多条公告
+- 增加上传后是否显示删除
+- 增加可以关闭广场/统计导航|页面
+- 调整登录和退出文件位置
+- 调整二维码内容为每个页面
+- 更换验证码库并不再区分大小写
+- 修复一处有概率暴露图片绝对路径的bug
+
+
+* 2022-1-22 v2.4.6
 - 视图优化
 - 删除重复内容
 - 增加图片信息页面
@@ -147,7 +172,6 @@ Deny from all
 - 更新依赖件
 - 修复统计错误
 
-
 * 2021-11-9 v2.4.0
 - 增加统计缓存
 - 增加最近30天上传统计与占用空间图表
@@ -155,7 +179,6 @@ Deny from all
 - 增加在线编辑配置(之前是需要修改config.php文件，现在可以直接网站端修改了)
 - 删除广场会导致浏览速度变慢的代码
 - 删除快捷配置会导致浏览速度变慢的代码
-
 
 * 2021-11-3 v2.3.2
 - 增加广场图片缓存
@@ -183,11 +206,10 @@ Deny from all
 - 增加浏览页面启用选定日期查看图片
 - 增加版本检测 ***每月10日06点和25日01点检测Github是否更新***
 - 增加上传压缩 ***此压缩有可能使图片变大！特别是小图片 也有一定概率改变图片方向***
-- 增加批量压缩目录 ***TinyImag或本机压缩，本机压缩出现的问题***
+- 增加批量压缩目录 ***TinyPng或本机压缩，本机压缩出现的问题***
 - 修复title
 - 修复二级目录安装
 - 修复对PHP5.6的兼容 ***建议使用php7.0及以上！***
-
 
 * 2021-5-8 v2.1.1
 - 修复上传界面上传失败提示信息bug
@@ -204,7 +226,7 @@ Deny from all
 - 增加删除图片url（服务器不会保存删除链接）
 - 恢复随机浏览20张上传图片 可以设定浏览数量和关闭浏览
 - - 随机浏览图片可以在线删除
-- 可以使用 https://img.545141.com/libs/list.php?num=100 定义浏览数量
+- 可以使用 https://png.cm/libs/list.php?num=100 定义浏览数量
 - 修复一些调用
 - 更改二维码显示方式
 - 开启api 需要token验证上传
@@ -230,7 +252,7 @@ RewriteRule config/(.*).(php)$ – [F]
      deny all;
     }
 ```
-- - 或者参考：https://www.545141.com/992.html https://www.545141.com/939.html
+- - 或者参考：https://blog.png.cm/992.html https://blog.png.cm/939.html
 - 一些精简
 
 * 2021-4-14 v2.0.2.1 Dev1
@@ -308,13 +330,29 @@ RewriteRule config/(.*).(php)$ – [F]
 
 </details>
 
-#### 兼容性
+ ## 支持开发者
+ |支付宝支持|微信支持| 
+ |:----:|:----:|
+ |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
+ 
+ ## 界面演示
+ 
+ ![简单图床 - 上传界面](https://i1.100024.xyz/i/2020/12/31/ulmtho.png)
+ ![简单图床 - 广场界面](https://i1.100024.xyz/i/2020/12/31/2.png)
+ ![简单图床 - 后台界面](https://i1.100024.xyz/i/2020/12/31/3.png)
+ ![简单图床 - 统计界面](https://i1.100024.xyz/i/2020/12/31/4.png)
+  
+## 兼容
+ - 最低`PHP 5.6`,推荐`PHP 7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
+ - 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要`HTML5`支持）来添加上传文件，支持上传大图片，优先使用`HTML5`旧得浏览器自动使用`Flash和Silverlight`的方式兼容
+   
 
-- 最低`PHP 5.6`,推荐`PHP 7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
-- 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要`HTML5`支持）来添加上传文件，支持上传大图片，优先使用`HTML5`旧得浏览器自动使用`Flash和Silverlight`的方式兼容
+## 鸣谢
+ 
+  - [verot](https://github.com/verot/class.upload.php "verot" )
+  - [ZUI](https://github.com/easysoft/zui "ZUI" )
+  
+## 开源许可
 
-<hr />
-
- - 感谢: [verot](https://github.com/verot/class.upload.php "verot" )提供非常好用的class.upload.php上传类
- - 感谢: [ZUI](https://github.com/easysoft/zui "ZUI" ) 提供前端框架
- - [使用 GPL-2.0 开源许可协议](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
+ - [GPL-2.0](https://github.com/icret/EasyImages2.0/blob/master/LICENSE) 
+ - Copyright © 2018 EasyImage dev By [Icret](https://github.com/icret)

@@ -7,9 +7,13 @@ require_once APP_ROOT . '/config/api_key.php';
 require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/chart.php';
 
+// 检测是否开启统计
+if (!$config['chart_on']) exit(header('Location: ' . $config['domain'] . '?chart#closed'));
+
 // 检测登录
-if (!is_online()) {
+if (!is_who_login('admin')) {
     checkLogin();
+    exit(require_once APP_ROOT . '/application/footer.php');
 }
 // 删除统计文件
 if (isset($_POST['del_total'])) {
@@ -148,7 +152,7 @@ if (is_array($char_data)) {
                 formatter: '{value}%'
             },
             data: [{
-                value: <?php echo round((disk_total_space('.') - disk_free_space('.')) / disk_total_space('.') * 100,2); ?>,
+                value: <?php echo round((disk_total_space('.') - disk_free_space('.')) / disk_total_space('.') * 100, 2); ?>,
                 name: '已使用'
             }]
         }]
@@ -235,7 +239,6 @@ if (is_array($char_data)) {
     };
     myChart.setOption(LineChart);
 
-
     // 硬盘统计-饼状图
     var myChart = echarts.init(document.getElementById('myPieChart'));
 
@@ -277,6 +280,7 @@ if (is_array($char_data)) {
             }
         }]
     };
+
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(myPieChart);
 
@@ -304,6 +308,9 @@ if (is_array($char_data)) {
             dataIndex: currentIndex
         });
     }, 1000);
+
+    // 更改网页标题
+    document.title = "图床统计信息 - <?php echo $config['title']; ?>"
 </script>
 
 <?php require_once APP_ROOT . '/application/footer.php';

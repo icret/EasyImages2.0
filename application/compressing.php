@@ -7,8 +7,9 @@ require_once 'header.php';
 require_once APP_ROOT . '/application/compress/function.compress.php';
 
 // 检测登录
-if (!is_online()) {
+if (!is_who_login('admin')) {
     checkLogin();
+    exit(require_once APP_ROOT . '/application/footer.php');
 }
 // 文件夹压缩
 if (isset($_POST['folder'])) {
@@ -54,9 +55,9 @@ echo '
 
 <font color="red">Imgcompress</font> 对自身机器要求高，如图片过多会导致脚本崩溃或者超时（已经预处理超时和脚本崩溃处理，但是有概率重现）！
 
-<font color="red">TinyImag</font> 是 https://tinify.cn/ 提供的API，需要自行申请，对服务器要求较低，但是对网络要求高！如在国内可能导致非常慢而超时崩溃（已预处理，但是有概率重现）。
+<font color="red">TinyPng</font> 是 https://tinify.cn/ 提供的API，需要自行申请，对服务器要求较低，但是对网络要求高！如在国内可能导致非常慢而超时崩溃（已预处理，但是有概率重现）。
 
-获取TinyImag key https://tinify.cn/developers 并填入 <font color="red">/config/api_key.php</font> 文件。
+获取TinyPng key https://tinify.cn/developers 并填入 <font color="red">/config/api_key.php</font> 文件。
 </h4></pre>
 ';
 

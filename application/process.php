@@ -10,7 +10,8 @@ function process($filePath, $absolutePath)
     if ($config['compress']) {
         if (!isAnimatedGif($absolutePath)) {
             require_once __DIR__ . '/compress/Imagick/class.Imgcompress.php';
-            $img = new Imgcompress($absolutePath, 1);
+            $percent = $config['compress_ratio'] / 100; // 压缩率
+            $img = new Imgcompress($absolutePath, $percent);
             $img->compressImg($absolutePath);
             // 释放
             ob_flush();

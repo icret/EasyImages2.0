@@ -26,7 +26,7 @@ if (empty($_REQUEST)) {
     </script>
     ';
     //header("refresh:3;url=".$config['domain']."");
-    
+
 } elseif (isset($_GET['url'])) {
     $img = $_GET['url'];
     echo '
@@ -43,7 +43,7 @@ if (isset($_GET['hash'])) {
 }
 
 // 检查登录后再处理url删除请求
-if (is_online()) {
+if (is_who_login('admin')) {
     if (isset($_GET['url'])) {
         getDel($_GET['url'], 'url');
     }
@@ -51,15 +51,15 @@ if (is_online()) {
     if (isset($_GET['url'])) {
         echo '
 			<script>
-            new $.zui.Messager("请登录后再删除", {
+            new $.zui.Messager("请使用管理员账号登录再删除!", {
 				type: "danger", // 定义颜色主题
 				icon: "exclamation-sign" // 定义消息图标
             }).show();
             // 延时2s跳转			
-            window.setTimeout("window.location=\'/../application/login.php \'",2000);
+            window.setTimeout("window.location=\'/../admin/index.php \'",3000);
             </script>
 			';
-            //header("refresh:2;url=".$config['domain']."/application/login.php");            
+        //header("refresh:2;url=".$config['domain']."/admin/index.php");
     }
 }
 
