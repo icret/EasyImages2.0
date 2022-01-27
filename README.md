@@ -51,7 +51,7 @@
 9. 出现`upload File size exceeds the maximum value` 调整`PHP`上传大小
 10. 出现`Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
 11. 出现`Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
-12. 不出验证码: 权限问题见问题1/CDN缓存了/开防火墙了
+12. 不出验证码: 权限问题见问题1 CDN缓存了/开防火墙了
 
 ## 安装
 

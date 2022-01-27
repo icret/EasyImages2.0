@@ -573,8 +573,8 @@ if (isset($_GET['reimg'])) {
                                     <td>' . $file_size . '</td>
                                     <td>
                                         <a class="btn btn-mini" href="' . $url  . '" target="_blank">新窗口</a>
-                                        <a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除</a>
                                         <a class="btn btn-mini btn-success" href="?reimg=' . $filen_name . '">恢复</a>
+                                        <a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除</a>
                                     </td>
                                 </tr>
 							';

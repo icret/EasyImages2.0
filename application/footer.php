@@ -23,15 +23,15 @@
   <p>
     © 2018-<?php echo date("Y"); ?>
     <a href="https://png.cm/" target="_blank"> EasyImage</a>
-    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow"><?php echo $config['version']; ?></a>
-    <a href="https://blog.png.cm" target="_blank"> By Icret</a>
+    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow"><?php echo $config['version']; ?></a> By
+    <a href="https://blog.png.cm" target="_blank">Icret</a>
     <a href="/admin/terms.php" target="_blank"> DMCA</a>
     <!-- 二维码对话框触发按钮 -->
     <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal" title="使用手机扫描二维码访问"><i class="icon icon-qrcode hidden-xs inline-block"></i></a>
     <?php
-    
+
     // 登录与退出    
-    if (is_who_login('admin')||is_who_login('guest')) {
+    if (is_who_login('admin') || is_who_login('guest')) {
       echo '<a href="' . $config['domain'] . '/admin/index.php?login=logout" title="退出账号"><i class="icon icon-signout"></i></a>';
     } else {
       echo '<a href="' . $config['domain'] . '/admin/index.php" title="账号登录"><i class="icon icon-user"></i></a>';
