@@ -79,6 +79,6 @@ $config=Array
 	'check_ip'=>0,
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
-	'version'=>'2.4.7 dev',
+	'version'=>'2.4.7',
 	'form'=>'2022-01-27 17:20:14'
 	);
