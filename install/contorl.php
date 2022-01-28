@@ -12,7 +12,7 @@ if (isset($_POST['password'])) {
     $config['user'] = $_POST['user'];
   } else {
 
-    exit('<script>window.alert("两次密码不一致请重新输入！");location.href="./index.php";</script>');
+    exit('<script>window.alert("两次密码不一致请重新输入!");location.href="./index.php";</script>');
   }
 }
 
@@ -32,7 +32,7 @@ file_put_contents(APP_ROOT . '/install/install.lock', '安装程序锁定文件�
 // 删除安装目录
 if (isset($_POST['del_install'])) {
   if ($_POST['del_install'] == "del") {
-    deldir(APP_ROOT . "/install/");
+    deldir(APP_ROOT . "/install");
   }
 }
 
@@ -43,15 +43,15 @@ if (isset($_POST['del_extra_files'])) {
     @unlink(APP_ROOT . '/LICENSE');
     @unlink(APP_ROOT . '/README.md');
     @unlink(APP_ROOT . '/config/EasyIamge.lock');
-    @deldir(APP_ROOT . "/.github/");
-    @deldir(APP_ROOT . "/.git/");
+    @deldir(APP_ROOT . "/.github");
+    @deldir(APP_ROOT . "/.git");
   }
 }
 
 // 跳转主页
 echo '
 <script>  
-window.alert("安装成功，即将为您跳转到登陆界面！");
-location.href="../admin/index.php";  
+window.alert("安装成功，即将为您跳转到登陆界面!");
+location.href="../index.php";  
 </script>  
 ';

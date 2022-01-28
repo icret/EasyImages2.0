@@ -17,16 +17,18 @@ if ($state !== 'checked') {
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>EasyIamge 2.0 即将完成安装！</title>
+    <title>EasyIamge 2.0 即将完成安装!</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="EasyIamge 2.0 即将完成安装！" />
-    <meta name="description" content="EasyIamge 2.0 即将完成安装！" />
+    <meta name="keywords" content="EasyIamge 2.0 即将完成安装!" />
+    <meta name="description" content="EasyIamge 2.0 即将完成安装!" />
     <link rel="shortcut icon" href="./../favicon.ico" type="image/x-icon" />
     <link href="./../public/static/zui/css/zui.min.css?v1.10.0" rel="stylesheet">
+    <link href="./../public/static/nprogress.min.css?v1.10.0" rel="stylesheet">
     <script src="./../public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
     <script src="./../public/static/zui/js/zui.min.js?v1.10.0"></script>
     <script src="./../public/static/qrcode.min.js?v2.0"></script>
+    <script src="./../public/static/nprogress.min.js"></script>
     <style>
         .message {
             font-size: 12px;
@@ -52,7 +54,7 @@ if ($state !== 'checked') {
             <div class="form-group">
                 <label class="col-sm-2">网站域名,末尾不加"/"</label>
                 <div class="col-md-6 col-sm-10">
-                    <input type="url" class="form-control" name="domain" value="<?php echo get_whole_url('/install/install.php'); ?>" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')" placeholder="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的！" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的！">
+                    <input type="url" class="form-control" name="domain" value="<?php echo get_whole_url('/install/install.php'); ?>" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')" placeholder="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的!" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，如果不变的话，下边2个填写成一样的!">
                 </div>
             </div>
             <div class="form-group">
@@ -74,6 +76,7 @@ if ($state !== 'checked') {
                     <input type="text" class="form-control inp" name="password" value="" required="required" placeholder="请使用英文输入法输入密码并不小于8位数" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
             </div>
+
             <div class="form-group">
                 <label class="col-sm-2 ">确认密码</label>
                 <div class="col-md-6 col-sm-10">
@@ -84,7 +87,7 @@ if ($state !== 'checked') {
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="del_extra_files" value="del" checked><span style="font-weight: bold;color:green;" title="删除Github/Gitee下载的多余文件">删除多余文件</span>
+                            <input type="checkbox" name="del_extra_files" value="del" checked><span style="font-weight: bold;color:green;" title="删除Github|Gitee下载的多余文件">删除多余文件</span>
                         </label>
                         <label>
                             <input type="checkbox" name="del_install" value="del"><span style="font-weight: bold;color:red;">删除安装目录</span>
@@ -94,13 +97,12 @@ if ($state !== 'checked') {
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-success">准备就绪，开始安装！</button>
+                    <a class="btn btn" href="index.php">上一步</a>
+                    <button type="submit" class="btn btn-success">开始安装</button>
                 </div>
             </div>
         </form>
     </div>
-
-
     <script>
         var password = document.querySelector('.inp');
         var message = document.querySelector('.message');
@@ -115,15 +117,13 @@ if ($state !== 'checked') {
             }
         }
     </script>
-
-
     <!-- install bottom HTML start -->
     <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true">x</span>
                         <span class="sr-only">关闭</span></button>
                     <h4 class="modal-title icon icon-mobile" style="text-align: center">扫描二维码使用手机上传</h4>
                 </div>
@@ -139,6 +139,12 @@ if ($state !== 'checked') {
         </div>
     </div>
     <script>
+        // NProgress
+        NProgress.configure({
+            showSpinner: false
+        });
+        NProgress.set(0.5);
+        NProgress.set(0.9);
         // js二维码 获取当前网址并赋值给id=text的value
         document.getElementById("text").value = window.location.href;
         var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -168,7 +174,6 @@ if ($state !== 'checked') {
     </script>
     <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px">
         <hr>
-        <p><a href="/../admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a><i class="icon icon-smile"></i></p>
         <div>
             <!-- 对话框触发按钮 -->
             <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">

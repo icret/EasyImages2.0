@@ -464,8 +464,8 @@ function is_who_login($user)
 function checkEnv($mode)
 {
     // 初始化安装
-    if (!file_exists(APP_ROOT . '/install/install.lock') and file_exists(APP_ROOT . '/install/install.php')) {
-        exit('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');
+    if (!is_file(APP_ROOT . '/install/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
+        echo '<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>';
     }
 
     if ($mode) {
@@ -644,11 +644,23 @@ function re_checkImg($name)
 {
     global $config;
 
-    $fileToPath = str_replace('_', '/', $name);                    // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
+    $fileToPath = str_replace('_', '/', $name);                      // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
     $now_path_file = APP_ROOT . $config['path'] . 'suspic/' . $name; // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
-    $to_file = APP_ROOT . $config['path'] . $fileToPath;            // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
-    rename($now_path_file, $to_file);
+    if (is_file($now_path_file)) {
+        $to_file = APP_ROOT . $config['path'] . $fileToPath;         // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
+        rename($now_path_file, $to_file);                            // 移动文件
+    } else {
+        echo "
+        <script>
+        new $.zui.Messager('文件不存在!', {
+            type: 'danger', // 定义颜色主题
+            icon: 'warning-sign'
+        }).show();
+        </script>
+        ";
+    }
 }
+
 
 /**
  * 创建缩略图

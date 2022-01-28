@@ -7,7 +7,6 @@ require APP_ROOT . '/application/WaterMask.php';
 // 检查登录
 if ($config['mustLogin']) {
     checkLogin();
-    exit;
 }
 
 // 黑/白IP名单上传

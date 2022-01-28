@@ -27,6 +27,8 @@ if (!IS_WIN) {
     }
 }
 
+$userINI = is_file(APP_ROOT . '/.user.ini') ? false : true; // user.ini
+
 function checkPASS($name)
 {
     if ($name) {
@@ -49,11 +51,12 @@ function checkPASS($name)
     <meta name="description" content="EasyIamge 2.0 安装环境检测" />
     <link rel="shortcut icon" href="./../favicon.ico" type="image/x-icon" />
     <link href="./../public/static/zui/css/zui.min.css?v1.10.0" rel="stylesheet">
+    <link href="./../public/static/nprogress.min.css?v1.10.0" rel="stylesheet">
     <script src="./../public/static/zui/lib/jquery/jquery-3.4.1.min.js?v3.4.1"></script>
     <script src="./../public/static/zui/js/zui.min.js?v1.10.0"></script>
     <script src="./../public/static/qrcode.min.js?v2.0"></script>
+    <script src="./../public/static/nprogress.min.js"></script>
 </head>
-
 
 <body class="container">
     <!-- install header html end -->
@@ -98,14 +101,17 @@ function checkPASS($name)
                 <td>可写</td>
                 <td><?php checkPASS($i_wjj); ?></td>
             </tr>
-
-
+            <tr>
+                <td>.user.ini</td>
+                <td>防止跨目录访问和读取文件-><a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini" target="_blank">删除方法</a></td>
+                <td><?php checkPASS($userINI); ?></td>
+            </tr>
         </tbody>
     </table>
 
 
     <?php
-    $checkres = array($phpEnv, $fileinfo, $gd, $i_wjj, $file_php);
+    $checkres = array($phpEnv, $fileinfo, $gd, $i_wjj, $file_php, $userINI);
 
     if (in_array(false, $checkres)) {
         echo '<p class="text-danger">如果你的PHP版本较低或者不想安装上述PHP扩展请删除<code>install</code>目录</p>
@@ -125,7 +131,7 @@ function checkPASS($name)
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true">x</span>
                         <span class="sr-only">关闭</span></button>
                     <h4 class="modal-title icon icon-mobile" style="text-align: center">扫描二维码使用手机上传</h4>
                 </div>
@@ -141,6 +147,13 @@ function checkPASS($name)
         </div>
     </div>
     <script>
+        // NProgress
+        NProgress.configure({
+            showSpinner: false
+        });
+        NProgress.set(0.0);
+        NProgress.set(0.5);
+
         // js二维码 获取当前网址并赋值给id=text的value
         document.getElementById("text").value = window.location.href;
         var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -170,7 +183,6 @@ function checkPASS($name)
     </script>
     <footer class="text-muted small col-md-12" style="text-align: center;margin-bottom: 10px">
         <hr>
-        <p><a href="/../admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a><i class="icon icon-smile"></i></p>
         <div>
             <!-- 对话框触发按钮 -->
             <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">

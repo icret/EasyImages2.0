@@ -94,7 +94,7 @@ $HTTP["url"] =~ "^/(i|public)/" {
 	fastcgi.server = ()
 }
 ```
- - 或者参考：[https://blog.png.cm/981.html](https://blog.png.cm/981.html)
+ - 或者参考：[https://blog.png.cm/996.html](https://blog.png.cm/996.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
 
@@ -252,7 +252,7 @@ RewriteRule config/(.*).(php)$ – [F]
      deny all;
     }
 ```
-- - 或者参考：https://blog.png.cm/992.html https://blog.png.cm/939.html
+- - 或者参考：https://blog.png.cm/939.html
 - 一些精简
 
 * 2021-4-14 v2.0.2.1 Dev1
