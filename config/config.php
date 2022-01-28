@@ -11,7 +11,7 @@ $config=Array
 	'imgurl'=>'http://127.0.0.1',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
-	'mustLogin'=>1,
+	'mustLogin'=>0,
 	'apiStatus'=>0,
 	'path'=>'/i/',
 	'imgName'=>'default',
@@ -44,7 +44,17 @@ $config=Array
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
 	'TinyPng_key'=>'',
 	'moderatecontent_key'=>'',
-	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>',
+	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?c790ac2bdc2f385757ecd0183206108d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+',
 	'ad_top'=>0,
 	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
 <div class="col-md-12" style="text-align: center;margin:2px;">
@@ -57,16 +67,7 @@ $config=Array
 </div>',
 	'showSwitch'=>1,
 	'listNumber'=>20,
-	'customize'=>' <!-- 百度统计代码-->
-    <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?5320b69f4f1caa9328dfada73c8e6a75";
-      var s = document.getElementsByTagName("script")[0]; 
-      s.parentNode.insertBefore(hm, s);
-    })();
-    </script>',
+	'customize'=>'',
 	'checkEnv'=>1,
 	'checkImg'=>0,
 	'checkImg_value'=>50,
@@ -80,5 +81,5 @@ $config=Array
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.4.7',
-	'form'=>'2022-01-28 21:21:52'
+	'form'=>'2022-01-28 22:50:38'
 	);

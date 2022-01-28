@@ -31,6 +31,8 @@ require_once APP_ROOT . '/application/total_files.php';
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/respond.js"></script>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/excanvas.js"></script>
   <![endif]-->
+	<?php /** 自定义代码 */ if (!empty($config['customize'])) echo $config['customize']; ?>
+
 </head>
 
 <body class="container">

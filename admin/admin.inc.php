@@ -139,7 +139,7 @@ if (isset($_GET['reimg'])) {
                         <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
-                        <label>图片链接域名 | 末尾不加'/' 如果只有一个域名请与上边一致</label>
+                        <label data-toggle="tooltip" title="如果只有一个域名请与上边一致">图片链接域名 | 末尾不加'/' </label>
                         <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，A、B需绑定到同一空间下,如果不变的话，下边2个填写成一样的! ">
                     </div>
                     <div class="form-group">
@@ -148,23 +148,23 @@ if (isset($_GET['reimg'])) {
                     </div>
                     <div class="form-group">
                         <label>网站关键字</label>
-                        <textarea class="form-control" rows="3" name="keywords" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['keywords']; ?></textarea>
+                        <textarea class="form-control" rows="2" name="keywords" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['keywords']; ?></textarea>
                     </div>
                     <div class="form-group">
                         <label>网站描述</label>
-                        <textarea class="form-control" rows="3" name="description" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['description']; ?></textarea>
+                        <textarea class="form-control" rows="2" name="description" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['description']; ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label>网站公告 | 支持html 不同公告以a标签分割</label>
+                        <label data-toggle="tooltip" title="不同公告以a标签分割">网站公告 | 支持html</label>
                         <textarea class="form-control" rows="3" name="tips"><?php echo $config['tips']; ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label>页脚信息</label>
-                        <textarea class="form-control" rows="3" name="footer"><?php echo $config['footer']; ?></textarea>
+                        <label data-toggle="tooltip" title="统计代码/JS/CSS | 代码需要闭合标签">页首信息 | 支持html</label>
+                        <textarea class="form-control" rows="3" name="customize"><?php echo $config['customize']; ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label>统计代码 | 需要包含script标签</></label>
-                        <textarea class="form-control" rows="7" name="customize"><?php echo $config['customize']; ?></textarea>
+                        <label data-toggle="tooltip" title="统计代码/JS/CSS | 代码需要闭合标签">页脚信息 | 支持htm</label>
+                        <textarea class="form-control" rows="7" name="footer"><?php echo $config['footer']; ?></textarea>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">

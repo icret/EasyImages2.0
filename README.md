@@ -97,6 +97,9 @@ $HTTP["url"] =~ "^/(i|public)/" {
  - 或者参考：[https://blog.png.cm/996.html](https://blog.png.cm/996.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+* 2022-1-28 v2.4.8
+- 修复开启登录上传后无法上传的bug
+- 增加安装时检测.user.ini
 
 * 2022-1-27 v2.4.7
 - 优化页面排版

@@ -18,8 +18,7 @@
       </div>
     </div>
   </div>
-  <?php if (!empty($config['footer'])) echo $config['footer']; // 页脚信息
-  ?>
+  <?php /** 页脚信息 */ if (!empty($config['footer'])) echo $config['footer']; ?>
   <p>
     © 2018-<?php echo date("Y"); ?>
     <a href="https://png.cm/" target="_blank"> EasyImage</a>
@@ -41,8 +40,6 @@
 </footer>
 
 <?php
-// 自定义代码
-if ($config['customize']) echo $config['customize'];
 // 环境检测
 checkEnv($config['checkEnv']);
 ?>
