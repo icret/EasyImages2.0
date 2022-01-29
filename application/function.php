@@ -792,12 +792,11 @@ function creat_thumbnail_by_list($imgUrl)
             Thumb::out($abPathName, $new_imgName, 258, 258);
 
             // 输出缩略图
-            // return $new_imgName;
-            return $imgUrl;
+            return $new_imgName;
+            // return $imgUrl;
         }
     }
 }
-
 
 /**
  * 获取当前页面完整URL地址

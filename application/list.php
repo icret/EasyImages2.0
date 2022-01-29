@@ -12,7 +12,6 @@ if (!$config['showSwitch'] && !is_who_login('admin')) {
   // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
   $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
   $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
-
   echo '
     <ul id="dowebok">
       <div class="cards listNum">';
@@ -25,11 +24,11 @@ if (!$config['showSwitch'] && !is_who_login('admin')) {
           <div class="card">
             <li><img data-image="' . creat_thumbnail_by_list($imgUrl) . '" src="../public/images/loading.svg" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
             <div class="bottom">
-              <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" title="打开原图" style="margin-left:10px;"></i></a>
-              <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" title="复制文件" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
-              <a href="/application/info.php?img=' . $imgUrl . '" title="Exif信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
-              <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
-              <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '" > 选择</label>
+              <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
+              <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+              <a href="/application/info.php?img=' . $imgUrl . '" data-toggle="tooltip" title="Exif" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+              <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
+              <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '"> 选择</label>
             </div> 
           </div>
         </div>
@@ -38,7 +37,6 @@ if (!$config['showSwitch'] && !is_who_login('admin')) {
     }
     echo '</div>';
   } else {
-
     echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
   }
   echo '</ul>';
@@ -50,7 +48,6 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
 @$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
 ?>
 </div>
-
 <script src="<?php static_cdn(); ?>/public/static/lazyload.js"></script>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
 <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
@@ -195,7 +192,13 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
   <div class="level-3"></div>
 </div>
 <script>
-  //viewjs
+  // tips提示
+  $('[data-toggle="tooltip"]').tooltip({
+    placement: 'top',
+    tipClass: 'tooltip-primary'
+  });
+
+  // viewjs
   var viewer = new Viewer(document.getElementById('dowebok'), {
     url: 'data-original',
     backdrop: true
@@ -237,38 +240,45 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
   }
   //获取所有的 checkbox 属性的 input标签
   function fun() {
-    confirm('确认要删除？\n* 删除文件夹后将无法恢复!');
-    obj = document.getElementsByName("checkbox");
-    check_val = [];
-    for (k in obj) {
-      //判断复选框是否被选中
-      if (obj[k].checked)
-        //获取被选中的复选框的值
-        check_val.push(obj[k].value);
-      console.log(check_val);
+    var r = confirm("确认要删除？\n* 删除文件夹后将无法恢复!")
+    if (r == true) {
+      obj = document.getElementsByName("checkbox");
+      check_val = [];
+      for (k in obj) {
+        //判断复选框是否被选中
+        if (obj[k].checked)
+          //获取被选中的复选框的值
+          check_val.push(obj[k].value);
+        console.log(check_val);
+      }
+      $.post("./post_del.php", {
+          'del_url_array': check_val
+        },
+        function(data) {
+          if (data.search('success') > 0) {
+            new $.zui.Messager("删除成功", {
+              type: "success", // 定义颜色主题 
+              icon: "ok-sign" // 定义消息图标
+            }).show();
+            // 延时2秒刷新
+            window.setTimeout(function() {
+              window.location.reload();
+            }, 1500)
+          } else {
+            new $.zui.Messager("删除失败 请登录后再删除!", {
+              type: "danger", // 定义颜色主题 
+              icon: "exclamation-sign" // 定义消息图标
+            }).show();
+            // 延时2s跳转			
+            window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
+          }
+        });
+    } else {
+      new $.zui.Messager("取消删除", {
+        type: "primary", // 定义颜色主题 
+        icon: "info-sign" // 定义消息图标
+      }).show();
     }
-    $.post("./post_del.php", {
-        'del_url_array': check_val
-      },
-      function(data) {
-        if (data.search('success') > 0) {
-          new $.zui.Messager("删除成功", {
-            type: "success", // 定义颜色主题 
-            icon: "ok-sign" // 定义消息图标
-          }).show();
-          // 延时2秒刷新
-          window.setTimeout(function() {
-            window.location.reload();
-          }, 1500)
-        } else {
-          new $.zui.Messager("删除失败 请登录后再删除!", {
-            type: "danger", // 定义颜色主题 
-            icon: "exclamation-sign" // 定义消息图标
-          }).show();
-          // 延时2s跳转			
-          window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
-        }
-      });
   }
 
   // 返回顶部

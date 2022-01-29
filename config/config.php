@@ -27,7 +27,7 @@ $config=Array
 	'extensions'=>'gif,jpeg,png,tif,bmp,tif,svg,webp,jpg,tga,svg,ico',
 	'compress'=>0,
 	'compress_ratio'=>80,
-	'thumbnail'=>1,
+	'thumbnail'=>2,
 	'imgConvert'=>'',
 	'maxWidth'=>10240,
 	'maxHeight'=>10240,
@@ -81,5 +81,5 @@ var _hmt = _hmt || [];
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.4.7',
-	'form'=>'2022-01-28 22:50:38'
+	'form'=>'2022-01-29 20:37:05'
 	);
