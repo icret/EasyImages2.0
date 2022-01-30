@@ -68,9 +68,14 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "We
 
     $log = json_encode($log, JSON_UNESCAPED_UNICODE);
     file_put_contents($logFileName, PHP_EOL . $log, FILE_APPEND | LOCK_EX);
+
+    /* 以数组存放 并发会丢日志
+    if (!is_file($logFileName)) {
+        file_put_contents($logFileName, '<?php $logs=Array();?>');
+    }
+
+    include $logFileName;
+    $log = array_replace($logs, $log);
+    cache_write($logFileName, $log, 'logs');
+    */
 }
-/*
-for ($i = 0; $i < 100000; $i++) {
-    write_log('/i/2021/11/13/12der8s.jpg', '/i/cache/2021_11_13_12der8s.jpg');
-}
-*/

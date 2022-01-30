@@ -180,13 +180,13 @@ if (isset($_GET['reimg'])) {
                             <label>缩略图生成方式</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="广场直接输出上传图片，会导致流量增加"> 关闭</label>
+                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片，会导致流量增加"> 关闭</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="每次浏览都请求服务器，不会影响广场页面布局但会影响服务器性能"> 实时生成</label>
+                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 缺点:无法生成webp动图"> 实时生成 | 推荐</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="每日首张缩略图生成会使广场页面代码布局异常 [ 刷新即可 ]"> 用户浏览广场实时生成</label>
+                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点:无缓存周期, 每日首张缩略图会使广场页面代码布局异常 [ 刷新即可 ]"> 实时生成 | 缩略图直链</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -555,8 +555,8 @@ if (isset($_GET['reimg'])) {
                         <tbody>
                             <?php
                             // 获取被隔离的文件
-                            $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                               // cache目录
-                            $cache_file = get_file_by_glob($cache_dir . '*.*');                                   // 获取所有文件
+                            $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                                // cache目录
+                            $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
                             @$cache_num = count($cache_file);                                                   // 统计目录文件个数
                             for ($i = 0; $i < $cache_num and $i < 21; $i++) {                                   // 循环输出文件
                                 $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];    // 图片绝对路径
