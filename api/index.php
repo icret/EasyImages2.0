@@ -113,7 +113,7 @@ if ($handle->uploaded) {
             "result" => "success",
             "code"   => 200,
             "url"    => $imageUrl,
-            "thumb"  => $config['domain'] . '/application/thumb.php?img=' . config_path() . $handle->file_dst_name . '&width=258&height=258',
+            "thumb"  => $config['domain'] . '/application/thumb.php?img=' . config_path() . $handle->file_dst_name,
             "del"    => $delUrl,
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);

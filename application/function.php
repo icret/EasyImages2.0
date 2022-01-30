@@ -93,6 +93,7 @@ function config_path($path = null)
     if (!is_writable($img_path)) {
         @chmod($img_path, 0755);
     }
+    
     return $img_path;
 }
 
@@ -671,15 +672,15 @@ function creat_thumbnail_images($imgName)
     require_once __DIR__ . '/class.thumb.php';
     global $config;
 
-    $old_img_path = APP_ROOT . config_path() . $imgName;                                                   // 获取要创建缩略图文件的绝对路径
-    $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';                                                   // cache目录的绝对路径
+    $old_img_path = APP_ROOT . config_path() . $imgName;                                               // 获取要创建缩略图文件的绝对路径
+    $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';                                          // cache目录的绝对路径
 
-    if (!is_dir($cache_path)) {                                                                              // 创建cache目录
+    if (!is_dir($cache_path)) {                                                                        // 创建cache目录
         mkdir($cache_path, 0777, true);
     }
-    if (!isAnimatedGif($old_img_path)) {                                                                   // 仅针对非gif创建图片缩略图
+    if (!isAnimatedGif($old_img_path)) {                                                               // 仅针对非gif创建图片缩略图
         $new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName;    // 缩略图缓存的绝对路径
-        Thumb::out($old_img_path, $new_imgName, 258, 258);                                    // 保存缩略图
+        Thumb::out($old_img_path, $new_imgName, 258, 258);                                             // 保存缩略图
     }
 }
 
@@ -693,16 +694,16 @@ function return_thumbnail_images($url)
     global $config;
     $cache_image_file = str_replace($config['imgurl'], '', $url);
 
-    if (isAnimatedGif(APP_ROOT . $cache_image_file)) {                            // 仅读取非gif的缩略图
-        return $url;                                                                    // 如果是gif则直接返回url
+    if (isAnimatedGif(APP_ROOT . $cache_image_file)) {                                      // 仅读取非gif的缩略图
+        return $url;                                                                        // 如果是gif则直接返回url
     } else {
-        $cache_image_file = str_replace($config['path'], '', $cache_image_file); // 将网址中的/i/去除
-        $cache_image_file = str_replace('/', '_', $cache_image_file);        // 将文件的/转换为_
-        $isFile = APP_ROOT . $config['path'] . 'thumbnails/' . $cache_image_file;            // 缓存文件的绝对路径
-        if (file_exists($isFile)) {                                                    // 缓存文件是否存在
+        $cache_image_file = str_replace($config['path'], '', $cache_image_file);            // 将网址中的/i/去除
+        $cache_image_file = str_replace('/', '_', $cache_image_file);                       // 将文件的/转换为_
+        $isFile = APP_ROOT . $config['path'] . 'thumbnails/' . $cache_image_file;           // 缓存文件的绝对路径
+        if (file_exists($isFile)) {                                                         // 缓存文件是否存在
             return $config['imgurl'] . $config['path'] . 'thumbnails/' . $cache_image_file; // 存在则返回缓存文件
         } else {
-            return $url;                                                                // 不存在直接返回url
+            return $url;                                                                    // 不存在直接返回url
         }
     }
 }
@@ -717,7 +718,7 @@ function get_online_thumbnail($imgUrl)
     global $config;
     if ($config['thumbnail']) {
         $imgUrl = str_replace($config['imgurl'], '', $imgUrl);
-        return $config['domain'] . '/application/thumb.php?img=' . $imgUrl . '&width=258&height=258';
+        return $config['domain'] . '/application/thumb.php?img=' . $imgUrl;
     } else {
         return $imgUrl;
     }

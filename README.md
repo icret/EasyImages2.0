@@ -97,9 +97,13 @@ $HTTP["url"] =~ "^/(i|public)/" {
  - 或者参考：[https://blog.png.cm/996.html](https://blog.png.cm/996.html)
 
 <details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
-* 2022-1-28 v2.4.8
+
+* 2022-1-28 v2.4.8 dev
+- 修复无可疑图片时显示错误
 - 修复开启登录上传后无法上传的bug
 - 增加安装时检测.user.ini
+- 增加WordPress上大名鼎鼎的实时缩略图生成TimThumb
+- TimeThumb为本图床修改版,会缓存到缓存文件夹方便下次调用
 
 * 2022-1-27 v2.4.7
 - 优化页面排版

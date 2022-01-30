@@ -555,8 +555,8 @@ if (isset($_GET['reimg'])) {
                         <tbody>
                             <?php
                             // 获取被隔离的文件
-                            @$cache_dir = APP_ROOT . $config['path'] . 'suspic/';                               // cache目录
-                            @$cache_file = getFile($cache_dir);                                                 // 获取所有文件
+                            $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                               // cache目录
+                            $cache_file = get_file_by_glob($cache_dir . '*.*');                                   // 获取所有文件
                             @$cache_num = count($cache_file);                                                   // 统计目录文件个数
                             for ($i = 0; $i < $cache_num and $i < 21; $i++) {                                   // 循环输出文件
                                 $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];    // 图片绝对路径
