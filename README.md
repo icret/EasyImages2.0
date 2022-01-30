@@ -340,7 +340,7 @@ RewriteRule config/(.*).(php)$ – [F]
  ## 支持开发者
  |支付宝支持|微信支持| 
  |:----:|:----:|
- |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
+ |![支付宝支持](https://png.cm/sponsor/images/alipay.jpg)|![微信支持](https://png.cm/sponsor/images/wechat.jpg)|
  
  ## 界面演示
  
