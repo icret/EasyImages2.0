@@ -190,8 +190,7 @@ if (isset($_GET['reimg'])) {
                             <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">开启静态文件CDN</label>
                         </div>
-                        <label> | 静态文件CDN加速网址末尾不加'/'</label>
-                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="静态文件CDN加速网址末尾不加'/'">
                     </div>
                     <div class="form-group">
                         <div>
@@ -230,11 +229,11 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>存储路径 | 例: /i/前后需加英文'/'</label>
+                        <label data-toggle="tooltip" title="前后需加英文'/' 例: /i/">存储路径</label>
                         <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全，参考: https://blog.png.cm/981.html 或 README.md">
                     </div>
                     <div class="form-group">
-                        <label>允许上传的图片扩展名 | 请以英文<code>,</code>分割,最后一个扩展名后边不要加<code>,</code></label>
+                        <label data-toggle="tooltip" title="请以英文','分割 最后一个扩展名后边不要加','">允许上传的图片扩展名</label>
                         <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
@@ -278,7 +277,7 @@ if (isset($_GET['reimg'])) {
                         <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
                     </div>
                     <div class="form-group">
-                        <label>水印文字颜色 | 格式RGBA 末尾为透明度0-127 0为不透明</label>
+                        <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明">水印文字颜色</label>
                         <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{value:'rgba(<?php echo $config['textColor']; ?>)', position:'bottom', height:80, backgroundColor:'#333',palette:'rgba(0,0,0,0) #fff #808080 #000 #996e36 #f55525 #ffe438 #88dd20 #22e0cd #269aff #bb1cd4',paletteCols:11, hideOnPaletteClick:true}">
                     </div>
                     <div class="form-group">
@@ -286,15 +285,15 @@ if (isset($_GET['reimg'])) {
                         <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="1" max="50" step="1" onchange="document.getElementById('textSize').innerHTML=value">
                     </div>
                     <div class="form-group">
-                        <label>字体路径 | 如果想改变字体，请选择支持中文的 GB/2312 字体</label>
+                        <label data-toggle="tooltip" title="如果想改变字体，请选择支持中文的 GB/2312 字体">字体路径</label>
                         <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
-                        <label>图片水印路径 | 支持GIF,JPG,BMP,PNG和PNG alpha</label>
+                        <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
                         <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
-                        <label>水印位置 | 不开启水印方式不生效</label>
+                        <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
                         <select class="chosen-select form-control" name="waterPosition">
                             <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>
                             <option value="1" <?php if ($config['waterPosition'] == 1) echo 'selected'; ?>>顶部居左</option>
@@ -317,7 +316,7 @@ if (isset($_GET['reimg'])) {
                         <input type="range" class="form-control" name="maxHeight" value="<?php echo $config['maxHeight']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxHeight').innerHTML=value">
                     </div>
                     <div class="form-group">
-                        <label>单文件最大上传大小(1MB-50MB) | 更改后的限制: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
+                        <label>单文件最大上传大小(1-50MB) | 更改后的限制: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
                         <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="52428800" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
                     </div>
                     <div class="form-group">
@@ -330,18 +329,18 @@ if (isset($_GET['reimg'])) {
                     </div>
                     <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:略增加用户端压力,仅支持JPG</h4>
                     <div class="form-group">
-                        <div class="switch switch-inline">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启下边五项不生效">
                             <input type="hidden" name="imgRatio" value="0">
                             <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启前端修改图片 | 控制以下五项 不开启下边五项不生效</label>
+                            <label style="font-weight: bold">开启前端修改图片</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>裁剪的宽度(设置0则不生效) | 更改后的宽度: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>像素</label>
+                        <label>裁剪的宽度(设置0不生效) | 更改后的宽度: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>像素</label>
                         <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_x').innerHTML=value">
                     </div>
                     <div class="form-group">
-                        <label>裁剪的高度(设置0则不生效) | 更改后的高度: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>像素</label>
+                        <label>裁剪的高度(设置0不生效) | 更改后的高度: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>像素</label>
                         <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_y').innerHTML=value">
                     </div>
                     <div class="form-group">
@@ -371,7 +370,7 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>后端图片压缩率,数值越低压缩率越高 | 更改后的压缩率: </label><label id="compress_ratio"><?php echo $config['compress_ratio']; ?></label><label>%</label>
+                        <label>后端图片压缩率 | 更改后的压缩率: </label><label id="compress_ratio"><?php echo $config['compress_ratio']; ?></label><label>%</label>
                         <input type="range" class="form-control" name="compress_ratio" value="<?php echo $config['compress_ratio']; ?>" min="1" max="100" step="1" onchange="document.getElementById('compress_ratio').innerHTML=value">
                     </div>
                     <div class="form-group">
@@ -433,14 +432,14 @@ if (isset($_GET['reimg'])) {
                 <p>
                 <form action="../application/compressing.php" method="post" target="_blank">
                     <div class="form-group">
-                        <label for="exampleInputInviteCode1">压缩文件夹内图片 | 格式: 2021/05/10/</label>
+                        <label for="exampleInputInviteCode1">压缩文件夹</label>
                         <input type="text" class="form-control form-date input-sm" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
                     </div>
                     <div class="radio-primary">
-                        <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress"> 使用本地 | 压缩效率受后端压缩图片压缩率控制</label>
+                        <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress" data-toggle="tooltip" title="压缩效率受后端压缩图片压缩率控制"> 使用本地</label>
                     </div>
                     <div class="radio-primary">
-                        <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng"> 使用TinyPng | 需要申请key，填入分类API 设置中的TinyPng Key中</label>
+                        <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key，填入API设置的TinyPng Key中"> 使用TinyPng</label>
                     </div>
                     <label>* 已开启上传压缩的不需重复压缩! </label><br />
                     <label>* 如果页面长时间没有响应，表示正面正在压缩! </label><br />
@@ -512,11 +511,11 @@ if (isset($_GET['reimg'])) {
             <div class="tab-pane fade" id="Content6">
                 <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group">
-                        <label data-toggle="tooltip" title="根据鉴黄方式在API 设置中填入Token或者url">图片鉴黄方式</label>
+                        <label data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">图片鉴黄方式</label>
                         <select class="chosen-select form-control" name="checkImg">
                             <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
-                            <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>使用 moderatecontent</option>
-                            <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?>>使用 nsfwjs (据说准确率93%)</option>
+                            <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
+                            <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?> title="">nsfwjs | API 设置中填入nsfwjs url</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -537,7 +536,7 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>黑/白名单IP | IP与IP以英文,分隔 支持IP段</label>
+                        <label data-toggle="tooltip" title="IP与IP以英文,分隔 支持IP段">黑/白名单IP</label>
                         <textarea class="form-control" rows="5" name="check_ip_list" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
                     </div>
                     <div class="form-group">
@@ -698,10 +697,10 @@ if (isset($_GET['reimg'])) {
                         </label>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline">
+                        <div class="switch switch-inline" data-toggle="tooltip" title=" 关闭广场非登录状态不显示广场导航">
                             <input type="hidden" name="showSwitch" value="0">
                             <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启广场 | 关闭广场非登录状态不显示广场导航)</label>
+                            <label style="font-weight: bold">开启广场</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -723,8 +722,8 @@ if (isset($_GET['reimg'])) {
                             <label style="font-weight: bold">开启图片Exif信息页面</label>
                         </div>
                     </div>
-                    <div class="form-group" title="图片过多时可能会影响统计时间">
-                        <div class="switch switch-inline">
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
                             <input type="hidden" name="chart_on" value="0">
                             <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">开启统计页面</label>
