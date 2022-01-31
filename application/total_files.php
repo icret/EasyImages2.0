@@ -51,7 +51,7 @@ function creat_json() // 创建json文件
     $yestUpload = getFileNumber(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day"))); // 昨日上传数量
 
     $totalJsonInfo = [
-        'filename'    => $totalJsonMD5,                     // 统计文件名称
+        'filename'    => $totalJsonMD5,                      // 统计文件名称
         'date'        => date('YmdH'),                       // 识别日期格式
         'total_time'  => date('Y-m-d H:i:s'),                // 统计时间
         'dirnum'      => $dirn,                              // 文件夹数量

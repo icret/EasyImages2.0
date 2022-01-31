@@ -101,7 +101,25 @@ if (isset($_POST['radio'])) {
 // 恢复图片
 if (isset($_GET['reimg'])) {
     $name = $_GET['reimg'];
-    re_checkImg($name);
+    if (re_checkImg($name)) {
+        echo "
+        <script>
+        new $.zui.Messager('恢复成功', {
+            type: 'success', // 定义颜色主题
+            icon: 'ok'
+        }).show();
+        </script>
+        ";
+    } else {
+        echo "
+        <script>
+        new $.zui.Messager('文件不存在!', {
+            type: 'danger', // 定义颜色主题
+            icon: 'warning-sign'
+        }).show();
+        </script>
+        ";
+    }
 }
 
 ?>
@@ -183,10 +201,10 @@ if (isset($_GET['reimg'])) {
                             <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片，会导致流量增加"> 关闭</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 缺点:无法生成webp动图"> 实时生成 | 推荐</label>
+                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 缺点:无法生成webp动图,无法被cdn缓存"> 实时生成 | 推荐</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点:无缓存周期, 每日首张缩略图会使广场页面代码布局异常 [ 刷新即可 ]"> 实时生成 | 缩略图直链</label>
+                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 无缓存周期, 每日首张缩略图会使广场页面代码布局异常 [ 刷新即可 ]"> 实时生成 | 缩略图直链</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -439,8 +457,8 @@ if (isset($_GET['reimg'])) {
                 <b>外部KEY | 请根据需要申请并填写</b>
                 <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
-                        <label for="TinyPng" title="申请地址:https://tinypng.com/developers"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key</a></label>
-                        <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" title="开启后会受服务器到https://tinypng.com 速度影响，国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key</a></label>
+                        <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响，国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
@@ -448,16 +466,24 @@ if (isset($_GET['reimg'])) {
                 </form>
                 <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
-                        <label for="moderatecontent_key" title="申请地址:https://client.moderatecontent.com"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
-                        <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片监黄Key" title="开启后会受服务器到https://moderatecontent.com 速度影响，国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <label for="moderatecontent_key" data-toggle="tooltip" title="申请网址"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
+                        <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响，国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     <button type="submit" class="btn btn-mini btn-primary">保存</button>
                 </form>
-                <b>生成API Token | 新Token需按要求填入<code>/config/api_key.php</code>才生效</b>
+                <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
+                    <div class="form-group">
+                        <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs github"><a href="https://github.com/infinitered/nsfwjs" target="_blank">nsfwjs url</a></label>
+                        <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://IP:99/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    </div>
+                    <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                    <button type="submit" class="btn btn-mini btn-primary">保存</button>
+                </form>
+                <b data-toggle="tooltip" title="新Token需按要求填入/config/api_key.php才生效">生成API upload Token</b>
                 <form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="input-group">
-                        <span class="input-group-addon">Generate token</span>
+                        <span class="input-group-addon">New Token</span>
                         <input type="text" class="form-control" id="exampleInputMoney1" value="<?php echo privateToken(); ?>">
                     </div>
                 </form>
@@ -486,11 +512,12 @@ if (isset($_GET['reimg'])) {
             <div class="tab-pane fade" id="Content6">
                 <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group">
-                        <div class="switch switch-inline">
-                            <input type="hidden" name="checkImg" value="0">
-                            <input type="checkbox" name="checkImg" value="1" <?php if ($config['checkImg']) echo 'checked="checked"'; ?> title="开启后会受服务器到https://moderatecontent.com速度影响，国内不建议开启! ">
-                            <label style="font-weight: bold">开启图片监黄 | 申请key后填入API 设置的Moderate Key中</label>
-                        </div>
+                        <label data-toggle="tooltip" title="根据鉴黄方式在API 设置中填入Token或者url">图片鉴黄方式</label>
+                        <select class="chosen-select form-control" name="checkImg">
+                            <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
+                            <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>使用 moderatecontent</option>
+                            <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?>>使用 nsfwjs (据说准确率93%)</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>图片违规判断准确率 | 当前: </label>
@@ -538,7 +565,7 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade" id="Content7">
-                <p>为了访问速度，仅显示最近20张图片；监黄需要在安全设置->开启图片监黄。</p>
+                <p>为了访问速度，仅显示最近20张图片；鉴黄需要在安全设置->开启图片鉴黄。</p>
                 <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
                 <p>获得key后打开->API 设置->Moderate Key->填入 </p>
                 <div class="table-responsive">
@@ -568,7 +595,7 @@ if (isset($_GET['reimg'])) {
                                 echo '
                                 <tr>
                                     <td>' . $i . '</td>
-                                    <td><img data-toggle="lightbox" src="' . get_online_thumbnail($file_path) . '" data-image="' . $file_path . '" class="img-thumbnail" ></td>
+                                    <td><img data-toggle="lightbox" src="' . get_online_thumbnail($file_path) . '" data-image="' . $url  . '" class="img-thumbnail" ></td>
                                     <td>' . $filen_name . '</td>
                                     <td>' . $file_size . '</td>
                                     <td>
@@ -577,7 +604,7 @@ if (isset($_GET['reimg'])) {
                                         <a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除</a>
                                     </td>
                                 </tr>
-							';
+                                ';
                             } ?>
                         </tbody>
                     </table>

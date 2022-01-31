@@ -20,9 +20,12 @@ function process($filePath, $absolutePath)
     }
 
     // 图片违规检查
-    if ($config['checkImg']) {
-        require_once APP_ROOT . '/config/api_key.php';
-        @checkImg($config['imgurl'] . $filePath);
+    if ($config['checkImg'] == 1) {
+        @checkImg($config['imgurl'] . $filePath, 1);
+    }
+
+    if ($config['checkImg'] == 2) {
+        @checkImg($config['imgurl'] . $filePath, 2);
     }
 }
 

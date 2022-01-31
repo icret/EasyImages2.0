@@ -43,7 +43,10 @@ $config=Array
 	'theme'=>'default',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
 	'TinyPng_key'=>'',
+	'checkImg'=>0,
+	'checkImg_value'=>50,
 	'moderatecontent_key'=>'',
+	'nsfwjs_url'=>'http://172.17.0.2:3307/api/nsfw/classify?url=',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 <script>
 var _hmt = _hmt || [];
@@ -69,8 +72,6 @@ var _hmt = _hmt || [];
 	'listNumber'=>20,
 	'customize'=>'',
 	'checkEnv'=>1,
-	'checkImg'=>0,
-	'checkImg_value'=>50,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
 	'upload_first_show'=>1,
@@ -80,6 +81,6 @@ var _hmt = _hmt || [];
 	'check_ip'=>0,
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
-	'version'=>'2.4.7',
-	'form'=>'2022-01-30 06:34:23'
+	'version'=>'2.4.8',
+	'form'=>'2022-02-01 03:21:02'
 	);

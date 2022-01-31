@@ -93,7 +93,7 @@ function config_path($path = null)
     if (!is_writable($img_path)) {
         @chmod($img_path, 0755);
     }
-    
+
     return $img_path;
 }
 
@@ -613,22 +613,113 @@ function moderatecontent_json($img, $url = null)
 }
 
 /**
- * 检查图片是否违规
- * @param $imageUrl string 图片url
+ * 使用curl方式实现get或post请求
+ * @param $url 请求的url地址
+ * @param $data 发送的post数据 如果为空则为get方式请求
+ * return 请求后获取到的数据
  */
-function checkImg($imageUrl)
+
+function nsfwjs_json($url, $data = '')
 {
     global $config;
 
-    $response = moderatecontent_json($imageUrl);
-    if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
-        //$old_path = APP_ROOT . parse_url($imageUrl)['path'];    		// 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-        $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl);            // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-        $name = date('Y_m_d') . '_' . basename($imageUrl);                // 文件名 2021_10_30_p8vypd.png
-        $new_path = APP_ROOT . $config['path'] . 'suspic/' . $name;     // 新路径含文件名
-        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';            // suspic路径
+    if (empty($config['nsfwjs_url'])) {
+        exit;
+    }
 
-        if (is_dir($cache_dir)) {                                        // 创建suspic目录并移动
+    $ch = curl_init();
+    $params[CURLOPT_URL] = $config['nsfwjs_url'] . $url; //请求url地址
+    $params[CURLOPT_HEADER] = false; //是否返回响应头信息
+    $params[CURLOPT_RETURNTRANSFER] = true; //是否将结果返回
+    $params[CURLOPT_FOLLOWLOCATION] = true; //是否重定向
+    $params[CURLOPT_TIMEOUT] = 30; //超时时间
+    if (!empty($data)) {
+        $params[CURLOPT_POST] = true;
+        $params[CURLOPT_POSTFIELDS] = $data;
+    }
+    $params[CURLOPT_SSL_VERIFYPEER] = false; //请求https时设置,还有其他解决方案
+    $params[CURLOPT_SSL_VERIFYHOST] = false; //请求https时,其他方案查看其他博文
+    curl_setopt_array($ch, $params); //传入curl参数
+    $content = curl_exec($ch); //执行
+    curl_close($ch); //关闭连接
+    $content = json_decode($content, true);
+    return $content;
+}
+
+/**
+ * 检查图片是否违规
+ * @param $imageUrl string 图片url
+ */
+function checkImg($imageUrl, $type = 1)
+{
+    global $config;
+
+    /** # 使用moderatecontent */
+    if ($type == 1) {
+        $response = moderatecontent_json($imageUrl);
+        if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
+            $bad_pic = true;
+        }
+    }
+
+    /** # 使用nsfwjs */
+    if ($type == 2) {
+        /**
+         * probability，概率
+         * className，类型
+         * 
+         * 上传图片后，总共会返回 5 个维度的数值来鉴别该图片的尺度:
+         * 
+         * 绘画（Drawing）—— 无害的艺术，或艺术绘画；
+         * 变态（Hentai）—— 色情艺术，不适合大多数工作环境；
+         * 中立（Neutral）—— 一般，无害的内容；
+         * 色情（Porn）—— 不雅的内容和行为，通常涉及生殖器；
+         * 性感（Sexy）—— 不合时宜的挑衅内容。
+         * 
+         * 当porn评分超过>=0.6左右,就几乎是一张带有色情性质的图片了。
+         */
+
+        $file = nsfwjs_json($imageUrl);
+
+        // 将获取的值删除className后组建数组
+        for ($i = 0; $i <= count($file); $i++) {
+            if ($file[$i]['className'] == 'Drawing') {
+                $res['Drawing'] = $file[$i]['probability'];
+            }
+            if ($file[$i]['className'] == 'Hentai') {
+                $res['Hentai'] = $file[$i]['probability'];
+            }
+            if ($file[$i]['className'] == 'Neutral') {
+                $res['Neutral'] = $file[$i]['probability'];
+            }
+            if ($file[$i]['className'] == 'Porn') {
+                $res['Porn'] = $file[$i]['probability'];
+            }
+            if ($file[$i]['className'] == 'Sexy') {
+                $res['Sexy'] = $file[$i]['probability'];
+            }
+        }
+
+        // 测试数组是否正确
+        // foreach ($file as $k => $v) {
+        //     foreach ($v as $k1 => $v1) {
+        //         echo $k1 . '=>' . $v1 . '<br/>';
+        //     }
+        // }
+
+        if ($res['Sexy']  * 100 > $config['checkImg_value'] or $res['Porn']  * 100 > $config['checkImg_value']) {
+            $bad_pic = true;
+        }
+    }
+
+    /** # 如果违规则移动图片到违规文件夹 */
+    if ($bad_pic == true) {
+        $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        $name = date('Y_m_d') . '_' . basename($imageUrl);                    // 文件名 2021_10_30_p8vypd.png
+        $new_path = APP_ROOT . $config['path'] . 'suspic/' . $name;           // 新路径含文件名
+        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                  // suspic路径
+
+        if (is_dir($cache_dir)) {                                             // 创建suspic目录并移动
             rename($old_path, $new_path);
         } else {
             mkdir($cache_dir, 0777, true);
@@ -650,15 +741,7 @@ function re_checkImg($name)
     if (is_file($now_path_file)) {
         $to_file = APP_ROOT . $config['path'] . $fileToPath;         // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
         rename($now_path_file, $to_file);                            // 移动文件
-    } else {
-        echo "
-        <script>
-        new $.zui.Messager('文件不存在!', {
-            type: 'danger', // 定义颜色主题
-            icon: 'warning-sign'
-        }).show();
-        </script>
-        ";
+        return true;
     }
 }
 

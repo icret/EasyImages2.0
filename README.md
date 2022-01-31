@@ -96,14 +96,44 @@ $HTTP["url"] =~ "^/(i|public)/" {
 ```
  - 或者参考：[https://blog.png.cm/996.html](https://blog.png.cm/996.html)
 
-<details><summary><mark><font color=darkred>点击查看2.0版更新日志</font></mark></summary>
+## 更新日志
+
+<details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
 * 2022-1-28 v2.4.8 dev
 - 修复无可疑图片时显示错误
 - 修复开启登录上传后无法上传的bug
 - 增加安装时检测.user.ini
+- 增加 [nsfwjs](https://github.com/infinitered/nsfwjs) 接口方式检测违规图片
+  - 作者测试时用的`docker`搭建 `docker`地址:[zengdawei/nsfw_restful_api
+](https://hub.docker.com/r/zengdawei/nsfw_restful_api)
+  - 使用注意 程序希望的nsfwjs返回json 并且如下格式：
+```json
+[
+    {
+        "className": "Drawing",
+        "probability": 0.824431836605072
+    },
+    {
+        "className": "Hentai",
+        "probability": 0.16360442340373993
+    },
+    {
+        "className": "Neutral",
+        "probability": 0.007620695047080517
+    },
+    {
+        "className": "Porn",
+        "probability": 0.004154415801167488
+    },
+    {
+        "className": "Sexy",
+        "probability": 0.00018858206749428064
+    }
+]
+```
 - 增加WordPress上大名鼎鼎的实时缩略图生成TimThumb
-- TimeThumb为本图床修改版,会缓存到缓存文件夹方便下次调用
+  - TimeThumb为本图床修改版,会缓存到缓存文件夹方便下次调用
 
 * 2022-1-27 v2.4.7
 - 优化页面排版
@@ -116,7 +146,6 @@ $HTTP["url"] =~ "^/(i|public)/" {
 - 调整二维码内容为每个页面
 - 更换验证码库并不再区分大小写
 - 修复一处有概率暴露图片绝对路径的bug
-
 
 * 2022-1-22 v2.4.6
 - 视图优化
@@ -317,7 +346,7 @@ RewriteRule config/(.*).(php)$ – [F]
 - ~~支持删除自定义删除图片(仅管理员)~~
 </details>
 
-<details><summary><mark><font color=darkred>与1.6.4版本差别</font></mark></summary>
+<details><summary><mark>与1.6.4版本差别</mark></summary>
 
 ##### 不建议再使用 [EasyImage 1.6.4版本](https://github.com/icret/easyImages)
 
@@ -352,7 +381,6 @@ RewriteRule config/(.*).(php)$ – [F]
 ## 兼容
  - 最低`PHP 5.6`,推荐`PHP 7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
  - 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要`HTML5`支持）来添加上传文件，支持上传大图片，优先使用`HTML5`旧得浏览器自动使用`Flash和Silverlight`的方式兼容
-   
 
 ## 鸣谢
  
@@ -363,3 +391,7 @@ RewriteRule config/(.*).(php)$ – [F]
 
  - [GPL-2.0](https://github.com/icret/EasyImages2.0/blob/master/LICENSE) 
  - Copyright © 2018 EasyImage dev By [Icret](https://github.com/icret)
+
+ * have fun!
+
+ [![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](https://github.com/icret/EasyImages2.0/stargazers)
