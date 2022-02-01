@@ -582,7 +582,6 @@ function deldir($dir)
     }
 }
 
-
 /**
  * 图片监黄curl 访问网站并返回解码过的json信息
  * @param $img string 图片url
@@ -744,7 +743,6 @@ function re_checkImg($name)
         return true;
     }
 }
-
 
 /**
  * 创建缩略图
@@ -1048,4 +1046,22 @@ function checkIP($ipNow = null, $ipList = null, $model = false)
     if ($result) {
         return true;
     }
+}
+
+/**
+ * 测试IP或者url是否可以ping通
+ * @param $host string ip或网址
+ * @param $port int 端口
+ * @param $timeout float 过期时间
+ * @return bool true|false
+ */
+function IP_URL_Ping($host, $port, $timeout)
+{
+    $errno = 444;
+    $errstr = 'fSockOpen 错误';
+    $fP = fSockOpen($host, $port, $errno, $errstr, $timeout);
+    if (!$fP) {
+        return false;
+    }
+    return true;
 }

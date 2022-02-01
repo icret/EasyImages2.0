@@ -78,22 +78,22 @@ function checkPASS($name)
             </tr>
             <tr>
                 <td>Fileinfo</td>
-                <td>必须支持</td>
+                <td>必须支持 | 安装后重启PHP</td>
                 <td> <?php checkPASS($fileinfo); ?></td>
             </tr>
             <tr>
                 <td>GD</td>
-                <td>必须支持</td>
+                <td>必须支持 | 安装后重启PHP</td>
                 <td> <?php checkPASS($gd); ?></td>
             </tr>
             <tr>
                 <td>openssl</td>
-                <td>建议支持（用于删除文件,PHP>7.0）</td>
+                <td>建议支持 | 生成加密删除url,需PHP>7.0</td>
                 <td> <?php checkPASS($openssl); ?></td>
             </tr>
             <tr>
                 <td>file.php</td>
-                <td>0755可执行权限（非windows系统）</td>
+                <td>0755可执行权限 | 非windows系统</td>
                 <td> <?php checkPASS($file_php); ?></td>
             </tr>
             <tr>
@@ -103,7 +103,7 @@ function checkPASS($name)
             </tr>
             <tr>
                 <td>.user.ini</td>
-                <td>防止跨目录访问和读取文件-><a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini" target="_blank">删除方法</a></td>
+                <td>防跨目录读写文件 | 删除方法:<a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini" target="_blank"> LNMP</a> | <a href="https://www.bt.cn/bbs/forum.php?mod=viewthread&tid=36605&page=1#pid122035" target="_blank">BT宝塔</a></td>
                 <td><?php checkPASS($userINI); ?></td>
             </tr>
         </tbody>

@@ -823,6 +823,7 @@ if (isset($_GET['reimg'])) {
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/md5.min.js"></script>
+<?php /** 引入空间检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
 <script>
     // tips提示
     $('[data-toggle="tooltip"]').tooltip({

@@ -39,10 +39,8 @@
   </p>
 </footer>
 
-<?php
-// 环境检测
-checkEnv($config['checkEnv']);
-?>
+<?php /** 环境检测 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php'; ?>
+
 <script>
   // js 获取当前网址二维码
   var qrcode = new QRCode(document.getElementById("qrcode"), {

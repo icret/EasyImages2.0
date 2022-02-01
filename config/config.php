@@ -46,7 +46,7 @@ $config=Array
 	'checkImg'=>0,
 	'checkImg_value'=>50,
 	'moderatecontent_key'=>'',
-	'nsfwjs_url'=>'http://172.17.0.2:3307/api/nsfw/classify?url=',
+	'nsfwjs_url'=>'',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 <script>
 var _hmt = _hmt || [];
@@ -56,8 +56,7 @@ var _hmt = _hmt || [];
   var s = document.getElementsByTagName("script")[0]; 
   s.parentNode.insertBefore(hm, s);
 })();
-</script>
-',
+</script>',
 	'ad_top'=>0,
 	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
 <div class="col-md-12" style="text-align: center;margin:2px;">
@@ -82,5 +81,5 @@ var _hmt = _hmt || [];
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.4.8',
-	'form'=>'2022-02-01 03:21:02'
+	'form'=>'2022-02-02 03:25:00'
 	);

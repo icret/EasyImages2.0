@@ -44,7 +44,7 @@
 2. 对`PHP`不太熟悉的请不要将图床程序放置于二级目录
 3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如宝塔面板
 4. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
-5. 第一使用会执行安装程序并生成`install.lock` 不执行安装可以删除`install`目录
+5. 第一次使用会执行安装程序并生成`install.lock` 不执行安装可以删除`install`目录
 6. 第一次访问会检查环境并在`config`目录下生成`EasyImage.lock`
 7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
 8. 出现`undefined function imagecreatefromwebp()`是因为GD没安装webp
@@ -104,6 +104,8 @@ $HTTP["url"] =~ "^/(i|public)/" {
 - 修复无可疑图片时显示错误
 - 修复开启登录上传后无法上传的bug
 - 增加安装时检测.user.ini
+- 增加检测鉴黄接口是否可以正确访问
+- 将插件检测等敏感信息转义到管理目录
 - 增加 [nsfwjs](https://github.com/infinitered/nsfwjs) 接口方式检测违规图片
   - 作者测试时用的`docker`搭建 `docker`地址:[zengdawei/nsfw_restful_api
 ](https://hub.docker.com/r/zengdawei/nsfw_restful_api)
