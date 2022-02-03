@@ -180,7 +180,7 @@ $('#btndel').on('click', function () {
         }
 
         if (!file) {
-            alert('粘贴内容非图片！');
+            alert('粘贴内容非图片!');
             return;
         }
         var formData = new FormData();
@@ -220,13 +220,11 @@ $('#btndel').on('click', function () {
         xhr.send(formData);
     });
 })();
-/****************************************************************
-* 
-*/
+/******************************************************************/
 var _hmt = _hmt || [];
 (function () {
     var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?5320b69f4f1caa9328dfada73c8e6a75";
+    hm.src = "https://hm.baidu.com/hm.js?c790ac2bdc2f385757ecd0183206108d";
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(hm, s);
 })();
