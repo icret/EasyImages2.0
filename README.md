@@ -100,7 +100,7 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
-* 2022-1-28 v2.4.8 dev
+* 2022-2-5 v2.4.8
 - 调整缩略图内存至128M
 - 修复无可疑图片时显示错误
 - 修复转换为webp时会复制一份bug
