@@ -216,7 +216,7 @@ $('#btndel').on('click', function () {
         xhr.onerror = function () {
             alert('上传失败3');
         };
-        xhr.open('POST', './file.php', true);
+        xhr.open('POST', './application/upload.php', true);
         xhr.send(formData);
     });
 })();

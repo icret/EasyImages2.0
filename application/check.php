@@ -46,22 +46,22 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
                     }
                 }
                 // 文件权限检测
-                $quanxian = substr(base_convert(fileperms("file.php"), 10, 8), 3);
+                $quanxian = substr(base_convert(fileperms("./application/upload.php"), 10, 8), 3);
                 if (IS_WIN) {
                     echo '
-                    <p style="color:green">file.php 文件可执行</p>
+                    <p style="color:green">upload.php 文件可执行</p>
                     <p style="color:green">/i 目录可读写</p>
                     ';
                 }
                 if (!IS_WIN) {
                     if ($quanxian !== '755' and !is_writable(APP_ROOT . '/i/')) {
                         echo '
-                        <p style="color:red">file.php 文件不可执行</font>>
+                        <p style="color:red">upload.php 文件不可执行</font>>
                         <p style="color:red">/i 目录可读写</font>>
                         ';
                     } else {
                         echo '
-                        <p style="color:green">file.php 文件可执行</p>
+                        <p style="color:green">upload.php 文件可执行</p>
                         <p style="color:green">/i 目录可读写</p>
                         ';
                     }

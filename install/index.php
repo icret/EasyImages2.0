@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../application/function.php';
+clearstatcache();
 // 存在程序锁则跳转主页
 if (file_exists(APP_ROOT . '/install/install.lock')) {
     exit(header("Location:/../index.php"));
@@ -9,7 +10,7 @@ $fileinfo = extension_loaded('fileinfo') ? true : false;
 $gd = extension_loaded('gd') ? true :  false;
 $openssl = extension_loaded('openssl') ? true :  false;
 
-$file = substr(base_convert(fileperms(APP_ROOT . "/file.php"), 10, 8), 3);
+$file = substr(base_convert(fileperms(APP_ROOT . "/application/upload.php"), 10, 8), 3);
 if (IS_WIN) {
     $file_php = true;
     $i_wjj =  true;
@@ -92,7 +93,7 @@ function checkPASS($name)
                 <td> <?php checkPASS($openssl); ?></td>
             </tr>
             <tr>
-                <td>file.php</td>
+                <td>upload.php</td>
                 <td>0755可执行权限 | 非windows系统</td>
                 <td> <?php checkPASS($file_php); ?></td>
             </tr>
