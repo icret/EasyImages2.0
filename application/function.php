@@ -604,6 +604,7 @@ function moderatecontent_json($img, $url = null)
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArray);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36');
     $output = curl_exec($ch);
     curl_close($ch);
@@ -716,14 +717,12 @@ function checkImg($imageUrl, $type = 1)
         $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
         $name = date('Y_m_d') . '_' . basename($imageUrl);                    // 文件名 2021_10_30_p8vypd.png
         $new_path = APP_ROOT . $config['path'] . 'suspic/' . $name;           // 新路径含文件名
-        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                  // suspic路径
+        $suspic_dir = APP_ROOT . $config['path'] . 'suspic/';                  // suspic路径
 
-        if (is_dir($cache_dir)) {                                             // 创建suspic目录并移动
-            rename($old_path, $new_path);
-        } else {
-            mkdir($cache_dir, 0777, true);
-            rename($old_path, $new_path);
+        if (!is_dir($suspic_dir)) {                                            // 创建suspic目录并移动
+            mkdir($suspic_dir, 0777, true);
         }
+        rename($old_path, $new_path);
     }
 }
 

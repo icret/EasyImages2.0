@@ -1,9 +1,10 @@
 <?php
 
 require_once __DIR__ . '/function.php';
+require_once __DIR__ . '/WaterMask.php';
 
 // 压缩图片与图片鉴黄
-function process($filePath, $absolutePath)
+function compress($absolutePath)
 {
     global $config;
     // 压缩图片 后压缩模式，不影响前台输出速度
@@ -18,14 +19,59 @@ function process($filePath, $absolutePath)
             flush();
         }
     }
+}
 
+// 设置水印
+function water($source)
+{
+    global $config;
+
+    // 文字水印
+    if ($config['watermark'] == 1) {
+        // 过滤gif
+        if (isAnimatedGif($source) === 0) {
+            $arr = [
+                #  水印图片路径（如果不存在将会被当成是字符串水印）
+                'res' => $config['waterText'],
+                #  水印显示位置
+                'pos' => $config['waterPosition'],
+                #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
+                'name' => $source,
+                'font' => APP_ROOT . $config['textFont'],
+                'fontSize' => $config['textSize'],
+                'color' => $config['textColor'],
+            ];
+            Imgs::setWater($source, $arr);
+        }
+    }
+
+    // 图片水印
+    if ($config['watermark'] == 2) {
+        // 过滤gif
+        if (isAnimatedGif($source) === 0) {
+            $arr = [
+                #  水印图片路径（如果不存在将会被当成是字符串水印）
+                'res' => APP_ROOT . $config['waterImg'],
+                #  水印显示位置
+                'pos' => $config['waterPosition'],
+                #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
+                'name' => $source,
+            ];
+            Imgs::setWater($source, $arr);
+        }
+    }
+}
+
+function process_checkImg($imgurl)
+{
+    global $config;
     // 图片违规检查
     if ($config['checkImg'] == 1) {
-        @checkImg($config['imgurl'] . $filePath, 1);
+        checkImg($imgurl, 1);
     }
 
     if ($config['checkImg'] == 2) {
-        @checkImg($config['imgurl'] . $filePath, 2);
+        checkImg($imgurl, 2);
     }
 }
 
@@ -81,4 +127,13 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "We
     $log = array_replace($logs, $log);
     cache_write($logFileName, $log, 'logs');
     */
+}
+
+if (isset($_GET['auth'])) {
+    $checkAuth = md5($config['domain'] . $config['password']);
+
+    // 鉴权
+    if ($_GET['auth'] == $checkAuth) {
+        process_checkImg($_GET['img']);
+    }
 }

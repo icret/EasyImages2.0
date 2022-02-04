@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../application/function.php';
 require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/class.upload.php';
-require_once APP_ROOT . '/application/WaterMask.php';
 require_once APP_ROOT . '/config/api_key.php';
 
 header('Access-Control-Allow-Origin:*');
@@ -43,53 +42,8 @@ if ($handle->uploaded) {
     // 转换图片为指定格式
     $handle->image_convert = $config['imgConvert'];
 
-    /* 等比例缩减图片 放到前端了
-    if ($config['imgRatio']) {
-        $handle->image_resize = true;
-        $handle->image_x = $config['image_x'];
-        $handle->image_y = $config['image_y'];
-    }
-    */
     // 存储图片路径:images/201807/
     $handle->process('../' . config_path());
-
-    // 设置水印
-    if ($config['watermark'] > 0) {
-        switch ($config['watermark']) {
-            case 1: // 文字水印 过滤gif
-                if (isAnimatedGif($handle->file_src_pathname) === 0) {
-                    $arr = [
-                        #  水印图片路径（如果不存在将会被当成是字符串水印）
-                        'res' => $config['waterText'],
-                        #  水印显示位置
-                        'pos' => $config['waterPosition'],
-                        #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
-                        'name' => $handle->file_dst_pathname,
-                        'font' => $config['textFont'],
-                        'fontSize' => $config['textSize'],
-                        'color' => $config['textColor'],
-                    ];
-                    Imgs::setWater($handle->file_dst_pathname, $arr);
-                }
-                break;
-            case 2: // 图片水印
-                if (isAnimatedGif($handle->file_src_pathname) === 0) {
-                    $arr = [
-                        #  水印图片路径（如果不存在将会被当成是字符串水印）
-                        'res' => $config['waterImg'],
-                        #  水印显示位置
-                        'pos' => $config['waterPosition'],
-                        #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
-                        'name' => $handle->file_dst_pathname,
-                    ];
-                    Imgs::setWater($handle->file_dst_pathname, $arr);
-                }
-                break;
-            default:
-                echo $handle->error;
-                break;
-        }
-    }
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
@@ -129,14 +83,28 @@ if ($handle->uploaded) {
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
-    // 后续处理
-    require_once APP_ROOT . '/application/process.php';
-    // 日志
-    if ($config['upload_logs']) {
-        @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
-    }
-    // 压缩|鉴黄
-    process(config_path() . $handle->file_dst_name, $handle->file_dst_pathname);
+    /** 后续处理 */
+    require APP_ROOT . '/application/process.php';
+    
+    // 普通模式鉴黄
+    process_checkImg($imageUrl);
 
+    // 使用fastcgi_finish_request操作
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+        // 日志
+        if ($config['upload_logs']) @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        // 水印        
+        @water($handle->file_dst_pathname);
+        // 压缩        
+        @compress($handle->file_dst_pathname);
+    } else {
+        // 日志
+        if ($config['upload_logs']) write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        // 水印
+        @water($handle->file_dst_pathname);
+        // 压缩
+        @compress($handle->file_dst_pathname);
+    }
     unset($handle);
 }

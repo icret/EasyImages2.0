@@ -1,8 +1,7 @@
 
 <?php
-require __DIR__ . '/application/function.php';
-require APP_ROOT . '/application/class.upload.php';
-require APP_ROOT . '/application/WaterMask.php';
+require __DIR__ . '/function.php';
+require __DIR__ . '/class.upload.php';
 
 // 检查登录
 if ($config['mustLogin']) {
@@ -52,44 +51,6 @@ if ($handle->uploaded) {
     // 存储图片路径:images/201807/
     $handle->process(APP_ROOT . config_path());
 
-    // 设置水印
-    if ($config['watermark'] > 0) {
-        switch ($config['watermark']) {
-            case 1: // 文字水印 过滤gif
-                if (isAnimatedGif($handle->file_src_pathname) === 0) {
-                    $arr = [
-                        #  水印图片路径（如果不存在将会被当成是字符串水印）
-                        'res' => $config['waterText'],
-                        #  水印显示位置
-                        'pos' => $config['waterPosition'],
-                        #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
-                        'name' => $handle->file_dst_pathname,
-                        'font' => APP_ROOT . $config['textFont'],
-                        'fontSize' => $config['textSize'],
-                        'color' => $config['textColor'],
-                    ];
-                    Imgs::setWater($handle->file_dst_pathname, $arr);
-                }
-                break;
-            case 2: // 图片水印
-                if (isAnimatedGif($handle->file_src_pathname) === 0) {
-                    $arr = [
-                        #  水印图片路径（如果不存在将会被当成是字符串水印）
-                        'res' => APP_ROOT . $config['waterImg'],
-                        #  水印显示位置
-                        'pos' => $config['waterPosition'],
-                        #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
-                        'name' => $handle->file_dst_pathname,
-                    ];
-                    Imgs::setWater($handle->file_dst_pathname, $arr);
-                }
-                break;
-            default:
-                echo $handle->error;
-                break;
-        }
-    }
-
     /*
     // 创建缩略图 开启后会个别返回文件失败，暂时没找到替代方案，如果启用此项目，需要将list.php中的get_online_thumbnail改成return_thumbnail_images函数
     if ($config['thumbnail']) {
@@ -132,17 +93,46 @@ if ($handle->uploaded) {
         );
         unset($handle);
         header('Content-Type:application/json; charset=utf-8');
+        unset($handle);
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
-    // 后续处理
-    require_once APP_ROOT . '/application/process.php';
-    // 日志
-    if ($config['upload_logs']) {
-        @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+
+    /** 后续处理 */
+    require __DIR__ . '/process.php';
+    /*
+    require __DIR__ . '/FsockService.php';
+
+    // 使用fosksock异步申请鉴黄
+    if ($config['checkImg']) {
+        $process = array(
+            'auth' => md5($config['domain'] . $config['password']),
+            'img' => $imageUrl
+        );
+        @request_asynchronous('/application/process.php', 'GET', $process, $config['domain']);
     }
-    // 压缩|鉴黄
-    process(config_path() . $handle->file_dst_name, $handle->file_dst_pathname);
+    */
+    // 普通模式鉴黄
+    process_checkImg($imageUrl);
+
+    // 使用fastcgi_finish_request操作
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+        // 日志
+        if ($config['upload_logs']) @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        // 水印        
+        @water($handle->file_dst_pathname);
+        // 压缩        
+        @compress($handle->file_dst_pathname);
+    } else {
+        // 日志
+        if ($config['upload_logs']) write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        // 水印
+        @water($handle->file_dst_pathname);
+        // 压缩
+        @compress($handle->file_dst_pathname);
+    }
+
 
     unset($handle);
 }

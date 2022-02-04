@@ -90,7 +90,7 @@ mustLogin();
     // 自动上传
     autoUpload: false,
     // 文件上传提交地址
-    url: 'file.php',
+    url: '/application/upload.php',
     // 最大支持的上传文件
     max_file_size: <?php echo $config['maxSize']; ?>,
     // 分片上传 0为不分片 分片容易使图片上传失败
