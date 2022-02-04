@@ -113,7 +113,7 @@ if ($handle->uploaded) {
     }
     */
     // 普通模式鉴黄
-    process_checkImg($imageUrl);
+    @process_checkImg($imageUrl);
 
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) {

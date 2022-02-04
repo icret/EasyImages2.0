@@ -101,12 +101,13 @@ $HTTP["url"] =~ "^/(i|public)/" {
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
 * 2022-1-28 v2.4.8 dev
+- 调整缩略图内存至128M
 - 修复无可疑图片时显示错误
 - 修复转换为webp时会复制一份bug
 - 修复开启登录上传后无法上传的bug
+- 插件检测的敏感信息转移到管理目录
 - 增加安装时检测.user.ini
 - 增加检测鉴黄接口是否可以正确访问
-- 将插件检测等敏感信息转义到管理目录
 - 增加异步处理文件,上传完毕后处理速度变快了
 - 增加 [nsfwjs](https://github.com/infinitered/nsfwjs) 接口方式检测违规图片
   - 作者测试时用的`docker`搭建 `docker`地址:[zengdawei/nsfw_restful_api

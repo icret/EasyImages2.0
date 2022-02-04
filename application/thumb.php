@@ -46,16 +46,19 @@ Thumb::show($src, $w, $h);
 
 
 require_once __DIR__ . '/function.php';
+// 中文翻译 https://my.oschina.net/whrlmc/blog/81739
 define('LOCAL_FILE_BASE_DIRECTORY', APP_ROOT);
+define('MEMORY_LIMIT', '128M');
 define('DEFAULT_WIDTH', 258);
 define('DEFAULT_HEIGHT', 258);
 define('FILE_CACHE_PREFIX', 'EasyImage');
 define('DEFAULT_ZC', 0);
+
 define('MAX_WIDTH', 10240);
 define('MAX_HEIGHT', 10240);
 define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'thumbnails');
-define('NOT_FOUND_IMAGE', '../public/images/404.png');
-define('ERROR_IMAGE', '无法生成缩略图');
+define('NOT_FOUND_IMAGE', $config['imgurl'] . '/public/images/404.png');
+define('ERROR_IMAGE', $config['imgurl'] . '/public/images/404.png');
 define('DISPLAY_ERROR_MESSAGES', false);
 define('MAX_FILE_SIZE', 10485760);      // 10 Megs 是 10485760。这是我们将处理的最大内部或外部文件大小。
 define('FILE_CACHE_TIME_BETWEEN_CLEANS', 86400); // 多久清理一次缓存
