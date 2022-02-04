@@ -17,7 +17,7 @@ $config=Array
 	'imgName'=>'default',
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
-	'watermark'=>2,
+	'watermark'=>0,
 	'waterText'=>'简单图床 - ww.png.cm',
 	'waterPosition'=>0,
 	'textColor'=>'255,0,0,1',
@@ -81,5 +81,5 @@ var _hmt = _hmt || [];
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.4.8',
-	'form'=>'2022-02-04 20:04:52'
+	'form'=>'2022-02-04 20:31:03'
 	);
