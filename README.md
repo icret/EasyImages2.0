@@ -20,7 +20,10 @@
 
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
-## 功能支持：
+## 目录
+[特性](#特性) &nbsp;[使用注意](#使用注意) &nbsp;[安装](#安装) &nbsp;[程序升级](#程序升级) &nbsp;[安全配置](#安全配置) &nbsp;[更新日志](#更新日志) &nbsp;[支持开发者](#支持开发者) &nbsp;[界面演示](#界面演示) &nbsp;[兼容](#兼容) &nbsp;[鸣谢](#鸣谢) &nbsp;[开源许可](#开源许可) &nbsp;
+
+## 特性
 
 - [x] 支持仅登录后上传
 - [x] 支持设置图片质量
@@ -32,13 +35,13 @@
 - [x] 在线管理图片
 - [x] 支持网站统计
 - [x] 支持设置广告
-- [x] 支持图片监黄
+- [x] 支持图片鉴黄
 - [x] 支持自定义代码
 - [x] 支持上传IP黑白名单
 - [x] 支持创建仅上传用户
 - [x] 更多支持请安装尝试···
 
-## 使用注意：
+## 使用注意
 
 1. 请将所有文件赋予`0755`和`www`权限
 2. 对`PHP`不太熟悉的请不要将图床程序放置于二级目录
@@ -64,7 +67,7 @@
 
  ## 程序升级
  
-- 备份`config`目录和`上传目录`
+- 备份`config`(没有增加上传用户和api可以只保留`config.php`文件)目录和`上传目录`
 - 将新程序下载至网站目录解压覆盖，然后将备份的文件替换既完成升级
 
 ## 安全配置
@@ -112,7 +115,7 @@ $HTTP["url"] =~ "^/(i|public)/" {
 - 增加 [nsfwjs](https://github.com/infinitered/nsfwjs) 接口方式检测违规图片
   - 作者测试时用的`docker`搭建 `docker`地址:[zengdawei/nsfw_restful_api
 ](https://hub.docker.com/r/zengdawei/nsfw_restful_api)
-  - 使用注意 程序希望的nsfwjs返回json 并且如下格式：
+  - 使用注意 程序期望nsfwjs返回json 并且如下格式：
 ```json
 [
     {
