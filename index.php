@@ -94,6 +94,10 @@ mustLogin();
     chunk_size: 0,
     // 点击文件列表上传文件
     browseByClickList: true,
+    // flash 上传组件地址
+    flash_swf_url: 'public/static/zui/lib/uploader/Moxie.swf',
+    // silverlight 上传组件地址
+    flash_swf_url: 'public/static/zui/lib/uploader/Moxie.xap',
     // 预览图尺寸
     previewImageSize: {
       'width': 80,
@@ -114,7 +118,7 @@ mustLogin();
     },
     // 限制文件上传数目
     limitFilesCount: <?php echo $config['maxUploadFiles']; ?>,
-    // 自动上传失败的文件
+    // 重置上传失败的文件
     autoResetFails: true,
     <?php echo imgRatio(); ?>,
     responseHandler: function(responseObject, file) {
@@ -123,21 +127,21 @@ mustLogin();
       console.log(obj); // 输出log
       if (obj.result === 'success') {
         var links = document.getElementById("links");
-        links.innerHTML += obj.url + "\n";
+        links.innerHTML += obj.url + "\r\n";
 
         var bbscode = document.getElementById("bbscode");
-        bbscode.innerHTML += "[img]" + obj.url + "[/img]\n";
+        bbscode.innerHTML += "[img]" + obj.url + "[/img]\r\n";
 
         var markdown = document.getElementById("markdown");
-        markdown.innerHTML += "![简单图床 - EasyImage](" + obj.url + ")\n";
+        markdown.innerHTML += "![" + obj.srcName + "](" + obj.url + ")\r\n";
 
         var html = document.getElementById("html");
-        html.innerHTML += "&lt;img src=\"" + obj.url + "\" alt=\"简单图床 - EasyImage\" /&#62;\n";
+        html.innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
 
         var del = document.getElementById("del");
-        del.innerHTML += obj.del + "\n";
+        del.innerHTML += obj.del + "\r\n";
       } else {
-        return '上传失败，服务器返回错误:' + obj.message;
+        return '上传失败,服务器返回错误:' + obj.message;
       }
     }
   });

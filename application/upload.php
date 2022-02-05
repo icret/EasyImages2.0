@@ -61,14 +61,16 @@ if ($handle->uploaded) {
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
+
         // 上传成功后返回json数据
-        $imageUrl = $config['imgurl'] . config_path() . $handle->file_dst_name;
+        $pathIMG = config_path() . $handle->file_dst_name;
+        $imageUrl = $config['imgurl'] . $pathIMG;
 
         // 关闭上传后显示加密删除链接
         if ($config['show_user_hash_del']) {
             // 判断PHP版本启用删除
             if (PHP_VERSION >= '7') {
-                $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash(config_path() . $handle->file_dst_name, 0);
+                $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash($pathIMG, 0);
             } else {
                 $delUrl = "Sever PHP version lower 7.0";
             }
@@ -77,10 +79,12 @@ if ($handle->uploaded) {
         }
 
         $reJson = array(
-            "result" => "success",
-            "code"   => 200,
-            "url"    => $imageUrl,
-            "del"    => $delUrl,
+            "result"    => "success",
+            "code"      => 200,
+            "url"       => $imageUrl,
+            "srcName"   => $handle->file_src_name_body,
+            "thumb"     => $config['domain'] . '/application/thumb.php?img=' . $pathIMG,
+            "del"       => $delUrl,
         );
         echo json_encode($reJson);
         $handle->clean();
@@ -119,14 +123,14 @@ if ($handle->uploaded) {
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
         // 日志
-        if ($config['upload_logs']) @write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 水印        
         @water($handle->file_dst_pathname);
         // 压缩        
         @compress($handle->file_dst_pathname);
     } else {
         // 日志
-        if ($config['upload_logs']) write_log(config_path() . $handle->file_dst_name, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 水印
         @water($handle->file_dst_pathname);
         // 压缩
