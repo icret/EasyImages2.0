@@ -125,7 +125,7 @@ if (isset($_GET['login'])) {
 		</div>
 	</div>
 </form>
-<script src="<?php static_cdn(); ?>/public/static/md5.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
 <script>
 	function md5_post() {
 		var password = document.getElementById('password');
