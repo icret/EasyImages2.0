@@ -7,12 +7,12 @@ $config=Array
 	'tips'=>'<a><li class="icon icon-bullhorn text-muted"> 单文件≤10M，单次上传≤30张</li></a>
 <a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-heart"> 简单图床是一款开源图床, 支持多文件上传无数据库</i></a>
 <a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-github"> 如果你喜欢这种图床风格就下载喔 (๑•̀ㅂ•́)و✧</i></a>',
-	'domain'=>'http://127.0.0.1',
-	'imgurl'=>'http://127.0.0.1',
+	'domain'=>'http://127.0.01',
+	'imgurl'=>'http://127.0.01',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>0,
+	'apiStatus'=>1,
 	'path'=>'/i/',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
@@ -56,7 +56,8 @@ var _hmt = _hmt || [];
   var s = document.getElementsByTagName("script")[0]; 
   s.parentNode.insertBefore(hm, s);
 })();
-</script>',
+</script>
+',
 	'ad_top'=>0,
 	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
 <div class="col-md-12" style="text-align: center;margin:2px;">
@@ -81,5 +82,5 @@ var _hmt = _hmt || [];
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.4.9',
-	'form'=>'2022-02-06 15:27:17'
+	'form'=>'2022-02-07 05:34:51'
 	);
