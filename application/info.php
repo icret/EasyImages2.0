@@ -87,7 +87,7 @@ clearstatcache();
         </div>
     </div>
 </div>
-<script src="<?php static_cdn(); ?>/public/static/exif.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/exif/exif.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script>
     // 获取图片长宽
@@ -143,7 +143,7 @@ clearstatcache();
         });
     }
     // 更改网页标题
-    document.title = "图片<?php echo basename($img); ?>的Exif信息 - <?php echo $config['title']; ?>"
+    document.title = "图片<?php echo basename($img); ?>的详细信息 - <?php echo $config['title']; ?>"
 </script>
 <?php
 include_once __DIR__ . "/footer.php";

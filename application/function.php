@@ -354,7 +354,7 @@ function getActive($url)
 {
     $arr = $_SERVER['SCRIPT_NAME'];
     if (strpos($arr, $url)) {
-        return 'class="active"';
+        return ' class="active"';
     }
 }
 

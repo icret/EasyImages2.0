@@ -21,9 +21,9 @@
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
 ## 目录
-[特性](#特性) &nbsp;[使用注意](#使用注意) &nbsp;[安装](#安装) &nbsp;[程序升级](#程序升级) &nbsp;[安全配置](#安全配置) &nbsp;[更新日志](#更新日志) &nbsp;[支持开发者](#支持开发者) &nbsp;[界面演示](#界面演示) &nbsp;[兼容](#兼容) &nbsp;[鸣谢](#鸣谢) &nbsp;[开源许可](#开源许可) &nbsp;
+[特点](#特点) &nbsp;[使用注意](#使用注意) &nbsp;[安装](#安装) &nbsp;[程序升级](#程序升级) &nbsp;[安全配置](#安全配置) &nbsp;[更新日志](#更新日志) &nbsp;[支持开发者](#支持开发者) &nbsp;[界面演示](#界面演示) &nbsp;[兼容](#兼容) &nbsp;[鸣谢](#鸣谢) &nbsp;[开源许可](#开源许可) &nbsp;
 
-## 特性
+## 特点
 
 - [x] 支持仅登录后上传
 - [x] 支持设置图片质量
@@ -102,6 +102,12 @@ $HTTP["url"] =~ "^/(i|public)/" {
 ## 更新日志
 
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
+
+* 2022-2-6 v2.4.9
+- 修复flash和silverlight路径引用(>IE9不影响)
+- markdown html alt值改为源文件名
+- 升级jquery-3.4.1至3.6.0
+- 调整了静态文件位置
 
 * 2022-2-5 v2.4.8
 - 调整缩略图内存至128M

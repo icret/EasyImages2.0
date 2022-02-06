@@ -80,6 +80,6 @@ var _hmt = _hmt || [];
 	'check_ip'=>0,
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
-	'version'=>'2.4.8',
-	'form'=>'2022-02-04 20:31:03'
+	'version'=>'2.4.9',
+	'form'=>'2022-02-06 15:27:17'
 	);

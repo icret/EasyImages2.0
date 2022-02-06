@@ -42,6 +42,13 @@
 <?php /** 环境检测 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php'; ?>
 
 <script>
+  // 导航状态
+  $('.nav-pills').find('a').each(function() {
+    if (this.href == document.location.href) {
+      $(this).parent().addClass('active'); // this.className = 'active';
+    }
+  });
+  
   // js 获取当前网址二维码
   var qrcode = new QRCode(document.getElementById("qrcode"), {
     text: window.location.href,

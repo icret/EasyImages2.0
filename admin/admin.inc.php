@@ -127,16 +127,16 @@ if (isset($_GET['reimg'])) {
     <div class="row">
         <div class="alert alert-primary alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-            <h5>目录保存以 年/月/日/ 递进，非必要请勿修改! 否则会导致部分操作不可用；</h5>
-            <h5>本人仅为程序开源创作，如非法网站使用与本人无关，请勿用于非法用途；</h5>
-            <h5>请为本人博客<a class="alert-link" href="https://blog.png.cm/" target="_blank">blog.png.cm</a>加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如: <a class="alert-link" href="https://blog.png.cm/">本人博客</a>，邮箱等）。</h5>
+            <h5>目录保存以 年/月/日/ 递进,非必要请勿修改! 否则会导致部分操作不可用;</h5>
+            <h5>本人仅为程序开源创作,如非法网站使用与本人无关,请勿用于非法用途;</h5>
+            <h5>请为本人博客<a class="alert-link" href="https://blog.png.cm/" target="_blank">blog.png.cm</a>加上网址链接,谢谢支持。作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中相关来源信息(例如: <a class="alert-link" href="https://blog.png.cm/">本人博客</a>,邮箱等)。</h5>
             <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
             <a href="https://www.kancloud.cn/easyimage/easyimage" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
             <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a>
             <button type="button" class="btn btn-danger btn-mini" data-scroll-inside="true" data-moveable="true" data-width="300px" data-height="250px" data-icon="heart" data-title="您的赞美是我开发的动力! " data-iframe="https://png.cm/sponsor/index.html" data-toggle="modal"><i class="icon icon-heart-empty"></i> 打赏作者</button>
         </div>
         <div class="col-md-2 col-xs-4">
-            <ul class="nav nav-tabs nav-stacked" id="tabC">
+            <ul class="nav nav-tabs nav-stacked">
                 <li class="active"><a data-tab href="#Content1">网站设置</a></li>
                 <li><a data-tab href="#Content9">界面设置</a></li>
                 <li><a data-tab href="#Content2">上传设置</a></li>
@@ -158,7 +158,7 @@ if (isset($_GET['reimg'])) {
                     </div>
                     <div class="form-group">
                         <label data-toggle="tooltip" title="如果只有一个域名请与上边一致">图片链接域名 | 末尾不加'/' </label>
-                        <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同，比如A域名上传，可以返回B域名图片链接，A、B需绑定到同一空间下,如果不变的话，下边2个填写成一样的! ">
+                        <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同,比如A域名上传,可以返回B域名图片链接,A、B需绑定到同一空间下,如果不变的话,下边2个填写成一样的! ">
                     </div>
                     <div class="form-group">
                         <label>网站标题</label>
@@ -197,7 +197,7 @@ if (isset($_GET['reimg'])) {
                             <label>缩略图生成方式</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片，会导致流量增加"> 关闭</label>
+                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
                         </div>
                         <div class="radio-primary">
                             <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 缺点:无法生成webp动图,无法被cdn缓存"> 实时生成 | 推荐</label>
@@ -230,7 +230,7 @@ if (isset($_GET['reimg'])) {
                     </div>
                     <div class="form-group">
                         <label data-toggle="tooltip" title="前后需加英文'/' 例: /i/">存储路径</label>
-                        <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全，参考: https://blog.png.cm/981.html 或 README.md">
+                        <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
                     </div>
                     <div class="form-group">
                         <label data-toggle="tooltip" title="请以英文','分割 最后一个扩展名后边不要加','">允许上传的图片扩展名</label>
@@ -285,7 +285,7 @@ if (isset($_GET['reimg'])) {
                         <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="1" max="50" step="1" onchange="document.getElementById('textSize').innerHTML=value">
                     </div>
                     <div class="form-group">
-                        <label data-toggle="tooltip" title="如果想改变字体，请选择支持中文的 GB/2312 字体">字体路径</label>
+                        <label data-toggle="tooltip" title="如果想改变字体,请选择支持中文的 GB/2312 字体">字体路径</label>
                         <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
@@ -439,11 +439,11 @@ if (isset($_GET['reimg'])) {
                         <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress" data-toggle="tooltip" title="压缩效率受后端压缩图片压缩率控制"> 使用本地</label>
                     </div>
                     <div class="radio-primary">
-                        <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key，填入API设置的TinyPng Key中"> 使用TinyPng</label>
+                        <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key,填入API设置的TinyPng Key中"> 使用TinyPng</label>
                     </div>
                     <label>* 已开启上传压缩的不需重复压缩! </label><br />
-                    <label>* 如果页面长时间没有响应，表示正面正在压缩! </label><br />
-                    <label>* 两种压缩均为不可逆，并且非常占用硬件资源. </label><br />
+                    <label>* 如果页面长时间没有响应,表示正面正在压缩! </label><br />
+                    <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
                     <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
                 </form>
                 </p>
@@ -457,7 +457,7 @@ if (isset($_GET['reimg'])) {
                 <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
                         <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key</a></label>
-                        <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响，国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
@@ -466,7 +466,7 @@ if (isset($_GET['reimg'])) {
                 <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
                         <label for="moderatecontent_key" data-toggle="tooltip" title="申请网址"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
-                        <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响，国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响,国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     <button type="submit" class="btn btn-mini btn-primary">保存</button>
@@ -474,7 +474,7 @@ if (isset($_GET['reimg'])) {
                 <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
                         <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs github"><a href="https://github.com/infinitered/nsfwjs" target="_blank">nsfwjs url</a></label>
-                        <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://IP:99/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://ip:3307/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     <button type="submit" class="btn btn-mini btn-primary">保存</button>
@@ -553,7 +553,7 @@ if (isset($_GET['reimg'])) {
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="upload_logs" value="0">
-                            <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?> title="日志每月保存一个文件；经过测试每月二十万条数据并不影响速度! ">
+                            <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?> title="日志每月保存一个文件;经过测试每月二十万条数据并不影响速度! ">
                             <label style="font-weight: bold">开启上传日志</label>
                         </div>
                     </div>
@@ -564,7 +564,7 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade" id="Content7">
-                <p>为了访问速度，仅显示最近20张图片；鉴黄需要在安全设置->开启图片鉴黄。</p>
+                <p>为了访问速度,仅显示最近20张图片;鉴黄需要在安全设置->开启图片鉴黄。</p>
                 <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
                 <p>获得key后打开->API 设置->Moderate Key->填入 </p>
                 <div class="table-responsive">
@@ -757,7 +757,7 @@ if (isset($_GET['reimg'])) {
                         <i class="icon-info-sign"></i>
                         <div class="content">
                             <p>直接输入账号和密码即可完成修改.</p>
-                            <p>更改后会立即生效并重新登录，请务必牢记账号和密码! </p>
+                            <p>更改后会立即生效并重新登录,请务必牢记账号和密码! </p>
                             <p>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到user对应的键值->填入</p>
                             <p>如果忘记密码请将密码->转换成MD5小写-><a href="https://md5jiami.bmcx.com/" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
                         </div>
@@ -785,8 +785,8 @@ if (isset($_GET['reimg'])) {
                     <div class="alert alert-primary with-icon col-xs-8" style="margin-top: 5px;">
                         <i class="icon-info-sign"></i>
                         <div class="content">
-                            <p>开启登录上传后，可以添加一些只能上传的账号.</p>
-                            <p>更改后会立即生效并重新登录，请将账号和密码发给使用者.</p>
+                            <p>开启登录上传后,可以添加一些只能上传的账号.</p>
+                            <p>更改后会立即生效并重新登录,请将账号和密码发给使用者.</p>
                             <p>上传用户的配置文件在<code>config.guest.php</code></p>
                             <p>如果忘记密码请填入账号并填写新的密码即可更正密码 | <b class="text-success">与更改管理 账号/密码不同!</b></p>
                         </div>
@@ -819,10 +819,10 @@ if (isset($_GET['reimg'])) {
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor.js"></script>
+<script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.js"></script>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/md5.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
 <?php /** 引入空间检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
 <script>
     // tips提示
@@ -835,7 +835,7 @@ if (isset($_GET['reimg'])) {
         var password = document.getElementById('uploader_password');
         var md5pwd = document.getElementById('uploader_md5_password');
         md5pwd.value = md5(password.value);
-        //可以校验判断表单内容，true就是通过提交，false，阻止提交
+        //可以校验判断表单内容,true就是通过提交,false,阻止提交
         return true;
     }
     // 账号密码 | 以md5加密方式发送
@@ -843,7 +843,7 @@ if (isset($_GET['reimg'])) {
         var password = document.getElementById('password');
         var md5pwd = document.getElementById('md5_password');
         md5pwd.value = md5(password.value);
-        //可以校验判断表单内容，true就是通过提交，false，阻止提交
+        //可以校验判断表单内容,true就是通过提交,false,阻止提交
         return true;
     }
     // 动态显示要删除的图片

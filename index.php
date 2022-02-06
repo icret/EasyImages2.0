@@ -95,9 +95,9 @@ mustLogin();
     // 点击文件列表上传文件
     browseByClickList: true,
     // flash 上传组件地址
-    flash_swf_url: 'public/static/zui/lib/uploader/Moxie.swf',
+    flash_swf_url: '<?php static_cdn(); ?>/public/static/zui/lib/uploader/Moxie.swf',
     // silverlight 上传组件地址
-    flash_swf_url: 'public/static/zui/lib/uploader/Moxie.xap',
+    flash_swf_url: '<?php static_cdn(); ?>/public/static/zui/lib/uploader/Moxie.xap',
     // 预览图尺寸
     previewImageSize: {
       'width': 80,
@@ -122,26 +122,17 @@ mustLogin();
     autoResetFails: true,
     <?php echo imgRatio(); ?>,
     responseHandler: function(responseObject, file) {
-
       var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
       console.log(obj); // 输出log
+      console.log(file); // 输出log
       if (obj.result === 'success') {
-        var links = document.getElementById("links");
-        links.innerHTML += obj.url + "\r\n";
-
-        var bbscode = document.getElementById("bbscode");
-        bbscode.innerHTML += "[img]" + obj.url + "[/img]\r\n";
-
-        var markdown = document.getElementById("markdown");
-        markdown.innerHTML += "![" + obj.srcName + "](" + obj.url + ")\r\n";
-
-        var html = document.getElementById("html");
-        html.innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
-
-        var del = document.getElementById("del");
-        del.innerHTML += obj.del + "\r\n";
+        document.getElementById("links").innerHTML += obj.url + "\r\n";
+        document.getElementById("bbscode").innerHTML += "[img]" + obj.url + "[/img]\r\n";
+        document.getElementById("markdown").innerHTML += "![" + obj.srcName + "](" + obj.url + ")\r\n";
+        document.getElementById("html").innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
+        document.getElementById("del").innerHTML += obj.del + "\r\n";
       } else {
-        return '上传失败,服务器返回错误:' + obj.message;
+        return '上传失败,错误信息:' + obj.message;
       }
     }
   });
