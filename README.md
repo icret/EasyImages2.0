@@ -112,9 +112,6 @@ $HTTP["url"] =~ "^/(i|public)/" {
 - 修复静态文件调用失败
 
 * 2022-2-6 v2.4.9
-- 修复静态文件引用
-
-* 2022-2-6 v2.4.9
 - 修复flash和silverlight路径引用(>IE9不影响)
 - markdown html alt值改为源文件名
 - 升级jquery-3.4.1至3.6.0
