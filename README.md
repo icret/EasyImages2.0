@@ -103,6 +103,17 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
+* 2022-2-13 v2.5.1
+- 异步执行鉴黄
+- 取消检测imagick扩展
+- 修复可能导致检测弹窗弹出失败
+
+* 2022-2-7 v2.5.0
+- 修复静态文件调用失败
+
+* 2022-2-6 v2.4.9
+- 修复静态文件引用
+
 * 2022-2-6 v2.4.9
 - 修复flash和silverlight路径引用(>IE9不影响)
 - markdown html alt值改为源文件名

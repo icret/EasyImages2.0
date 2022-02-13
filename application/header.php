@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/function.php';
-require_once APP_ROOT . '/application/total_files.php';
 ?>
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -40,25 +39,18 @@ require_once APP_ROOT . '/application/total_files.php';
 	<?php if ($config['ad_top']) echo $config['ad_top_info']; ?>
 	<div class="page-header">
 		<ul class="nav nav-pills">
-			<li>
-				<a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a>
-			</li>
+			<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
 			<?php
 			// 关闭广场非登录状态不显示广场导航
 			if ($config['showSwitch'] || is_who_login('admin')) echo '
-			<li>
-				<a href="' . $config['domain'] . '/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-success">' . get_file_by_glob(APP_ROOT . config_path(), 'number') . '</span></a>
-			</li>';
+			<li><a href="' . $config['domain'] . '/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-success">' . get_file_by_glob(APP_ROOT . config_path(), 'number') . '</span></a></li>';
 			// 登陆状态显示设置页面
 			if (is_who_login('admin')) {
 				echo '				
-			<li>
-				<a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"></i> 设置</a>
-			</li>';
+			<li><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"></i> 设置</a></li>';
 				// 登陆状态下开启统计页面与导航
 				if ($config['chart_on']) echo '
-			<li>
-				<a href="' . $config['domain'] . '/admin/chart.php' . '"><i class="icon icon-pie-chart"></i> 统计</a>
+			<li><a href="' . $config['domain'] . '/admin/chart.php' . '"><i class="icon icon-pie-chart"></i> 统计</a>
 			</li>';
 			} ?>
 

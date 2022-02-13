@@ -109,7 +109,7 @@ if ($state !== 'checked') {
 
         password.onblur = function() {
             if (this.value.length < 8 || this.value.length > 18) {
-                message.innerHTML = '密码长度错误，应为8~18位';
+                message.innerHTML = '密码长度错误,应为8~18位';
                 message.className = 'message wrong';
             } else {
                 message.innerHTML = '密码长度正确';

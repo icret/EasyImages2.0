@@ -17,11 +17,11 @@ $config=Array
 	'imgName'=>'default',
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
-	'watermark'=>0,
-	'waterText'=>'简单图床 - ww.png.cm',
+	'watermark'=>1,
+	'waterText'=>'简单图床 - png.cm',
 	'waterPosition'=>0,
 	'textColor'=>'255,0,0,1',
-	'textSize'=>20,
+	'textSize'=>50,
 	'textFont'=>'/public/static/hkxzy.ttf',
 	'waterImg'=>'/public/images/watermark.png',
 	'extensions'=>'gif,jpeg,png,tif,bmp,tif,svg,webp,jpg,tga,svg,ico',
@@ -41,7 +41,7 @@ $config=Array
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
 	'theme'=>'default',
-	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0',
+	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.0',
 	'TinyPng_key'=>'',
 	'checkImg'=>0,
 	'checkImg_value'=>50,
@@ -56,8 +56,7 @@ var _hmt = _hmt || [];
   var s = document.getElementsByTagName("script")[0]; 
   s.parentNode.insertBefore(hm, s);
 })();
-</script>
-',
+</script>',
 	'ad_top'=>0,
 	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
 <div class="col-md-12" style="text-align: center;margin:2px;">
@@ -81,6 +80,6 @@ var _hmt = _hmt || [];
 	'check_ip'=>0,
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
-	'version'=>'2.4.9',
-	'form'=>'2022-02-07 06:34:43'
+	'version'=>'2.5.1',
+	'form'=>'2022-02-13 16:06:20'
 	);

@@ -1,21 +1,17 @@
 <?php
 require_once 'application/header.php';
-// 公告
-if (!empty($config['tips'])) echo '
-<div class="marquee">
-<div class="wrap">
-  <div id="marquee2">
-    ' . $config['tips'] . '
-  </div>
-</div>
-</div>
-';
-
 // 检查登录
 mustLogin();
 ?>
-
 <div class="col-md-12">
+  <!-- 公告 -->
+  <div class="marquee">
+    <div class="wrap">
+      <div id="marquee2">
+        <?php if (!empty($config['tips'])) echo $config['tips']; ?>
+      </div>
+    </div>
+  </div>
   <div id='upShowID' class="uploader col-md-10 col-md-offset-1 clo-xs-12" data-ride="uploader" data-url="/application/upload.php">
     <div class="uploader-message text-center">
       <div class="content"></div>

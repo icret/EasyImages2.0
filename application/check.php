@@ -1,15 +1,14 @@
 <?php
 require_once __DIR__ . '/function.php';
-// global $config;
 // 跳转安装
 if (!is_file(APP_ROOT . '/install/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
-    echo '<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>';
+    exit('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');
 }
 /**
  * 检测弹窗内容
  */
 
-if (is_file(APP_ROOT . '/config/EasyIamge.lock')) return; // 查询锁定弹窗文件是否存在
+if (file_exists(APP_ROOT . '/config/EasyIamge.lock')) return; // 查询锁定弹窗文件是否存在
 file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定文件,如需再次展示请删除此文件!', FILE_APPEND | LOCK_EX);
 ?>
 <div class="modal fade" id="myModal-1">
@@ -34,8 +33,8 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
                 <p>post_max_size - POST上传最大值:<sapn style="color:green"><?php echo ini_get('post_max_size'); ?></sapn>
                 </p>
                 <?php
-                // 扩展检测
-                $expand = array('fileinfo', 'gd', 'openssl', 'imagick');
+                // 扩展检测 取消检测imagick扩展
+                $expand = array('fileinfo', 'gd', 'openssl');
                 foreach ($expand as $val) {
                     if (extension_loaded($val)) {
                         echo '
@@ -46,7 +45,7 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
                     }
                 }
                 // 文件权限检测
-                $quanxian = substr(base_convert(fileperms("./application/upload.php"), 10, 8), 3);
+                $quanxian = substr(base_convert(fileperms(APP_ROOT . "/application/upload.php"), 10, 8), 3);
                 if (IS_WIN) {
                     echo '
                     <p style="color:green">upload.php 文件可执行</p>

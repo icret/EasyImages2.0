@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/function.php';
+require_once __DIR__ . '/total_files.php';
 
 /**
  * 统计最近一个月上传文件数与空间占用

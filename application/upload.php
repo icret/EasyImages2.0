@@ -101,7 +101,6 @@ if ($handle->uploaded) {
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
-
     /** 后续处理 */
     require __DIR__ . '/process.php';
     /*
@@ -116,12 +115,11 @@ if ($handle->uploaded) {
         @request_asynchronous('/application/process.php', 'GET', $process, $config['domain']);
     }
     */
-    // 普通模式鉴黄
-    @process_checkImg($imageUrl);
-
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
+        // 普通模式鉴黄
+        @process_checkImg($imageUrl);
         // 日志
         if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 水印        
@@ -129,6 +127,8 @@ if ($handle->uploaded) {
         // 压缩        
         @compress($handle->file_dst_pathname);
     } else {
+        // 普通模式鉴黄
+        @process_checkImg($imageUrl);
         // 日志
         if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 水印
@@ -136,7 +136,6 @@ if ($handle->uploaded) {
         // 压缩
         @compress($handle->file_dst_pathname);
     }
-
 
     unset($handle);
 }
