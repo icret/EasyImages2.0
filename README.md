@@ -112,6 +112,9 @@ $HTTP["url"] =~ "^/(i|public)/" {
 - 修复静态文件调用失败
 
 * 2022-2-6 v2.4.9
+- 修复静态文件引用
+
+* 2022-2-6 v2.4.9
 - 修复flash和silverlight路径引用(>IE9不影响)
 - markdown html alt值改为源文件名
 - 升级jquery-3.4.1至3.6.0
@@ -395,10 +398,10 @@ RewriteRule config/(.*).(php)$ – [F]
  
  ## 界面演示
  
- ![简单图床 - 上传界面](https://i1.100024.xyz/i/2020/12/31/ulmtho.png)
- ![简单图床 - 广场界面](https://i1.100024.xyz/i/2020/12/31/2.png)
- ![简单图床 - 后台界面](https://i1.100024.xyz/i/2020/12/31/3.png)
- ![简单图床 - 统计界面](https://i1.100024.xyz/i/2020/12/31/4.png)
+ ![简单图床 - 上传界面](https://blog.png.cm/usr/uploads/2022/02/674074848.png)
+ ![简单图床 - 广场界面](https://blog.png.cm/usr/uploads/2022/02/3053540273.png)
+ ![简单图床 - 后台界面](https://blog.png.cm/usr/uploads/2022/02/2657944724.png)
+ ![简单图床 - 统计界面](https://blog.png.cm/usr/uploads/2022/02/1305032567.png)
   
 ## 兼容
  - 最低`PHP 5.6`,推荐`PHP 7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片

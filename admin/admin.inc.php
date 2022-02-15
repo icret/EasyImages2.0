@@ -133,7 +133,8 @@ if (isset($_GET['reimg'])) {
             <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
             <a href="https://www.kancloud.cn/easyimage/easyimage" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
             <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a>
-            <button type="button" class="btn btn-danger btn-mini" data-scroll-inside="true" data-moveable="true" data-width="300px" data-height="250px" data-icon="heart" data-title="您的赞美是我开发的动力! " data-iframe="https://png.cm/sponsor/index.html" data-toggle="modal"><i class="icon icon-heart-empty"></i> 打赏作者</button>
+            <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-success btn-mini"><i class="icon icon-wechat"></i> 打赏作者</i></a>
+            <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-primary btn-mini"><i class="icon icon-zhifubao"></i> 打赏作者</i></a>
         </div>
         <div class="col-md-2 col-xs-4">
             <ul class="nav nav-tabs nav-stacked">
