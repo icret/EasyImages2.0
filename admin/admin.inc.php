@@ -133,8 +133,8 @@ if (isset($_GET['reimg'])) {
             <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
             <a href="https://www.kancloud.cn/easyimage/easyimage" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
             <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a>
-            <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-success btn-mini"><i class="icon icon-wechat"></i> 打赏作者</i></a>
-            <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-primary btn-mini"><i class="icon icon-zhifubao"></i> 打赏作者</i></a>
+            <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
+            <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
         </div>
         <div class="col-md-2 col-xs-4">
             <ul class="nav nav-tabs nav-stacked">
@@ -143,7 +143,7 @@ if (isset($_GET['reimg'])) {
                 <li><a data-tab href="#Content2">上传设置</a></li>
                 <li><a data-tab href="#Content3">广告设置</a></li>
                 <li><a data-tab href="#Content5">API 设置</a></li>
-                <li><a data-tab href="#Content7">可疑图片</a></li>
+                <li><a data-tab href="#Content7">可疑图片<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'suspic', 'number'); ?></span></a></li>
                 <li><a data-tab href="#Content4">文件操作</a></li>
                 <li><a data-tab href="#Content10">账号密码</a></li>
                 <li><a data-tab href="#Content6">图片安全</a></li>
