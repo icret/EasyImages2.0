@@ -63,11 +63,12 @@ var _hmt = _hmt || [];
     <a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
 </div>',
 	'ad_bot'=>0,
-	'ad_bot_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
-<div class="col-md-12" style="text-align: center;margin:2px;">
-    <a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
+	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;margin:12px;">
+    <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
+    <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
 </div>',
 	'showSwitch'=>1,
+	'showSort'=>1,
 	'listNumber'=>20,
 	'customize'=>'',
 	'checkEnv'=>1,
@@ -80,6 +81,6 @@ var _hmt = _hmt || [];
 	'check_ip'=>0,
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
-	'version'=>'2.5.0',
-	'form'=>'2022-02-16 00:38:13'
+	'version'=>'2.5.1',
+	'form'=>'2022-02-17 23:53:12'
 	);

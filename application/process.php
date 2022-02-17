@@ -128,12 +128,3 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "We
     cache_write($logFileName, $log, 'logs');
     */
 }
-
-if (isset($_GET['auth'])) {
-    $checkAuth = md5($config['domain'] . $config['password']);
-
-    // 鉴权
-    if ($_GET['auth'] == $checkAuth) {
-        process_checkImg($_GET['img']);
-    }
-}

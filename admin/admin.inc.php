@@ -144,9 +144,9 @@ if (isset($_GET['reimg'])) {
                 <li><a data-tab href="#Content3">广告设置</a></li>
                 <li><a data-tab href="#Content5">API 设置</a></li>
                 <li><a data-tab href="#Content7">可疑图片<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'suspic', 'number'); ?></span></a></li>
-                <li><a data-tab href="#Content4">文件操作</a></li>
-                <li><a data-tab href="#Content10">账号密码</a></li>
+                <li><a data-tab href="#Content4">文件操作</a></li>                
                 <li><a data-tab href="#Content6">图片安全</a></li>
+                <li><a data-tab href="#Content10">账号密码</a></li>
                 <li><a data-tab href="#Content8">系统信息</a></li>
             </ul>
         </div>
@@ -189,7 +189,7 @@ if (isset($_GET['reimg'])) {
                         <div class="switch switch-inline">
                             <input type="hidden" name="static_cdn" value="0">
                             <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启静态文件CDN</label>
+                            <label style="font-weight: bold">静态文件CDN</label>
                         </div>
                         <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="静态文件CDN加速网址末尾不加'/'">
                     </div>
@@ -219,14 +219,14 @@ if (isset($_GET['reimg'])) {
                         <div class="switch switch-inline">
                             <input type="hidden" name="mustLogin" value="0">
                             <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启登录上传</label>
+                            <label style="font-weight: bold">登录上传</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="apiStatus" value="0">
                             <input type="checkbox" name="apiStatus" value="1" <?php if ($config['apiStatus']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启API上传</label>
+                            <label style="font-weight: bold">API上传</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -386,7 +386,7 @@ if (isset($_GET['reimg'])) {
                         <div class="switch switch-inline">
                             <input type="hidden" name="ad_top" value="0">
                             <input type="checkbox" name="ad_top" value="1" <?php if ($config['ad_top']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启顶部广告</label>
+                            <label style="font-weight: bold">顶部广告</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -397,7 +397,7 @@ if (isset($_GET['reimg'])) {
                         <div class="switch switch-inline">
                             <input type="hidden" name="ad_bot" value="0">
                             <input type="checkbox" name="ad_bot" value="1" <?php if ($config['ad_bot']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启底部广告</label>
+                            <label style="font-weight: bold">底部广告</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -454,41 +454,32 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade " id="Content5">
-                <b>外部KEY | 请根据需要申请并填写</b>
-                <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
+                <h5>外部KEY | 请根据需要申请并填写</h5>
+                <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
-                        <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key</a></label>
+                        <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key &nbsp;</a></label>
                         <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
-                    <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                    <button type="submit" class="btn btn-mini btn-primary">保存</button>
-                </form>
-                <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
                         <label for="moderatecontent_key" data-toggle="tooltip" title="申请网址"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
                         <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响,国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
-                    <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                    <button type="submit" class="btn btn-mini btn-primary">保存</button>
-                </form>
-                <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
-                        <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs github"><a href="https://github.com/infinitered/nsfwjs" target="_blank">nsfwjs url</a></label>
+                        <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs github"><a href="https://github.com/infinitered/nsfwjs" target="_blank">nsfwjs url &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></label>
                         <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://ip:3307/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     <button type="submit" class="btn btn-mini btn-primary">保存</button>
                 </form>
-                <b data-toggle="tooltip" title="新Token需按要求填入/config/api_key.php才生效">生成API upload Token</b>
+                <b data-toggle="tooltip" title="新Token需按要求填入/config/api_key.php才生效">生成新的API upload Token</b>
                 <form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="input-group">
                         <span class="input-group-addon">New Token</span>
                         <input type="text" class="form-control" id="exampleInputMoney1" value="<?php echo privateToken(); ?>">
                     </div>
                 </form>
-                <p>
-                <table class="table table-hover table-bordered table-condensed table-responsive">
+                <table class="table table-hover table-bordered table-condensed table-responsive" style="margin-top: 10px;">
                     <thead>
                         <tr>
                             <th>当前可用Token列表: </th>
@@ -498,7 +489,6 @@ if (isset($_GET['reimg'])) {
                         <?php foreach ($tokenList as $value) echo '<tr><td>' . $value . '</td></tr>'; ?>
                     </tbody>
                 </table>
-                </p>
                 <form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group">
                         <label for="exampleInputAccount6">根据ID/Token查找用户</label>
@@ -529,33 +519,30 @@ if (isset($_GET['reimg'])) {
                         <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
                         <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
                     </div>
+
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="check_ip" value="0">
                             <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启黑/白IP名单上传</label>
+                            <label style="font-weight: bold">黑/白IP名单上传</label>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label data-toggle="tooltip" title="IP与IP以英文,分隔 支持IP段">黑/白名单IP</label>
-                        <textarea class="form-control" rows="5" name="check_ip_list" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
-                    </div>
-                    <div class="form-group">
+                        <textarea class="form-control" rows="5" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
                     </div>
+
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="checkEnv" value="0">
                             <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启PHP插件检测 | 安全设置检测 | 版本检测</label>
+                            <label style="font-weight: bold">PHP扩展检测 | 安全设置检测 | 版本检测</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="upload_logs" value="0">
                             <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?> title="日志每月保存一个文件;经过测试每月二十万条数据并不影响速度! ">
-                            <label style="font-weight: bold">开启上传日志</label>
+                            <label style="font-weight: bold">上传日志</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -565,7 +552,7 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade" id="Content7">
-                <p>为了访问速度,仅显示最近20张图片;鉴黄需要在安全设置->开启图片鉴黄。</p>
+                <p>为了访问速度,仅显示最近20张图片;鉴黄需要在安全设置->图片鉴黄。</p>
                 <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
                 <p>获得key后打开->API 设置->Moderate Key->填入 </p>
                 <div class="table-responsive">
@@ -698,37 +685,45 @@ if (isset($_GET['reimg'])) {
                         </label>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline" data-toggle="tooltip" title=" 关闭广场非登录状态不显示广场导航">
-                            <input type="hidden" name="showSwitch" value="0">
-                            <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启广场</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>默认游客浏览数量 | 当前: </label>
-                        <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
-                        <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" data-toggle="tooltip" title="可在网址后填写参数实时更改预览数量 如: https://png.cm/application/list.php?num=3">
-                    </div>
-                    <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="show_user_hash_del" value="0">
                             <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启上传后显示删除链接</label>
+                            <label style="font-weight: bold">上传后显示删除链接</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="show_exif_info" value="0">
                             <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启图片Exif信息页面</label>
+                            <label style="font-weight: bold">图片Exif信息</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
                             <input type="hidden" name="chart_on" value="0">
                             <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">开启统计页面</label>
+                            <label style="font-weight: bold">统计信息</label>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title=" 关闭广场非登录状态不显示广场导航">
+                            <input type="hidden" name="showSwitch" value="0">
+                            <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">广场</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="以上传时间正序 | 开启倒序">
+                            <input type="hidden" name="showSort" value="0">
+                            <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">按上传时间排序</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>默认游客浏览数量 | 当前: </label>
+                        <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
+
+                        <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" data-toggle="tooltip" title="可在网址后填写参数实时更改预览数量 如: https://png.cm/application/list.php?num=3">
                     </div>
                     <div class="form-group">
                         <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">

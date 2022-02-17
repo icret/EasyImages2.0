@@ -139,7 +139,7 @@ function imgName($source = null)
             return sha1(microtime());
             break;
         default:
-            return base_convert(date('His') . mt_rand(1024, 9999), 10, 36);    // 将上传时间+随机数转换为36进制 例：vx77yu
+            return base_convert(date('His') . mt_rand(1001, 9999), 10, 36);    // 将上传时间+随机数转换为36进制 例：vx77yu
     }
 }
 
@@ -269,13 +269,21 @@ function getFile($dir)
  */
 function get_file_by_glob($dir_fileName_suffix, $type = 'list')
 {
-
+    global $config;
     $glob = glob($dir_fileName_suffix, GLOB_BRACE);
 
     // 获取所有文件
     if ($type == 'list') {
         foreach ($glob as $v) {
             if (is_file($v)) $res[] =  basename($v);
+        }
+        // 排序
+        if ($res) {
+            switch ($config['showSort']) {
+                case 1:
+                    $res = array_reverse($res);
+                    break;
+            }
         }
     }
 

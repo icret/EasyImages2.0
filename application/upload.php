@@ -103,18 +103,6 @@ if ($handle->uploaded) {
 
     /** 后续处理 */
     require __DIR__ . '/process.php';
-    /*
-    require __DIR__ . '/FsockService.php';
-
-    // 使用fosksock异步申请鉴黄
-    if ($config['checkImg']) {
-        $process = array(
-            'auth' => md5($config['domain'] . $config['password']),
-            'img' => $imageUrl
-        );
-        @request_asynchronous('/application/process.php', 'GET', $process, $config['domain']);
-    }
-    */
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
