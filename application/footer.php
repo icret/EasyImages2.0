@@ -1,4 +1,6 @@
-<?php if ($config['ad_bot']) echo $config['ad_bot_info']; // 底部广告 
+<?php
+defined('APP_ROOT') ?: exit; // 禁止访问
+if ($config['ad_bot']) echo $config['ad_bot_info']; // 底部广告 
 ?>
 <footer class="text-muted small col-md-12" style="text-align: center;">
   <hr>

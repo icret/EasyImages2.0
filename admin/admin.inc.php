@@ -23,7 +23,7 @@ if (!is_who_login('admin')) {
 }
 
 // 修改config配置
-if (isset($_POST['form'])) {
+if (isset($_POST['update'])) {
     $postArr = $_POST;
     $new_config = array_replace($config, $postArr);
     $config_file = APP_ROOT . '/config/config.php';
@@ -208,7 +208,7 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
@@ -375,7 +375,7 @@ if (isset($_GET['reimg'])) {
                         <input type="range" class="form-control" name="compress_ratio" value="<?php echo $config['compress_ratio']; ?>" min="1" max="100" step="1" onchange="document.getElementById('compress_ratio').innerHTML=value">
                     </div>
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
@@ -405,7 +405,7 @@ if (isset($_GET['reimg'])) {
                         <textarea class="form-control" rows="5" name="ad_bot_info"><?php echo $config['ad_bot_info']; ?></textarea>
                     </div>
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
@@ -459,7 +459,7 @@ if (isset($_GET['reimg'])) {
                     <div class="form-group">
                         <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key &nbsp;</a></label>
                         <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <div class="form-group">
                         <label for="moderatecontent_key" data-toggle="tooltip" title="申请网址"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
@@ -469,7 +469,7 @@ if (isset($_GET['reimg'])) {
                         <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs github"><a href="https://github.com/infinitered/nsfwjs" target="_blank">nsfwjs url &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></label>
                         <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://ip:3307/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
-                    <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                    <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     <button type="submit" class="btn btn-mini btn-primary">保存</button>
                 </form>
                 <b data-toggle="tooltip" title="新Token需按要求填入/config/api_key.php才生效">生成新的API upload Token</b>
@@ -546,7 +546,7 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
@@ -726,7 +726,7 @@ if (isset($_GET['reimg'])) {
                         <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" data-toggle="tooltip" title="可在网址后填写参数实时更改预览数量 如: https://png.cm/application/list.php?num=3">
                     </div>
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
@@ -746,7 +746,7 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn btn-primary">更改管理 账号/密码</button>
                     <div class="alert alert-primary with-icon col-xs-8" style="margin-top: 5px;">

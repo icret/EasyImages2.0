@@ -1,6 +1,4 @@
-<?php
-require_once __DIR__ . '/function.php';
-?>
+<?php require_once __DIR__ . '/function.php'; ?>
 <!DOCTYPE html>
 <html lang="zh-cn">
 

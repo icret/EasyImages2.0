@@ -41,7 +41,7 @@ $config=Array
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
 	'theme'=>'default',
-	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.0',
+	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.1',
 	'TinyPng_key'=>'',
 	'checkImg'=>0,
 	'checkImg_value'=>50,
@@ -82,5 +82,5 @@ var _hmt = _hmt || [];
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'version'=>'2.5.1',
-	'form'=>'2022-02-17 23:53:12'
+	'update'=>'2022-02-18 00:23:07'
 	);
