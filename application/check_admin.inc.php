@@ -17,7 +17,7 @@ foreach ($expand as $val) {
 if (strstr('localhost|127.0.0.1', $_SERVER['HTTP_HOST'])) {
     echo '
     <script>
-    new $.zui.Messager("请修改默认域名，可能会导致网站访问异常! ",{
+    new $.zui.Messager("请修改默认域名,可能会导致网站访问异常! ",{
         type: "black" // 定义颜色主题 
     }).show();
     </script>
@@ -27,7 +27,7 @@ if (strstr('localhost|127.0.0.1', $_SERVER['HTTP_HOST'])) {
 if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     echo '
     <script>
-    new $.zui.Messager("请修改默认密码，否则会有泄露风险! ",{
+    new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
         type: "warning" // 定义颜色主题 
     }).show();
     </script>

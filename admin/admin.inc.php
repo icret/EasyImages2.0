@@ -121,7 +121,6 @@ if (isset($_GET['reimg'])) {
         ";
     }
 }
-
 ?>
 <div class="container">
     <div class="row">
@@ -189,9 +188,9 @@ if (isset($_GET['reimg'])) {
                         <div class="switch switch-inline">
                             <input type="hidden" name="static_cdn" value="0">
                             <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">静态文件CDN</label>
+                            <label style="font-weight: bold">静态文件CDN | 末尾不加'/'</label>
                         </div>
-                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="静态文件CDN加速网址末尾不加'/'">
+                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可添加当前版本号 例:@2.5.1">
                     </div>
                     <div class="form-group">
                         <div>
@@ -411,7 +410,6 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade " id="Content4">
-                <p>
                 <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" onSubmit="getStr();" target="_blank">
                     <p id="delimgurl"></p>
                     <div class="form-group">
@@ -420,8 +418,6 @@ if (isset($_GET['reimg'])) {
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
                 </form>
-                </p>
-                <p>
                 <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group">
                         <label for="delDir" style="color:red">删除指定日期文件: </label>
@@ -429,8 +425,6 @@ if (isset($_GET['reimg'])) {
                     </div>
                     <button type="submit" class="btn btn-sm btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复! ');">删除文件夹</button>
                 </form>
-                </p>
-                <p>
                 <form action="../application/compressing.php" method="post" target="_blank">
                     <div class="form-group">
                         <label for="exampleInputInviteCode1">压缩文件夹</label>
@@ -447,7 +441,6 @@ if (isset($_GET['reimg'])) {
                     <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
                     <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
                 </form>
-                </p>
                 <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <hr>
                     <button type="submit" class="btn btn-primary" name="delDir" value="thumbnails/" data-toggle="tooltip" title="已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?>" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');">清理缓存</button>
@@ -519,7 +512,6 @@ if (isset($_GET['reimg'])) {
                         <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
                         <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
                     </div>
-
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="check_ip" value="0">
@@ -530,7 +522,6 @@ if (isset($_GET['reimg'])) {
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
                     </div>
-
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="checkEnv" value="0">
@@ -625,19 +616,17 @@ if (isset($_GET['reimg'])) {
                     <h5>图床信息</h5>
                     <hr />
                     <p class="text-ellipsis">
-                        <?php
-                        if (empty($config['TinyPng_key'])) {
-                            echo '<i class="icon icon-times" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng Key</i><br />';
-                        } else {
-                            echo '<i class="icon icon-check" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng Key</i><br/>';
-                        }
+                        <?php if (empty($config['TinyPng_key'])) : ?>
+                            <i class="icon icon-times" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng Key</i><br />
+                        <?php else : ?>
+                            <i class="icon icon-check" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng Key</i><br />
+                        <?php endif; ?>
+                        <?php if (empty($config['moderatecontent_key'])) : ?>
+                            <i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">moderatecontent key</i><br />
+                        <?php else : ?>
+                            <i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent Key</i><br />
+                        <?php endif; ?>
 
-                        if (empty($config['moderatecontent_key'])) {
-                            echo '<i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">moderatecontent key</i><br />';
-                        } else {
-                            echo '<i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent Key</i><br/>';
-                        }
-                        ?>
                     </p>
                     <p class="text-ellipsis">最新版本:<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a></p>
                     <p class="text-ellipsis">当前版本:<span class="label label-badge label-outline"><?php echo $config['version']; ?></span></p>
@@ -725,7 +714,6 @@ if (isset($_GET['reimg'])) {
                             <label style="font-weight: bold">统计</label>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label>默认游客浏览数量 | 当前: </label>
                         <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
@@ -898,5 +886,4 @@ if (isset($_GET['reimg'])) {
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
 </script>
-<?php
-require_once APP_ROOT . '/application/footer.php';
+<?php require_once APP_ROOT . '/application/footer.php';

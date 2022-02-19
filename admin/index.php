@@ -135,5 +135,4 @@ if (isset($_GET['login'])) {
 		return true;
 	}
 </script>
-<?php
-require_once APP_ROOT . '/application/footer.php';
+<?php require_once APP_ROOT . '/application/footer.php';

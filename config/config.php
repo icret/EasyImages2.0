@@ -82,6 +82,6 @@ var _hmt = _hmt || [];
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
 	'language'=>0,
-	'version'=>'2.5.2 dev',
-	'update'=>'2022-02-19 13:59:41'
+	'version'=>'2.5.2',
+	'update'=>'2022-02-19 22:50:51'
 	);

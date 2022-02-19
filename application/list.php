@@ -48,11 +48,6 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
 @$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
 ?>
 </div>
-<script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
-<script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <style>
   /** 图片列表*/
   @media screen and (min-width:960px) {
@@ -125,6 +120,8 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
     z-index: 11;
   }
 </style>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
 <div class="col-md-12">
   <hr />
   <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
@@ -191,6 +188,9 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
   <div style="opacity:0;display: block;" class="level-2"></div>
   <div class="level-3"></div>
 </div>
+<script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
   // tips提示
   $('[data-toggle="tooltip"]').tooltip({
