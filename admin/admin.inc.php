@@ -138,20 +138,20 @@ if (isset($_GET['reimg'])) {
         </div>
         <div class="col-md-2 col-xs-4">
             <ul class="nav nav-tabs nav-stacked">
-                <li class="active"><a data-tab href="#Content1">网站设置</a></li>
+                <li><a data-tab href="#Content1">网站设置</a></li>
                 <li><a data-tab href="#Content9">界面设置</a></li>
                 <li><a data-tab href="#Content2">上传设置</a></li>
                 <li><a data-tab href="#Content3">广告设置</a></li>
                 <li><a data-tab href="#Content5">API 设置</a></li>
                 <li><a data-tab href="#Content7">可疑图片<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'suspic', 'number'); ?></span></a></li>
-                <li><a data-tab href="#Content4">文件操作</a></li>                
+                <li><a data-tab href="#Content4">文件操作</a></li>
                 <li><a data-tab href="#Content6">图片安全</a></li>
                 <li><a data-tab href="#Content10">账号密码</a></li>
                 <li><a data-tab href="#Content8">系统信息</a></li>
             </ul>
         </div>
         <div class="tab-content col-md-10 col-xs-8">
-            <div class="tab-pane fade active in" id="Content1">
+            <div class="tab-pane fade" id="Content1">
                 <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group">
                         <label>网站域名 | 末尾不加'/'</label>
@@ -572,27 +572,26 @@ if (isset($_GET['reimg'])) {
                             $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                                // cache目录
                             $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
                             @$cache_num = count($cache_file);                                                   // 统计目录文件个数
-                            for ($i = 0; $i < $cache_num and $i < 21; $i++) {                                   // 循环输出文件
+                            for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
                                 $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];    // 图片绝对路径
                                 $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                    // 图片相对路径
                                 @$file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
                                 @$filen_name = $cache_file[$i];                                                 // 图片名称
                                 $url = $config['imgurl'] . $config['path'] . 'suspic/' . $cache_file[$i];       // 图片网络连接
                                 $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
-                                echo '
+                            ?>
                                 <tr>
-                                    <td>' . $i . '</td>
-                                    <td><img data-toggle="lightbox" src="' . get_online_thumbnail($file_path) . '" data-image="' . $url  . '" class="img-thumbnail" ></td>
-                                    <td>' . $filen_name . '</td>
-                                    <td>' . $file_size . '</td>
+                                    <td><?php echo $i; ?></td>
+                                    <td><img data-toggle="lightbox" src="<?php echo get_online_thumbnail($file_path); ?>" data-image="<?php echo $url; ?>" class="img-thumbnail"></td>
+                                    <td><?php echo $filen_name; ?></td>
+                                    <td><?php echo $file_size; ?></td>
                                     <td>
-                                        <a class="btn btn-mini" href="' . $url  . '" target="_blank">新窗口</a>
-                                        <a class="btn btn-mini btn-success" href="?reimg=' . $filen_name . '">恢复</a>
-                                        <a class="btn btn-mini btn-danger" href="' . $unlink_img . '" target="_blank">删除</a>
+                                        <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
+                                        <a class="btn btn-mini btn-success" href="?reimg=<?php echo $filen_name; ?>">恢复</a>
+                                        <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
                                     </td>
                                 </tr>
-                                ';
-                            } ?>
+                            <?php endfor; ?>
                         </tbody>
                     </table>
                 </div>
@@ -662,6 +661,13 @@ if (isset($_GET['reimg'])) {
                         </select>
                     </div>
                     <div class="form-group">
+                        <label data-toggle="tooltip" title="界面语言切换 | 暂支持中文简繁体转换">界面语言</label>
+                        <select class="chosen-select form-control" name="language">
+                            <option value="0" <?php if ($config['language'] == '0') echo 'selected'; ?>>简体中文</option>
+                            <option value="1" <?php if ($config['language'] == '1') echo 'selected'; ?>>繁體中文</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <h5>上传后首选显示链接</h5>
                         <label class="radio-inline">
                             <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
@@ -685,24 +691,10 @@ if (isset($_GET['reimg'])) {
                         </label>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="链接经过加密 | 请妥善保存密码">
                             <input type="hidden" name="show_user_hash_del" value="0">
                             <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">上传后显示删除链接</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="switch switch-inline">
-                            <input type="hidden" name="show_exif_info" value="0">
-                            <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">图片Exif信息</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
-                            <input type="hidden" name="chart_on" value="0">
-                            <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">统计信息</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -713,12 +705,27 @@ if (isset($_GET['reimg'])) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline" data-toggle="tooltip" title="以上传时间正序 | 开启倒序">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间正序 | 开启倒序">
                             <input type="hidden" name="showSort" value="0">
                             <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">按上传时间排序</label>
+                            <label style="font-weight: bold">排序</label>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="广场图片信息按钮">
+                            <input type="hidden" name="show_exif_info" value="0">
+                            <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">Exif</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
+                            <input type="hidden" name="chart_on" value="0">
+                            <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">统计</label>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label>默认游客浏览数量 | 当前: </label>
                         <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
@@ -799,15 +806,13 @@ if (isset($_GET['reimg'])) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            foreach ($guestConfig as $key => $value) {
-                                echo "
-                            <tr>
-                                <td>$key</td>
-                                <td>$value</td>
-                                <td><a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=$key'>删除</a></td>
-                            </tr>";
-                            } ?>
+                            <?php foreach ($guestConfig as $key => $value) : ?>
+                                <tr>
+                                    <td><?php echo $key; ?></td>
+                                    <td><?php echo $value; ?></td>
+                                    <td><a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=$key'>删除</a></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -819,8 +824,30 @@ if (isset($_GET['reimg'])) {
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
-<?php /** 引入空间检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
+<script src="<?php static_cdn(); ?>/public/static/jquery/jquery.cookie.js"></script>
+<?php /** 引入设置页面检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
 <script>
+    // cookie 记录当前tab页面
+    $('[data-tab]').on('shown.zui.tab', function(e) {
+        var cookie_value = e.delegateTarget.attributes[1].value;
+        $.cookie('data-tab-now', cookie_value, {
+            expires: 1,
+        }); // 存储一个带1天期限的 cookie
+        console.log('当前被激活的标签页', e.target);
+        console.log('上一个标签页', e.relatedTarget);
+    });
+    // cookie有
+    if ($.cookie('data-tab-now') != null) {
+        $ac = $.cookie('data-tab-now');
+        $("a[href = '" + $ac + "']").parent().addClass("active in")
+        $($ac).addClass("active in")
+    }
+    // cookie无
+    if ($.cookie('data-tab-now') == null) {
+        $("a[href = '#Content1']").parent().addClass("active in")
+        $('#Content1').addClass("active in")
+    }
+
     // tips提示
     $('[data-toggle="tooltip"]').tooltip({
         placement: 'top',
@@ -870,12 +897,6 @@ if (isset($_GET['reimg'])) {
 
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
-
-    $('[data-tab]').on('shown.zui.tab', function(e) {
-        console.clear()
-        console.log('当前被激活的标签页', e.target);
-        console.log('上一个标签页', e.relatedTarget);
-    });
 </script>
 <?php
 require_once APP_ROOT . '/application/footer.php';

@@ -153,4 +153,5 @@ mustLogin();
   })();
 </script>
 <?php
+/** 环境检测 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php';
 require_once APP_ROOT . '/application/footer.php';

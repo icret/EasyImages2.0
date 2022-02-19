@@ -113,7 +113,7 @@ if (isset($_GET['login'])) {
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<div class="checkbox">
-				<label title="选不选都记得你，想退出就点击退出才可以哦!">
+				<label title="选不选都记得你,想退出就点击退出才可以哦!">
 					<input type="checkbox" checked="checked"> 记住我
 				</label>
 			</div>
