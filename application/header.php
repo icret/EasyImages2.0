@@ -40,7 +40,7 @@
 			<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
 			<?php // 关闭广场非登录状态不显示广场导航
 			if ($config['showSwitch'] || is_who_login('admin')) echo '
-			<li><a href="' . $config['domain'] . '/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-success">' . get_file_by_glob(APP_ROOT . config_path(), 'number') . '</span></a></li>';
+			<li><a href="' . $config['domain'] . '/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary">' . get_file_by_glob(APP_ROOT . config_path(), 'number') . '</span></a></li>';
 			// 登陆状态显示设置页面
 			if (is_who_login('admin')) {
 				echo '				

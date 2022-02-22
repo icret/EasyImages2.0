@@ -1,55 +1,10 @@
-<?php
-require_once __DIR__ . '/header.php';
+<?php require_once __DIR__ . '/header.php'; ?>
 
-echo '<div class="col-md-12">';
-if (!$config['showSwitch'] && !is_who_login('admin')) {
-  echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
-} else {
-  $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                    // 获取指定目录
-  $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));                      // 过滤非日期，删除空格
-  $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
-  $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
-  // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
-  $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
-  $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
-  echo '
-    <ul id="dowebok">
-      <div class="cards listNum">';
-  if ($fileArr[0]) {
-    foreach ($fileArr as $key => $value) {
-      if ($key < $keyNum) {
-        $imgUrl = $config['imgurl'] . config_path($path) . $value;
-        echo '
-        <div class="col-md-4 col-sm-6 col-lg-3">        
-          <div class="card">
-            <li><img data-image="' . creat_thumbnail_by_list($imgUrl) . '" src="../public/images/loading.svg" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
-            <div class="bottom">
-              <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
-              <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
-              <a href="/application/info.php?img=' . $imgUrl . '" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
-              <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
-              <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '"> 选择</label>
-            </div> 
-          </div>
-        </div>
-				';
-      }
-    }
-    echo '</div>';
-  } else {
-    echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
-  }
-  echo '</ul>';
-}
-// 当前日期全部上传
-$allUploud = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
-$allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');
-// 组合url
-@$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
-?>
-</div>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
 <style>
   /** 图片列表*/
+
   @media screen and (min-width:960px) {
     .listNum img {
       width: 258px;
@@ -62,15 +17,6 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
       width: 358px;
       height: 258px;
     }
-  }
-
-  .card .bottom {
-    width: 100%;
-    position: absolute;
-    left: 0;
-    bottom: 0px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
   }
 
   /** 返回顶部*/
@@ -119,9 +65,86 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
     width: 110px;
     z-index: 11;
   }
+
+  .cards {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+
+  .card {
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    border-radius: 10px;
+  }
+
+  img {
+    cursor: pointer;
+    transition: all 0.6s;
+  }
+
+  img:hover {
+    transform: scale(1.5);
+    position: relative;
+    z-index: 100;
+  }
+
+  .bottom-bar {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 </style>
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
+<div class="col-md-12">
+  <?php
+  if (!$config['showSwitch'] && !is_who_login('admin')) {
+    echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
+  } else {
+    $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                    // 获取指定目录
+    $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));                      // 过滤非日期，删除空格
+    $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
+    $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
+    // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
+    $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
+    $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
+    echo '
+    <ul id="viewjs">
+      <div class="cards listNum">';
+    if ($fileArr[0]) {
+      foreach ($fileArr as $key => $value) {
+        if ($key < $keyNum) {
+          $imgUrl = $config['imgurl'] . config_path($path) . $value;
+          echo '
+        <div class="col-md-4 col-sm-6 col-lg-3">        
+          <div class="card">
+            <li><img src="../public/images/loading.svg" data-image="' . creat_thumbnail_by_list($imgUrl) . '" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
+            <div class="bottom-bar">
+              <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
+              <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+              <a href="/application/info.php?img=' . $imgUrl . '" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+              <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
+              <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '"> 选择</label>
+            </div> 
+          </div>
+        </div>
+				';
+        }
+      }
+      echo '</div>';
+    } else {
+      echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
+    }
+    echo '</ul>';
+  }
+  // 当前日期全部上传
+  $allUploud = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
+  $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');
+  // 组合url
+  @$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
+  ?>
+</div>
 <div class="col-md-12">
   <hr />
   <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
@@ -199,9 +222,8 @@ $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number')
   });
 
   // viewjs
-  var viewer = new Viewer(document.getElementById('dowebok'), {
+  new Viewer(document.getElementById('viewjs'), {
     url: 'data-original',
-    backdrop: true
   });
 
   // 复制url

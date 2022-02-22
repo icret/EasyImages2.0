@@ -177,12 +177,16 @@ if (isset($_GET['reimg'])) {
                         <textarea class="form-control" rows="3" name="tips"><?php echo $config['tips']; ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label data-toggle="tooltip" title="统计代码/JS/CSS | 代码需要闭合标签">页首信息 | 支持html</label>
-                        <textarea class="form-control" rows="3" name="customize"><?php echo $config['customize']; ?></textarea>
+                        <label data-toggle="tooltip" title="HTML / 统计代码 / JS / CSS">页首代码 | 需闭合标签</label>
+                        <textarea class="form-control" rows="2" name="customize"><?php echo $config['customize']; ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label data-toggle="tooltip" title="统计代码/JS/CSS | 代码需要闭合标签">页脚信息 | 支持htm</label>
-                        <textarea class="form-control" rows="7" name="footer"><?php echo $config['footer']; ?></textarea>
+                        <label data-toggle="tooltip" title="HTML / 统计代码 / JS / CSS">页脚代码 | 需闭合标签</label>
+                        <textarea class="form-control" rows="2" name="footer"><?php echo $config['footer']; ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label data-toggle="tooltip" title="服务条款 / 隐私政策 / DMCA">使用条款| 支持HTML</label>
+                        <textarea class="form-control" rows="2" name="terms"><?php echo $config['terms']; ?></textarea>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
@@ -190,7 +194,7 @@ if (isset($_GET['reimg'])) {
                             <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">静态文件CDN | 末尾不加'/'</label>
                         </div>
-                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可添加当前版本号 例:@2.5.1">
+                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可添加当前版本号 例:@2.5.6">
                     </div>
                     <div class="form-group">
                         <div>
@@ -203,7 +207,7 @@ if (isset($_GET['reimg'])) {
                             <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 缺点:无法生成webp动图,无法被cdn缓存"> 实时生成 | 推荐</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 无缓存周期, 每日首张缩略图会使广场页面代码布局异常 [ 刷新即可 ]"> 实时生成 | 缩略图直链</label>
+                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问需要刷新"> 实时生成 | 缩略图直链</label>
                         </div>
                     </div>
                     <div class="form-group">
