@@ -16,7 +16,7 @@ $config=Array
 	'path'=>'/i/',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
-	'maxUploadFiles'=>30,
+	'maxUploadFiles'=>100,
 	'watermark'=>0,
 	'waterText'=>'简单图床 - png.cm',
 	'waterPosition'=>0,
@@ -39,7 +39,7 @@ $config=Array
 	'imgRatio_quality'=>80,
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
-	'static_cdn'=>1,
+	'static_cdn'=>0,
 	'theme'=>'default',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.2',
 	'TinyPng_key'=>'',
@@ -97,7 +97,7 @@ var _hmt = _hmt || [];
 		),
 	'language'=>0,
 	'version'=>'2.5.3',
-	'update'=>'2022-02-22 18:47:40',
+	'update'=>'2022-02-22 21:08:18',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

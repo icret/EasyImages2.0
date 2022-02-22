@@ -80,18 +80,17 @@ if (is_array($char_data)) {
     <div class="col-md-12 col-xs-12">
         <div class="col-xs-3 alert  alert-success autoshadow">今日上传
             <hr />
-            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][0])); ?>
+            <?php echo  read_total_json('todayUpload'); ?> 张
         </div>
         <div class="col-xs-3 alert  alert-success autoshadow">昨日上传
             <hr />
-            <?php printf("%u 张", preg_replace('/\D/s', '', $char_data['number'][1])); ?>
+            <?php echo  read_total_json('yestUpload'); ?> 张
         </div>
         <div class="col-xs-3 alert alert-primary autoshadow">
             累计上传
             <hr />
             <?php printf("%u 张", read_total_json('filenum')); ?>
         </div>
-
         <div class="col-xs-3 alert alert-primary autoshadow">
             缓存文件
             <hr />
@@ -123,9 +122,14 @@ if (is_array($char_data)) {
             <?php echo getDistUsed(disk_free_space('.')); ?>
         </div>
         <div class="col-xs-3 alert alert-primary autoshadow">
-            图床占用
+            图片占用
             <hr />
             <?php echo read_total_json('usage_space'); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            当前版本
+            <hr />
+            <?php echo $config['version']; ?>
         </div>
     </div>
     <div class="col-md-12 col-xs-12">
