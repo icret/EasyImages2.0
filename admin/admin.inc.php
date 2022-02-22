@@ -527,16 +527,55 @@ if (isset($_GET['reimg'])) {
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline">
-                            <input type="hidden" name="checkEnv" value="0">
-                            <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">PHP扩展检测 | 安全设置检测 | 版本检测</label>
+                        <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据,当前不开启下边多选框不会生效, 使用方法见使用手册->公共查询">
+                            <input type="hidden" name="public" value="0">
+                            <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
+                            <label style="font-weight: bold">开放数据</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline">
+                        <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
+                            <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=today">
+                            <input type="checkbox" name="public_list[]" value="today" id="today" <?php if (in_array('today', $config['public_list']))  echo 'checked'; ?>><label for="today">今日</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=yesterday">
+                            <input type="checkbox" name="public_list[]" value="yesterday" id="yesterday" <?php if (in_array('yesterday', $config['public_list']))  echo 'checked'; ?>><label for="yesterday">昨日</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=total_space">
+                            <input type="checkbox" name="public_list[]" value="total_space" id="total_space" <?php if (in_array('total_space', $config['public_list']))  echo 'checked'; ?>><label for="total_space">总空间</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=used_space">
+                            <input type="checkbox" name="public_list[]" value="used_space" id="used_space" <?php if (in_array('used_space', $config['public_list']))  echo 'checked'; ?>><label for="used_space">已用</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=free_space">
+                            <input type="checkbox" name="public_list[]" value="free_space" id="free_space" <?php if (in_array('free_space', $config['public_list']))  echo 'checked'; ?>><label for="free_space">剩余</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=image_used">
+                            <input type="checkbox" name="public_list[]" value="image_used" id="image_used" <?php if (in_array('image_used', $config['public_list']))  echo 'checked'; ?>><label for="image_used">图床占用</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=file">
+                            <input type="checkbox" name="public_list[]" value="file" id="file" <?php if (in_array('file', $config['public_list']))  echo 'checked'; ?>><label for="file">文件数量</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=dir">
+                            <input type="checkbox" name="public_list[]" value="dir" id="dir" <?php if (in_array('dir', $config['public_list']))  echo 'checked'; ?>><label for="dir">文件夹数量</label>
+                        </label>
+                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=month">
+                            <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日</label>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="PHP扩展 | 安全设置 | 鉴黄 | 版本">
+                            <input type="hidden" name="checkEnv" value="0">
+                            <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">检测网站</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件; 经测试二十万条数据并不影响速度!">
                             <input type="hidden" name="upload_logs" value="0">
-                            <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?> title="日志每月保存一个文件;经过测试每月二十万条数据并不影响速度! ">
+                            <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">上传日志</label>
                         </div>
                     </div>
@@ -816,26 +855,23 @@ if (isset($_GET['reimg'])) {
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/jquery/jquery.cookie.js"></script>
 <?php /** 引入设置页面检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
 <script>
-    // cookie 记录当前tab页面
+    // 使用本地存储记录当前tab页面
     $('[data-tab]').on('shown.zui.tab', function(e) {
         var cookie_value = e.delegateTarget.attributes[1].value;
-        $.cookie('data-tab-now', cookie_value, {
-            expires: 1,
-        }); // 存储一个带1天期限的 cookie
+        $.zui.store.pageSet('data-tab-now', cookie_value);
         console.log('当前被激活的标签页', e.target);
         console.log('上一个标签页', e.relatedTarget);
-    });
+    })
     // cookie有
-    if ($.cookie('data-tab-now') != null) {
-        $ac = $.cookie('data-tab-now');
+    if ($.zui.store.pageGet('data-tab-now') != null) {
+        $ac = $.zui.store.pageGet('data-tab-now');
         $("a[href = '" + $ac + "']").parent().addClass("active in")
         $($ac).addClass("active in")
     }
     // cookie无
-    if ($.cookie('data-tab-now') == null) {
+    if ($.zui.store.pageGet('data-tab-now') == null) {
         $("a[href = '#Content1']").parent().addClass("active in")
         $('#Content1').addClass("active in")
     }

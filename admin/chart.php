@@ -108,7 +108,12 @@ if (is_array($char_data)) {
             <?php printf("%d 个", read_total_json('dirnum')); ?>
         </div>
         <div class="col-xs-3 alert alert-primary autoshadow">
-            占用存储
+            总空间
+            <hr />
+            <?php echo getDistUsed(disk_total_space('.')); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            已用空间
             <hr />
             <?php echo getDistUsed(disk_total_space('.') - disk_free_space('.')); ?>
         </div>
@@ -116,6 +121,11 @@ if (is_array($char_data)) {
             剩余空间
             <hr />
             <?php echo getDistUsed(disk_free_space('.')); ?>
+        </div>
+        <div class="col-xs-3 alert alert-primary autoshadow">
+            图床占用
+            <hr />
+            <?php echo read_total_json('usage_space'); ?>
         </div>
     </div>
     <div class="col-md-12 col-xs-12">

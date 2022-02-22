@@ -39,7 +39,7 @@ $config=Array
 	'imgRatio_quality'=>80,
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
-	'static_cdn'=>0,
+	'static_cdn'=>1,
 	'theme'=>'default',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.2',
 	'TinyPng_key'=>'',
@@ -81,9 +81,23 @@ var _hmt = _hmt || [];
 	'check_ip'=>0,
 	'check_ip_model'=>0,
 	'check_ip_list'=>'',
+	'public'=>0,
+	'public_list'=>Array
+		(
+		0=>'time',
+		1=>'today',
+		2=>'yesterday',
+		3=>'total_space',
+		4=>'used_space',
+		5=>'free_space',
+		6=>'image_used',
+		7=>'file',
+		8=>'dir',
+		9=>'month'
+		),
 	'language'=>0,
 	'version'=>'2.5.3',
-	'update'=>'2022-02-22 03:37:40',
+	'update'=>'2022-02-22 18:47:40',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

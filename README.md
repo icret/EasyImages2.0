@@ -104,8 +104,10 @@ $HTTP["url"] =~ "^/(i|public)/" {
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
 * 2022-2-21 v2.5.3 Developing
+- 增加图床数据开放
 - 增加自定义服务条款
 - 升级 Viewer.js 到 v1.10.4
+- 将页面选择记录从cookie改为本地存储
 - 修复实时生成缩略图导致的页面布局异常
 - 优化显示代码
 
