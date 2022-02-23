@@ -720,6 +720,11 @@ function checkImg($imageUrl, $type = 1)
         }
     }
 
+    // 移入回收站
+    if ($type == 3) {
+        $bad_pic = true;
+    }
+
     /** # 如果违规则移动图片到违规文件夹 */
     if ($bad_pic == true) {
         $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png

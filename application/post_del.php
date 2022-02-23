@@ -1,7 +1,9 @@
 <?php
 
 /**
- * 删除文件页面
+ * 删除/回收文件页面
+ * @author Icret
+ * 2022-2-23 11:01:52
  */
 require_once __DIR__ . '/function.php';
 
@@ -9,26 +11,20 @@ if (!is_who_login('admin')) {
   exit('Not Logged!');
 }
 
-$del_url_array = isset($_POST['del_url_array']) ? $_POST['del_url_array'] : exit;
-$del_num = count($del_url_array);
-for ($i = 0; $i < $del_num; $i++) {
-  getDel($del_url_array[$i], 'url');
+// 删除文件
+if (isset($_POST['del_url_array'])) {
+  $del_url_array = $_POST['del_url_array'];
+  $del_num = count($del_url_array);
+  for ($i = 0; $i < $del_num; $i++) {
+    getDel($del_url_array[$i], 'url');
+  }
 }
 
-$path = '/i/cache/';
-
-if (deldir($path)) {
-  echo '
-    <script> new $.zui.Messager("删除成功!", {
-		type: "success", // 定义颜色主题
-		icon: "ok-sign" // 定义消息图标
-    }).show();</script>';
-  header("refresh:1;"); // 1s后刷新当前页面
-} else {
-  echo '
-    <script> new $.zui.Messager("删除失败!", {
-		type: "danger", // 定义颜色主题 
-		icon: "exclamation-sign" // 定义消息图标
-    }).show();</script>';
-  header("refresh:1;"); // 1s后刷新当前页面
+// 回收文件
+if (isset($_POST['recycle_url_array'])) {
+  $recycle_url_array = $_POST['recycle_url_array'];
+  $del_num = count($recycle_url_array);
+  for ($i = 0; $i < $del_num; $i++) {
+    checkImg($recycle_url_array[$i], 3);
+  }
 }

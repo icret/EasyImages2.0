@@ -163,7 +163,8 @@
         <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
         <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
         <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
-        <a class="btn btn-mini" onclick="fun()">删除</a>
+        <a class="btn btn-mini" onclick="recycle_img()">回收</a>
+        <a class="btn btn-mini" onclick="delete_img()">删除</a>
       </div>
     </div>
   </div>
@@ -260,9 +261,40 @@
       }
     }
   }
-  //获取所有的 checkbox 属性的 input标签
-  function fun() {
-    var r = confirm("确认要删除？\n* 删除文件夹后将无法恢复!")
+  // 回收图片
+  function recycle_img() {
+    var r = confirm("确认要放入回收站?\n* 可在可疑图片中恢复!")
+    if (r == true) {
+      obj = document.getElementsByName("checkbox");
+      check_val = [];
+      for (k in obj) {
+        //判断复选框是否被选中
+        if (obj[k].checked)
+          //获取被选中的复选框的值
+          check_val.push(obj[k].value);
+        console.log(check_val);
+      }
+      $.post("./post_del.php", {
+        'recycle_url_array': check_val
+      }, );
+      new $.zui.Messager("放入回收站成功", {
+        type: "success", // 定义颜色主题 
+        icon: "ok-sign" // 定义消息图标
+      }).show();
+      // 延时2秒刷新
+      window.setTimeout(function() {
+        window.location.reload();
+      }, 1500)
+    } else {
+      new $.zui.Messager("取消回收", {
+        type: "primary", // 定义颜色主题 
+        icon: "info-sign" // 定义消息图标
+      }).show();
+    }
+  }
+ // 删除图片
+  function delete_img() {
+    var r = confirm("确认要删除?\n* 删除文件夹后将无法恢复!")
     if (r == true) {
       obj = document.getElementsByName("checkbox");
       check_val = [];
@@ -389,6 +421,6 @@
     endDate: new Date() // 只能选当前日期之前
   });
   // 更改网页标题
-  document.title = "图床广场 今日上传<?php get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?>张 昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")) . '*.*', 'number'); ?>张 - <?php echo $config['title']; ?>"
+  document.title = "图床广场 - 今日上传<?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?>张 昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")) . '*.*', 'number'); ?>张 - <?php echo $config['title']; ?>"
 </script>
 <?php require_once APP_ROOT . '/application/footer.php';

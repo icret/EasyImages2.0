@@ -204,7 +204,7 @@ if (isset($_GET['reimg'])) {
                             <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 缺点:无法生成webp动图,无法被cdn缓存"> 实时生成 | 推荐</label>
+                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点:无法生成webp动图,无法被cdn缓存"> 实时生成 | 推荐</label>
                         </div>
                         <div class="radio-primary">
                             <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问需要刷新"> 实时生成 | 缩略图直链</label>
@@ -369,7 +369,7 @@ if (isset($_GET['reimg'])) {
                     <div class="form-group">
                         <div class="switch switch-inline">
                             <input type="hidden" name="compress" value="0">
-                            <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) echo 'checked="checked"'; ?> title=" 轻微有损压缩图片, 此压缩有可能使图片变大! 特别是小图片 也有一定概率改变图片方向">
+                            <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) echo 'checked="checked"'; ?> data-toggle="tooltip" title=" 轻微有损压缩图片, 此压缩有可能使图片变大! 特别是小图片 也有一定概率改变图片方向">
                             <label style="font-weight: bold">后端压缩上传图片 | 更多图片格式的支持</label>
                         </div>
                     </div>
@@ -693,7 +693,7 @@ if (isset($_GET['reimg'])) {
                         </select>
                     </div>
                     <div class="form-group">
-                        <label data-toggle="tooltip" title="界面语言切换 | 暂支持中文简繁体转换">界面语言</label>
+                        <label data-toggle="tooltip" title="暂支持中文简繁体转换">界面语言</label>
                         <select class="chosen-select form-control" name="language">
                             <option value="0" <?php if ($config['language'] == '0') echo 'selected'; ?>>简体中文</option>
                             <option value="1" <?php if ($config['language'] == '1') echo 'selected'; ?>>繁體中文</option>
@@ -878,8 +878,13 @@ if (isset($_GET['reimg'])) {
 
     // tips提示
     $('[data-toggle="tooltip"]').tooltip({
+        tipClass: 'tooltip',
         placement: 'top',
-        tipClass: 'tooltip-primary'
+        html: true,
+        delay: {
+            show: 50,
+            hide: 100
+        }
     });
     // 账号密码 | 以md5加密方式发送
     function uploader_md5_post() {
