@@ -124,6 +124,7 @@
               <a href="' . $imgUrl . '" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
               <a href="#" class="copy" data-clipboard-text="' . $imgUrl . '" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
               <a href="/application/info.php?img=' . $imgUrl . '" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+              <a href="' . $config['domain'] . '/application/del.php?recycle_url=' . $imgUrl . '" target="_blank" data-toggle="tooltip" title="回收" style="margin-left:10px;"><i class="icon icon-undo"></i></a>              
               <a href="' . $config['domain'] . '/application/del.php?url=' . $imgUrl . '" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>              
               <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="' . $imgUrl . '"> 选择</label>
             </div> 

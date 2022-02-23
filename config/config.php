@@ -40,17 +40,14 @@ $config=Array
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
-	'theme'=>'red',
-	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.2',
+	'theme'=>'default',
+	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.3',
 	'TinyPng_key'=>'',
 	'checkImg'=>0,
 	'checkImg_value'=>50,
 	'moderatecontent_key'=>'',
 	'nsfwjs_url'=>'',
-	'footer'=>' <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
-            <button class="btn btn-mini " type="button" style="color:#1970fc;" data-toggle="tooltip" title="您的赞美是我开发的动力!<img src=\'../public/images/alipay.jpg\'/>"><i class="icon icon-zhifubao"></i> 打赏作者</button>
-
-<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
+	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -100,7 +97,7 @@ var _hmt = _hmt || [];
 		),
 	'language'=>0,
 	'version'=>'2.5.3',
-	'update'=>'2022-02-23 00:06:31',
+	'update'=>'2022-02-24 00:42:23',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

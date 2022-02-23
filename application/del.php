@@ -44,8 +44,34 @@ if (isset($_GET['hash'])) {
 
 // 检查登录后再处理url删除请求
 if (is_who_login('admin')) {
+    // 删除
     if (isset($_GET['url'])) {
         getDel($_GET['url'], 'url');
+    }
+    // 回收
+    if (isset($_GET['recycle_url'])) {
+        $recycle_url = $_GET['recycle_url'];
+        $recycle_url = parse_url($recycle_url)['path'];
+        if (file_exists(APP_ROOT . $recycle_url)) {
+            checkImg($recycle_url, 3);
+            echo '
+			<script>
+            new $.zui.Messager("已放入回收站!", {
+				type: "success", // 定义颜色主题
+				icon: "ok" // 定义消息图标
+            }).show();
+            </script>
+			';
+        } else {
+            echo '
+			<script>
+            new $.zui.Messager("文件不存在!", {
+				type: "danger", // 定义颜色主题
+				icon: "exclamation-sign" // 定义消息图标
+            }).show();
+            </script>
+			';
+        }
     }
 } else {
     if (isset($_GET['url'])) {
@@ -59,7 +85,6 @@ if (is_who_login('admin')) {
             window.setTimeout("window.location=\'/../admin/index.php \'",3000);
             </script>
 			';
-        //header("refresh:2;url=".$config['domain']."/admin/index.php");
     }
 }
 
