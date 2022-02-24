@@ -38,6 +38,55 @@ if (isset($_POST['update'])) {
   ';
     header("refresh:1;");
 }
+
+// 添加token
+if (isset($_POST['add_token_id'])) {
+    // $_POST['add_token'] 生成的Token
+    // $_POST['add_token_id'] Token的ID
+    //  $_POST['add_token_expired'] 过期时间
+    $postArr = array(
+        $_POST['add_token'] => array(
+            'id' => $_POST['add_token_id'], 'expired' => $_POST['add_token_expired'] * 86400 + time(), 'add_time' => time()
+        )
+    );
+    $new_config = array_replace($tokenList, $postArr);
+    $config_file = APP_ROOT . '/config/api_key.php';
+    cache_write($config_file, $new_config, 'tokenList');
+    echo '
+  <script>
+  new $.zui.Messager("上传用户添加成功!", {
+    type: "primary", // 定义颜色主题 
+    icon: "ok-sign" // 定义消息图标
+  }).show();
+  </script>  
+  ';
+    header("refresh:1;");
+}
+// 禁用Token 
+if (isset($_GET['stop_token'])) {
+
+    // unset($tokenList[$_GET['delete_token']]);
+    $stop_token =  $_GET['stop_token'];
+    $postArr = array(
+        $stop_token => array(
+            'id' => 0, 'expired' => time()
+        )
+    );
+    $new_config = array_replace($tokenList, $postArr);
+    $config_file = APP_ROOT . '/config/api_key.php';
+    cache_write($config_file, $new_config, 'tokenList');
+    echo '
+        <script>
+        new $.zui.Messager("禁用Token成功!", {
+            type: "primary", // 定义颜色主题 
+            icon: "ok-sign" // 定义消息图标
+        }).show();
+        </script>  
+  ';
+    header("refresh:2;url=" . $config['domain'] . "/admin/admin.inc.php");
+}
+
+
 // 删除guset.config.php数组对
 if (isset($_GET['delete_guest'])) {
     unset($guestConfig[$_GET['delete_guest']]);
@@ -88,16 +137,7 @@ if (isset($_POST['delDir'])) {
         header("refresh:1;"); // 1s后刷新当前页面
     }
 }
-// 查找用户ID或者Token
-if (isset($_POST['radio'])) {
-    if ($_POST['radio'] == 'id') {
-        $radio_value = '用户token: ' . getIDToken($_POST['radio-value']);
-    } elseif ($_POST['radio'] == 'token') {
-        $radio_value = '用户ID: ' . getID($_POST['radio-value']);
-    } else {
-        $radio_value = null;
-    }
-}
+
 // 恢复图片
 if (isset($_GET['reimg'])) {
     $name = $_GET['reimg'];
@@ -451,7 +491,7 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade " id="Content5">
-                <h5>外部KEY | 请根据需要申请并填写</h5>
+                <h5>外部KEY</h5>
                 <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                     <div class="form-group">
                         <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key &nbsp;</a></label>
@@ -469,31 +509,30 @@ if (isset($_GET['reimg'])) {
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     <button type="submit" class="btn btn-mini btn-primary">保存</button>
                 </form>
-                <b data-toggle="tooltip" title="新Token需按要求填入/config/api_key.php才生效">生成新的API upload Token</b>
-                <form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                    <div class="input-group">
-                        <span class="input-group-addon">New Token</span>
-                        <input type="text" class="form-control" id="exampleInputMoney1" value="<?php echo privateToken(); ?>">
+                <hr>
+                <h5>上传Token</h5>
+              
+                <div id="myDataGrid" class="datagrid">
+                    <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
+                        <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="搜索Token">
+                        <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
+                        <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
                     </div>
-                </form>
-                <table class="table table-hover table-bordered table-condensed table-responsive" style="margin-top: 10px;">
-                    <thead>
-                        <tr>
-                            <th>当前可用Token列表: </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($tokenList as $value) echo '<tr><td>' . $value . '</td></tr>'; ?>
-                    </tbody>
-                </table>
-                <form class="form-condensed" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                    <div class="datagrid-container"></div>
+                </div>
+
+                <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
                     <div class="form-group">
-                        <label for="exampleInputAccount6">根据ID/Token查找用户</label>
-                        <input type="text" name="radio-value" id="exampleInputAccount6" class="form-control" placeholder="输入信息" value="<?php echo @$radio_value; ?>">
-                        <div class="radio-primary"><input type="radio" name="radio" value="id" id="primaryradio1" checked="checked"><label for="primaryradio1">根据ID查找用户Token</label></div>
-                        <div class="radio-primary"><input type="radio" name="radio" value="token" id="primaryradio2"><label for="primaryradio2">根据Token查找用户ID</label></div>
-                        <button type="submit" class="btn btn-mini btn-primary">查找</button>
+                        <label for="exampleInputEmail3">Token: </label>
+                        <input type="text" class="form-control input-sm" id="exampleInputEmail3" name="add_token" value="<?php echo privateToken(); ?>">
                     </div>
+                    <div class="form-group">
+                        <label for="exampleInputInviteCode3">有效期: </label>
+                        <input type="number" class="form-control input-sm" id="exampleInputInviteCode3" name="add_token_expired" value="30">
+                        <label for="exampleInputInviteCode3">天</label>
+                    </div>
+                    <input type="hidden" class="form-control" name="add_token_id" value="<?php echo count($tokenList); ?>" placeholder="隐藏的保存">
+                    <button type="submit" class="btn btn-sm btn-primary">添加</button>
                 </form>
             </div>
             <div class="tab-pane fade" id="Content6">
@@ -841,7 +880,7 @@ if (isset($_GET['reimg'])) {
                                 <tr>
                                     <td><?php echo $key; ?></td>
                                     <td><?php echo $value; ?></td>
-                                    <td><a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=$key'>删除</a></td>
+                                    <td><a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $key; ?>'>删除</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -855,7 +894,11 @@ if (isset($_GET['reimg'])) {
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
+<link href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
+
 <?php /** 引入设置页面检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
+
 <script>
     // 使用本地存储记录当前tab页面
     $('[data-tab]').on('shown.zui.tab', function(e) {
@@ -927,6 +970,68 @@ if (isset($_GET['reimg'])) {
         format: "yyyy/mm/dd/",
         endDate: new Date() // 只能选当前日期之前
     });
+
+    // Token 数据表格
+    $('#myDataGrid').datagrid({
+        dataSource: {
+            cols: [{
+                    name: 'id',
+                    label: 'ID',
+                    width: 0.1
+                },
+                {
+                    name: 'list',
+                    label: '列表',
+                    width: 0.4
+                },
+                {
+                    name: 'add_time',
+                    label: '添加时间',
+                    html: true,
+                    width: 0.2
+                },
+                {
+                    name: 'expired',
+                    label: '有效期至',
+                    html: true,
+                    width: 0.2
+                },
+                {
+                    name: 'delete',
+                    label: '删除',
+                    html: true,
+                    width: 0.1
+                },
+            ],
+            array: [
+                <? foreach ($tokenList as $key => $value) :
+
+                    if ($value['expired'] < time()) {
+                        $expired = '<p class="text-gray">已过期</p>';
+                    } else {
+                        $expired =  '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>';
+                    }
+                ?> {
+                        id: '<?php echo $value['id']; ?>',
+                        list: '<?php echo $key; ?>',
+                        add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',
+                        expired: '<?php echo $expired; ?>',
+                        delete: "<a class='btn btn-mini btn-danger' href='admin.inc.php?stop_token=<?php echo $key; ?>'>禁用</a>"
+                    },
+                <?php endforeach; ?>
+            ]
+        },
+        sortable: true,
+        hoverCell: true,
+        showRowIndex: false,
+        responsive: true,
+        // ... 其他初始化选项
+    });
+    // 获取数据表格实例
+    var myDataGrid = $('#myDataGrid').data('zui.datagrid');
+
+    // 按照 `name` 列降序排序
+    myDataGrid.sortBy('expired', 'desc');
 
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"

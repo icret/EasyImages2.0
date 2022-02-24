@@ -28,7 +28,7 @@ if ($handle->uploaded) {
     // 允许上传的mime类型
     $handle->allowed = array('image/*');
     // 文件命名
-    $handle->file_new_name_body = imgName($handle->file_src_name_body) . '_' . getID($token);
+    $handle->file_new_name_body = imgName($handle->file_src_name_body) . '_' . $tokenList[$token]['id'];
     // 最大上传限制
     $handle->file_max_sizes = $config['maxSize'];
     // 最大宽度

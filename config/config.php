@@ -12,7 +12,7 @@ $config=Array
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>0,
+	'apiStatus'=>1,
 	'path'=>'/i/',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
@@ -97,7 +97,7 @@ var _hmt = _hmt || [];
 		),
 	'language'=>0,
 	'version'=>'2.5.3',
-	'update'=>'2022-02-24 00:42:23',
+	'update'=>'2022-02-25 00:25:27',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

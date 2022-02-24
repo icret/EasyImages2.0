@@ -58,12 +58,22 @@ function check_api($token)
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
-    if (!in_array($token, $tokenList)) {
-        // Token错误 Token错误
+    if (!in_array($tokenList[$token], $tokenList)) {
+        // Token 是否存在
         $reJson = array(
             "result" => 'failed',
             'code' => 202,
             'message' => 'Token Error',
+        );
+        exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
+    }
+
+    if ($tokenList[$token]['expired'] < time()) {
+        // Token 是否过期
+        $reJson = array(
+            "result" => 'failed',
+            'code' => 203,
+            'message' => 'Token Expired',
         );
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }

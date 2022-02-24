@@ -1,17 +1,22 @@
 <?php
-
-/**
- * 此文件用来存放API Key
- * 2021-11-6 14:36:35
- */
-
-
-/*
- * Token list 请在此填写需要配置Token的用户 前边编号有助于识别上传者ID
- * 格式： ID（数字，需要从0开始,顺序添加）=> Token（注意后边',')
- */
-
-$tokenList = array(
-    0 => '8337effca0ddfcd9c5899f3509b23657',
-    1 => '1c17b11693cb5ec63859b091c5b9c1b2',
-);
+$tokenList=Array
+	(
+	'8337effca0ddfcd9c5899f3509b23657'=>Array
+		(
+		'id'=>0,
+		'expired'=>3373722730,
+		'add_time'=>1645722730
+		),
+	'1c17b11693cb5ec63859b091c5b9c1b2'=>Array
+		(
+		'id'=>1,
+		'expired'=>2509722743,
+		'add_time'=>1645722743
+		),
+	'3e2246984b5047c25dcf08dc41c367b8'=>Array
+		(
+		'id'=>2,
+		'expired'=>1645636354,
+		'add_time'=>1645722754
+		)
+	);
