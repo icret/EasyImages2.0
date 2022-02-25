@@ -511,8 +511,31 @@ if (isset($_GET['reimg'])) {
                 </form>
                 <hr>
                 <h5>上传Token</h5>
-              
-                <div id="myDataGrid" class="datagrid">
+                <table class="table table-hover table-bordered table-condensed table-responsive visible-xs visible-sm" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>列表</th>
+                            <th>添加时间</th>
+                            <th>有效期至</th>
+                            <th>禁用</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <? foreach ($tokenList as $key => $value) :
+                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>';
+                        ?>
+                            <tr>
+                                <td><?php echo $value['id']; ?></td>
+                                <td><?php echo $key; ?></td>
+                                <td><?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
+                                <td><?php echo $expired; ?></td>
+                                <td><a class="btn btn-mini btn-danger" href="admin.inc.php?stop_token=<?php echo $key; ?>">禁用</a>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div id="myDataGrid" class="datagrid visible-md visible-lg">
                     <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
                         <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="搜索Token">
                         <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
@@ -708,7 +731,6 @@ if (isset($_GET['reimg'])) {
                         <?php else : ?>
                             <i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent Key</i><br />
                         <?php endif; ?>
-
                     </p>
                     <p class="text-ellipsis">最新版本:<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a></p>
                     <p class="text-ellipsis">当前版本:<span class="label label-badge label-outline"><?php echo $config['version']; ?></span></p>
@@ -1005,13 +1027,7 @@ if (isset($_GET['reimg'])) {
             ],
             array: [
                 <? foreach ($tokenList as $key => $value) :
-
-                    if ($value['expired'] < time()) {
-                        $expired = '<p class="text-gray">已过期</p>';
-                    } else {
-                        $expired =  '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>';
-                    }
-                ?> {
+                    $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>'; ?> {
                         id: '<?php echo $value['id']; ?>',
                         list: '<?php echo $key; ?>',
                         add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',

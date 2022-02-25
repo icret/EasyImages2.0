@@ -97,7 +97,7 @@ var _hmt = _hmt || [];
 		),
 	'language'=>0,
 	'version'=>'2.5.3',
-	'update'=>'2022-02-25 00:25:27',
+	'update'=>'2022-02-25 01:25:54',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">
