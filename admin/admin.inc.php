@@ -138,10 +138,33 @@ if (isset($_POST['delDir'])) {
     }
 }
 
-// 恢复图片
-if (isset($_GET['reimg'])) {
-    $name = $_GET['reimg'];
+// 监黄恢复图片
+if (isset($_GET['suspic_reimg'])) {
+    $name = $_GET['suspic_reimg'];
     if (re_checkImg($name)) {
+        echo "
+        <script>
+        new $.zui.Messager('恢复成功', {
+            type: 'success', // 定义颜色主题
+            icon: 'ok'
+        }).show();
+        </script>
+        ";
+    } else {
+        echo "
+        <script>
+        new $.zui.Messager('文件不存在!', {
+            type: 'danger', // 定义颜色主题
+            icon: 'warning-sign'
+        }).show();
+        </script>
+        ";
+    }
+}
+// 回收站恢复图片
+if (isset($_GET['recycle_reimg'])) {
+    $name = $_GET['recycle_reimg'];
+    if (re_checkImg($name, 'recycle/')) {
         echo "
         <script>
         new $.zui.Messager('恢复成功', {
@@ -180,11 +203,12 @@ if (isset($_GET['reimg'])) {
                 <li><a data-tab href="#Content1">网站设置</a></li>
                 <li><a data-tab href="#Content9">界面设置</a></li>
                 <li><a data-tab href="#Content2">上传设置</a></li>
-                <li><a data-tab href="#Content3">广告设置</a></li>
                 <li><a data-tab href="#Content5">API 设置</a></li>
+                <li><a data-tab href="#Content11">图片回收<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'recycle', 'number'); ?></span></a></li>
                 <li><a data-tab href="#Content7">可疑图片<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'suspic', 'number'); ?></span></a></li>
-                <li><a data-tab href="#Content4">文件操作</a></li>
-                <li><a data-tab href="#Content6">图片安全</a></li>
+                <li><a data-tab href="#Content4">压缩图片</a></li>
+                <li><a data-tab href="#Content3">广告设置</a></li>
+                <li><a data-tab href="#Content6">图床安全</a></li>
                 <li><a data-tab href="#Content10">账号密码</a></li>
                 <li><a data-tab href="#Content8">系统信息</a></li>
             </ul>
@@ -258,20 +282,6 @@ if (isset($_GET['reimg'])) {
             </div>
             <div class="tab-pane fade" id="Content2">
                 <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                    <div class="form-group">
-                        <div class="switch switch-inline">
-                            <input type="hidden" name="mustLogin" value="0">
-                            <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">登录上传</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="switch switch-inline">
-                            <input type="hidden" name="apiStatus" value="0">
-                            <input type="checkbox" name="apiStatus" value="1" <?php if ($config['apiStatus']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">API上传</label>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label data-toggle="tooltip" title="前后需加英文'/' 例: /i/">存储路径</label>
                         <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
@@ -485,10 +495,6 @@ if (isset($_GET['reimg'])) {
                     <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
                     <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
                 </form>
-                <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                    <hr>
-                    <button type="submit" class="btn btn-primary" name="delDir" value="thumbnails/" data-toggle="tooltip" title="已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?>" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');">清理缓存</button>
-                </form>
             </div>
             <div class="tab-pane fade " id="Content5">
                 <h5>外部KEY</h5>
@@ -559,9 +565,14 @@ if (isset($_GET['reimg'])) {
                 </form>
             </div>
             <div class="tab-pane fade" id="Content6">
+                <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" name="delDir" value="thumbnails/" data-toggle="tooltip" title="已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?>" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');">清理缓存</button>
+                    </div>
+                </form>
                 <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group">
-                        <label data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">图片鉴黄方式</label>
+                        <label data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">图片鉴黄</label>
                         <select class="chosen-select form-control" name="checkImg">
                             <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
                             <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
@@ -587,6 +598,41 @@ if (isset($_GET['reimg'])) {
                         <textarea class="form-control" rows="5" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline">
+                            <input type="hidden" name="mustLogin" value="0">
+                            <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">登录上传</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline">
+                            <input type="hidden" name="apiStatus" value="0">
+                            <input type="checkbox" name="apiStatus" value="1" <?php if ($config['apiStatus']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">API 上传</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="所有用户上传的图片使用加密链接删除后是否进入回收站">
+                            <input type="hidden" name="image_recycl" value="0">
+                            <input type="checkbox" name="image_recycl" value="1" <?php if ($config['image_recycl']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">图片回收</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="PHP扩展 | 安全设置 | 鉴黄 | 版本 检测">
+                            <input type="hidden" name="checkEnv" value="0">
+                            <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">网站检测</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件; 经测试二十万条数据并不影响速度!">
+                            <input type="hidden" name="upload_logs" value="0">
+                            <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">上传日志</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
@@ -628,27 +674,61 @@ if (isset($_GET['reimg'])) {
                         </label>
                     </div>
                     <div class="form-group">
-                        <div class="switch switch-inline" data-toggle="tooltip" title="PHP扩展 | 安全设置 | 鉴黄 | 版本">
-                            <input type="hidden" name="checkEnv" value="0">
-                            <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">网站检测</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件; 经测试二十万条数据并不影响速度!">
-                            <input type="hidden" name="upload_logs" value="0">
-                            <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
-                            <label style="font-weight: bold">上传日志</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
             </div>
+            <div class="tab-pane fade" id="Content11">
+                <h5>用户上传后自行删除的会显示在这个页面</h5>
+                <p>为了访问速度,仅显示最近20张图片;图片回收需要在图床安全->图片回收中开启</p>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>缩略图</th>
+                                <th>文件名</th>
+                                <th>文件大小</th>
+                                <th>文件操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // 获取被隔离的文件
+                            $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                               // cache目录
+                            $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
+                            @$cache_num = count($cache_file);                                                   // 统计目录文件个数
+                            for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
+                                $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i];   // 图片绝对路径
+                                $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                   // 图片相对路径
+                                @$file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
+                                @$filen_name = $cache_file[$i];                                                 // 图片名称
+                                $url = $config['imgurl'] . $config['path'] . 'recycle/' . $cache_file[$i];      // 图片网络连接
+                                $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
+                            ?>
+                                <tr>
+                                    <td><?php echo $i; ?></td>
+                                    <td><img data-toggle="lightbox" src="<?php echo get_online_thumbnail($file_path); ?>" data-image="<?php echo $url; ?>" class="img-thumbnail"></td>
+                                    <td><?php echo $filen_name; ?></td>
+                                    <td><?php echo $file_size; ?></td>
+                                    <td>
+                                        <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
+                                        <a class="btn btn-mini btn-success" href="?recycle_reimg=<?php echo $filen_name; ?>">恢复</a>
+                                        <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
+                                    </td>
+                                </tr>
+                            <?php endfor; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                    <input class="form-control" type="hidden" name="delDir" value="/suspic/" readonly="">
+                    <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
+                </form>
+            </div>
             <div class="tab-pane fade" id="Content7">
-                <p>为了访问速度,仅显示最近20张图片;鉴黄需要在安全设置->图片鉴黄。</p>
+                <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
                 <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
                 <p>获得key后打开->API 设置->Moderate Key->填入 </p>
                 <div class="table-responsive">
@@ -683,7 +763,7 @@ if (isset($_GET['reimg'])) {
                                     <td><?php echo $file_size; ?></td>
                                     <td>
                                         <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
-                                        <a class="btn btn-mini btn-success" href="?reimg=<?php echo $filen_name; ?>">恢复</a>
+                                        <a class="btn btn-mini btn-success" href="?suspic_reimg=<?php echo $filen_name; ?>">恢复</a>
                                         <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
                                     </td>
                                 </tr>

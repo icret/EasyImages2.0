@@ -658,7 +658,7 @@ function nsfwjs_json($url, $data = '')
  * 检查图片是否违规
  * @param $imageUrl string 图片url
  */
-function checkImg($imageUrl, $type = 1)
+function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
 {
     global $config;
 
@@ -723,14 +723,15 @@ function checkImg($imageUrl, $type = 1)
     // 移入回收站
     if ($type == 3) {
         $bad_pic = true;
+        $dir = 'recycle/';
     }
 
     /** # 如果违规则移动图片到违规文件夹 */
     if ($bad_pic == true) {
         $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
         $name = date('Y_m_d') . '_' . basename($imageUrl);                    // 文件名 2021_10_30_p8vypd.png
-        $new_path = APP_ROOT . $config['path'] . 'suspic/' . $name;           // 新路径含文件名
-        $suspic_dir = APP_ROOT . $config['path'] . 'suspic/';                  // suspic路径
+        $new_path = APP_ROOT . $config['path'] . $dir . $name;           // 新路径含文件名
+        $suspic_dir = APP_ROOT . $config['path'] . $dir;                  // suspic路径
 
         if (!is_dir($suspic_dir)) {                                            // 创建suspic目录并移动
             mkdir($suspic_dir, 0777, true);
@@ -743,15 +744,15 @@ function checkImg($imageUrl, $type = 1)
  * 还原被审查的图片
  * @param $name string 要还原的图片
  */
-function re_checkImg($name)
+function re_checkImg($name, $dir = 'suspic/')
 {
     global $config;
 
-    $fileToPath = str_replace('_', '/', $name);                      // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
-    $now_path_file = APP_ROOT . $config['path'] . 'suspic/' . $name; // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
+    $fileToPath = str_replace('_', '/', $name);                     // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
+    $now_path_file = APP_ROOT . $config['path'] . $dir . $name;     // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
     if (is_file($now_path_file)) {
-        $to_file = APP_ROOT . $config['path'] . $fileToPath;         // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
-        rename($now_path_file, $to_file);                            // 移动文件
+        $to_file = APP_ROOT . $config['path'] . $fileToPath;        // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
+        rename($now_path_file, $to_file);                           // 移动文件
         return true;
     }
 }

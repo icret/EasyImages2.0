@@ -39,6 +39,9 @@ if ($config['ad_bot']) echo $config['ad_bot_info']; // 底部广告
     ?>
   </p>
 </footer>
+<link href="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/qrcode/qrcode.min.js"></script>
 <script>
   // NProgress
   NProgress.start();

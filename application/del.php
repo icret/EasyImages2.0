@@ -39,7 +39,24 @@ if (empty($_REQUEST)) {
 if (isset($_GET['hash'])) {
     $delHash = $_GET['hash'];
     $delHash = urlHash($delHash, 1);
-    getDel($delHash, 'hash');
+
+    // getDel($delHash, 'hash');
+
+    if ($config['image_recycl']) {
+        // 如果开启回收站则进入回收站
+        checkImg($delHash, 3, 'recycle/');
+        echo '
+        <script>
+        new $.zui.Messager("删除成功", {
+            type: "success", // 定义颜色主题 
+            icon: "ok-sign" // 定义消息图标
+        }).show();
+        </script>
+        ';
+    } else {
+        // 否则直接删除
+        getDel($delHash, 'url');
+    }
 }
 
 // 检查登录后再处理url删除请求

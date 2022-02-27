@@ -28,7 +28,8 @@ if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     echo '
     <script>
     new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
-        type: "warning" // 定义颜色主题 
+        type: "warning", // 定义颜色主题 
+        time:7000
     }).show();
     </script>
     ';
@@ -76,4 +77,16 @@ if ($configp['checkImg'] !== 0) {
             }
         }
     }
+}
+
+// 检测是否存在.user.ini
+if (file_exists(APP_ROOT . '/.user.ini')) {
+    echo '
+    <script>
+        new $.zui.Messager("请关闭防跨目录读写或删除.user.ini文件 ",{
+            type: "danger", // 定义颜色主题 
+            time:10000
+        }).show();
+    </script>
+    ';
 }

@@ -104,8 +104,9 @@ $HTTP["url"] =~ "^/(i|public)/" {
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
 * 2022-2-21 v2.5.4 Developing
-- 增加回收图片
 - 增加Token有效期
+- 增加回收图片按钮
+- 增加加密删除回收站
 - 修复广场标题
 
 * 2022-2-21 v2.5.3

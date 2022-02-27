@@ -11,7 +11,7 @@ $config=Array
 	'imgurl'=>'http://127.0.0.1',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
-	'mustLogin'=>0,
+	'mustLogin'=>1,
 	'apiStatus'=>1,
 	'path'=>'/i/',
 	'imgName'=>'default',
@@ -96,8 +96,9 @@ var _hmt = _hmt || [];
 		9=>'month'
 		),
 	'language'=>0,
+	'image_recycl'=>1,
 	'version'=>'2.5.3',
-	'update'=>'2022-02-25 01:25:54',
+	'update'=>'2022-02-27 13:22:00',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">
@@ -181,5 +182,6 @@ var _hmt = _hmt || [];
       </div>
     </div>
   </div>
-</div>'
+</div>',
+	'delDir'=>'thumbnails/'
 	);

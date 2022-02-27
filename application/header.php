@@ -13,17 +13,11 @@
 	<meta name="keywords" content="<?php echo  $config['keywords']; ?>" />
 	<meta name="description" content="<?php echo  $config['description']; ?>" />
 	<link rel="shortcut icon" href="<?php echo $config['domain']; ?>/favicon.ico" type="image/x-icon" />
-	<link rel="dns-prefetch" href="<?php echo $config['imgurl']; ?>" />
-	<link rel="dns-prefetch" href="<?php echo $config['static_cdn_url']; ?>" />
 	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css" rel="stylesheet">
 	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme']; ?>.css" rel="stylesheet">
-	<link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css" rel="stylesheet">
-	<link href="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.css" rel="stylesheet">
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
-	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
-	<script src="<?php static_cdn(); ?>/public/static/qrcode/qrcode.min.js"></script>
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
-	<script src="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.js"></script>
+	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
 	<!--[if lt IE 9]>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/html5shiv.js"></script>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/respond.js"></script>
