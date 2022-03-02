@@ -2,7 +2,7 @@
 defined('APP_ROOT') ?: exit; // 禁止访问
 if ($config['ad_bot']) echo $config['ad_bot_info']; // 底部广告 
 ?>
-<footer class="col-md-12 text-muted small" style="text-align: center;">
+<footer class="container text-muted small navbar-fixed-bottom" style="text-align: center;background-color:rgba(255,255,255,0.7);">
   <hr>
   <!-- 对话框HTML -->
   <div class="modal fade" id="myModal">

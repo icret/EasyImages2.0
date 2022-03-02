@@ -25,7 +25,7 @@ mustLogin();
       <button type="button" class="btn btn-link uploader-btn-stop"><i class="icon icon-pause"></i>暂停上传</button>
     </div>
   </div>
-  <div class="col-md-10 col-md-offset-1 clo-xs-12">
+  <div class="col-md-10 col-md-offset-1 clo-xs-12" style="margin-bottom:90px;">
     <ul class="nav nav-tabs">
       <li <?php if ($config['upload_first_show'] == 1) echo 'class="active"'; ?>>
         <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"></i> 直链</a>
@@ -72,7 +72,6 @@ mustLogin();
     </div>
   </div>
 </div>
-</table>
 <link href="<?php static_cdn(); ?>/public/static/marquee/marquee.css" rel="stylesheet">
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js"></script>

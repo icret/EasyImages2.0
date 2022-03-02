@@ -90,3 +90,12 @@ if (file_exists(APP_ROOT . '/.user.ini')) {
     </script>
     ';
 }
+
+// 检测是否开启登录上传
+if ($config['mustLogin']) {
+    echo '
+    <script>
+    $.zui.browser.tip("请注意: 当前已开启登录上传,非登录用户不可上传图片!");
+    </script>
+    ';
+}
