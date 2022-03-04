@@ -190,9 +190,10 @@ if (isset($_GET['recycle_reimg'])) {
         <h5>请为本人博客<a class="alert-link" href="https://blog.png.cm/" target="_blank">blog.png.cm</a>加上网址链接,谢谢支持。作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中相关来源信息(例如: <a class="alert-link" href="https://blog.png.cm/">本人博客</a>,邮箱等)。</h5>
         <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
         <a href="https://www.kancloud.cn/easyimage/easyimage" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
-        <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a>
+        <!-- <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a> -->
+        <a href="https://qm.qq.com/cgi-bin/qm/qr?k=kpzasY8VdPfrJrpAYdk0rxQJjqddgyAm&jump_from=webapi" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> 问题反馈</button></a>
         <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
-        <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
+        <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
     </div>
     <div class="col-md-2 col-xs-4">
         <ul class="nav nav-tabs nav-stacked">
