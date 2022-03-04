@@ -1,7 +1,5 @@
 <?php require_once __DIR__ . '/header.php'; ?>
 
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
 <style>
   /** 图片列表*/
 
@@ -97,26 +95,27 @@
     background-color: rgba(0, 0, 0, 0.5);
   }
 </style>
-<div class="col-md-12">
-  <?php
-  if (!$config['showSwitch'] && !is_who_login('admin')) {
-    echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
-  } else {
-    $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                    // 获取指定目录
-    $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));                      // 过滤非日期，删除空格
-    $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
-    $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
-    // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
-    $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
-    $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
-    echo '
+<div class="row" style="margin-bottom:100px">
+  <div class="col-md-12">
+    <?php
+    if (!$config['showSwitch'] && !is_who_login('admin')) {
+      echo '<div class="alert alert-info">管理员关闭了预览哦~~</div>';
+    } else {
+      $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                    // 获取指定目录
+      $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));                      // 过滤非日期，删除空格
+      $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
+      $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
+      // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
+      $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
+      $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
+      echo '
     <ul id="viewjs">
       <div class="cards listNum">';
-    if ($fileArr[0]) {
-      foreach ($fileArr as $key => $value) {
-        if ($key < $keyNum) {
-          $imgUrl = $config['imgurl'] . config_path($path) . $value;
-          echo '
+      if ($fileArr[0]) {
+        foreach ($fileArr as $key => $value) {
+          if ($key < $keyNum) {
+            $imgUrl = $config['imgurl'] . config_path($path) . $value;
+            echo '
         <div class="col-md-4 col-sm-6 col-lg-3">        
           <div class="card">
             <li><img src="../public/images/loading.svg" data-image="' . creat_thumbnail_by_list($imgUrl) . '" data-original="' . $imgUrl . '" alt="简单图床-EasyImage"></li>
@@ -130,48 +129,48 @@
             </div> 
           </div>
         </div>
-				';
+		';
+          }
         }
+        echo '</div>';
+      } else {
+        echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
       }
-      echo '</div>';
-    } else {
-      echo '<div class="alert alert-danger">今天还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
+      echo '</ul>';
     }
-    echo '</ul>';
-  }
-  // 当前日期全部上传
-  $allUploud = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
-  $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');
-  // 组合url
-  @$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
-  ?>
-</div>
-<div class="col-md-12">
-  <hr />
-  <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
-    <div class="btn-toolbar">
-      <div class="btn-group">
-        <a class="btn btn-danger btn-mini" href="?<?php echo http_build_query($httpUrl); ?>">当前<?php echo $allUploud; ?></a>
-        <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
-        <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
-        <?php
-        // 倒推日期显示上传图片
-        for ($x = 2; $x <= 6; $x++)
-          echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('m月d日', strtotime("-$x day")) . '</a>';
-        ?>
-      </div>
-      <div class="btn-group">
-        <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
-        <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
-        <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
-        <a class="btn btn-mini" onclick="recycle_img()">回收</a>
-        <a class="btn btn-mini" onclick="delete_img()">删除</a>
+    // 当前日期全部上传
+    $allUploud = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
+    $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');
+    // 组合url
+    @$httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));
+    ?>
+  </div>
+  <div class="col-md-12">
+    <hr />
+    <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <a class="btn btn-danger btn-mini" href="?<?php echo http_build_query($httpUrl); ?>">当前<?php echo $allUploud; ?></a>
+          <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
+          <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
+          <?php
+          // 倒推日期显示上传图片
+          for ($x = 2; $x <= 6; $x++)
+            echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('m月d日', strtotime("-$x day")) . '</a>';
+          ?>
+        </div>
+        <div class="btn-group">
+          <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
+          <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
+          <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
+          <a class="btn btn-mini" onclick="recycle_img()">回收</a>
+          <a class="btn btn-mini" onclick="delete_img()">删除</a>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- 按格式 -->
-  <div class="row">
-    <!-- 
+    <!-- 按格式 -->
+    <div class="row">
+      <!-- 
     <div class="col-md-2 col-xs-6">
       <form action="list.php" method="get">
         <div class="input-group">
@@ -186,33 +185,36 @@
         </div>
       </form>
     </div> -->
-    <div class="col-md-2 col-xs-6">
-      <div class="btn-group">
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
+      <div class="col-md-2 col-xs-6">
+        <div class="btn-group">
+          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
+          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
+          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
+          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
+        </div>
+      </div>
+      <!-- 按日期-->
+      <div class="col-md-2 col-xs-6">
+        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+          <div class="input-group">
+            <span class="input-group-addon fix-border fix-padding"></span>
+            <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-primary input-sm">按日期</button>
+            </span>
+          </div>
+        </form>
       </div>
     </div>
-    <!-- 按日期-->
-    <div class="col-md-2 col-xs-6">
-      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
-        <div class="input-group">
-          <span class="input-group-addon fix-border fix-padding"></span>
-          <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
-          <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary input-sm">按日期</button>
-          </span>
-        </div>
-      </form>
-    </div>
+  </div>
+  <!-- 返回顶部 -->
+  <div style="display: none;" id="rocket-to-top">
+    <div style="opacity:0;display: block;" class="level-2"></div>
+    <div class="level-3"></div>
   </div>
 </div>
-<!-- 返回顶部 -->
-<div style="display: none;" id="rocket-to-top">
-  <div style="opacity:0;display: block;" class="level-2"></div>
-  <div class="level-3"></div>
-</div>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
 <script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
@@ -293,7 +295,7 @@
       }).show();
     }
   }
- // 删除图片
+  // 删除图片
   function delete_img() {
     var r = confirm("确认要删除?\n* 删除文件夹后将无法恢复!")
     if (r == true) {

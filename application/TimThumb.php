@@ -319,7 +319,7 @@ class timthumb
 
         $cachePrefix = ($this->isURL ? '_ext_' : '_int_');
         if ($this->isURL) {
-            $arr = explode('&', $_SERVER ['QUERY_STRING']);
+            $arr = explode('&', $_SERVER['QUERY_STRING']);
             asort($arr);
             $this->cachefile = $this->cacheDirectory . '/' . FILE_CACHE_PREFIX . $cachePrefix . md5($this->salt . implode('', $arr) . $this->fileCacheVersion) . FILE_CACHE_SUFFIX;
         } else {
@@ -333,7 +333,7 @@ class timthumb
             $this->debug(1, "Local image path is {$this->localImage}");
             $this->localImageMTime = @filemtime($this->localImage);
             //We include the mtime of the local file in case in changes on disk.
-            $this->cachefile = $this->cacheDirectory . '/' . FILE_CACHE_PREFIX . $cachePrefix . md5($this->salt . $this->localImageMTime . $_SERVER ['QUERY_STRING'] . $this->fileCacheVersion) . FILE_CACHE_SUFFIX;
+            $this->cachefile = $this->cacheDirectory . '/' . FILE_CACHE_PREFIX . $cachePrefix . md5($this->salt . $this->localImageMTime . $_SERVER['QUERY_STRING'] . $this->fileCacheVersion) . FILE_CACHE_SUFFIX;
         }
         $this->debug(2, "Cache file is: " . $this->cachefile);
 
@@ -580,7 +580,7 @@ class timthumb
         $mimeType = $sData['mime'];
 
         $this->debug(3, "Mime type of image is $mimeType");
-        if (!preg_match('/^image\/(?:gif|jpg|jpeg|png|webp)$/i', $mimeType)) {
+        if (!preg_match('/^image\/(?:gif|jpg|jpeg|png|webp|bmp)$/i', $mimeType)) {
             return $this->error("The image being resized is not a valid gif, jpg or png.");
         }
 
@@ -828,8 +828,11 @@ class timthumb
             $imgType = 'gif';
             imagegif($canvas, $tempfile);
         } else if (preg_match('/^image\/webp$/i', $mimeType)) {
-            $imgType = 'WEBP';
+            $imgType = 'webp';
             imagewebp($canvas, $tempfile);
+        } else if (preg_match('/^image\/bmp$/i', $mimeType)) {
+            $imgType = 'bmp';
+            imagebmp($canvas, $tempfile);
         } else {
             return $this->sanityFail("Could not match mime type after verifying it previously.");
         }
@@ -876,9 +879,9 @@ class timthumb
         $tempfile4 = tempnam($this->cacheDirectory, 'timthumb_tmpimg_');
         $context = stream_context_create();
         $fp = fopen($tempfile, 'r', 0, $context);
-        if(strlen($imgType) == 3) {
+        if (strlen($imgType) == 3) {
             file_put_contents($tempfile4, $this->filePrependSecurityBlock . $imgType . '  ?' . '>'); //7 extra bytes, first 3 being image type
-        }elseif (strlen($imgType) == 4){
+        } elseif (strlen($imgType) == 4) {
             file_put_contents($tempfile4, $this->filePrependSecurityBlock . $imgType . ' ?' . '>'); //7 extra bytes, first 4 being image type
         }
         file_put_contents($tempfile4, $fp, FILE_APPEND);
@@ -1096,7 +1099,7 @@ class timthumb
         }
 
         $mimeType = $this->getMimeType($tempfile);
-        if (!preg_match("/^image\/(?:jpg|jpeg|gif|png|webp)$/i", $mimeType)) {
+        if (!preg_match("/^image\/(?:jpg|jpeg|gif|png|webp|bmp)$/i", $mimeType)) {
             $this->debug(3, "Remote file has invalid mime type: $mimeType");
             @unlink($this->cachefile);
             touch($this->cachefile);
@@ -1171,6 +1174,9 @@ class timthumb
         if (strtolower($mimeType) == 'image/webp') {
             $mimeType = 'image/webp';
         }
+        if (strtolower($mimeType) == 'image/bmp') {
+            $mimeType = 'image/bmp';
+        }
         $gmdate_expires = gmdate('D, d M Y H:i:s', strtotime('now +10 days')) . ' GMT';
         $gmdate_modified = gmdate('D, d M Y H:i:s') . ' GMT';
         // send content headers then display image
@@ -1193,7 +1199,6 @@ class timthumb
 
     protected function securityChecks()
     {
-
     }
 
     protected function param($property, $default = '')
@@ -1214,6 +1219,10 @@ class timthumb
 
             case 'image/webp':
                 $image = imagecreatefromwebp($src);
+                break;
+                
+            case 'image/bmp':
+                $image = imagecreatefrombmp($src);
                 break;
 
             case 'image/png':
@@ -1412,5 +1421,4 @@ class timthumb
     {
         return $this->is404;
     }
-
 }

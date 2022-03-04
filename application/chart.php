@@ -56,8 +56,8 @@ function write_chart_total()
         $count_contents['chart_disk'][] = [$count_day[$i] => getDirectorySize($total_contents . $count_day[$i])];
     }
 
-    if(!is_dir(APP_ROOT.'/admin/logs/counts/')){
-        mkdir(APP_ROOT.'/admin/logs/counts/',0755,true);
+    if (!is_dir(APP_ROOT . '/admin/logs/counts/')) {
+        mkdir(APP_ROOT . '/admin/logs/counts/', 0755, true);
     }
 
     $count_contents = json_encode($count_contents, true);

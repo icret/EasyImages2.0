@@ -103,9 +103,12 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary><mark>点击查看2.0版更新日志</mark></summary>
 
-* 2022-3-2 v2.5.5
+* 2022-3-4 v2.5.5
 - 增加设置页面检测是否开启登录上传
 - 将footer固定在底部
+- 移除function_API.php
+- 修复TimThumb不支持bmp格式的bug
+- 修复TimThumb不支持webp动态图片bug
 
 * 2022-2-29 v2.5.4
 - 增加Token有效期

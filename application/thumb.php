@@ -83,5 +83,25 @@ $ALLOWED_SITES = array(
     'mindsharestudios.com'
 );
 
-require_once __DIR__ . '/TimThumb.php';
-timthumb::start();
+/**
+ * 修复无法生成生成webp动态图片的缩略图bug
+ */
+if (isset($_GET['img'])) {
+    // 获取图片后缀后4位
+    $ext = substr($_GET['img'], -4);
+    // 图片绝对路径
+    $src = APP_ROOT . $_GET['img'];
+    // 检测图片
+    if ($ext == 'webp' && isWebpAnimated($src)) {
+        // 输出动态的webp
+        header("Content-type: image/webp");
+        exit(file_get_contents($src, true));
+    }
+    // 非动态webp输出
+    require_once __DIR__ . '/TimThumb.php';
+    timthumb::start();
+} else {
+    // 输出404
+    header("Content-type: image/webp");
+    exit(file_get_contents(APP_ROOT . '/public/images/404.png', true));
+}

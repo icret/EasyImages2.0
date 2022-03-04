@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../application/function.php';
-require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/class.upload.php';
 require_once APP_ROOT . '/config/api_key.php';
 

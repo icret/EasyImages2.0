@@ -3,8 +3,6 @@
  * 统计中心
  */
 require_once '../application/header.php';
-require_once APP_ROOT . '/config/api_key.php';
-require_once APP_ROOT . '/api/function_API.php';
 require_once APP_ROOT . '/application/chart.php';
 
 // 检测是否开启统计

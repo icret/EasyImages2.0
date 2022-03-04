@@ -1078,3 +1078,78 @@ function IP_URL_Ping($host, $port, $timeout)
     }
     return true;
 }
+
+/**
+ * 生成Token
+ * @param int $length Token长度
+ * @return string 返回Token
+ */
+function privateToken($length = 32)
+{
+    $output = '';
+    for ($a = 0; $a < $length; $a++) {
+        $output .= chr(mt_rand(65, 122));    //生成php随机数
+    }
+    return md5($output);
+}
+
+/**
+ * 检查Token
+ * @param $token 要检查的Token
+ * code:201 访问成功但是服务端关闭API上传
+ * code:202 访问成功但是Token错误
+ */
+function check_api($token)
+{
+    global $config;
+    global $tokenList;
+
+    if (!$config['apiStatus']) {
+        // API关闭 服务端关闭API上传
+        $reJson = array(
+            "result" => 'failed',
+            'code' => 201,
+            'message' => 'API Closed',
+        );
+        exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
+    }
+
+    if (!in_array($tokenList[$token], $tokenList)) {
+        // Token 是否存在
+        $reJson = array(
+            "result" => 'failed',
+            'code' => 202,
+            'message' => 'Token Error',
+        );
+        exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
+    }
+
+    if ($tokenList[$token]['expired'] < time()) {
+        // Token 是否过期
+        $reJson = array(
+            "result" => 'failed',
+            'code' => 203,
+            'message' => 'Token Expired',
+        );
+        exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
+    }
+}
+
+/**
+ * 判断webp是否为动态图片
+ * @param $src 图像文件
+ * @return bool 是|否
+ */
+function isWebpAnimated($src)
+{
+    $webpContents = file_get_contents($src);
+    $where = strpos($webpContents, "ANMF");
+    if ($where !== FALSE) {
+        // animated
+        $isAnimated = true;
+    } else {
+        // non animated
+        $isAnimated = false;
+    }
+    return $isAnimated;
+}

@@ -43,15 +43,16 @@ if ($config['ad_bot']) echo $config['ad_bot_info']; // 底部广告
 <script src="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/qrcode/qrcode.min.js"></script>
 <script>
-  // NProgress
-  NProgress.start();
-  NProgress.done();
   // 导航状态
   $('.nav-pills').find('a').each(function() {
     if (this.href == document.location.href) {
       $(this).parent().addClass('active'); // this.className = 'active';
     }
   });
+
+  // NProgress
+  NProgress.start();
+  NProgress.done();
 
   // js 获取当前网址二维码
   var qrcode = new QRCode(document.getElementById("qrcode"), {

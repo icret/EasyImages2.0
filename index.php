@@ -78,6 +78,27 @@ mustLogin();
 <script src="<?php static_cdn(); ?>/public/static/marquee/marquee.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script>
+  // 公告
+  (function() {
+    new Marquee({
+      // 要滚动的元素
+      elem: document.getElementById("marquee2"),
+      // 每次滚动的步长(px)，默认0
+      step: 30,
+      // 滚动效果执行时间(ms)，默认400
+      stepInterval: 400,
+      // 每次滚动间隔时间(ms)，默认3000
+      interval: 3000,
+      // 滚动方向，up、down、left、right，默认为"left" 当前只支持上下
+      dir: 'up',
+      // 是否自动滚动，默认为true
+      autoPlay: true,
+      // 是否在鼠标滑过低级元素时暂停滚动，默认为true
+      hoverPause: true
+    });
+  })();
+
+  // 上传控制
   $('#upShowID').uploader({
     // 自动上传
     autoUpload: false,
@@ -131,25 +152,6 @@ mustLogin();
       }
     }
   });
-  // 公告
-  (function() {
-    new Marquee({
-      // 要滚动的元素
-      elem: document.getElementById("marquee2"),
-      // 每次滚动的步长(px)，默认0
-      step: 30,
-      // 滚动效果执行时间(ms)，默认400
-      stepInterval: 400,
-      // 每次滚动间隔时间(ms)，默认3000
-      interval: 3000,
-      // 滚动方向，up、down、left、right，默认为"left" 当前只支持上下
-      dir: 'up',
-      // 是否自动滚动，默认为true
-      autoPlay: true,
-      // 是否在鼠标滑过低级元素时暂停滚动，默认为true
-      hoverPause: true
-    });
-  })();
 </script>
 <?php
 /** 环境检测 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php';
