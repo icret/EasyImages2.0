@@ -15,6 +15,7 @@
 [![Release](https://img.shields.io/github/v/release/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/releases)
 [![Issues](https://img.shields.io/github/issues/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/issues)
 [![stargazers](https://img.shields.io/github/stars/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/stargazers)
+[![jsdelivr](https://data.jsdelivr.com/v1/package/gh/icret/EasyImages2.0/badge)](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@EasyImage2.0/)
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 
