@@ -28,9 +28,9 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
                 <h4>EasyImage2.0 基础检测:</h4>
                 <p>当前PHP版本:<sapn style="color:green"><?php echo phpversion() ?></sapn>
                 </p>
-                <p>upload_max_filesize - PHP上传最大值:<sapn style="color:green"><?php echo ini_get('upload_max_filesize'); ?></sapn>
+                <p>PHP最大上传: <sapn style="color:green"><?php echo ini_get('upload_max_filesize'); ?></sapn>
                 </p>
-                <p>post_max_size - POST上传最大值:<sapn style="color:green"><?php echo ini_get('post_max_size'); ?></sapn>
+                <p>POST最大上传: <sapn style="color:green"><?php echo ini_get('post_max_size'); ?></sapn>
                 </p>
                 <?php
                 // 扩展检测 取消检测imagick扩展
@@ -49,19 +49,19 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
                 if (IS_WIN) {
                     echo '
                     <p style="color:green">upload.php 文件可执行</p>
-                    <p style="color:green">/i 目录可读写</p>
+                    <p style="color:green">' . $config['path'] . ' 目录可读写</p>
                     ';
                 }
                 if (!IS_WIN) {
-                    if ($quanxian !== '755' and !is_writable(APP_ROOT . '/i/')) {
+                    if ($quanxian !== '755' and !is_writable(APP_ROOT . $config['path'])) {
                         echo '
                         <p style="color:red">upload.php 文件不可执行</font>>
-                        <p style="color:red">/i 目录可读写</font>>
+                        <p style="color:red">' . $config['path'] . ' 目录可读写</font>>
                         ';
                     } else {
                         echo '
                         <p style="color:green">upload.php 文件可执行</p>
-                        <p style="color:green">/i 目录可读写</p>
+                        <p style="color:green">' . $config['path'] . ' 目录可读写</p>
                         ';
                     }
                 }

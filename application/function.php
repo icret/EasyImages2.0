@@ -6,7 +6,7 @@ require_once APP_ROOT . '/config/config.guest.php';
 /**
  * 判断GIF图片是否为动态
  * @param $filename string 文件
- * @return int
+ * @return int 是|否
  */
 function isAnimatedGif($filename)
 {
@@ -155,18 +155,20 @@ function static_cdn()
         echo $config['domain'];
     }
 }
-/*
-// 获取允许上传的扩展名
+
+/**
+ * 获取允许上传的扩展名
+ */
 function getExtensions()
 {
     global $config;
+    $arr = explode(',', $config['extensions']);
     $mime = '';
-    for ($i = 0; $i < count($config['extensions']); $i++) {
-        $mime .= $config['extensions'][$i] . ',';
+    for ($i = 0; $i < count($arr); $i++) {
+        $mime .= $arr . ',';
     }
     return rtrim($mime, ',');
 }
-*/
 
 /**
  * 获取目录大小 如果目录文件较多将很费时
@@ -656,7 +658,10 @@ function nsfwjs_json($url, $data = '')
 
 /**
  * 检查图片是否违规
- * @param $imageUrl string 图片url
+ * @param $imageUrl 图片链接
+ * @param int $type 模式: 1|moderatecontent 2|nsfwjs 3|移入回收站
+ * @param string $dir 移入的目录
+ * @return bool
  */
 function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
 {
@@ -730,13 +735,18 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
     if ($bad_pic == true) {
         $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
         $name = date('Y_m_d') . '_' . basename($imageUrl);                    // 文件名 2021_10_30_p8vypd.png
-        $new_path = APP_ROOT . $config['path'] . $dir . $name;           // 新路径含文件名
-        $suspic_dir = APP_ROOT . $config['path'] . $dir;                  // suspic路径
+        $new_path = APP_ROOT . $config['path'] . $dir . $name;                // 新路径含文件名
+        $suspic_dir = APP_ROOT . $config['path'] . $dir;                      // suspic路径
 
-        if (!is_dir($suspic_dir)) {                                            // 创建suspic目录并移动
+        if (!is_dir($suspic_dir)) {                                           // 创建suspic目录并移动
             mkdir($suspic_dir, 0777, true);
         }
-        rename($old_path, $new_path);
+        if (is_file($old_path)) {
+            rename($old_path, $new_path);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -1105,7 +1115,7 @@ function check_api($token)
     global $tokenList;
 
     if (!$config['apiStatus']) {
-        // API关闭 服务端关闭API上传
+        // 关闭API
         $reJson = array(
             "result" => 'failed',
             'code' => 201,
@@ -1115,7 +1125,7 @@ function check_api($token)
     }
 
     if (!in_array($tokenList[$token], $tokenList)) {
-        // Token 是否存在
+        // Token 存在
         $reJson = array(
             "result" => 'failed',
             'code' => 202,
@@ -1125,7 +1135,7 @@ function check_api($token)
     }
 
     if ($tokenList[$token]['expired'] < time()) {
-        // Token 是否过期
+        // Token 过期
         $reJson = array(
             "result" => 'failed',
             'code' => 203,

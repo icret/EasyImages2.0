@@ -44,8 +44,8 @@ if (isset($_GET['hash'])) {
 
     if ($config['image_recycl']) {
         // 如果开启回收站则进入回收站
-        checkImg($delHash, 3, 'recycle/');
-        echo '
+        if (checkImg($delHash, 3, 'recycle/') == true) {
+            echo '
         <script>
         new $.zui.Messager("删除成功", {
             type: "success", // 定义颜色主题 
@@ -53,6 +53,16 @@ if (isset($_GET['hash'])) {
         }).show();
         </script>
         ';
+        } else {
+            echo '
+			<script>
+            new $.zui.Messager("文件不存在!", {
+				type: "danger", // 定义颜色主题
+				icon: "exclamation-sign" // 定义消息图标
+            }).show();
+            </script>
+			';
+        }
     } else {
         // 否则直接删除
         getDel($delHash, 'url');
