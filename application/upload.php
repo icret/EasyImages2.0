@@ -38,7 +38,12 @@ if ($handle->uploaded) {
     // 最小高度
     $handle->image_min_height = $config['minHeight'];
     // 转换图片为指定格式
-    $handle->image_convert = $config['imgConvert'];
+    if (isset($config['imgConvert'])) {
+        // 只转换非webp格式和非动态图片
+        if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
+            $handle->image_convert = $config['imgConvert'];
+        }
+    }
 
     /* 等比例缩减图片 放到前端了
     if ($config['imgRatio']) {
@@ -50,13 +55,6 @@ if ($handle->uploaded) {
 
     // 存储图片路径:images/201807/
     $handle->process(APP_ROOT . config_path());
-
-    /*
-    // 创建缩略图 开启后会个别返回文件失败，暂时没找到替代方案，如果启用此项目，需要将list.php中的get_online_thumbnail改成return_thumbnail_images函数
-    if ($config['thumbnail']) {
-        @creat_thumbnail_images($handle->file_dst_name);
-    }
-    */
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {

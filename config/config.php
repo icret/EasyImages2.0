@@ -39,7 +39,7 @@ $config=Array
 	'imgRatio_quality'=>80,
 	'imgRatio_crop'=>0,
 	'imgRatio_preserve_headers'=>1,
-	'static_cdn'=>1,
+	'static_cdn'=>0,
 	'theme'=>'default',
 	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.5',
 	'TinyPng_key'=>'',
@@ -99,7 +99,7 @@ var _hmt = _hmt || [];
 	'image_recycl'=>1,
 	'delDir'=>'thumbnails/',
 	'version'=>'2.5.5',
-	'update'=>'2022-03-07 12:32:21',
+	'update'=>'2022-03-10 23:30:29',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

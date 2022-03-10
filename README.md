@@ -6,7 +6,7 @@
 >
 
 [演示](https://png.cm/) &nbsp;
-[Chrome 拓展](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
+[Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
 [使用手册](https://www.kancloud.cn/easyimage/easyimage/) &nbsp;
 [问题反馈](https://support.qq.com/products/367633) &nbsp;
 [QQ群](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
@@ -102,10 +102,11 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 ## 更新日志
 
-<details><summary><mark>点击查看2.0版更新日志</mark></summary>
+<details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-3-7 v2.5.6 dev
+* 2022-3-10 v2.5.6 dev
 - 修复加密删除后不能正确提示
+- 修复webp转换其他格式失败
 
 * 2022-3-4 v2.5.5
 - 增加设置页面检测是否开启登录上传
@@ -402,7 +403,7 @@ RewriteRule config/(.*).(php)$ – [F]
 - ~~支持删除自定义删除图片(仅管理员)~~
 </details>
 
-<details><summary><mark>与1.6.4版本差别</mark></summary>
+<details><summary>与1.6.4版本差别</summary>
 
 ##### 不建议再使用 [EasyImage 1.6.4版本](https://github.com/icret/easyImages)
 
@@ -449,5 +450,6 @@ RewriteRule config/(.*).(php)$ – [F]
  - Copyright © 2018 EasyImage dev By [Icret](https://github.com/icret)
 
  * have fun!
-
- [![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](https://github.com/icret/EasyImages2.0/stargazers)
+ 
+![项目状态](https://repobeats.axiom.co/api/embed/0922803f14091f0686de26fee5196b9984b106a4.svg "Repobeats analytics image")
+[![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](https://github.com/icret/EasyImages2.0/stargazers)

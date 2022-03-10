@@ -39,7 +39,12 @@ if ($handle->uploaded) {
     // 最小高度
     $handle->image_min_height = $config['minHeight'];
     // 转换图片为指定格式
-    $handle->image_convert = $config['imgConvert'];
+    if (isset($config['imgConvert'])) {
+        // 只转换非webp格式和非动态图片
+        if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
+            $handle->image_convert = $config['imgConvert'];
+        }
+    }
 
     // 存储图片路径:images/201807/
     $handle->process('../' . config_path());
