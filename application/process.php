@@ -39,7 +39,7 @@ function water($source)
                 'name' => $source,
                 'font' => APP_ROOT . $config['textFont'],
                 'fontSize' => $config['textSize'],
-                'color' => $config['textColor'],
+                'color' => str_replace(array('rgba', '(', ')'), '', $config['textColor']),
             ];
             Imgs::setWater($source, $arr);
         }

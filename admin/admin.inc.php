@@ -329,7 +329,7 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
-                    <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{value:'rgba(<?php echo $config['textColor']; ?>)', position:'bottom', height:80, backgroundColor:'#333',palette:'rgba(0,0,0,0) #fff #808080 #000 #996e36 #f55525 #ffe438 #88dd20 #22e0cd #269aff #bb1cd4',paletteCols:11, hideOnPaletteClick:true}">
+                    <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
                 </div>
                 <div class="form-group">
                     <label>水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
@@ -988,13 +988,29 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.js"></script>
+<script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css" rel="stylesheet">
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
 <script>
+    //
+    jscolor.presets.myPreset = {
+        value: '<?php echo $config['textColor']; ?>',
+        format: 'rgba',
+        closeText: true,
+        width: 201,
+        height: 81,
+        backgroundColor: '#333',
+        palette: [
+            '#000000', '#7d7d7d', '#870014', '#ec1c23', '#ff7e26',
+            '#fef100', '#22b14b', '#00a1e7', '#3f47cc', '#a349a4',
+            '#ffffff', '#c3c3c3', '#b87957', '#feaec9', '#ffc80d',
+            '#eee3af', '#b5e61d', '#99d9ea', '#7092be', '#c8bfe7',
+        ],
+    }
+
     // 使用本地存储记录当前tab页面
     $('[data-tab]').on('shown.zui.tab', function(e) {
         var cookie_value = e.delegateTarget.attributes[1].value;

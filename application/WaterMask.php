@@ -285,7 +285,8 @@ class Imgs
                 return array('code' => false, 'msg' => '请给正确的字体颜色');
             }
 
-            $def['color'] = imagecolorallocatealpha($dst_img, $rgb[0], $rgb[1], $rgb[2], $rgb[3]);
+            // ceil(127 - 127 * $rgb[3]) 将CSS中的Alpha 0-1 转换为PHP Alpha 127-0 并取整
+            $def['color'] = imagecolorallocatealpha($dst_img, $rgb[0], $rgb[1], $rgb[2], ceil(127 - 127 * $rgb[3]));
             imagettftext(
                 $dst_img,
                 $def['fontSize'],
