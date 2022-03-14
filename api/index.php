@@ -56,6 +56,9 @@ if ($handle->uploaded) {
         $pathIMG = config_path() . $handle->file_dst_name;
         $imageUrl = $config['imgurl'] . $pathIMG;
 
+        // 原图保护 key值是由crc32加密的登录密码
+        $hide_original = $config['hide'] == 1 ? $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['password'])) : $imageUrl;
+
         // 关闭上传后显示加密删除链接
         if ($config['show_user_hash_del']) {
             // 判断PHP版本启用删除
@@ -79,10 +82,10 @@ if ($handle->uploaded) {
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean();
     } else {
-        // 上传错误 code:403 客户端文件有问题
+        // 上传错误 code:400 客户端文件有问题
         $reJson = array(
             "result"    =>  "failed",
-            "code"      =>  403,
+            "code"      =>  400,
             "message"   =>  $handle->error,
         );
 

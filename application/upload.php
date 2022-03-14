@@ -64,6 +64,9 @@ if ($handle->uploaded) {
         $pathIMG = config_path() . $handle->file_dst_name;
         $imageUrl = $config['imgurl'] . $pathIMG;
 
+        // 原图保护 key值是由crc32加密的登录密码
+        $hide_original = $config['hide'] == 1 ? $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['password'])) : $imageUrl;
+
         // 关闭上传后显示加密删除链接
         if ($config['show_user_hash_del']) {
             // 判断PHP版本启用删除
@@ -79,7 +82,7 @@ if ($handle->uploaded) {
         $reJson = array(
             "result"    => "success",
             "code"      => 200,
-            "url"       => $imageUrl,
+            "url"       => $hide_original,
             "srcName"   => $handle->file_src_name_body,
             "thumb"     => $config['domain'] . '/application/thumb.php?img=' . $pathIMG,
             "del"       => $delUrl,
@@ -95,7 +98,6 @@ if ($handle->uploaded) {
         );
         unset($handle);
         header('Content-Type:application/json; charset=utf-8');
-        unset($handle);
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 

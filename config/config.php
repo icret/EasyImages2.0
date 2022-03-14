@@ -41,7 +41,7 @@ $config=Array
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
 	'theme'=>'default',
-	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.5',
+	'static_cdn_url'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.6',
 	'TinyPng_key'=>'',
 	'checkImg'=>0,
 	'checkImg_value'=>50,
@@ -63,9 +63,9 @@ var _hmt = _hmt || [];
     <a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
 </div>',
 	'ad_bot'=>0,
-	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;padding:12px 0 90px 0;">
-    <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
-    <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
+	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;padding:12px 0 110px 0;">
+    <a href="../public/images/wechat.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
+    <a href="../public/images/alipay.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
 </div>',
 	'showSwitch'=>1,
 	'showSort'=>1,
@@ -98,8 +98,9 @@ var _hmt = _hmt || [];
 	'language'=>0,
 	'image_recycl'=>1,
 	'delDir'=>'thumbnails/',
-	'version'=>'2.5.5',
-	'update'=>'2022-03-12 14:03:59',
+	'hide'=>0,
+	'version'=>'2.5.6',
+	'update'=>'2022-03-14 17:48:22',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

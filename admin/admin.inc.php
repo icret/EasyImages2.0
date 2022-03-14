@@ -255,7 +255,7 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">静态文件CDN | 末尾不加'/'</label>
                     </div>
-                    <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可添加当前版本号 例:@2.5.6">
+                    <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
                 </div>
                 <div class="form-group">
                     <div>
@@ -611,6 +611,13 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="隐藏图片直链 | *注意: key与登录密码绑定,更改登录密码后key失效">
+                        <input type="hidden" name="hide" value="0">
+                        <input type="checkbox" name="hide" value="1" <?php if ($config['hide']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">原图保护</label>
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="switch switch-inline" data-toggle="tooltip" title="所有用户上传的图片使用加密链接删除后是否进入回收站">
                         <input type="hidden" name="image_recycl" value="0">
                         <input type="checkbox" name="image_recycl" value="1" <?php if ($config['image_recycl']) echo 'checked="checked"'; ?>>
@@ -677,8 +684,8 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content11">
-            <h5>用户上传后自行删除的会显示在这个页面</h5>
-            <p>为了访问速度,仅显示最近20张图片;图片回收需要在图床安全->图片回收中开启</p>
+            <h5>用户自己删除的会显示在这个页面</h5>
+            <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed table-striped">
                     <thead>
@@ -785,8 +792,8 @@ if (isset($_GET['recycle_reimg'])) {
                 <p class="text-ellipsis">剩余磁盘: <?php echo  getDistUsed(disk_free_space(__DIR__)); ?></p>
                 <h5>PHP信息</h5>
                 <hr />
-                <p class="text-ellipsis">PHP Version: <?php echo  phpversion(); ?></p>
-                <p class="text-ellipsis">GD Version: <?php echo (gd_info()["GD Version"]); ?></p>
+                <p class="text-ellipsis">PHP: <?php echo  phpversion(); ?></p>
+                <p class="text-ellipsis">GD : <?php echo (gd_info()["GD Version"]); ?></p>
                 <p class="text-ellipsis">PHP最大上传: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
                 <p class="text-ellipsis">POST最大上传: <?php echo ini_get('post_max_size'); ?></p>
                 <p class="text-ellipsis">PHP最长执行时间: <?PHP echo get_cfg_var("max_execution_time") . "秒 "; ?></p>
@@ -794,23 +801,24 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5>我的信息</h5>
                 <hr />
                 <p class="text-ellipsis">浏览器: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
-                <p class="text-ellipsis">我的IP: <?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
+                <p class="text-ellipsis">登录IP: <?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
                 <h5>图床信息</h5>
                 <hr />
                 <p class="text-ellipsis">
                     <?php if (empty($config['TinyPng_key'])) : ?>
-                        <i class="icon icon-times" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng Key</i><br />
+                        <i class="icon icon-times" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng</i><br />
                     <?php else : ?>
-                        <i class="icon icon-check" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng Key</i><br />
+                        <i class="icon icon-check" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng</i><br />
                     <?php endif; ?>
                     <?php if (empty($config['moderatecontent_key'])) : ?>
-                        <i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">moderatecontent key</i><br />
+                        <i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">moderatecontent</i><br />
                     <?php else : ?>
-                        <i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent Key</i><br />
+                        <i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</i><br />
                     <?php endif; ?>
                 </p>
-                <p class="text-ellipsis">最新版本:<a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success label-outline"><?php echo getVersion(); ?></span></a></p>
-                <p class="text-ellipsis">当前版本:<span class="label label-badge label-outline"><?php echo $config['version']; ?></span></p>
+                <p>
+                    <span class="label label-badge label-info">当前版本:<?php echo $config['version']; ?></span>
+                    <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步版本">最新版本:<?php echo getVersion(); ?></span></a>                </p>
             </div>
         </div>
         <div class="tab-pane fade" id="Content9">

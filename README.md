@@ -22,7 +22,7 @@
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
 ## 目录
-[特点](#特点) &nbsp;[使用注意](#使用注意) &nbsp;[安装](#安装) &nbsp;[程序升级](#程序升级) &nbsp;[安全配置](#安全配置) &nbsp;[更新日志](#更新日志) &nbsp;[支持开发者](#支持开发者) &nbsp;[界面演示](#界面演示) &nbsp;[兼容](#兼容)  &nbsp;[鸣谢](#鸣谢) &nbsp;[开源许可](#开源许可) &nbsp;
+[特点](#特点) &nbsp;[注意](#常见问题) &nbsp;[安装](#安装) &nbsp;[升级](#程序升级) &nbsp;[安全](#安全配置) &nbsp;[更新日志](#更新日志) &nbsp;[支持开发者](#支持开发者) &nbsp;[界面演示](#界面演示) &nbsp;[兼容](#兼容)  &nbsp;[鸣谢](#鸣谢) &nbsp;[开源许可](#开源许可) &nbsp;
 
 ## 特点
 
@@ -42,21 +42,31 @@
 - [x] 支持创建仅上传用户
 - [x] 更多支持请安装尝试···
 
-## 使用注意
+## 常见问题
 
 1. 请将所有文件赋予`0755`和`www`权限
 2. 对`PHP`不太熟悉的请不要将图床程序放置于二级目录
-3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如宝塔面板
+3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如`宝塔面板`|`军哥lnmp`
 4. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
-5. 第一次使用会执行安装程序并生成`install.lock` 不执行安装可以删除`install`目录
-6. 第一次访问会检查环境并在`config`目录下生成`EasyImage.lock`
+5. 首次使用会执行安装程序并生成`install.lock` 跳过安装流程请删除`install`目录
+6. 首次访问首页会检查环境并在`config`目录下生成`EasyImage.lock`
 7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
-8. 出现`undefined function imagecreatefromwebp()`是因为GD没安装webp
-9. 出现`upload File size exceeds the maximum value` 调整`PHP`上传大小
-10. 出现`Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
-11. 出现`Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
-12. 不出验证码: 权限问题见问题1 CDN缓存了/开防火墙了
+8. 不显示验证码: 1. 权限问题见问题`1` 2. CDN缓存了 3. 开防火墙了
+9. `upload File size exceeds the maximum value` 调整`PHP`上传大小
+10. `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
+11. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
+12. 出现`Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
+13. 如果开启原图保护功后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
 
+  ```Nginx
+# 把Nginx这段配置删掉
+location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+{
+    expires      30d;
+    error_log /dev/null;
+    access_log /dev/null;
+}
+```
 ## 安装
 
 - windows:
@@ -68,8 +78,10 @@
 
  ## 程序升级
  
-- 备份`config`目录(没有增加上传用户和api可以只保留`config.php`文件)和`图片目录`
+- 备份`config`目录(没有增加上传用户和api可以只保留`config.php`文件)和`上传文件目录`
 - 将新程序下载至网站目录解压覆盖，然后将备份的文件替换既完成升级
+- 如果出现错误请在设置中把所有底部设置点击一次`保存`
+- 
 
 ## 安全配置
 
@@ -104,10 +116,13 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-3-10 v2.5.6 dev
+* 2022-3-13 v2.5.6 dev
 - 修复加密删除后不能正确提示
 - 修复webp转换其他格式失败
 - 修复文字水印透明度不生效
+- 修复jscolor显示不正确
+- 增加原图保护
+- 增加检测版本
 
 * 2022-3-4 v2.5.5
 - 增加设置页面检测是否开启登录上传
@@ -427,14 +442,14 @@ RewriteRule config/(.*).(php)$ – [F]
  ## 支持开发者
  |支付宝支持|微信支持| 
  |:----:|:----:|
- |![支付宝支持](https://png.cm/sponsor/images/alipay.jpg)|![微信支持](https://png.cm/sponsor/images/wechat.jpg)|
+ |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
  
  ## 界面演示
  
- ![简单图床 - 上传界面](https://blog.png.cm/usr/uploads/2022/02/674074848.png)
- ![简单图床 - 广场界面](https://blog.png.cm/usr/uploads/2022/02/3053540273.png)
- ![简单图床 - 后台界面](https://blog.png.cm/usr/uploads/2022/02/2657944724.png)
- ![简单图床 - 统计界面](https://blog.png.cm/usr/uploads/2022/02/1305032567.png)
+ ![简单图床 - 上传界面](./install/README/674074848.png)
+ ![简单图床 - 广场界面](./install/README/3053540273.png)
+ ![简单图床 - 后台界面](./install/README/2657944724.png)
+ ![简单图床 - 统计界面](./install/README/1305032567.png)
   
 ## 兼容
  - 最低`PHP 5.6`,推荐`PHP 7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片

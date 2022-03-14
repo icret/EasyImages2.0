@@ -372,11 +372,16 @@ function getActive($url)
  * 加密/解密图片路径
  * @param string $data 要加密的内容
  * @param int $mode =1或0  1解密 0加密
+ * @param String $key 盐
  */
-function urlHash($data, $mode)
+function urlHash($data, $mode, $key = null)
 {
     global $config;
-    $key = $config['password'];
+
+    if ($key) {
+        $key = $config['password'];
+    }
+
     $iv = 'sciCuBC7orQtDhTO';
     if ($mode) {
         return openssl_decrypt(base64_decode($data), "AES-128-CBC", $key, 0, $iv);
