@@ -124,15 +124,16 @@ if (isset($_POST['delDir'])) {
 			type: "success", // 定义颜色主题 
 			icon: "ok-sign" // 定义消息图标
 		}).show();</script>';
-        header("refresh:1;"); // 1s后刷新当前页面
+        
     } else {
         echo '
 		<script> new $.zui.Messager("删除失败! ", {
 			type: "danger", // 定义颜色主题 
 			icon: "exclamation-sign" // 定义消息图标
 		}).show();</script>';
-        header("refresh:1;"); // 1s后刷新当前页面
+       
     }
+    header("refresh:1;"); // 1s后刷新当前页面
 }
 
 // 监黄恢复图片
@@ -728,7 +729,7 @@ if (isset($_GET['recycle_reimg'])) {
                 </table>
             </div>
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <input class="form-control" type="hidden" name="delDir" value="/suspic/" readonly="">
+                <input class="form-control" type="hidden" name="delDir" value="/recycle/" readonly="">
                 <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
             </form>
         </div>
