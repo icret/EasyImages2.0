@@ -290,14 +290,15 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <label>图片命名方式</label>
                     <select class="chosen-select form-control" name="imgName">
-                        <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 以上传时间+4位随机数转换为36进制 例: vx77yu</option>
-                        <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>以上传文件名称 例: 微信图片_20211228214754</option>
-                        <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>以上传时间 例: 192704</option>
-                        <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>以Unix时间 例: 1635074840</option>
-                        <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>基于以微秒计的当前时间 例: 6175436c73418</option>
-                        <option value="guid" <?php if ($config['imgName'] == 'guid') echo 'selected'; ?>>全球唯一标识符 例: 6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
-                        <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>md5加密时间 例: 3888aa69eb321a2b61fcc63520bf6c82</option>
-                        <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>sha1加密微秒 例: 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
+                        <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 上传时间+4位随机数的36进制 >> vx77yu</option>
+                        <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>上传时间 >> 192704</option>
+                        <option value="crc32" <?php if ($config['imgName'] == 'crc32') echo 'selected'; ?>>CRC32 >> 2495551279</option>
+                        <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix时间 >> 1635074840</option>
+                        <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>微秒时间 >> 6175436c73418</option>
+                        <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源文件名 >> 微信图片_20211228214754</option>
+                        <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>MD5 >> 3888aa69eb321a2b61fcc63520bf6c82</option>
+                        <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>SHA1 >> 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
+                        <option value="guid" <?php if ($config['imgName'] == 'guid') echo 'selected'; ?>>全局唯一标识符 >> 6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -818,7 +819,8 @@ if (isset($_GET['recycle_reimg'])) {
                 </p>
                 <p>
                     <span class="label label-badge label-info">当前版本:<?php echo $config['version']; ?></span>
-                    <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步版本">最新版本:<?php echo getVersion(); ?></span></a>                </p>
+                    <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步版本">最新版本:<?php echo getVersion(); ?></span></a>
+                </p>
             </div>
         </div>
         <div class="tab-pane fade" id="Content9">

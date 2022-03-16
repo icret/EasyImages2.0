@@ -13,16 +13,7 @@ foreach ($expand as $val) {
     ';
     }
 }
-// 检测是否更改默认域名
-if (strstr('localhost|127.0.0.1', $_SERVER['HTTP_HOST'])) {
-    echo '
-    <script>
-    new $.zui.Messager("请修改默认域名,可能会导致网站访问异常! ",{
-        type: "black" // 定义颜色主题 
-    }).show();
-    </script>
-    ';
-}
+
 // 检测是否修改默认密码
 if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     echo '
@@ -34,6 +25,31 @@ if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     </script>
     ';
 }
+
+/*
+// 检测是否更改默认域名
+if (strstr('localhost|127.0.0.1|192.168.', $_SERVER['HTTP_HOST'])) {
+    echo '
+    <script>
+    new $.zui.Messager("请修改默认域名,可能会导致网站访问异常! ",{
+        type: "black" // 定义颜色主题 
+    }).show();
+    </script>
+    ';
+}
+*/
+
+// 检测是否局域网访问
+if (is_local($config['domain'])) {
+    echo '
+    <script>
+    new $.zui.Messager("当前使用局域网,可能会导致外网访问异常!",{
+        type: "black" // 定义颜色主题 
+    }).show();
+    </script>
+    ';
+}
+
 // 检测监黄接口是否可以访问
 if ($configp['checkImg'] !== 0) {
 

@@ -3,13 +3,6 @@
 演示地址：[https://png.cm/](https://png.cm/) 
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](https://www.jb51.net/codes/40544.html)
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
->
-
-[演示](https://png.cm/) &nbsp;
-[Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) &nbsp;
-[使用手册](https://www.kancloud.cn/easyimage/easyimage/) &nbsp;
-[问题反馈](https://support.qq.com/products/367633) &nbsp;
-[QQ群](https://shang.qq.com/wpa/qunwpa?idkey=3feb4e8be8f1839f71e53bf2e876de36afc6889b2630c33c877d8df5a5583a6f)
 
 [![PHP](https://img.shields.io/badge/PHP->=5.6-orange.svg)](http://php.net)
 [![Release](https://img.shields.io/github/v/release/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/releases)
@@ -18,7 +11,10 @@
 [![jsdelivr](https://data.jsdelivr.com/v1/package/gh/icret/EasyImages2.0/badge)](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@EasyImage2.0/)
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
+[![QQ group](https://pub.idqqimg.com/wpa/images/group.png)](https://qm.qq.com/cgi-bin/qm/qr?k=TmGoIK7BXij_CR3lqZoJZu3_trPwtJ09&jump_from=webapi)
 
+>[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/)
+>
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
 ## 目录
@@ -55,8 +51,8 @@
 9. `upload File size exceeds the maximum value` 调整`PHP`上传大小
 10. `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
 11. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
-12. 出现`Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
-13. 如果开启原图保护功后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
+12. `Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
+13. 开启原图保护功能后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
 
   ```Nginx
 # 把Nginx这段配置删掉
@@ -81,7 +77,6 @@ location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
 - 备份`config`目录(没有增加上传用户和api可以只保留`config.php`文件)和`上传文件目录`
 - 将新程序下载至网站目录解压覆盖，然后将备份的文件替换既完成升级
 - 如果出现错误请在设置中把所有底部设置点击一次`保存`
-- 
 
 ## 安全配置
 
@@ -116,7 +111,10 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-3-13 v2.5.6 dev
+* 2022-3-15 v2.5.7 dev
+- 检测更改域名改为检测局域网
+
+* 2022-3-13 v2.5.6
 - 修复加密删除后不能正确提示
 - 修复webp转换其他格式失败
 - 修复文字水印透明度不生效

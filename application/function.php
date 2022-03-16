@@ -112,34 +112,47 @@ function imgName($source = null)
             return trim(com_create_guid(), '{}');
         }
 
-        return strtolower(sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)));
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
     switch ($config['imgName']) {
-        case "source":    // 以上传文件名称 例：微信图片_20211228214754
+
+        case "source":
+            // 以上传文件名称 例：微信图片_20211228214754
             // 过滤非法名称 $source = preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/","",$source);
             return $source;
             break;
-        case "date":    // 以上传时间 例：192704
+        case "date":
+            // 以上传时间 例：192704
             return date("His");
             break;
-        case "unix":    // 以Unix时间 例：1635074840
+        case "unix":
+            // 以Unix时间 例：1635074840
             return time();
             break;
-        case "uniqid":    // 基于以微秒计的当前时间 例：6175436c73418
+        case "uniqid":
+            // 基于以微秒计的当前时间 例：6175436c73418
             return uniqid(true);
             break;
-        case "guid":    // 全球唯一标识符 例：6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA
+        case "guid":
+            // 全球唯一标识符 例：6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA
             return create_guid();
             break;
-        case "md5":    // md5加密时间 例：3888aa69eb321a2b61fcc63520bf6c82
+        case "md5":
+            // md5加密时间 例：3888aa69eb321a2b61fcc63520bf6c82
             return md5(microtime());
             break;
-        case "sha1":    // sha1加密微秒 例：654faac01499e0cb5fb0e9d78b21e234c63d842a
+        case "sha1":
+            // sha1加密微秒 例：654faac01499e0cb5fb0e9d78b21e234c63d842a
             return sha1(microtime());
             break;
+        case "crc32":
+            // crc32加密微秒 例：2495551279
+            return crc32(microtime());
+            break;
         default:
-            return base_convert(date('His') . mt_rand(1001, 9999), 10, 36);    // 将上传时间+随机数转换为36进制 例：vx77yu
+            // 将上传时间+随机数转换为36进制 例：vx77yu
+            return base_convert(date('His') . mt_rand(1001, 9999), 10, 36);
     }
 }
 
@@ -1163,8 +1176,23 @@ function isWebpAnimated($src)
         // animated
         $isAnimated = true;
     } else {
-        // non animated
+        // not animated
         $isAnimated = false;
     }
     return $isAnimated;
+}
+
+/**
+ * 根据URL判断是否本地局域网访问（PHP代码函数）
+ * https://blog.csdn.net/monxinmonxin0/article/details/44854383
+ * @param $url 要判断的网址
+ * @return bool 是|否
+ */
+function is_local($url)
+{
+    if (stristr($url, 'localhost') || stristr($url, '127.') || stristr($url, '192.')) {
+        return true;
+    } else {
+        return false;
+    }
 }

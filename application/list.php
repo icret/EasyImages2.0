@@ -73,12 +73,12 @@
 
   .card {
     box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
-    border-radius: 10px;
+    border-radius: 5px 5px 5px 5px;
   }
 
   img {
     cursor: pointer;
-    transition: all 0.6s;
+    transition: all 0.8s;
   }
 
   img:hover {
@@ -90,9 +90,8 @@
   .bottom-bar {
     width: 100%;
     position: absolute;
-    left: 0;
-    bottom: 0px;
-    background-color: rgba(0, 0, 0, 0.5);
+    bottom: -4px;
+    background-color: rgba(0, 0, 0, 0.4);
   }
 </style>
 <div class="row" style="margin-bottom:100px">
