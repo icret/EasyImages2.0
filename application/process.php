@@ -77,13 +77,14 @@ function process_checkImg($imgurl)
 
 /**
  * 写日志
- * 日志格式：图片名称->源文件名称->上传时间（Asia/Shanghai）->IP地址->浏览器信息->文件相对路径->图片的MD5
+ * {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:图像审查,form:上传方式web/API ID}}
  * $filePath 文件相对路径
  * $sourceName 源文件名称
  * $absolutePath 图片的绝对路径
  * $fileSize 图片的大小
+ * $form 来源如果是网页上传直接显示网页,如果是API上传则显示ID
  */
-function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "Web upload")
+function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "web")
 {
     global $config;
 
@@ -111,7 +112,7 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "We
 
     // 写入禁止浏览器直接访问
     if (filesize($logFileName) == 0) {
-        $php_exit = '<?php /** {当前图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:图像审查,form:图片上传来源}} */ exit;?>';
+        $php_exit = '<?php /** {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:图像审查,form:上传方式web/API ID}} */ exit;?>';
         file_put_contents($logFileName, $php_exit);
     }
 

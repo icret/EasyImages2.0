@@ -2,7 +2,7 @@
 $config=Array
 	(
 	'title'=>'简单图床 - EasyImage',
-	'keywords'=>'简单图床,easyimage,无数据库图床,PHP多图长传程序,自适应页面,HTML5,markdown,bbscode,一键复制',
+	'keywords'=>'简单图床,easyimage,easyimage2.0,无数据库图床,PHP多图长传程序,自适应页面,HTML5,markdown,bbscode,一键复制',
 	'description'=>'简单图床EasyImage是一款支持多文件上传的无数据库图床,可以完美替代PHP多图上传程序,最新html5自适应页面兼容手机电脑,上传后返回图片直链,markdown图片,论坛贴图bbscode链接,简单方便支持一键复制,支持多域名,api上传',
 	'tips'=>'<a><li class="icon icon-bullhorn text-muted">单文件≤10M,单次上传≤30张</li></a>
 <a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-heart"> 简单图床是一款开源图床, 支持多文件上传无数据库</i></a>
@@ -12,11 +12,11 @@ $config=Array
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>0,
+	'apiStatus'=>1,
 	'path'=>'/i/',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
-	'maxUploadFiles'=>100,
+	'maxUploadFiles'=>30,
 	'watermark'=>0,
 	'waterText'=>'简单图床 - png.cm',
 	'waterPosition'=>5,
@@ -100,7 +100,7 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'version'=>'2.5.6',
-	'update'=>'2022-03-16 01:57:25',
+	'update'=>'2022-03-19 14:44:36',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

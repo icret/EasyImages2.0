@@ -91,7 +91,7 @@
     width: 100%;
     position: absolute;
     bottom: -4px;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.2);
   }
 </style>
 <div class="row" style="margin-bottom:100px">

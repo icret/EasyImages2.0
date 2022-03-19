@@ -64,13 +64,13 @@ location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
 }
 ```
 ## 安装
-
+> 推荐环境：Nginx + PHP≥7.0 + linux
 #### windows:
-- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip) | [稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web目录
+- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip) | [稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web根目录
 
 #### Linux:
 
-- `git clone https://github.com/icret/EasyImages2.0.git` 至web目录赋予www:www和0755权限
+- `git clone https://github.com/icret/EasyImages2.0.git` 至web根目录赋予www:www和0755权限
 
 #### BT宝塔面板
 - 安装环境 Ngixn(推荐) / Apache + PHP(推荐≥7.0)
@@ -80,7 +80,7 @@ location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
  
 - 备份`config`目录(没有增加上传用户和api可以只保留`config.php`文件)和`上传文件目录`
 - 将新程序下载至网站目录解压覆盖，然后将备份的文件替换既完成升级
-- 如果出现错误请在设置中把所有底部设置点击一次`保存`
+- 如果出现错误请在设置中把所有设置中底部按钮 `保存` 一次
 
 ## 安全配置
 
@@ -116,8 +116,12 @@ $HTTP["url"] =~ "^/(i|public)/" {
 <details><summary>点击查看2.0版更新日志</summary>
 
 * 2022-3-15 v2.5.7 dev
-- 修复图片回收批量删除失败
-- 检测更改域名改为检测局域网
+- 微调了广场样式
+- 修复图片回收中批量删除失败
+- 修复广场预览ico格式文件失败
+- 日志将记录通过API上传者的ID
+- 缩略图最大生成与用户设置关联
+- 安全检测中检测本地域名改为检测局域网
 
 * 2022-3-13 v2.5.6
 - 修复加密删除后不能正确提示
@@ -453,6 +457,8 @@ RewriteRule config/(.*).(php)$ – [F]
  ![简单图床 - 广场界面](./install/README/3053540273.png)
  ![简单图床 - 后台界面](./install/README/2657944724.png)
  ![简单图床 - 统计界面](./install/README/1305032567.png)
+ ![简单图床 - 图片信息](./install/README/info.png)
+
   
 ## 兼容
  - 最低`PHP 5.6`,推荐`PHP≥7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片

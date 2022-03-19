@@ -60,10 +60,10 @@ define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'thumbnails');
 define('NOT_FOUND_IMAGE', $config['imgurl'] . '/public/images/404.png');
 define('ERROR_IMAGE', $config['imgurl'] . '/public/images/404.png');
 define('DISPLAY_ERROR_MESSAGES', false);
-define('MAX_FILE_SIZE', 10485760);      		 // 10 Megs 是 10485760。这是我们将处理的最大内部或外部文件大小。
+define('MAX_FILE_SIZE', $config['maxSize']);     // 10 Megs 是 10485760。这是我们将处理的最大内部或外部文件大小。
 define('FILE_CACHE_TIME_BETWEEN_CLEANS', 86400); // 多久清理一次缓存
-define('FILE_CACHE_MAX_FILE_AGE', 86400);    	 // 文件必须从缓存中删除多长时间
-define('BROWSER_CACHE_MAX_AGE', 864000);    	 // 浏览器缓存时间
+define('FILE_CACHE_MAX_FILE_AGE', 86400);         // 文件必须从缓存中删除多长时间
+define('BROWSER_CACHE_MAX_AGE', 864000);         // 浏览器缓存时间
 
 global $ALLOWED_SITES;
 $ALLOWED_SITES = array(
@@ -87,21 +87,46 @@ $ALLOWED_SITES = array(
  * 修复无法生成生成webp动态图片的缩略图bug
  */
 if (isset($_GET['img'])) {
-    // 获取图片后缀后4位
-    $ext = substr($_GET['img'], -4);
+
+    // 引入文件
+    require_once __DIR__ . '/TimThumb.php';
     // 图片绝对路径
     $src = APP_ROOT . $_GET['img'];
-    // 检测图片
-    if ($ext == 'webp' && isWebpAnimated($src)) {
-        // 输出动态的webp
-        header("Content-type: image/webp");
-        exit(file_get_contents($src, true));
+    // 获取文件后缀
+    $ext =  pathinfo($src)['extension'];
+    // 404 文件
+    $i404 = APP_ROOT . '/public/images/404.png';
+
+    // 文件不存在
+    if (!is_file($src)) {
+        // 输出404
+        header("Content-type: image/png");
+        exit(file_get_contents($i404, true));
     }
-    // 非动态webp输出
-    require_once __DIR__ . '/TimThumb.php';
-    timthumb::start();
+
+    switch ($ext) {
+        case 'ico':
+            header("Content-type: image/jpeg");
+            exit(file_get_contents($src, true));
+            break;
+        case 'svg':
+            header('Content-Type:image/svg+xml');
+            exit(file_get_contents($src, true));
+            break;
+        case 'webp':
+            if (isWebpAnimated($src)) {
+                // 输出动态的webp
+                header("Content-type: image/webp");
+                exit(file_get_contents($src, true));
+            } else {
+                timthumb::start();
+            }
+            break;
+        default:
+            timthumb::start();
+    }
 } else {
     // 输出404
-    header("Content-type: image/webp");
-    exit(file_get_contents(APP_ROOT . '/public/images/404.png', true));
+    header("Content-type: image/png");
+    exit(file_get_contents($i404, true));
 }

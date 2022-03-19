@@ -8,6 +8,7 @@ $token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非
 
 // 检查api合法性
 check_api($token);
+$tokenID = $tokenList[$token]['id'];
 
 // 黑/白IP名单上传
 if ($config['check_ip']) {
@@ -27,7 +28,7 @@ if ($handle->uploaded) {
     // 允许上传的mime类型
     $handle->allowed = array('image/*');
     // 文件命名
-    $handle->file_new_name_body = imgName($handle->file_src_name_body) . '_' . $tokenList[$token]['id'];
+    $handle->file_new_name_body = imgName($handle->file_src_name_body) . '_' . $tokenID;
     // 最大上传限制
     $handle->file_max_sizes = $config['maxSize'];
     // 最大宽度
@@ -98,19 +99,19 @@ if ($handle->uploaded) {
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
-        // 普通模式鉴黄
+        // 鉴黄
         @process_checkImg($imageUrl);
         // 日志
-        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size,$tokenID);
         // 水印        
         @water($handle->file_dst_pathname);
         // 压缩        
         @compress($handle->file_dst_pathname);
     } else {
-        // 普通模式鉴黄
+        // 鉴黄
         @process_checkImg($imageUrl);
         // 日志
-        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size,$tokenID);
         // 水印
         @water($handle->file_dst_pathname);
         // 压缩

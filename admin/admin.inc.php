@@ -370,7 +370,7 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <label>单文件最大上传(1-50MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
-                    <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="52428800" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
+                    <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="104857600" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
                 </div>
                 <div class="form-group">
                     <label>最小上传宽度 | 当前: </label><label id="minWidth"><?php echo $config['minWidth']; ?></label><label>px</label>
@@ -380,7 +380,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <label>最小上传高度 | 当前: </label><label id="minHeight"><?php echo $config['minHeight']; ?></label><label>px</label>
                     <input type="range" class="form-control" name="minHeight" value="<?php echo $config['minHeight']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minHeight').innerHTML=value">
                 </div>
-                <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:略增加用户端压力,仅支持JPG</h4>
+                <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4>
                 <div class="form-group">
                     <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启下边五项不生效">
                         <input type="hidden" name="imgRatio" value="0">
