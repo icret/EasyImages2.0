@@ -77,7 +77,22 @@ function process_checkImg($imgurl)
 
 /**
  * 写日志
- * {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:图像审查,form:上传方式web/API ID}}
+ * 
+ * 格式：
+ * {
+ *  上传图片名称{
+ *      source:源文件名称,
+ *      date:上传日期(Asia/Shanghai),
+ *      ip:上传者IP,port:IP端口,
+ *      user_agent:上传者浏览器信息,
+ *      path:文件相对路径,
+ *      size:文件大小(格式化),
+ *      md5:文件MD5,
+ *      checkImg:鉴黄状态,
+ *      form:上传方式web/API ID
+ *  }
+ * }
+ * 
  * $filePath 文件相对路径
  * $sourceName 源文件名称
  * $absolutePath 图片的绝对路径
@@ -88,19 +103,20 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "we
 {
     global $config;
 
-    $checkImg = $config['checkImg'] == true ? "Images Passed" : "Check Closed";
+    $checkImg = $config['checkImg'] == true ? "Passed" : "Closed";
 
-    $name = trim(basename($filePath), " \t\n\r\0\x0B"); // 当前图片名称
-    $log = array($name => array(
-        'source'     => $sourceName,                    // 原始文件名称
-        'date'       => date('Y-m-d H:i:s'),            // 上传日期
-        'ip'         => real_ip(),                      // 上传ip
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'],    // 浏览器信息
-        'path'       => $filePath,                      // 文件相对路径
-        'size'       => getDistUsed($fileSize),         // 文件大小(格式化)
-        'md5'        => md5_file($absolutePath),        // 文件的md5
-        'checkImg'   => $checkImg,                      // 图像审查
-        'from'       => $from,                          // 图片上传来源
+    // $name = trim(basename($filePath), " \t\n\r\0\x0B"); // 当前图片名称
+    $log = array(basename($filePath) => array(             // 以上传图片名称为Array
+        'source'     => $sourceName,                       // 原始文件名称
+        'date'       => date('Y-m-d H:i:s'),               // 上传日期
+        'ip'         => real_ip(),                         // 上传IP
+        'port'       => $_SERVER['REMOTE_PORT'],           // IP端口
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'],       // 浏览器信息
+        'path'       => $filePath,                         // 文件相对路径
+        'size'       => getDistUsed($fileSize),            // 文件大小(格式化)
+        'md5'        => md5_file($absolutePath),           // 文件的md5
+        'checkImg'   => $checkImg,                         // 鉴黄状态
+        'from'       => $from,                             // 图片上传来源
     ));
 
     $logFileName = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
@@ -112,7 +128,7 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "we
 
     // 写入禁止浏览器直接访问
     if (filesize($logFileName) == 0) {
-        $php_exit = '<?php /** {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:图像审查,form:上传方式web/API ID}} */ exit;?>';
+        $php_exit = '<?php /** {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,port:IP端口,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:鉴黄状态,form:上传方式web/API ID}} */ exit;?>';
         file_put_contents($logFileName, $php_exit);
     }
 

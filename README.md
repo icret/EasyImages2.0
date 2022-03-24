@@ -117,9 +117,10 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 * 2022-3-15 v2.5.7 dev
 - 微调了广场样式
+- 日志记录上传IP端口
+- 日志记录通过API上传的ID
 - 修复图片回收中批量删除失败
 - 修复广场预览ico格式文件失败
-- 日志将记录通过API上传者的ID
 - 缩略图最大生成与用户设置关联
 - 安全检测中检测本地域名改为检测局域网
 
@@ -447,6 +448,7 @@ RewriteRule config/(.*).(php)$ – [F]
 </details>
 
  ## 支持开发者
+ 
  |支付宝支持|微信支持| 
  |:----:|:----:|
  |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
@@ -461,6 +463,7 @@ RewriteRule config/(.*).(php)$ – [F]
 
   
 ## 兼容
+
  - 最低`PHP 5.6`,推荐`PHP≥7.0`及以上版本，需要PHP支持`Fileinfo,iconv,zip,mbstring,openssl`扩展,如果缺失会导致无法上传/删除图片
  - 文件上传视图提供文件列表管理和文件批量上传功能，允许拖拽（需要`HTML5`支持）来添加上传文件，支持上传大图片，优先使用`HTML5`旧得浏览器自动使用`Flash和Silverlight`的方式兼容
 
@@ -476,5 +479,5 @@ RewriteRule config/(.*).(php)$ – [F]
 
  * have fun!
  
-![项目状态](https://repobeats.axiom.co/api/embed/0922803f14091f0686de26fee5196b9984b106a4.svg "Repobeats analytics image")
-[![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](https://github.com/icret/EasyImages2.0/stargazers)
+[![项目状态](https://repobeats.axiom.co/api/embed/0922803f14091f0686de26fee5196b9984b106a4.svg "Repobeats analytics image")](https://png.cm)
+[![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](/stargazers)

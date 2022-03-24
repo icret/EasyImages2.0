@@ -12,7 +12,7 @@ $config=Array
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>1,
+	'apiStatus'=>0,
 	'path'=>'/i/',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
@@ -100,7 +100,7 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'version'=>'2.5.6',
-	'update'=>'2022-03-19 14:44:36',
+	'update'=>'2022-03-24 12:39:24',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

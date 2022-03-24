@@ -124,14 +124,12 @@ if (isset($_POST['delDir'])) {
 			type: "success", // 定义颜色主题 
 			icon: "ok-sign" // 定义消息图标
 		}).show();</script>';
-        
     } else {
         echo '
 		<script> new $.zui.Messager("删除失败! ", {
 			type: "danger", // 定义颜色主题 
 			icon: "exclamation-sign" // 定义消息图标
 		}).show();</script>';
-       
     }
     header("refresh:1;"); // 1s后刷新当前页面
 }
@@ -303,7 +301,7 @@ if (isset($_GET['recycle_reimg'])) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>将上传图片转换为指定格式<?php echo $config['imgConvert']; ?></label>
+                    <label>将上传图片转换为指定格式</label>
                     <select class="chosen-select form-control" name="imgConvert">
                         <option value="" <?php if (empty($config['imgConvert'])) echo 'selected'; ?>>不转换</option>
                         <option value="webp" <?php if ($config['imgConvert'] == 'webp') echo 'selected'; ?>>WEBP</option>
@@ -369,7 +367,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="range" class="form-control" name="maxHeight" value="<?php echo $config['maxHeight']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxHeight').innerHTML=value">
                 </div>
                 <div class="form-group">
-                    <label>单文件最大上传(1-50MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
+                    <label>单文件最大上传(1-100MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
                     <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="104857600" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
                 </div>
                 <div class="form-group">
