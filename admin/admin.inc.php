@@ -226,7 +226,7 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <label>网站关键字</label>
-                    <textarea class="form-control" rows="2" name="keywords" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['keywords']; ?></textarea>
+                    <input type="text" class="form-control" name="keywords" required="required" value="<?php echo $config['keywords']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <label>网站描述</label>
@@ -234,7 +234,11 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="不同公告以a标签分割">网站公告 | 支持html</label>
-                    <textarea class="form-control" rows="3" name="tips"><?php echo $config['tips']; ?></textarea>
+                    <textarea class="form-control" rows="2" name="tips"><?php echo $config['tips']; ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-toggle="tooltip" title="需要在图床安全中开启弹窗公告">弹窗公告 | 支持html</label>
+                    <textarea class="form-control" rows="2" name="notice" placeholder="弹窗公告会在首次访问网站时弹出,关闭浏览器再次访问弹出"><?php echo $config['notice']; ?></textarea>
                 </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="HTML / 统计代码 / JS / CSS">页首代码 | 需闭合标签</label>
@@ -636,6 +640,13 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="hidden" name="upload_logs" value="0">
                         <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">上传日志</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="公告每次打开浏览器访问网站会重新打开弹窗">
+                        <input type="hidden" name="notice_status" value="0">
+                        <input type="checkbox" name="notice_status" value="1" <?php if ($config['notice_status']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">弹窗公告</label>
                     </div>
                 </div>
                 <div class="form-group">

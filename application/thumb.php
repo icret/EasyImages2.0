@@ -44,7 +44,6 @@ Thumb::show($src, $w, $h);
  * ct	画布的透明度	true (1)	使用透明而忽略背景颜色
  */
 
-
 require_once __DIR__ . '/function.php';
 // 中文翻译 https://my.oschina.net/whrlmc/blog/81739
 define('LOCAL_FILE_BASE_DIRECTORY', APP_ROOT);

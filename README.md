@@ -116,12 +116,16 @@ $HTTP["url"] =~ "^/(i|public)/" {
 <details><summary>点击查看2.0版更新日志</summary>
 
 * 2022-3-15 v2.5.7 dev
+- 增加弹窗公告
 - 微调了广场样式
+- 微调了删除文件
+- 删除了base.php
 - 日志记录上传IP端口
 - 日志记录通过API上传的ID
 - 修复图片回收中批量删除失败
 - 修复广场预览ico格式文件失败
-- 缩略图最大生成与用户设置关联
+- 修复个别浏览器显示二维遮住网页
+- 缩略图最大生成与用户设置最大上传关联
 - 安全检测中检测本地域名改为检测局域网
 
 * 2022-3-13 v2.5.6
@@ -480,4 +484,4 @@ RewriteRule config/(.*).(php)$ – [F]
  * have fun!
  
 [![项目状态](https://repobeats.axiom.co/api/embed/0922803f14091f0686de26fee5196b9984b106a4.svg "Repobeats analytics image")](https://png.cm)
-[![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](/stargazers)
+[![Stargazers over time](https://starchart.cc/icret/EasyImages2.0.svg)](https://github.com/icret/EasyImages2.0/stargazers)

@@ -4,18 +4,7 @@
  * 删除文件页面
  */
 require_once './header.php';
-echo '<div class="col-md-4 col-md-offset-4">
-	<div id="title" style="margin: 10px;"></div>
 
-        <form class="form-inline" method="get" action="' . $_SERVER['SCRIPT_NAME'] . '" id="form" name="delForm" onSubmit="getStr();">
-            <div class="form-group">
-                <label for="exampleInputInviteCode3">删除图片-格式:</label>
-                <input type="text" class="form-control" id="exampleInputInviteCode3" name="url" placeholder="https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg">
-            </div>
-            <button type="submit" class="btn btn-danger">删除</button>
-        </form>
-	</div>
-    ';
 if (empty($_REQUEST)) {
     echo '
     <script>
@@ -25,14 +14,11 @@ if (empty($_REQUEST)) {
     }).show();
     </script>
     ';
-    //header("refresh:3;url=".$config['domain']."");
+}
 
-} elseif (isset($_GET['url'])) {
+$img = $config['imgurl'] . '/public/images/404.png';
+if (isset($_GET['url'])) {
     $img = $_GET['url'];
-    echo '
-    <div class="col-md-12">
-    <a href="' . $img . '" target="_blank"><img src="' . $img  . '" alt="简单图床-EasyImage" class="img-thumbnail"></a>
-    </div>';
 }
 
 // 解密删除
@@ -114,9 +100,17 @@ if (is_who_login('admin')) {
 			';
     }
 }
-
-require_once APP_ROOT . '/application/footer.php';
 ?>
+<div class="col-md-4 col-md-offset-4">
+    <a href="<?php echo $img; ?>" target="_blank"><img src="<?php echo $img; ?>" alt="简单图床-EasyImage" class="img-thumbnail"></a>
+    <form class="form-inline" method="get" action="<?php $_SERVER['SCRIPT_NAME']; ?>" id="form" name="delForm" onSubmit="getStr();">
+        <div class="form-group">
+            <label for="exampleInputInviteCode3">删除图片-格式:</label>
+            <input type="text" class="form-control" id="exampleInputInviteCode3" name="url" placeholder="https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg">
+        </div>
+        <button type="submit" class="btn btn-danger">删除</button>
+    </form>
+</div>
 <script>
     // 修改网页标题
     document.title = "删除图片 - <?php echo $config['title']; ?>";
@@ -133,3 +127,4 @@ require_once APP_ROOT . '/application/footer.php';
         oTi.innerHTML = '<img src="' + oBtn.value + '" width="200" class="img-rounded" /><br />';
     }
 </script>
+<?php require_once APP_ROOT . '/application/footer.php';

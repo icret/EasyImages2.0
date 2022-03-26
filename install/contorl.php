@@ -41,6 +41,8 @@ if (isset($_POST['del_extra_files'])) {
   if ($_POST['del_extra_files'] == "del") {
     @unlink(APP_ROOT . '/LICENSE');
     @unlink(APP_ROOT . '/README.md');
+    @deldir(APP_ROOT . "/admin/logs");
+    @deldir(APP_ROOT . "/SECURITY.md");
     @unlink(APP_ROOT . '/.whitesource');
     @unlink(APP_ROOT . '/CODE_OF_CONDUCT.md');
     @unlink(APP_ROOT . '/config/EasyIamge.lock');
