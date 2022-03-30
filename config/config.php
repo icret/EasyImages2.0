@@ -100,10 +100,11 @@ var _hmt = _hmt || [];
 		),
 	'language'=>0,
 	'image_recycl'=>1,
+	'tinyfilemanager'=>1,
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
-	'version'=>'2.5.6',
-	'update'=>'2022-03-27 03:21:45',
+	'version'=>'2.5.7',
+	'update'=>'2022-03-30 13:35:01',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

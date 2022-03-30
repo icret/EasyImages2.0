@@ -18,7 +18,9 @@
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
 ## 目录
-[特点](#特点) &nbsp;[注意](#常见问题) &nbsp;[安装](#安装) &nbsp;[升级](#程序升级) &nbsp;[安全](#安全配置) &nbsp;[更新日志](#更新日志) &nbsp;[支持开发者](#支持开发者) &nbsp;[界面演示](#界面演示) &nbsp;[兼容](#兼容)  &nbsp;[鸣谢](#鸣谢) &nbsp;[开源许可](#开源许可) &nbsp;
+
+[特点](#特点)|[注意](#常见问题)|[安装](#安装)|[升级](#程序升级)|[安全](#安全配置)|[鉴黄](#鉴黄)|[更新日志](#更新日志)|[支持开发者](#支持开发者)|[界面演示](#界面演示)|[兼容](#兼容)  | [鸣谢](#鸣谢)|[开源许可](#开源许可) | 
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
 
 ## 特点
 
@@ -53,8 +55,7 @@
 11. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
 12. `Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
 13. 开启原图保护功能后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
-
-  ```Nginx
+```Nginx
 # 把Nginx这段配置删掉
 location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
 {
@@ -63,10 +64,11 @@ location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
     access_log /dev/null;
 }
 ```
+
 ## 安装
 > 推荐环境：Nginx + PHP≥7.0 + linux
 #### windows:
-- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip) | [稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web根目录
+- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip)|[稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web根目录
 
 #### Linux:
 
@@ -111,20 +113,55 @@ $HTTP["url"] =~ "^/(i|public)/" {
 ```
  - 或者参考：[https://blog.png.cm/996.html](https://blog.png.cm/996.html)
 
+## 鉴黄
+图床支持moderatecontent和nsfwjs方式鉴黄
+- moderatecontent：
+    1. 注册[moderatecontent](https://client.moderatecontent.com/)并获取Token
+    2. 后台API设置中填入Moderate Key
+    3. 后台图片安全图片鉴黄以moderatecontent方式
+
+- nsfwjs [nsfwjs docker](https://hub.docker.com/r/icret/nsfw_restful_api)
+    1. 确定已安装`docker`和`docker-compose`
+    2. 拉去镜像 `docker pull icret/nsfw_restful_api:latest` 或者直接 `docker run -p 3307:3307 -d icret/nsfw_restful_api`
+    3. 后台API设置中填入网址 比如：`http://IP:3307/api/nsfw/classify?url=`
+    4. 后台图片安全图片鉴黄以nsfwjs方式
+    5. nsfwjs鉴黄方式不支持webp
+    - 程序期望nsfwjs返回json 并且如下格式：
+```json
+[{
+    "className": "Drawing",
+    "probability": 0.824431836605072
+}, {
+    "className": "Hentai",
+    "probability": 0.16360442340373993
+}, {
+    "className": "Neutral",
+    "probability": 0.007620695047080517
+}, {
+    "className": "Porn",
+    "probability": 0.004154415801167488
+}, {
+    "className": "Sexy",
+    "probability": 0.00018858206749428064
+}]
+```
+
 ## 更新日志
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-3-15 v2.5.7 dev
+* 2022-3-15 v2.5.7
 - 增加弹窗公告
+- 恢复文件管理
 - 微调了广场样式
 - 微调了删除文件
 - 删除了base.php
 - 日志记录上传IP端口
 - 日志记录通过API上传的ID
+- 修复管理页面短标签bug [#30](https://github.com/icret/EasyImages2.0/issues/30#issue-1185821542)
 - 修复图片回收中批量删除失败
 - 修复广场预览ico格式文件失败
-- 修复个别浏览器显示二维遮住网页
+- 修复个别浏览器显示二维遮住网页 [#28](https://github.com/icret/EasyImages2.0/issues/28#issue-1180675728)
 - 缩略图最大生成与用户设置最大上传关联
 - 安全检测中检测本地域名改为检测局域网
 
@@ -455,15 +492,15 @@ RewriteRule config/(.*).(php)$ – [F]
  
  |支付宝支持|微信支持| 
  |:----:|:----:|
- |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
+ |![支付宝支持](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/public/images/alipay.jpg)|![微信支持](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/public/images/wechat.jpg)|
  
  ## 界面演示
  
- ![简单图床 - 上传界面](./install/README/674074848.png)
- ![简单图床 - 广场界面](./install/README/3053540273.png)
- ![简单图床 - 后台界面](./install/README/2657944724.png)
- ![简单图床 - 统计界面](./install/README/1305032567.png)
- ![简单图床 - 图片信息](./install/README/info.png)
+ ![简单图床 - 上传界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/674074848.png)
+ ![简单图床 - 广场界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/3053540273.png)
+ ![简单图床 - 后台界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/2657944724.png)
+ ![简单图床 - 统计界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/1305032567.png)
+ ![简单图床 - 图片信息](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/info.png)
 
   
 ## 兼容

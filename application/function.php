@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EasyImage2.0 - 简单图床基础配置
 
@@ -506,7 +507,6 @@ function is_who_login($user)
     global $guestConfig;
     if (isset($_COOKIE['auth'])) {
         $getCOK = unserialize($_COOKIE['auth']);
-        // if (!$getCOK) return false;
         if ($user == 'admin') {
             if ($getCOK[1] == $config['password']) return true;
         }
