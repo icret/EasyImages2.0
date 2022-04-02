@@ -31,7 +31,7 @@
   }
   
   #rocket-to-top .level-2 {
-      background: url("../public/images/rocket_button_up.png") no-repeat scroll -149px 0 transparent;
+      background: url("../images/rocket_button_up.png") no-repeat scroll -149px 0 transparent;
       display: none;
       height: 250px;
       opacity: 0;
@@ -47,7 +47,7 @@
   }
   
   #rocket-to-top {
-      background: url("../public/images/rocket_button_up.png") no-repeat scroll 0 0 transparent;
+      background: url("../images/rocket_button_up.png") no-repeat scroll 0 0 transparent;
       cursor: default;
       display: block;
       height: 250px;
