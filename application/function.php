@@ -263,7 +263,7 @@ function getFileNumber($dir)
  * @return mixed
  * @example getDir("./dir")
  */
-function getDir($dir)
+function getDirList($dir)
 {
     $dirArray[] = NULL;
     if (false != ($handle = opendir($dir))) {
@@ -321,32 +321,41 @@ function getFile($dir)
 function get_file_by_glob($dir_fileName_suffix, $type = 'list')
 {
     global $config;
-    $glob = glob($dir_fileName_suffix, GLOB_BRACE);
 
     // 获取所有文件
     if ($type == 'list') {
-        foreach ($glob as $v) {
-            if (is_file($v)) $res[] =  basename($v);
-        }
-        // 排序
-        if ($res) {
-            switch ($config['showSort']) {
-                case 1:
-                    $res = array_reverse($res);
-                    break;
+        $glob = glob($dir_fileName_suffix, GLOB_BRACE);
+
+        if ($glob) {
+            foreach ($glob as $v) {
+                if (is_file($v)) $res[] =  basename($v);
             }
+            // 排序
+            if ($res) {
+                switch ($config['showSort']) {
+                    case 1:
+                        $res = array_reverse($res);
+                        break;
+                }
+            }
+        } else {
+            $res = array();
         }
     }
 
     if ($type == 'number') {
         $res = 0;
         $glob = glob($dir_fileName_suffix); //把该路径下所有的文件存到一个数组里面;
-        foreach ($glob as $v) {
-            if (is_file($v)) {
-                $res++;
-            } else {
-                $res += get_file_by_glob($v . "/*", $type = 'number');
+        if ($glob) {
+            foreach ($glob as $v) {
+                if (is_file($v)) {
+                    $res++;
+                } else {
+                    $res += get_file_by_glob($v . "/*", $type = 'number');
+                }
             }
+        }else{
+            $res = 0;
         }
     }
     return $res;

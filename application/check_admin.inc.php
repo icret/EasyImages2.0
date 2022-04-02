@@ -51,11 +51,11 @@ if (is_local($config['domain'])) {
 }
 
 // 检测监黄接口是否可以访问
-if ($configp['checkImg'] !== 0) {
+if ($config['checkImg'] !== 0) {
 
     if ($config['checkImg'] == 1) {
 
-        if (!@IP_URL_Ping('api.moderatecontent.com', 80, 1)) {
+        if (!IP_URL_Ping('api.moderatecontent.com', 80, 1)) {
             echo '
             <script>
                 new $.zui.Messager("moderatecontent 鉴黄接口无法ping通! ",{

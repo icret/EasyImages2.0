@@ -67,7 +67,9 @@ if (isset($_GET['stop_token'])) {
     $stop_token =  $_GET['stop_token'];
     $postArr = array(
         $stop_token => array(
-            'id' => 0, 'expired' => time()
+            'id' => 0,
+            'expired' => time(),
+            'add_time' => $tokenList[$stop_token]['add_time']
         )
     );
     $new_config = array_replace($tokenList, $postArr);
@@ -728,13 +730,14 @@ if (isset($_GET['recycle_reimg'])) {
                         <?php
                         // 获取被隔离的文件
                         $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                               // cache目录
+
                         $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
-                        @$cache_num = count($cache_file);                                                   // 统计目录文件个数
+                        $cache_num = count($cache_file);                                                   // 统计目录文件个数
                         for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
                             $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i];   // 图片绝对路径
                             $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                   // 图片相对路径
-                            @$file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
-                            @$filen_name = $cache_file[$i];                                                 // 图片名称
+                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
+                            $filen_name = $cache_file[$i];                                                 // 图片名称
                             $url = $config['imgurl'] . $config['path'] . 'recycle/' . $cache_file[$i];      // 图片网络连接
                             $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
                         ?>
@@ -778,12 +781,12 @@ if (isset($_GET['recycle_reimg'])) {
                         // 获取被隔离的文件
                         $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                                // cache目录
                         $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
-                        @$cache_num = count($cache_file);                                                   // 统计目录文件个数
+                        $cache_num = count($cache_file);                                                   // 统计目录文件个数
                         for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
                             $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];    // 图片绝对路径
                             $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                    // 图片相对路径
-                            @$file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
-                            @$filen_name = $cache_file[$i];                                                 // 图片名称
+                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
+                            $filen_name = $cache_file[$i];                                                 // 图片名称
                             $url = $config['imgurl'] . $config['path'] . 'suspic/' . $cache_file[$i];       // 图片网络连接
                             $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
                         ?>
