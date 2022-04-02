@@ -23,7 +23,7 @@ $config=Array
 	'watermark'=>0,
 	'waterText'=>'简单图床 - png.cm',
 	'waterPosition'=>5,
-	'textColor'=>'rgba(0,255,0,0.5)',
+	'textColor'=>'rgba(255,0,0,1)',
 	'textSize'=>50,
 	'textFont'=>'/public/static/hkxzy.ttf',
 	'waterImg'=>'/public/images/watermark.png',
@@ -104,7 +104,7 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'version'=>'2.5.7',
-	'update'=>'2022-03-30 13:35:01',
+	'update'=>'2022-04-02 18:00:58',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">
