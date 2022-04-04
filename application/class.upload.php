@@ -2448,13 +2448,13 @@ class Upload {
                                 $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;MAGIC path is set to ' . $path . '<br />';
                             }
                         }
-                        if ($path) {
+                        if ($path && file_exists($path)) {
                             $f = @finfo_open(FILEINFO_MIME, $path);
                         } else {
                             $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;MAGIC path will not be used<br />';
                             $f = @finfo_open(FILEINFO_MIME);
                         }
-                        if (is_resource($f)) {
+                        if ($f) {
                             $mime = finfo_file($f, realpath($this->file_src_pathname));
                             finfo_close($f);
                             $this->file_src_mime = $mime;
@@ -2956,7 +2956,7 @@ class Upload {
     function imageunset($im) {
         if (is_resource($im)) {
             imagedestroy($im);
-        } else if (is_object($im) && $im instanceOf GdImage) {
+        } else if (is_object($im) && $im instanceOf \GdImage) {
             unset($im);
         }
     }

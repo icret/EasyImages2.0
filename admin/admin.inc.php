@@ -814,41 +814,42 @@ if (isset($_GET['recycle_reimg'])) {
             <div class="alert alert-primary">
                 <h5>系统信息</h5>
                 <hr />
-                <p class="text-ellipsis">操作系统: <?PHP echo php_uname('s') . ' <small class="text-muted">' . php_uname() . '</small>'; ?></p>
-                <p class="text-ellipsis">Web 服务: <?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
-                <p class="text-ellipsis">服务器IP: <?PHP echo  GetHostByName($_SERVER['SERVER_NAME']) ?></p>
-                <p class="text-ellipsis">系统时间: <?PHP echo date("Y-m-d G:i:s"); ?></p>
+                <p class="text-ellipsis">服务系统: <?PHP echo php_uname('s') . ' <small class="text-muted">' . php_uname() . '</small>'; ?></p>
+                <p class="text-ellipsis">Web服务: <?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
+                <p class="text-ellipsis">服务器IP: <?PHP echo  $_SERVER["SERVER_ADDR"] ?></p>
+                <p class="text-ellipsis">系统时间: <?PHP echo date("Y-m-d H:i:s"); ?></p>
                 <p class="text-ellipsis">已用磁盘: <?php echo  getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) ?></p>
                 <p class="text-ellipsis">剩余磁盘: <?php echo  getDistUsed(disk_free_space(__DIR__)); ?></p>
                 <h5>PHP信息</h5>
                 <hr />
                 <p class="text-ellipsis">PHP: <?php echo  phpversion(); ?></p>
-                <p class="text-ellipsis">GD : <?php echo (gd_info()["GD Version"]); ?></p>
-                <p class="text-ellipsis">PHP最大上传: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
-                <p class="text-ellipsis">POST最大上传: <?php echo ini_get('post_max_size'); ?></p>
-                <p class="text-ellipsis">PHP最长执行时间: <?PHP echo get_cfg_var("max_execution_time") . "秒 "; ?></p>
-                <p class="text-ellipsis">PHP允许占用内存: <?PHP echo get_cfg_var("memory_limit"); ?></p>
+                <p class="text-ellipsis">PHP UP: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
+                <p class="text-ellipsis">POST UP: <?php echo ini_get('post_max_size'); ?></p>
+                <p class="text-ellipsis">PHP Max Time: <?PHP echo get_cfg_var("max_execution_time") . "秒"; ?></p>
+                <p class="text-ellipsis">PHP Max Memery: <?PHP echo get_cfg_var("memory_limit"); ?></p>
+                <p class="text-ellipsis">GD: <?php echo (gd_info()["GD Version"]); ?></p>
                 <h5>我的信息</h5>
                 <hr />
-                <p class="text-ellipsis">浏览器: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
-                <p class="text-ellipsis">登录IP: <?php echo  $_SERVER["REMOTE_ADDR"]; ?></p>
+                <p class="text-ellipsis">Your IP: <?php echo real_ip(); ?></p>
+                <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>                
                 <h5>图床信息</h5>
                 <hr />
-                <p class="text-ellipsis">
+                <p>
                     <?php if (empty($config['TinyPng_key'])) : ?>
                         <i class="icon icon-times" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng</i><br />
                     <?php else : ?>
                         <i class="icon icon-check" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng</i><br />
                     <?php endif; ?>
                     <?php if (empty($config['moderatecontent_key'])) : ?>
-                        <i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">moderatecontent</i><br />
+                        <i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">Moderatecontent</i><br />
                     <?php else : ?>
                         <i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</i><br />
                     <?php endif; ?>
-                </p>
-                <p>
-                    <span class="label label-badge label-info">当前版本:<?php echo $config['version']; ?></span>
+                    <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
+                    <a href="https://github.com/easysoft/zui" target="_blank"><span class="label label-badge label-info" data-toggle="tooltip" title="前端使用的框架">ZUI</span></a>
+                    <span class="label label-badge label-info" data-toggle="tooltip" title="当前版本"><?php echo $config['version']; ?></span>
                     <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步版本">最新版本:<?php echo getVersion(); ?></span></a>
+
                 </p>
             </div>
         </div>

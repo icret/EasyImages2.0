@@ -123,9 +123,8 @@ $HTTP["url"] =~ "^/(i|public)/" {
     1. 确定已安装`docker`和`docker-compose`
     2. 拉去镜像 `docker pull icret/nsfw_restful_api:latest` 或者直接 `docker run -p 3307:3307 -d icret/nsfw_restful_api`
     3. 后台API设置中填入网址 比如：`http://IP:3307/api/nsfw/classify?url=`
-    4. 后台图片安全图片鉴黄以nsfwjs方式
-    5. nsfwjs鉴黄方式不支持webp
-    - 程序期望nsfwjs返回json 并且如下格式：
+    4. 后台图片安全图片鉴黄以nsfwjs方式   
+    5. 如果你使用别的nsfwjs api必须返回json格式如下：
 ```json
 [{
     "className": "Drawing",
