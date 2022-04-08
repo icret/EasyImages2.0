@@ -831,25 +831,26 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5>我的信息</h5>
                 <hr />
                 <p class="text-ellipsis">Your IP: <?php echo real_ip(); ?></p>
-                <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>                
+                <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
                 <h5>图床信息</h5>
                 <hr />
                 <p>
                     <?php if (empty($config['TinyPng_key'])) : ?>
-                        <i class="icon icon-times" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng</i><br />
+                        <span class="label label-badge label-warning" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng</span>
                     <?php else : ?>
-                        <i class="icon icon-check" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng</i><br />
+                        <span class="label label-badge label-success" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng</span>
                     <?php endif; ?>
                     <?php if (empty($config['moderatecontent_key'])) : ?>
-                        <i class="icon icon-times" data-toggle="tooltip" title="图片审查moderatecontent未填写">Moderatecontent</i><br />
+                        <span class="label label-badge label-warning" data-toggle="tooltip" title="图片审查moderatecontent未填写">Moderatecontent</span>
                     <?php else : ?>
-                        <i class="icon icon-check" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</i><br />
+                        <span class="label label-badge label-success" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</span>
+                    <?php endif; ?>
+                    <a href="https://easysoft.github.io/zui/" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="前端框架">ZUI</span></a>
+                    <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo $config['version']; ?></span>
+                    <?php if (getVersion() !== $config['version']) : ?>
+                        <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-warning" data-toggle="tooltip" title="Github有更新,更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步最新版本号"><?php echo getVersion(); ?> New</span></a>
                     <?php endif; ?>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
-                    <a href="https://github.com/easysoft/zui" target="_blank"><span class="label label-badge label-info" data-toggle="tooltip" title="前端使用的框架">ZUI</span></a>
-                    <span class="label label-badge label-info" data-toggle="tooltip" title="当前版本"><?php echo $config['version']; ?></span>
-                    <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步版本">最新版本:<?php echo getVersion(); ?></span></a>
-
                 </p>
             </div>
         </div>

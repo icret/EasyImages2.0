@@ -1,6 +1,6 @@
-<?php require_once __DIR__ . '/function.php'; ?>
 <!DOCTYPE html>
 <html lang="zh-cn">
+<?php require_once __DIR__ . '/function.php'; ?>
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,7 +16,6 @@
 	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css" rel="stylesheet">
 	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme']; ?>.css" rel="stylesheet">
 	<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
-	<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
 	<!--[if lt IE 9]>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/html5shiv.js"></script>
@@ -28,7 +27,6 @@
 </head>
 
 <body class="container">
-	<?php if ($config['ad_top']) echo $config['ad_top_info']; ?>
 	<div class="page-header">
 		<ul class="nav nav-pills">
 			<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>

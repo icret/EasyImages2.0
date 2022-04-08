@@ -19,7 +19,7 @@
 
 ## 目录
 
-[特点](#特点)-[注意](#常见问题)-[安装](#安装)-[升级](#程序升级)-[安全](#安全配置)-[鉴黄](#鉴黄)-[更新日志](#更新日志)-[支持开发者](#支持开发者)-[界面演示](#界面演示)-[兼容](#兼容)-[鸣谢](#鸣谢)-[开源许可](#许可证)
+[特点](#特点)-[注意](#常见问题)-[安装](#安装)-[升级](#程序升级)-[安全](#安全配置)-[鉴黄](#鉴黄)-[更新日志](#更新日志)-[支持开发者](#支持开发者)-[界面演示](#界面演示)-[兼容](#兼容)-[鸣谢](#鸣谢)-[许可证](#开源许可)
 
 ## 特点
 
@@ -121,10 +121,11 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 - nsfwjs [nsfwjs docker](https://hub.docker.com/r/icret/nsfw_restful_api)
     1. 确定已安装`docker`和`docker-compose`
-    2. 拉去镜像 `docker pull icret/nsfw_restful_api:latest` 或者直接 `docker run -p 3307:3307 -d icret/nsfw_restful_api`
+    2. 拉取镜像 `docker pull icret/nsfw_restful_api:latest` 或者直接 `docker run -p 3307:3307 -d icret/nsfw_restful_api`
     3. 后台API设置中填入网址 比如：`http://IP:3307/api/nsfw/classify?url=`
     4. 后台图片安全图片鉴黄以nsfwjs方式   
-    5. 如果你使用别的nsfwjs api必须返回json格式如下：
+    5. 如果你使用别的nsfwjs api,必须返回json 并且格式如下：
+    
 ```json
 [{
     "className": "Drawing",
@@ -151,6 +152,8 @@ $HTTP["url"] =~ "^/(i|public)/" {
 * 2022-04-02 v2.5.8 deving
 - 修复在PHP8环境下的bugs
 - 修复删除token产生的bug
+- 更改顶部广告位置
+- 更改广场样式
 
 * 2022-3-30 v2.5.7
 - 增加弹窗公告

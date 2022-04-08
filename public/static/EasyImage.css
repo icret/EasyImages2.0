@@ -87,6 +87,6 @@
   .bottom-bar {
       width: 100%;
       position: absolute;
-      bottom: -4px;
+      bottom: 0.1px;
       background-color: rgba(0, 0, 0, 0.2);
   }

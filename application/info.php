@@ -27,6 +27,8 @@ $upTime = filemtime(APP_ROOT . $img);
 
 // 清除缓存
 clearstatcache();
+// 广告
+if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
@@ -89,6 +91,7 @@ clearstatcache();
 </div>
 <script src="<?php static_cdn(); ?>/public/static/exif/exif.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>
     // 获取图片长宽
     function getImgNaturalDimensions(oImg, callback) {

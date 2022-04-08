@@ -65,7 +65,7 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
   // 导航状态
   $('.nav-pills').find('a').each(function() {
     if (this.href == document.location.href) {
-      $(this).parent().addClass('active'); // this.className = 'active';
+        $(this).parent().addClass('active'); // this.className = 'active';
     }
   });
 

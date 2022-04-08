@@ -22,16 +22,16 @@
 /*---------------基础配置开始-------------------*/
 
 // 设置html为utf8
-@header('Content-Type:text/html;charset=utf-8');
+header('Content-Type:text/html;charset=utf-8');
 //将时区设置为中国·上海
-@ini_set('date.timezone', 'Asia/Shanghai');
-@date_default_timezone_set('Asia/Shanghai');
+ini_set('date.timezone', 'Asia/Shanghai');
+date_default_timezone_set('Asia/Shanghai');
 // 修改内存限制 根据服务器配置选择，低于128M容易出现上传失败，你懂得图片挺占用内存的
-@ini_set('memory_limit', '512M');
+ini_set('memory_limit', '512M');
 // 定义根目录
-@define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
+define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
 // 判断当前的系统类型是否为windows
-@define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
+define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 
 /*---------------基础配置结束-------------------*/
 

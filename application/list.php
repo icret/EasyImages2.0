@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . '/header.php'; ?>
+<?php require_once __DIR__ . '/header.php';
+if ($config['ad_top']) echo $config['ad_top_info'];
+?>
 <div class="row" style="margin-bottom:100px">
   <div class="col-md-12">
     <?php
@@ -34,9 +36,11 @@
                     <a href="<?php echo $imgUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
                     <a href="#" class="copy" data-clipboard-text="<?php echo $imgUrl; ?>" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
                     <a href="/application/info.php?img=<?php echo $imgUrl; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
-                    <a href="<?php echo $config['domain']; ?>/application/del.php?recycle_url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="回收" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
-                    <a href="<?php echo $config['domain']; ?>/application/del.php?url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
-                    <label style="margin-left:10px;" class="text-primary"><input type="checkbox" style="margin: left 200px;" id="url" name="checkbox" value="<?php echo $imgUrl; ?>"> 选择</label>
+                    <?php if (is_who_login('admin')) : ?>
+                      <a href="/application/del.php?recycle_url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="回收" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
+                      <a href="/application/del.php?url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
+                      <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $imgUrl; ?>"> 选择</label>
+                    <?php endif; ?>
                   </div>
                 </div>
               </div>
@@ -60,40 +64,42 @@
             echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('m月d日', strtotime("-$x day")) . '</a>';
           ?>
         </div>
-        <div class="btn-group">
-          <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
-          <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
-          <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
-          <a class="btn btn-mini" onclick="recycle_img()">回收</a>
-          <a class="btn btn-mini" onclick="delete_img()">删除</a>
-        </div>
+        <?php if (is_who_login('admin')) : ?>
+          <div class="btn-group">
+            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
+            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
+            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
+            <a class="btn btn-mini" onclick="recycle_img()">回收</a>
+            <a class="btn btn-mini" onclick="delete_img()">删除</a>
+          </div>
+        <?php endif; ?>
       </div>
     </div>
     <!-- 按格式 -->
     <div class="row">
-      <!-- 
-    <div class="col-md-2 col-xs-6">
-      <form action="list.php" method="get">
-        <div class="input-group">
-          <select name="search" class="form-control input-sm">
-            <option value="jpg">jpg</option>
-            <option value="png">png</option>
-            <option value="gif">gif</option>
-          </select>
-          <span class="input-group-btn">
-            <input type="submit" value="按格式" class="btn btn-primary input-sm" />
-          </span>
-        </div>
-      </form>
-    </div> -->
       <div class="col-md-2 col-xs-6">
-        <div class="btn-group">
-          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
-          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
-          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
-          <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
-        </div>
+        <form action="list.php" method="get">
+          <div class="input-group">
+            <select name="&search" class="form-control input-sm">
+              <option value="jpg">JPG</option>
+              <option value="png">PNG</option>
+              <option value="gif">Gif</option>
+              <option value="gif">WEBP</option>
+            </select>
+            <span class="input-group-btn">
+              <input type="submit" value="按格式" class="btn btn-primary input-sm" />
+            </span>
+          </div>
+        </form>
       </div>
+      <!-- <div class="col-md-2 col-xs-6">
+        <div class="btn-group">
+          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
+          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
+          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
+          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
+        </div>
+      </div> -->
       <!-- 按日期-->
       <div class="col-md-2 col-xs-6">
         <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
@@ -119,6 +125,7 @@
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
 <script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
   // tips提示
