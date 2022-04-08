@@ -60,12 +60,12 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>',
-	'ad_top'=>1,
+	'ad_top'=>0,
 	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
 <div class="col-md-12" style="text-align: center;margin:2px;">
     <a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
 </div>',
-	'ad_bot'=>1,
+	'ad_bot'=>0,
 	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;">
     <a href="../public/images/wechat.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
     <a href="../public/images/alipay.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
@@ -104,7 +104,7 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'version'=>'2.5.8',
-	'update'=>'2022-04-09 01:52:07',
+	'update'=>'2022-04-09 01:54:10',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">
