@@ -23,32 +23,35 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       <?php else : ?>
         <ul id="viewjs">
           <div class="cards listNum">
-            <?php
-            foreach ($fileArr as $key => $value) :
+            <?php foreach ($fileArr as $key => $value) {
               if ($key < $keyNum) {
-                $imgUrl = $config['imgurl'] . config_path($path) . $value;
-              }
-            ?>
-              <div class="col-md-4 col-sm-6 col-lg-3">
-                <div class="card">
-                  <li><img src="../public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
-                  <div class="bottom-bar">
-                    <a href="<?php echo $imgUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
-                    <a href="#" class="copy" data-clipboard-text="<?php echo $imgUrl; ?>" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
-                    <a href="/application/info.php?img=<?php echo $imgUrl; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
-                    <?php if (is_who_login('admin')) : ?>
-                      <a href="/application/del.php?recycle_url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="回收" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
-                      <a href="/application/del.php?url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
-                      <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $imgUrl; ?>"> 选择</label>
-                    <?php endif; ?>
+                $imgUrl = $config['imgurl'] . config_path($path) . $value; ?>
+                <div class="col-md-4 col-sm-6 col-lg-3">
+                  <div class="card">
+                    <li><img src="../public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
+                    <div class="bottom-bar">
+                      <a href="<?php echo $imgUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
+                      <a href="#" class="copy" data-clipboard-text="<?php echo $imgUrl; ?>" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+                      <a href="/application/info.php?img=<?php echo $imgUrl; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                      <?php if (is_who_login('admin')) : ?>
+                        <a href="/application/del.php?recycle_url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="回收" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
+                        <a href="/application/del.php?url=<?php echo $imgUrl; ?>" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
+                        <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $imgUrl; ?>"> 选择</label>
+                      <?php endif; ?>
+                    </div>
                   </div>
                 </div>
-              </div>
-            <?php endforeach; ?>
+            <?php
+              }
+            }
+            ?>
           </div>
         </ul>
-    <?php endif;
-    endif; ?>
+    <?php
+      endif;
+    endif;
+    /** 底部广告 */
+    if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
   </div>
   <div class="col-md-12">
     <hr />
@@ -335,4 +338,6 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   // 更改网页标题
   document.title = "图床广场 - 今日上传<?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?>张 昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")) . '*.*', 'number'); ?>张 - <?php echo $config['title']; ?>"
 </script>
-<?php require_once APP_ROOT . '/application/footer.php';
+<?php
+/** 引入底部 */
+require_once APP_ROOT . '/application/footer.php';

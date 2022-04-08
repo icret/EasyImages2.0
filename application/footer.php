@@ -1,9 +1,8 @@
 <?php
-// 禁止直接访问
+
+/** 禁止直接访问 */
 defined('APP_ROOT') ?: exit;
-// 底部广告 
-if ($config['ad_bot']) echo $config['ad_bot_info'];
-// 弹窗公告
+/** 弹窗公告 */
 if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
   <div class="modal fade" id="notice">
     <div class="modal-dialog">
@@ -65,7 +64,7 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
   // 导航状态
   $('.nav-pills').find('a').each(function() {
     if (this.href == document.location.href) {
-        $(this).parent().addClass('active'); // this.className = 'active';
+      $(this).parent().addClass('active'); // this.className = 'active';
     }
   });
 

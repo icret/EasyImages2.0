@@ -55,6 +55,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 </div>
+<? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
 <div class="col-md-12" style="margin-top: 10px;">
     <div class="col-md-12" style="padding-bottom: 10px;">
         <div class="col-md-6" style="padding-bottom: 10px;">
@@ -149,4 +150,5 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     document.title = "图片<?php echo basename($img); ?>的详细信息 - <?php echo $config['title']; ?>"
 </script>
 <?php
-include_once __DIR__ . "/footer.php";
+/** 引入底部 */
+require_once APP_ROOT . '/application/footer.php';

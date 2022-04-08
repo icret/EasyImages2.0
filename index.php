@@ -1,8 +1,8 @@
 <?php
 require_once 'application/header.php';
-// 广告
+/** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
-// 检查登录
+/** 检查登陆 */
 mustLogin();
 ?>
 <div class="col-md-12">
@@ -156,5 +156,9 @@ mustLogin();
   });
 </script>
 <?php
-/** 环境检测 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php';
+/** 环境检测 */
+if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php';
+/** 底部广告 */
+if ($config['ad_bot']) echo $config['ad_bot_info'];
+/** 引入底部 */
 require_once APP_ROOT . '/application/footer.php';
