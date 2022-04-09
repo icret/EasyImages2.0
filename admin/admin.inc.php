@@ -203,10 +203,12 @@ if (isset($_GET['recycle_reimg'])) {
             <li><a data-tab href="#Content1">网站设置</a></li>
             <li><a data-tab href="#Content9">界面设置</a></li>
             <li><a data-tab href="#Content2">上传设置</a></li>
+            <li><a data-tab href="#Content12">水印设置</a></li>
             <li><a data-tab href="#Content5">API 设置</a></li>
+            <li><a data-tab href="#Content13">上传压缩</a></li>
+            <li><a data-tab href="#Content4">压缩图片</a></li>
             <li><a data-tab href="#Content11">图片回收<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'recycle', 'number'); ?></span></a></li>
             <li><a data-tab href="#Content7">可疑图片<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'suspic', 'number'); ?></span></a></li>
-            <li><a data-tab href="#Content4">压缩图片</a></li>
             <li><a data-tab href="#Content3">广告设置</a></li>
             <li><a href="<?php echo $config['domain'] . '/admin/manager.php?p=' . date('Y/m/d'); ?>" target="_blank">文件管理</a></li>
             <li><a data-tab href="#Content6">图床安全</a></li>
@@ -258,28 +260,6 @@ if (isset($_GET['recycle_reimg'])) {
                     <textarea class="form-control" rows="2" name="terms"><?php echo $config['terms']; ?></textarea>
                 </div>
                 <div class="form-group">
-                    <div class="switch switch-inline">
-                        <input type="hidden" name="static_cdn" value="0">
-                        <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">静态文件CDN | 末尾不加'/'</label>
-                    </div>
-                    <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
-                </div>
-                <div class="form-group">
-                    <div>
-                        <label>缩略图生成方式</label>
-                    </div>
-                    <div class="radio-primary">
-                        <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
-                    </div>
-                    <div class="radio-primary">
-                        <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: 无法被cdn缓存"> 访问时生成 | 推荐</label>
-                    </div>
-                    <div class="radio-primary">
-                        <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问广场需刷新一次,有缓存不失效"> 访问时生成 | 直链</label>
-                    </div>
-                </div>
-                <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
                 <button type="submit" class="btn btn-primary">保存</button>
@@ -325,49 +305,6 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="range" class="form-control" name="maxUploadFiles" value="<?php echo $config['maxUploadFiles']; ?>" min="1" max="100" step="1" onchange="document.getElementById('maxUploadFiles').innerHTML=value">
                 </div>
                 <div class="form-group">
-                    <label>水印方式</label>
-                    <select class="chosen-select form-control" name="watermark">
-                        <option value="0" <?php if (!$config['watermark']) echo 'selected'; ?>>关闭水印</option>
-                        <option value="1" <?php if ($config['watermark'] == 1) echo 'selected'; ?>>文字水印</option>
-                        <option value="2" <?php if ($config['watermark'] == 2) echo 'selected'; ?>>图片水印</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>水印文字</label>
-                    <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
-                </div>
-                <div class="form-group">
-                    <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
-                    <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
-                </div>
-                <div class="form-group">
-                    <label>水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="5" max="200" step="5" onchange="document.getElementById('textSize').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字字体路径</label>
-                    <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div>
-                <div class="form-group">
-                    <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
-                    <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div>
-                <div class="form-group">
-                    <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
-                    <select class="chosen-select form-control" name="waterPosition">
-                        <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>
-                        <option value="1" <?php if ($config['waterPosition'] == 1) echo 'selected'; ?>>顶部居左</option>
-                        <option value="2" <?php if ($config['waterPosition'] == 2) echo 'selected'; ?>>顶部居中</option>
-                        <option value="3" <?php if ($config['waterPosition'] == 3) echo 'selected'; ?>>顶部居右</option>
-                        <option value="4" <?php if ($config['waterPosition'] == 4) echo 'selected'; ?>>左边居中</option>
-                        <option value="5" <?php if ($config['waterPosition'] == 5) echo 'selected'; ?>>图片中心</option>
-                        <option value="6" <?php if ($config['waterPosition'] == 6) echo 'selected'; ?>>右边居中</option>
-                        <option value="7" <?php if ($config['waterPosition'] == 7) echo 'selected'; ?>>底部居左</option>
-                        <option value="8" <?php if ($config['waterPosition'] == 8) echo 'selected'; ?>>底部居中</option>
-                        <option value="9" <?php if ($config['waterPosition'] == 9) echo 'selected'; ?>>底部居右</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label>最大上传宽度 | 当前: </label><label id="maxWidth"><?php echo $config['maxWidth']; ?></label><label>px</label>
                     <input type="range" class="form-control" name="maxWidth" value="<?php echo $config['maxWidth']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxWidth').innerHTML=value">
                 </div>
@@ -386,52 +323,6 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <label>最小上传高度 | 当前: </label><label id="minHeight"><?php echo $config['minHeight']; ?></label><label>px</label>
                     <input type="range" class="form-control" name="minHeight" value="<?php echo $config['minHeight']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minHeight').innerHTML=value">
-                </div>
-                <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4>
-                <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启下边五项不生效">
-                        <input type="hidden" name="imgRatio" value="0">
-                        <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">前端修改图片</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>裁剪的宽度(0不生效) | 当前宽度: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_x').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label>裁剪的高度(0不生效) | 当前高度: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_y').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline">
-                        <input type="hidden" name="imgRatio_crop" value="0">
-                        <input type="checkbox" name="imgRatio_crop" value="1" <?php if ($config['imgRatio_crop']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">上传前裁剪</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline">
-                        <input type="hidden" name="imgRatio_preserve_headers" value="0">
-                        <input type="checkbox" name="imgRatio_preserve_headers" value="1" <?php if ($config['imgRatio_preserve_headers']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">保留图片原始数据</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>前端压缩率(仅支持JPG) | 当前: </label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
-                    <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">
-                </div>
-                <h4 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</h4>
-                <div class="form-group">
-                    <div class="switch switch-inline">
-                        <input type="hidden" name="compress" value="0">
-                        <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) echo 'checked="checked"'; ?> data-toggle="tooltip" title=" 轻微有损压缩图片, 此压缩有可能使图片变大! 特别是小图片 也有一定概率改变图片方向">
-                        <label style="font-weight: bold">后端压缩上传图片 | 更多图片格式的支持</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>后端压缩率 | 当前: </label><label id="compress_ratio"><?php echo $config['compress_ratio']; ?></label><label>%</label>
-                    <input type="range" class="form-control" name="compress_ratio" value="<?php echo $config['compress_ratio']; ?>" min="1" max="100" step="1" onchange="document.getElementById('compress_ratio').innerHTML=value">
                 </div>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
@@ -522,7 +413,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <button type="submit" class="btn btn-mini btn-primary">保存</button>
             </form>
             <hr>
-            <h5>上传Token</h5>
+            <h5>已存在Token</h5>
             <table class="table table-hover table-bordered table-condensed table-responsive visible-xs visible-sm" style="margin-top: 10px;">
                 <thead>
                     <tr>
@@ -555,28 +446,34 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="datagrid-container"></div>
             </div>
-
             <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
                 <div class="form-group">
-                    <label for="exampleInputEmail3">Token: </label>
-                    <input type="text" class="form-control input-sm" id="exampleInputEmail3" name="add_token" value="<?php echo privateToken(); ?>">
+                    <label for="add_modify_token" data-toggle="tooltip" title="当前的Token是实时生成的,如果需要修改只需要复制已存在的Token并修改有效期即可!">增加/修改Token: </label>
+                    <input type="text" class="form-control input-sm" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputInviteCode3">有效期: </label>
-                    <input type="number" class="form-control input-sm" id="exampleInputInviteCode3" name="add_token_expired" value="30">
-                    <label for="exampleInputInviteCode3">天</label>
+                    <label for="add_modify_token_time" data-toggle="tooltip" title="正整数或负整数<p>正整数代表有效期</p><p>负整数(-1)代表过期</p>">有效期: </label>
+                    <input type="number" class="form-control input-sm" id="add_modify_token_time" name="add_token_expired" value="30">
+                    <label for="add_modify_token_time">天</label>
                 </div>
                 <input type="hidden" class="form-control" name="add_token_id" value="<?php echo count($tokenList); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn-sm btn-primary">添加</button>
             </form>
         </div>
         <div class="tab-pane fade" id="Content6">
-            <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" name="delDir" value="thumbnails/" data-toggle="tooltip" title="已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?>" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');">清理缓存</button>
-                </div>
-            </form>
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <div class="form-group">
+                    <label>缩略图生成方式</label>
+                    <div class="radio-primary">
+                        <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
+                    </div>
+                    <div class="radio-primary">
+                        <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: 无法被cdn缓存"> 访问时生成 | 推荐</label>
+                    </div>
+                    <div class="radio-primary">
+                        <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问广场需刷新一次,有缓存不失效"> 访问时生成 | 直链</label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">图片鉴黄</label>
                     <select class="chosen-select form-control" name="checkImg">
@@ -597,6 +494,14 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <div class="switch switch-inline">
+                        <input type="hidden" name="static_cdn" value="0">
+                        <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">静态文件CDN | 末尾不加'/'</label>
+                    </div>
+                    <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
+                </div>
+                <div class="form-group">
+                    <div class="switch switch-inline">
                         <input type="hidden" name="check_ip" value="0">
                         <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">黑/白IP名单上传</label>
@@ -607,6 +512,7 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <hr />
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="公告每次打开浏览器访问网站会重新打开弹窗">
                                 <input type="hidden" name="notice_status" value="0">
@@ -709,56 +615,8 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
+                <button type="submit" class="btn btn-info" name="delDir" value="thumbnails/" data-toggle="tooltip" title="已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?>" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');">清理缓存</button>
                 <button type="submit" class="btn btn-primary">保存</button>
-            </form>
-        </div>
-        <div class="tab-pane fade" id="Content11">
-            <h5>用户自己删除的会显示在这个页面</h5>
-            <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>缩略图</th>
-                            <th>文件名</th>
-                            <th>文件大小</th>
-                            <th>文件操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        // 获取被隔离的文件
-                        $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                               // cache目录
-
-                        $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
-                        $cache_num = count($cache_file);                                                   // 统计目录文件个数
-                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
-                            $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i];   // 图片绝对路径
-                            $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                   // 图片相对路径
-                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
-                            $filen_name = $cache_file[$i];                                                 // 图片名称
-                            $url = $config['imgurl'] . $config['path'] . 'recycle/' . $cache_file[$i];      // 图片网络连接
-                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
-                        ?>
-                            <tr>
-                                <td><?php echo $i; ?></td>
-                                <td><img data-toggle="lightbox" src="<?php echo get_online_thumbnail($file_path); ?>" data-image="<?php echo $url; ?>" class="img-thumbnail"></td>
-                                <td><?php echo $filen_name; ?></td>
-                                <td><?php echo $file_size; ?></td>
-                                <td>
-                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
-                                    <a class="btn btn-mini btn-success" href="?recycle_reimg=<?php echo $filen_name; ?>">恢复</a>
-                                    <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
-                                </td>
-                            </tr>
-                        <?php endfor; ?>
-                    </tbody>
-                </table>
-            </div>
-            <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <input class="form-control" type="hidden" name="delDir" value="/recycle/" readonly="">
-                <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
             </form>
         </div>
         <div class="tab-pane fade" id="Content7">
@@ -1027,6 +885,160 @@ if (isset($_GET['recycle_reimg'])) {
                 </table>
             </div>
         </div>
+        <div class="tab-pane fade" id="Content11">
+            <h5>用户自行删除的会显示在这个页面</h5>
+            <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>缩略图</th>
+                            <th>文件名</th>
+                            <th>文件大小</th>
+                            <th>文件操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // 获取被隔离的文件
+                        $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                               // cache目录
+
+                        $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
+                        $cache_num = count($cache_file);                                                   // 统计目录文件个数
+                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
+                            $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i];   // 图片绝对路径
+                            $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                   // 图片相对路径
+                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
+                            $filen_name = $cache_file[$i];                                                 // 图片名称
+                            $url = $config['imgurl'] . $config['path'] . 'recycle/' . $cache_file[$i];      // 图片网络连接
+                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
+                        ?>
+                            <tr>
+                                <td><?php echo $i; ?></td>
+                                <td><img data-toggle="lightbox" src="<?php echo get_online_thumbnail($file_path); ?>" data-image="<?php echo $url; ?>" class="img-thumbnail"></td>
+                                <td><?php echo $filen_name; ?></td>
+                                <td><?php echo $file_size; ?></td>
+                                <td>
+                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
+                                    <a class="btn btn-mini btn-success" href="?recycle_reimg=<?php echo $filen_name; ?>">恢复</a>
+                                    <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
+                                </td>
+                            </tr>
+                        <?php endfor; ?>
+                    </tbody>
+                </table>
+            </div>
+            <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <input class="form-control" type="hidden" name="delDir" value="/recycle/" readonly="">
+                <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="Content12">
+            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <div class="form-group">
+                    <label>水印方式</label>
+                    <select class="chosen-select form-control" name="watermark">
+                        <option value="0" <?php if (!$config['watermark']) echo 'selected'; ?>>关闭水印</option>
+                        <option value="1" <?php if ($config['watermark'] == 1) echo 'selected'; ?>>文字水印</option>
+                        <option value="2" <?php if ($config['watermark'] == 2) echo 'selected'; ?>>图片水印</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>水印文字</label>
+                    <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
+                </div>
+                <div class="form-group">
+                    <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
+                    <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
+                </div>
+                <div class="form-group">
+                    <label>水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
+                    <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="5" max="200" step="5" onchange="document.getElementById('textSize').innerHTML=value">
+                </div>
+                <div class="form-group">
+                    <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字字体路径</label>
+                    <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div>
+                <div class="form-group">
+                    <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
+                    <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div>
+                <div class="form-group">
+                    <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
+                    <select class="chosen-select form-control" name="waterPosition">
+                        <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>
+                        <option value="1" <?php if ($config['waterPosition'] == 1) echo 'selected'; ?>>顶部居左</option>
+                        <option value="2" <?php if ($config['waterPosition'] == 2) echo 'selected'; ?>>顶部居中</option>
+                        <option value="3" <?php if ($config['waterPosition'] == 3) echo 'selected'; ?>>顶部居右</option>
+                        <option value="4" <?php if ($config['waterPosition'] == 4) echo 'selected'; ?>>左边居中</option>
+                        <option value="5" <?php if ($config['waterPosition'] == 5) echo 'selected'; ?>>图片中心</option>
+                        <option value="6" <?php if ($config['waterPosition'] == 6) echo 'selected'; ?>>右边居中</option>
+                        <option value="7" <?php if ($config['waterPosition'] == 7) echo 'selected'; ?>>底部居左</option>
+                        <option value="8" <?php if ($config['waterPosition'] == 8) echo 'selected'; ?>>底部居中</option>
+                        <option value="9" <?php if ($config['waterPosition'] == 9) echo 'selected'; ?>>底部居右</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                </div>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="Content13">
+            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4>
+                <div class="form-group">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启下边五项不生效">
+                        <input type="hidden" name="imgRatio" value="0">
+                        <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">前端修改图片</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>裁剪的宽度(0不生效) | 当前宽度: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>px</label>
+                    <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_x').innerHTML=value">
+                </div>
+                <div class="form-group">
+                    <label>裁剪的高度(0不生效) | 当前高度: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>px</label>
+                    <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_y').innerHTML=value">
+                </div>
+                <div class="form-group">
+                    <div class="switch switch-inline">
+                        <input type="hidden" name="imgRatio_crop" value="0">
+                        <input type="checkbox" name="imgRatio_crop" value="1" <?php if ($config['imgRatio_crop']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">上传前裁剪</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="switch switch-inline">
+                        <input type="hidden" name="imgRatio_preserve_headers" value="0">
+                        <input type="checkbox" name="imgRatio_preserve_headers" value="1" <?php if ($config['imgRatio_preserve_headers']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">保留图片原始数据</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>前端压缩率(仅支持JPG) | 当前: </label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
+                    <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">
+                </div>
+                <h4 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</h4>
+                <div class="form-group">
+                    <div class="switch switch-inline">
+                        <input type="hidden" name="compress" value="0">
+                        <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) echo 'checked="checked"'; ?> data-toggle="tooltip" title=" 轻微有损压缩图片, 此压缩有可能使图片变大! 特别是小图片 也有一定概率改变图片方向">
+                        <label style="font-weight: bold">后端压缩上传图片 | 更多图片格式的支持</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>后端压缩率 | 当前: </label><label id="compress_ratio"><?php echo $config['compress_ratio']; ?></label><label>%</label>
+                    <input type="range" class="form-control" name="compress_ratio" value="<?php echo $config['compress_ratio']; ?>" min="1" max="100" step="1" onchange="document.getElementById('compress_ratio').innerHTML=value">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                </div>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </form>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
@@ -1182,5 +1194,8 @@ if (isset($_GET['recycle_reimg'])) {
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
 </script>
-<?php require_once APP_ROOT . '/application/footer.php';
-/** 引入设置页面检测文件 */ if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
+<?php
+/** 引入设置页面检测文件 */
+if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php';
+/** 引入底部 */
+require_once APP_ROOT . '/application/footer.php';

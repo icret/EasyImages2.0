@@ -127,3 +127,27 @@ if ($config['mustLogin']) {
     </script>
     ';
 }
+
+// 检测水印图片是否存在
+if (!is_file(APP_ROOT . $config['waterImg'])) {
+    echo '
+    <script>
+    new $.zui.Messager("水印图片不存在,请检测路径或者文件是否存在!",{
+        type: "danger", // 定义颜色主题 
+        time:10000
+    }).show();
+    </script>
+    ';
+}
+
+// 检测水印字体是否存在
+if (!is_file(APP_ROOT . $config['textFont'])) {
+    echo '
+    <script>
+    new $.zui.Messager("水印字体不存在,请检测路径或者文件是否存在!",{
+        type: "danger", // 定义颜色主题 
+        time:10000
+    }).show();
+    </script>
+    ';
+}

@@ -88,29 +88,31 @@ function checkPASS($name)
                 <td> <?php checkPASS($gd); ?></td>
             </tr>
             <tr>
-                <td>openssl</td>
-                <td>建议支持 | 生成加密删除url,需PHP>7.0</td>
-                <td> <?php checkPASS($openssl); ?></td>
-            </tr>
-            <tr>
                 <td>upload.php</td>
                 <td>0755可执行权限 | 非windows系统</td>
                 <td> <?php checkPASS($file_php); ?></td>
             </tr>
             <tr>
+                <td>openssl</td>
+                <td>建议支持 | 生成加密删除url,需PHP>7.0</td>
+                <td> <?php checkPASS($openssl); ?></td>
+            </tr>
+            <tr>
                 <td>/i</td>
-                <td>可写</td>
+                <td>图片存储目录需可写</code></td>
                 <td><?php checkPASS($i_wjj); ?></td>
             </tr>
             <tr>
                 <td>.user.ini</td>
-                <td>防跨目录读写文件 | 删除方法:<a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini" target="_blank"> LNMP</a> | <a href="https://www.bt.cn/bbs/forum.php?mod=viewthread&tid=36605&page=1#pid122035" target="_blank">BT宝塔</a></td>
+                <td>需关闭防跨目录读写文件 | 删除方法:<a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini" target="_blank"> LNMP</a> | <a href="https://www.bt.cn/bbs/forum.php?mod=viewthread&tid=36605&page=1#pid122035" target="_blank">BT宝塔</a></td>
                 <td><?php checkPASS($userINI); ?></td>
             </tr>
         </tbody>
     </table>
-
-
+    <!-- 使用按钮 -->
+    <p class="text-primary">图床需要权限0755,所有者用户组为www, 命令: <code>chmod -R 0755 /网站的绝对目录/*</code>
+        <a href="./README/chmod.png" data-toggle="lightbox" class="btn btn-mini btn-primary">宝塔面板演示</a>
+    </p>
     <?php
     $checkres = array($phpEnv, $fileinfo, $gd, $i_wjj, $file_php, $userINI);
 

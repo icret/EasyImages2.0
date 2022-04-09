@@ -104,7 +104,7 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'version'=>'2.5.8',
-	'update'=>'2022-04-09 01:54:10',
+	'update'=>'2022-04-09 13:07:01',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">
