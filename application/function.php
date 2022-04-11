@@ -62,38 +62,32 @@ function checkLogin()
 
     // 无cookie
     if (empty($_COOKIE['auth'])) {
-        echo '
-            <script>
-            new $.zui.Messager("请登录后再上传!", {type: "danger" // 定义颜色主题 
-            }).show();
-            </script>';
-        header("refresh:1;url=" . $config['domain'] . "/admin/index.php");
+        return 201;
     }
 
-    // 存在cookie 但是cookie错误
+    // 存在cookie
     if (isset($_COOKIE['auth'])) {
+
         $getCOK = unserialize($_COOKIE['auth']);
 
+        // 无法读取cookie
         if (!$getCOK) {
-            echo '
-                <script> 
-                new $.zui.Messager("密码已更改，请重新登录", {
-					type: "special", // 定义颜色主题 
-					icon: "exclamation-sign" // 定义消息图标
-                }).show();
-                </script>';
-            header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
+            return 202;
         }
 
-        if ($getCOK[1] != $config['password'] && $getCOK[1] !== $guestConfig[$getCOK[0]]) {
-            echo '
-                <script> 
-                new $.zui.Messager("密码已更改，请重新登录", {
-					type: "special", // 定义颜色主题 
-					icon: "exclamation-sign" // 定义消息图标
-                }).show();
-                </script>';
-            exit(header("refresh:2;url=" . $config['domain'] . "/admin/index.php"));
+        // 密码错误
+        if ($getCOK[1] !== $config['password'] && $getCOK[1] !== $guestConfig[$getCOK[0]]) {
+            return 203;
+        }
+
+        // 管理员登陆
+        if ($getCOK[1] == $config['password']) {
+            return 204;
+        }
+
+        // 上传者账号登陆
+        if ($getCOK[1] == $guestConfig[$getCOK[0]]) {
+            return 205;
         }
     }
 }
@@ -105,7 +99,59 @@ function mustLogin()
 {
     global $config;
     if ($config['mustLogin']) {
-        checkLogin();
+
+        switch (checkLogin()) {
+            case 201:
+                echo '
+                <script>
+                new $.zui.Messager("本站已开启登陆上传, 请登录!", {
+                    type: "danger", // 定义颜色主题 
+                    icon: "bullhorn" // 定义消息图标
+                }).show();
+                </script>';
+                header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
+                break;
+            case 202:
+                echo '
+                <script> 
+                new $.zui.Messager("登陆超时，请重新登录", {
+					type: "special", // 定义颜色主题 
+					icon: "exclamation-sign" // 定义消息图标
+                }).show();
+                </script>';
+                header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
+                break;
+            case 203:
+                echo '
+                    <script> 
+                    new $.zui.Messager("密码已更改，请重新登录", {
+                        type: "special", // 定义颜色主题 
+                        icon: "exclamation-sign" // 定义消息图标
+                    }).show();
+                    </script>';
+                exit(header("refresh:2;url=" . $config['domain'] . "/admin/index.php"));
+                break;
+            case 205:
+                echo '
+                    <script> 
+                    new $.zui.Messager("上传者用户已登陆", {
+                        type: "success", // 定义颜色主题 
+                        icon: "check", // 定义消息图标
+                        placement:"bottom-right" // 消息位置
+                    }).show();
+                    </script>';
+                break;
+            case 204:
+                echo '
+                    <script> 
+                    new $.zui.Messager("管理员已登陆", {
+                        type: "success", // 定义颜色主题 
+                        icon: "check", // 定义消息图标
+                        placement:"bottom-right" // 消息位置
+                    }).show();
+                    </script>';
+                break;
+        }
     }
 }
 
@@ -354,7 +400,7 @@ function get_file_by_glob($dir_fileName_suffix, $type = 'list')
                     $res += get_file_by_glob($v . "/*", $type = 'number');
                 }
             }
-        }else{
+        } else {
             $res = 0;
         }
     }
@@ -516,6 +562,9 @@ function is_who_login($user)
     global $guestConfig;
     if (isset($_COOKIE['auth'])) {
         $getCOK = unserialize($_COOKIE['auth']);
+        if (!$getCOK) {
+            return false;
+        }
         if ($user == 'admin') {
             if ($getCOK[1] == $config['password']) return true;
         }

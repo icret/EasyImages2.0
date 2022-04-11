@@ -15,10 +15,10 @@ if (isset($_REQUEST['code'])) {
 		// 提交登录
 		if (isset($_POST['password']) and isset($_POST['user'])) {
 
+			global $guestConfig;
 			$postUser = strip_tags($_POST['user']);
 			$postPWD = strip_tags($_POST['password']);
 
-			global $guestConfig;
 			if ($postUser == $config['user'] || in_array($postPWD, $guestConfig)) {
 				if ($postPWD == $config['password'] || $postPWD == $guestConfig[$postUser]) {
 					// 将账号密码序列化后存储
@@ -37,15 +37,15 @@ if (isset($_REQUEST['code'])) {
                         new $.zui.Messager("密码错误", {type: "danger" // 定义颜色主题
                         }).show();
                         </script>';
-					exit(header("refresh:1;"));
+					header("refresh:2;");
 				}
 			} else {
 				echo '
-				<script> 
-					$.zui.Messager("用户名错误", {type: "danger" // 定义颜色主题
-					}).show();
-				</script>';
-				exit(header("refresh:2;"));
+					<script> 
+                    new $.zui.Messager("账号不存在", {type: "danger" // 定义颜色主题
+                    }).show();
+                    </script>';
+				header("refresh:2;");
 			}
 		}
 	} else {
@@ -93,13 +93,13 @@ if (isset($_GET['login'])) {
 	<div class="form-group">
 		<label for="account" class="col-sm-2">账号</label>
 		<div class="has-success col-md-3 col-sm-5">
-			<input type="text" name="user" id="account" class="form-control" value="" placeholder="请输入登录账号">
+			<input type="text" name="user" id="account" class="form-control" value="" placeholder="请输入登录账号" required="required">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="password" class="col-sm-2">密码</label>
 		<div class="has-success col-md-3 col-sm-5">
-			<input type="password" name="password" id="password" class="form-control" value="" placeholder="请输入登录密码">
+			<input type="password" name="password" id="password" class="form-control" value="" placeholder="请输入登录密码" required="required">
 		</div>
 		<input type="hidden" name="password" id="md5_password">
 	</div>
@@ -107,7 +107,7 @@ if (isset($_GET['login'])) {
 		<label class="col-sm-2">验证码</label>
 		<div class="has-success col-md-3 col-sm-5">
 			<label><img src="<?php echo $config["domain"] . "/application/captcha.php"; ?>" onClick="this.src='<?php echo $config["domain"] . "/application/captcha.php"; ?>?nocache='+Math.random()" title="点击换一张" /></label>
-			<input class="form-control" type="text" name="code" value="" placeholder="请输入上方4位数验证码 - 不区分大小写" />
+			<input class="form-control" type="text" name="code" value="" placeholder="请输入上方4位数验证码 - 不区分大小写" required="required" />
 		</div>
 	</div>
 	<div class="form-group">

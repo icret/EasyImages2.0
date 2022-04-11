@@ -192,7 +192,7 @@ if (isset($_GET['recycle_reimg'])) {
         <h5>本人仅为程序开源创作,如非法网站使用与本人无关,请勿用于非法用途;</h5>
         <h5>请为本人博客<a class="alert-link" href="https://blog.png.cm/" target="_blank">blog.png.cm</a>加上网址链接,谢谢支持。作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中相关来源信息(例如: <a class="alert-link" href="https://blog.png.cm/">本人博客</a>,邮箱等)。</h5>
         <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
-        <a href="https://www.kancloud.cn/easyimage/easyimage" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
+        <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
         <!-- <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a> -->
         <a href="https://qm.qq.com/cgi-bin/qm/qr?k=kpzasY8VdPfrJrpAYdk0rxQJjqddgyAm&jump_from=webapi" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> 问题反馈</button></a>
         <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
@@ -692,6 +692,11 @@ if (isset($_GET['recycle_reimg'])) {
                 <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
                 <h5>图床信息</h5>
                 <hr />
+                <h6>API 插件</h6>
+                <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Edge/Chrome</span></a>
+                <a href="https://www.kancloud.cn/easyimage/easyimage/2625228" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="使用ShareX上传">ShareX</span></a>
+                <a href="https://www.kancloud.cn/easyimage/easyimage/2625229" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="使用PicGo上传">PicGo</span></a>
+                <h6>图床依赖</h6>
                 <p>
                     <?php if (empty($config['TinyPng_key'])) : ?>
                         <span class="label label-badge label-warning" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng</span>
@@ -837,7 +842,7 @@ if (isset($_GET['recycle_reimg'])) {
             <!-- 上传用户管理 start-->
             <hr>
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return uploader_md5_post()">
-                <h5>上传者账号管理 | 开启登录上传后可添加</h5>
+                <h5>上传者账号 | 开启登陆上传后只能上传的账号</h5>
                 <div class="form-group">
                     <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
                         <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">

@@ -5,7 +5,13 @@ require __DIR__ . '/class.upload.php';
 
 // 检查登录
 if ($config['mustLogin']) {
-    checkLogin();
+    if (checkLogin() !== 204 && checkLogin() !== 205) {
+        exit(json_encode(array(
+            "result"    =>  "failed",
+            "code"      =>  401,
+            "message"   =>  "本站已开启登陆上传,您尚未登陆",
+        )));
+    }
 }
 
 // 黑/白IP名单上传

@@ -4,11 +4,6 @@ require_once APP_ROOT . '/application/class.upload.php';
 require_once APP_ROOT . '/config/api_key.php';
 
 header('Access-Control-Allow-Origin:*');
-$token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
-
-// 检查api合法性
-check_api($token);
-$tokenID = $tokenList[$token]['id'];
 
 // 黑/白IP名单上传
 if ($config['check_ip']) {
@@ -16,10 +11,25 @@ if ($config['check_ip']) {
         // 上传错误 code:403 未授权IP
         exit(json_encode(array(
             "result"    =>  "failed",
-            "code"      =>  403,
+            "code"      =>  401,
             "message"   =>  "黑名单内或白名单外用户不允许上传",
         )));
     }
+}
+$token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
+
+// 检查api合法性
+check_api($token);
+$tokenID = $tokenList[$token]['id'];
+
+if (empty($_FILES['image'])) {
+    exit(json_encode(
+        array(
+            "result"    =>  "NoFile",
+            "code"      =>  402,
+            "message"   =>  "没有选择上传的文件",
+        )
+    ));
 }
 
 $handle = new Upload($_FILES['image'], 'zh_CN');
@@ -102,7 +112,7 @@ if ($handle->uploaded) {
         // 鉴黄
         @process_checkImg($imageUrl);
         // 日志
-        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size,$tokenID);
+        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 水印        
         @water($handle->file_dst_pathname);
         // 压缩        
@@ -111,7 +121,7 @@ if ($handle->uploaded) {
         // 鉴黄
         @process_checkImg($imageUrl);
         // 日志
-        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size,$tokenID);
+        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 水印
         @water($handle->file_dst_pathname);
         // 压缩
