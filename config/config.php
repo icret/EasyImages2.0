@@ -83,7 +83,7 @@ var _hmt = _hmt || [];
 	'chart_on'=>1,
 	'check_ip'=>0,
 	'check_ip_model'=>0,
-	'check_ip_list'=>'127.0.0.1',
+	'check_ip_list'=>'',
 	'public'=>0,
 	'public_list'=>Array
 		(
@@ -104,7 +104,7 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'version'=>'2.5.8',
-	'update'=>'2022-04-11 13:31:22',
+	'update'=>'2022-04-11 13:38:41',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

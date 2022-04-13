@@ -1033,9 +1033,8 @@ function get_whole_url($search = null)
     if ($search) {
         // 返回指定符号之前
         return substr($whole_domain, 0, strrpos($whole_domain, $search));
-    } else {
-        return $whole_domain;
     }
+    return $whole_domain;
 }
 
 /**

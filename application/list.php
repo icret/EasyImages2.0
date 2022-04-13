@@ -79,49 +79,49 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       </div>
     </div>
     <!-- 按格式 -->
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-md-2 col-xs-6">
-        <form action="list.php" method="get">
+        <form action="<php echo '?' . http_build_query($httpUrl) . '&'; ?>" method="get">
           <div class="input-group">
-            <select name="&search" class="form-control input-sm">
+            <select name="search" class="form-control input-sm">
               <option value="jpg">JPG</option>
               <option value="png">PNG</option>
               <option value="gif">Gif</option>
-              <option value="gif">WEBP</option>
+              <option value="webp">WEBP</option>
             </select>
             <span class="input-group-btn">
               <input type="submit" value="按格式" class="btn btn-primary input-sm" />
             </span>
           </div>
         </form>
-      </div>
-      <!-- <div class="col-md-2 col-xs-6">
-        <div class="btn-group">
-          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
-          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
-          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
-          <a class="btn btn-sm" href="<php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
-        </div>
       </div> -->
-      <!-- 按日期-->
-      <div class="col-md-2 col-xs-6">
-        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
-          <div class="input-group">
-            <span class="input-group-addon fix-border fix-padding"></span>
-            <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
-            <span class="input-group-btn">
-              <button type="submit" class="btn btn-primary input-sm">按日期</button>
-            </span>
-          </div>
-        </form>
+    <div class="col-md-2 col-xs-6">
+      <div class="btn-group">
+        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
+        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
+        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
+        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
       </div>
     </div>
+    <!-- 按日期-->
+    <div class="col-md-2 col-xs-6">
+      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+        <div class="input-group">
+          <span class="input-group-addon fix-border fix-padding"></span>
+          <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary input-sm">按日期</button>
+          </span>
+        </div>
+      </form>
+    </div>
   </div>
-  <!-- 返回顶部 -->
-  <div style="display: none;" id="rocket-to-top">
-    <div style="opacity:0;display: block;" class="level-2"></div>
-    <div class="level-3"></div>
-  </div>
+</div>
+<!-- 返回顶部 -->
+<div style="display: none;" id="rocket-to-top">
+  <div style="opacity:0;display: block;" class="level-2"></div>
+  <div class="level-3"></div>
+</div>
 </div>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">

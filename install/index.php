@@ -109,25 +109,21 @@ function checkPASS($name)
             </tr>
         </tbody>
     </table>
-    <!-- 使用按钮 -->
-    <p class="text-primary">图床需要权限0755,所有者用户组为www, 命令: <code>chmod -R 0755 /网站的绝对目录/*</code>
-        <a href="./README/chmod.png" data-toggle="lightbox" class="btn btn-mini btn-primary">宝塔面板演示</a>
-    </p>
     <?php
     $checkres = array($phpEnv, $fileinfo, $gd, $i_wjj, $file_php, $userINI);
 
-    if (in_array(false, $checkres)) {
-        echo '<p class="text-danger">如果你的PHP版本较低或者不想安装上述PHP扩展请删除<code>install</code>目录</p>
-        <a href="./index.php" ><button class="btn btn-lg btn-danger" type="button">请满足上述要求后点击刷新</button></a>';
-    } else {
-        echo '
-    <form action="install.php" method="post">
-        <input type="hidden" name="check" value="checked" readonly>
-        <input type="submit" class="btn btn-lg btn-primary" value="下一步(1/2)" >
-    </form>
-    ';
-    }
-    ?>
+    if (in_array(false, $checkres)) : ?>
+        <p class="text-primary">对于Liunx主机可以使用以下命令: <a href="./README/chmod.png" data-toggle="lightbox" class="btn btn-mini btn-primary">宝塔面板演示</a></p>
+        <h6 class="code">chmod 755 -R /data/wwwroot/<?php echo $_SERVER['HTTP_HOST']; ?></h6>
+        <h6 class="code">chown -R www:www /data/wwwroot/<?php echo $_SERVER['HTTP_HOST']; ?></h6>
+        <p class="text-danger">如果你的PHP版本较低或者不想安装上述PHP扩展请删除<code>install</code>目录</p>
+        <a href="./index.php"><button class="btn btn-danger" type="button">请满足上述要求后点击刷新</button></a>
+    <?php else : ?>
+        <form action="install.php" method="post">
+            <input type="hidden" name="check" value="checked" readonly>
+            <input type="submit" class="btn btn-primary" value="下一步(1/2)">
+        </form>
+    <?php endif; ?>
     <!-- install bottom HTML start -->
     <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-sm">
