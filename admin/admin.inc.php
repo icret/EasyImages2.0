@@ -194,7 +194,7 @@ if (isset($_GET['recycle_reimg'])) {
         <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
         <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
         <!-- <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a> -->
-        <a href="https://qm.qq.com/cgi-bin/qm/qr?k=kpzasY8VdPfrJrpAYdk0rxQJjqddgyAm&jump_from=webapi" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> 问题反馈</button></a>
+        <a href="https://jq.qq.com/?_wv=1027&k=OBIlf2y7" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> 954441002</button></a>
         <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
         <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
     </div>
@@ -210,7 +210,7 @@ if (isset($_GET['recycle_reimg'])) {
             <li><a data-tab href="#Content11">图片回收<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'recycle', 'number'); ?></span></a></li>
             <li><a data-tab href="#Content7">可疑图片<span class="label label-badge label-success"><?php echo get_file_by_glob(APP_ROOT . $config['path'] . 'suspic', 'number'); ?></span></a></li>
             <li><a data-tab href="#Content3">广告设置</a></li>
-            <li><a href="<?php echo $config['domain'] . '/admin/manager.php?p=' . date('Y/m/d'); ?>" target="_blank">文件管理</a></li>
+            <li><a data-tab href="#Content14">文件管理</a></li>
             <li><a data-tab href="#Content6">图床安全</a></li>
             <li><a data-tab href="#Content10">账号密码</a></li>
             <li><a data-tab href="#Content8">系统信息</a></li>
@@ -302,7 +302,7 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <label>单次最多上传 | 当前: </label><label id="maxUploadFiles"><?php echo $config['maxUploadFiles']; ?></label><label>张</label>
-                    <input type="range" class="form-control" name="maxUploadFiles" value="<?php echo $config['maxUploadFiles']; ?>" min="1" max="100" step="1" onchange="document.getElementById('maxUploadFiles').innerHTML=value">
+                    <input type="range" class="form-control" name="maxUploadFiles" value="<?php echo $config['maxUploadFiles']; ?>" min="1" max="200" step="1" onchange="document.getElementById('maxUploadFiles').innerHTML=value">
                 </div>
                 <div class="form-group">
                     <label>最大上传宽度 | 当前: </label><label id="maxWidth"><?php echo $config['maxWidth']; ?></label><label>px</label>
@@ -361,21 +361,6 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade " id="Content4">
-            <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" onSubmit="getStr();" target="_blank">
-                <p id="delimgurl"></p>
-                <div class="form-group">
-                    <label for="del">删除单张图片文件: </label>
-                    <input type="url" name="url" class="form-control input-sm" id="del" placeholder="请输入图片链接">
-                </div>
-                <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
-            </form>
-            <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group">
-                    <label for="delDir" style="color:red">删除指定日期文件: </label>
-                    <input type="text" class="form-control form-date input-sm" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly="">
-                </div>
-                <button type="submit" class="btn btn-sm btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复! ');">删除文件夹</button>
-            </form>
             <form action="../application/compressing.php" method="post" target="_blank">
                 <div class="form-group">
                     <label for="exampleInputInviteCode1">压缩文件夹</label>
@@ -693,7 +678,8 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5>图床信息</h5>
                 <hr />
                 <h6>API 插件</h6>
-                <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Edge/Chrome</span></a>
+                <a href="https://microsoftedge.microsoft.com/addons/detail/%E7%AE%80%E5%8D%95%E5%9B%BE%E5%BA%8A-edge-version/hdafcoenpmebcjjcccojdlhfnndelefk" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Edge</span></a>
+                <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Chrome</span></a>
                 <a href="https://www.kancloud.cn/easyimage/easyimage/2625228" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="使用ShareX上传">ShareX</span></a>
                 <a href="https://www.kancloud.cn/easyimage/easyimage/2625229" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="使用PicGo上传">PicGo</span></a>
                 <h6>图床依赖</h6>
@@ -709,12 +695,15 @@ if (isset($_GET['recycle_reimg'])) {
                         <span class="label label-badge label-success" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</span>
                     <?php endif; ?>
                     <a href="https://easysoft.github.io/zui/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="前端框架">ZUI</span></a>
+                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="图像处理类">verot</span></a>
+                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
                     <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo $config['version']; ?></span>
                     <?php if (getVersion() !== $config['version']) : ?>
                         <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-warning" data-toggle="tooltip" title="Github有更新,更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步最新版本号"><?php echo getVersion(); ?> New</span></a>
                     <?php endif; ?>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
                 </p>
+                <p class="text-muted"><i class="icon icon-certificate"> EasyImage2.0简单图床构建于众多优秀的开源项目之上,非常感谢这些项目!</i></p>
             </div>
         </div>
         <div class="tab-pane fade" id="Content9">
@@ -765,10 +754,10 @@ if (isset($_GET['recycle_reimg'])) {
                     </label>
                 </div>
                 <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="删除链接是经过加密的">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
                         <input type="hidden" name="show_user_hash_del" value="0">
                         <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">上传后显示删除链接</label>
+                        <label style="font-weight: bold">删除</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -800,7 +789,7 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>默认游客浏览数量 | 当前: </label>
+                    <label>广场默认浏览数量 | 当前: </label>
                     <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
 
                     <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" data-toggle="tooltip" title="可在网址后填写参数实时更改预览数量 如: https://png.cm/application/list.php?num=3">
@@ -1042,6 +1031,28 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
                 <button type="submit" class="btn btn-primary">保存</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="Content14">
+            <h4>文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h4>
+            <a class="btn btn-mini btn-primary" href="<?php echo $config['domain'] . '/admin/manager.php?p=' . date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
+            <hr />
+            <h4>删除文件 <small>* 删除后不可恢复</small></h4>
+            <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank">
+                <p id="delimgurl"></p>
+                <div class="form-group">
+                    <label for="del" class="text-primary">删除单张图片文件: </label>
+                    <input type="url" name="url" class="form-control input-sm" id="del" placeholder="请输入图片链接">
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
+            </form>
+            <br />
+            <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <div class="form-group">
+                    <label for="delDir" class="text-danger">删除指定日期文件: </label>
+                    <input type="text" class="form-control form-date input-sm" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly="">
+                </div>
+                <button type="submit" class="btn btn-sm btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复! ');">删除文件夹</button>
             </form>
         </div>
     </div>

@@ -11,7 +11,7 @@
 [![jsdelivr](https://data.jsdelivr.com/v1/package/gh/icret/EasyImages2.0/badge)](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@EasyImage2.0/)
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
-[![QQ group](https://pub.idqqimg.com/wpa/images/group.png)](https://qm.qq.com/cgi-bin/qm/qr?k=TmGoIK7BXij_CR3lqZoJZu3_trPwtJ09&jump_from=webapi)
+[![QQ group](https://pub.idqqimg.com/wpa/images/group.png)](https://jq.qq.com/?_wv=1027&k=jfXRHU8Y)
 
 >[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/)
 >

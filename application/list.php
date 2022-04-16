@@ -126,6 +126,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.css">
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
@@ -178,76 +180,107 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   }
   // 回收图片
   function recycle_img() {
-    var r = confirm("确认要放入回收站?\n* 可在可疑图片中恢复!")
-    if (r == true) {
-      obj = document.getElementsByName("checkbox");
-      check_val = [];
-      for (k in obj) {
-        //判断复选框是否被选中
-        if (obj[k].checked)
-          //获取被选中的复选框的值
-          check_val.push(obj[k].value);
-        console.log(check_val);
+    bootbox.confirm({
+      message: "确认要放入回收站? <br /> 可在可疑图片中恢复!",
+      buttons: {
+        confirm: {
+          label: '确定',
+          className: 'btn-success'
+        },
+        cancel: {
+          label: '取消',
+          className: 'btn-danger'
+        }
+      },
+      callback: function(result) {
+        if (result == true) {
+          obj = document.getElementsByName("checkbox");
+          check_val = [];
+          for (k in obj) {
+            //判断复选框是否被选中
+            if (obj[k].checked)
+              //获取被选中的复选框的值
+              check_val.push(obj[k].value);
+            console.log(check_val);
+          }
+          $.post("./post_del.php", {
+            'recycle_url_array': check_val
+          }, );
+          new $.zui.Messager("放入回收站成功", {
+            type: "success", // 定义颜色主题 
+            icon: "ok-sign" // 定义消息图标
+          }).show();
+          // 延时2秒刷新
+          window.setTimeout(function() {
+            window.location.reload();
+          }, 1500)
+        } else {
+          new $.zui.Messager("取消回收", {
+            type: "primary", // 定义颜色主题 
+            icon: "info-sign" // 定义消息图标
+          }).show();
+        }
+        console.log('是否回收图片: ' + result);
       }
-      $.post("./post_del.php", {
-        'recycle_url_array': check_val
-      }, );
-      new $.zui.Messager("放入回收站成功", {
-        type: "success", // 定义颜色主题 
-        icon: "ok-sign" // 定义消息图标
-      }).show();
-      // 延时2秒刷新
-      window.setTimeout(function() {
-        window.location.reload();
-      }, 1500)
-    } else {
-      new $.zui.Messager("取消回收", {
-        type: "primary", // 定义颜色主题 
-        icon: "info-sign" // 定义消息图标
-      }).show();
-    }
+    });
+
   }
   // 删除图片
   function delete_img() {
-    var r = confirm("确认要删除?\n* 删除文件夹后将无法恢复!")
-    if (r == true) {
-      obj = document.getElementsByName("checkbox");
-      check_val = [];
-      for (k in obj) {
-        //判断复选框是否被选中
-        if (obj[k].checked)
-          //获取被选中的复选框的值
-          check_val.push(obj[k].value);
-        console.log(check_val);
-      }
-      $.post("./post_del.php", {
-          'del_url_array': check_val
+    bootbox.confirm({
+      message: "确认要删除?<br />* 删除文件夹后将无法恢复!",
+      buttons: {
+        confirm: {
+          label: '确定',
+          className: 'btn-success'
         },
-        function(data) {
-          if (data.search('success') > 0) {
-            new $.zui.Messager("删除成功", {
-              type: "success", // 定义颜色主题 
-              icon: "ok-sign" // 定义消息图标
-            }).show();
-            // 延时2秒刷新
-            window.setTimeout(function() {
-              window.location.reload();
-            }, 1500)
-          } else {
-            new $.zui.Messager("删除失败 请登录后再删除!", {
-              type: "danger", // 定义颜色主题 
-              icon: "exclamation-sign" // 定义消息图标
-            }).show();
-            // 延时2s跳转			
-            window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
+        cancel: {
+          label: '取消',
+          className: 'btn-danger'
+        }
+      },
+      callback: function(result) {
+        if (result == true) {
+          obj = document.getElementsByName("checkbox");
+          check_val = [];
+          for (k in obj) {
+            //判断复选框是否被选中
+            if (obj[k].checked)
+              //获取被选中的复选框的值
+              check_val.push(obj[k].value);
+            console.log(check_val);
           }
-        });
-    } else {
-      new $.zui.Messager("取消删除", {
-        type: "primary", // 定义颜色主题 
-        icon: "info-sign" // 定义消息图标
-      }).show();
-    }
+          $.post("./post_del.php", {
+              'del_url_array': check_val
+            },
+            function(data) {
+              if (data.search('success') > 0) {
+                new $.zui.Messager("删除成功", {
+                  type: "success", // 定义颜色主题 
+                  icon: "ok-sign" // 定义消息图标
+                }).show();
+                // 延时2秒刷新
+                window.setTimeout(function() {
+                  window.location.reload();
+                }, 1500)
+              } else {
+                new $.zui.Messager("删除失败 请登录后再删除!", {
+                  type: "danger", // 定义颜色主题 
+                  icon: "exclamation-sign" // 定义消息图标
+                }).show();
+                // 延时2s跳转			
+                window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
+              }
+            });
+        } else {
+          new $.zui.Messager("取消删除", {
+            type: "primary", // 定义颜色主题 
+            icon: "info-sign" // 定义消息图标
+          }).show();
+        }
+        console.log('是否删除图片: ' + result);
+      }
+    });
   }
 
   // 返回顶部

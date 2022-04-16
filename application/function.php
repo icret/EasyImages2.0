@@ -1278,7 +1278,7 @@ function isWebpAnimated($src)
 }
 
 /**
- * 根据URL判断是否本地局域网访问（PHP代码函数）
+ * 根据URL判断是否本地局域网访问(PHP代码函数)
  * https://blog.csdn.net/monxinmonxin0/article/details/44854383
  * @param $url 要判断的网址
  * @return bool 是|否
@@ -1287,7 +1287,6 @@ function is_local($url)
 {
     if (stristr($url, 'localhost') || stristr($url, '127.') || stristr($url, '192.')) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }

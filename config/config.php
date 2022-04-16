@@ -103,8 +103,8 @@ var _hmt = _hmt || [];
 	'tinyfilemanager'=>1,
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
-	'version'=>'2.5.8',
-	'update'=>'2022-04-11 13:38:41',
+	'version'=>'2.5.9',
+	'update'=>'2022-04-16 13:19:50',
 	'terms'=>'<div class="container">
   <div class="row">
     <div class="col-xs-3">

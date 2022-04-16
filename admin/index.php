@@ -89,6 +89,27 @@ if (isset($_GET['login'])) {
 	}
 }
 ?>
+<!-- 忘记密码 -->
+<div class="modal fade" id="fogot">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">关闭</span></button>
+				<h4 class="modal-title">
+					<i class="icon icon-bell-alt"> </i>忘记账号/密码?
+				</h4>
+			</div>
+			<div class="modal-body">
+				<p class="text-primary">忘记账号可以打开-><code>/config/config.php</code>文件->找到user对应的键值->填入</p>
+				<p class="text-success">忘记密码请将密码->转换成MD5小写-><a href="https://md5jiami.bmcx.com/" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
+				<h4 class="text-danger">更改后会立即生效并重新登录,请务必牢记账号和密码! </h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
 <form class="form-horizontal" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
 	<div class="form-group">
 		<label for="account" class="col-sm-2">账号</label>
@@ -115,6 +136,9 @@ if (isset($_GET['login'])) {
 			<div class="checkbox">
 				<label title="选不选都记得你,想退出就点击退出才可以哦!">
 					<input type="checkbox" checked="checked"> 记住我
+				</label>
+				<label title="选不选都记得你,想退出就点击退出才可以哦!">
+					<a href="#fogot" data-moveable="inside" data-remember-pos="false" data-toggle="modal" data-target="#fogot" data-position="center">忘记账号/密码?</a>
 				</label>
 			</div>
 		</div>
