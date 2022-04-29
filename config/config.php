@@ -20,7 +20,7 @@ $config=Array
 	'imgName'=>'default',
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
-	'watermark'=>2,
+	'watermark'=>0,
 	'waterText'=>'简单图床 - png.cm',
 	'waterPosition'=>0,
 	'textColor'=>'rgba(255,0,0,1)',
@@ -106,7 +106,7 @@ var _hmt = _hmt || [];
 	'hide'=>0,
 	'hide_key'=>'EasyImage2.0',
 	'version'=>'2.6.0',
-	'update'=>'2022-04-29 16:38:49',
+	'update'=>'2022-04-29 16:49:44',
 	'terms'=>'<div class="container" style="margin-bottom: 80px;">
   <div class="row">
     <div class="col-xs-3">
