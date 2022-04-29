@@ -1,4 +1,8 @@
-<?php require_once __DIR__ . '/header.php';
+<?php
+
+/** 广场页面 */
+require_once __DIR__ . '/header.php';
+/** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="row" style="margin-bottom:100px">

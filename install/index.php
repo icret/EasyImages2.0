@@ -62,7 +62,7 @@ function checkPASS($name)
 <body class="container">
     <!-- install header html end -->
 
-    <h1 style="text-align:center">EasyIamge 2.0 安装环境检测</h1>
+    <h1 class="header-dividing" style="text-align:center">EasyIamge 2.0 安装环境检测</h1>
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
@@ -113,10 +113,12 @@ function checkPASS($name)
     $checkres = array($phpEnv, $fileinfo, $gd, $i_wjj, $file_php, $userINI);
 
     if (in_array(false, $checkres)) : ?>
-        <p class="text-primary">对于Liunx主机可以使用以下命令: <a href="./README/chmod.png" data-toggle="lightbox" class="btn btn-mini btn-primary">宝塔面板演示</a></p>
+        <p class="text-primary">如果使用Liunx主机权限错误可以使用以下命令: </p>
         <h6 class="code">chmod 755 -R /data/wwwroot/<?php echo $_SERVER['HTTP_HOST']; ?></h6>
         <h6 class="code">chown -R www:www /data/wwwroot/<?php echo $_SERVER['HTTP_HOST']; ?></h6>
-        <p class="text-danger">如果你的PHP版本较低或者不想安装上述PHP扩展请删除<code>install</code>目录</p>
+        <a href="./README/chmod.png" data-toggle="lightbox" class="btn btn-mini btn-primary">宝塔面板赋予权限演示</a>
+        <hr />
+        <p class="text-danger">如果你不想安装上述PHP扩展或跳过安装过程请删除<code>install</code>目录 <a href="https://www.kancloud.cn/easyimage/easyimage/2635850" target="_blank" class="btn btn-mini btn-primary">跳过安装页面</a></p>
         <a href="./index.php"><button class="btn btn-danger" type="button">请满足上述要求后点击刷新</button></a>
     <?php else : ?>
         <form action="install.php" method="post">

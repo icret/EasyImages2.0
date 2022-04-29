@@ -1,5 +1,7 @@
-
 <?php
+
+namespace Verot\Upload;
+
 require __DIR__ . '/function.php';
 require __DIR__ . '/class.upload.php';
 
@@ -70,8 +72,8 @@ if ($handle->uploaded) {
         $pathIMG = config_path() . $handle->file_dst_name;
         $imageUrl = $config['imgurl'] . $pathIMG;
 
-        // 原图保护 key值是由crc32加密的登录密码
-        $hide_original = $config['hide'] == 1 ? $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['password'])) : $imageUrl;
+        // 原图保护 key值是由crc32加密的hide_key
+        $hide_original = $config['hide'] == 1 ? $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key'])) : $imageUrl;
 
         // 关闭上传后显示加密删除链接
         if ($config['show_user_hash_del']) {

@@ -4,9 +4,9 @@ session_start(); //设置session
 require __DIR__ . "/function.php";
 
 //创建背景画布
-$img_w = 270;
+$img_w = 305;
 /*宽*/
-$img_h = 50;
+$img_h = 54;
 
 $img = imagecreatetruecolor($img_w, $img_h);
 $bg_color = imagecolorallocate($img, 0xcc, 0xcc, 0xcc);

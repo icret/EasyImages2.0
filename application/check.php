@@ -38,10 +38,10 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
                 foreach ($expand as $val) {
                     if (extension_loaded($val)) {
                         echo '
-                            <p style="color:green">' . $val . " - 已安装</p>";
+                            <p style="color:green">' . strtoupper($val) . " - 已安装</p>";
                     } else {
                         echo "<script language='javascript'>alert('$val - 未安装')</script>";
-                        echo '<p style="color:red">' . $val . " - 未安装</p>";
+                        echo '<p style="color:red">' . strtoupper($val) . " - 未安装</p>";
                     }
                 }
                 // 文件权限检测

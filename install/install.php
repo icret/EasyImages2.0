@@ -48,7 +48,7 @@ if ($state !== 'checked') {
 
 <body class="container">
     <!-- install header html end -->
-    <div class="col-md-12" style="height: 120px;"></div>
+    <h1 class="header-dividing" style="text-align:center">EasyIamge 2.0 网站配置</h1>
     <div class="col-md-12" style="text-align: center;">
         <form class="form-horizontal" action="./contorl.php" method="post">
             <div class="form-group">
@@ -76,7 +76,6 @@ if ($state !== 'checked') {
                     <input type="text" class="form-control inp" name="password" value="" required="required" placeholder="请使用英文输入法输入密码并不小于8位数" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="col-sm-2 ">确认密码</label>
                 <div class="col-md-6 col-sm-10">
@@ -103,20 +102,6 @@ if ($state !== 'checked') {
             </div>
         </form>
     </div>
-    <script>
-        var password = document.querySelector('.inp');
-        var message = document.querySelector('.message');
-
-        password.onblur = function() {
-            if (this.value.length < 8 || this.value.length > 18) {
-                message.innerHTML = '密码长度错误,应为8~18位';
-                message.className = 'message wrong';
-            } else {
-                message.innerHTML = '密码长度正确';
-                message.className = 'message right';
-            }
-        }
-    </script>
     <!-- install bottom HTML start -->
     <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-sm">
@@ -139,12 +124,27 @@ if ($state !== 'checked') {
         </div>
     </div>
     <script>
+        // 双重验证密码
+        var password = document.querySelector('.inp');
+        var message = document.querySelector('.message');
+
+        password.onblur = function() {
+            if (this.value.length < 8 || this.value.length > 18) {
+                message.innerHTML = '密码长度错误,应为8~18位';
+                message.className = 'message wrong';
+            } else {
+                message.innerHTML = '密码长度正确';
+                message.className = 'message right';
+            }
+        }
+
         // NProgress
         NProgress.configure({
             showSpinner: false
         });
         NProgress.set(0.5);
         NProgress.set(0.9);
+        
         // js二维码 获取当前网址并赋值给id=text的value
         document.getElementById("text").value = window.location.href;
         var qrcode = new QRCode(document.getElementById("qrcode"), {

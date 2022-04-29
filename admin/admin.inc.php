@@ -194,7 +194,8 @@ if (isset($_GET['recycle_reimg'])) {
         <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
         <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
         <!-- <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a> -->
-        <a href="https://jq.qq.com/?_wv=1027&k=OBIlf2y7" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> 954441002</button></a>
+        <a href="https://jq.qq.com/?_wv=1027&k=OBIlf2y7" target="_blank" data-toggle="tooltip" title="954441002"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> QQ群</button></a>
+        <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床TG群"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-plane"></i> Telegram</button></a>
         <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
         <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
     </div>
@@ -363,7 +364,7 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade " id="Content4">
             <form action="../application/compressing.php" method="post" target="_blank">
                 <div class="form-group">
-                    <label for="exampleInputInviteCode1">压缩文件夹</label>
+                    <h5 class="header-dividing">压缩文件夹</h5>
                     <input type="text" class="form-control form-date input-sm" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
                 </div>
                 <div class="radio-primary">
@@ -379,7 +380,7 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade " id="Content5">
-            <h5>外部KEY</h5>
+            <h5 class="header-dividing">外部KEY</h5>
             <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                 <div class="form-group">
                     <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key &nbsp;</a></label>
@@ -397,8 +398,8 @@ if (isset($_GET['recycle_reimg'])) {
                 <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn-mini btn-primary">保存</button>
             </form>
-            <hr>
-            <h5>已存在Token</h5>
+            <h5 class="page-header">Token列表:</h5>
+            <p><kbd>API调用网址:<?php echo $config['domain']; ?>/api/index.php</kbd></p>
             <table class="table table-hover table-bordered table-condensed table-responsive visible-xs visible-sm" style="margin-top: 10px;">
                 <thead>
                     <tr>
@@ -481,7 +482,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <div class="switch switch-inline">
                         <input type="hidden" name="static_cdn" value="0">
                         <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">静态文件CDN | 末尾不加'/'</label>
+                        <label style="font-weight: bold">静态文件CDN地址 | 末尾不加'/'</label>
                     </div>
                     <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
                 </div>
@@ -497,37 +498,37 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <hr />
+                        <h5 class="header-dividing">其他设置</h5>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="公告每次打开浏览器访问网站会重新打开弹窗">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="每次重新打开浏览器访问网站会展示公告弹窗">
                                 <input type="hidden" name="notice_status" value="0">
                                 <input type="checkbox" name="notice_status" value="1" <?php if ($config['notice_status']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">弹窗公告</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="开启登陆上传">
                                 <input type="hidden" name="mustLogin" value="0">
                                 <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">登录上传</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="开启API上传接口">
                                 <input type="hidden" name="apiStatus" value="0">
                                 <input type="checkbox" name="apiStatus" value="1" <?php if ($config['apiStatus']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">API 上传</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="隐藏图片直链 | *注意: key与登录密码绑定,更改登录密码后key失效">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="隐藏图片直链 | *注意: key值与账号密码->源图保护Key绑定,更改源图保护Key后所有链接失效">
                                 <input type="hidden" name="hide" value="0">
                                 <input type="checkbox" name="hide" value="1" <?php if ($config['hide']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">原图保护</label>
+                                <label style="font-weight: bold">源图保护</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="所有用户上传的图片使用加密链接删除后是否进入回收站">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="所有用户上传的图片使用加密链接删除的图片会进入回收站">
                                 <input type="hidden" name="image_recycl" value="0">
                                 <input type="checkbox" name="image_recycl" value="1" <?php if ($config['image_recycl']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">图片回收</label>
@@ -543,17 +544,17 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                     <div class="col-md-12">
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件; 经测试二十万条数据并不影响速度!">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
                                 <input type="hidden" name="upload_logs" value="0">
                                 <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">上传日志</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="PHP扩展 | 安全设置 | 鉴黄 | 版本 检测">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="检测图床的 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径">
                                 <input type="hidden" name="checkEnv" value="0">
                                 <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">网站检测</label>
+                                <label style="font-weight: bold">图床自检</label>
                             </div>
                         </div>
                     </div>
@@ -564,37 +565,41 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
                         <label style="font-weight: bold">开放数据<i class="icon icon-long-arrow-down"></i></label>
                     </div>
-                    <div class="form-group">
-                        <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
-                            <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=today">
-                            <input type="checkbox" name="public_list[]" value="today" id="today" <?php if (in_array('today', $config['public_list']))  echo 'checked'; ?>><label for="today">今日</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=yesterday">
-                            <input type="checkbox" name="public_list[]" value="yesterday" id="yesterday" <?php if (in_array('yesterday', $config['public_list']))  echo 'checked'; ?>><label for="yesterday">昨日</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=total_space">
-                            <input type="checkbox" name="public_list[]" value="total_space" id="total_space" <?php if (in_array('total_space', $config['public_list']))  echo 'checked'; ?>><label for="total_space">总空间</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=used_space">
-                            <input type="checkbox" name="public_list[]" value="used_space" id="used_space" <?php if (in_array('used_space', $config['public_list']))  echo 'checked'; ?>><label for="used_space">已用</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=free_space">
-                            <input type="checkbox" name="public_list[]" value="free_space" id="free_space" <?php if (in_array('free_space', $config['public_list']))  echo 'checked'; ?>><label for="free_space">剩余</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=image_used">
-                            <input type="checkbox" name="public_list[]" value="image_used" id="image_used" <?php if (in_array('image_used', $config['public_list']))  echo 'checked'; ?>><label for="image_used">图片占用</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=file">
-                            <input type="checkbox" name="public_list[]" value="file" id="file" <?php if (in_array('file', $config['public_list']))  echo 'checked'; ?>><label for="file">文件数量</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=dir">
-                            <input type="checkbox" name="public_list[]" value="dir" id="dir" <?php if (in_array('dir', $config['public_list']))  echo 'checked'; ?>><label for="dir">文件夹数量</label>
-                        </label>
-                        <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=month">
-                            <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日</label>
-                        </label>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
+                                    <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=today">
+                                    <input type="checkbox" name="public_list[]" value="today" id="today" <?php if (in_array('today', $config['public_list']))  echo 'checked'; ?>><label for="today">今日</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=yesterday">
+                                    <input type="checkbox" name="public_list[]" value="yesterday" id="yesterday" <?php if (in_array('yesterday', $config['public_list']))  echo 'checked'; ?>><label for="yesterday">昨日</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=total_space">
+                                    <input type="checkbox" name="public_list[]" value="total_space" id="total_space" <?php if (in_array('total_space', $config['public_list']))  echo 'checked'; ?>><label for="total_space">总空间</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=used_space">
+                                    <input type="checkbox" name="public_list[]" value="used_space" id="used_space" <?php if (in_array('used_space', $config['public_list']))  echo 'checked'; ?>><label for="used_space">已用</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=free_space">
+                                    <input type="checkbox" name="public_list[]" value="free_space" id="free_space" <?php if (in_array('free_space', $config['public_list']))  echo 'checked'; ?>><label for="free_space">剩余</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=image_used">
+                                    <input type="checkbox" name="public_list[]" value="image_used" id="image_used" <?php if (in_array('image_used', $config['public_list']))  echo 'checked'; ?>><label for="image_used">图片占用</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=file">
+                                    <input type="checkbox" name="public_list[]" value="file" id="file" <?php if (in_array('file', $config['public_list']))  echo 'checked'; ?>><label for="file">文件数量</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=dir">
+                                    <input type="checkbox" name="public_list[]" value="dir" id="dir" <?php if (in_array('dir', $config['public_list']))  echo 'checked'; ?>><label for="dir">文件夹数量</label>
+                                </label>
+                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=month">
+                                    <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日上传</label>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -605,6 +610,7 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content7">
+            <h5 class="header-dividing">可疑图片<small> 鉴黄查到的可疑图片</small></h5>
             <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
             <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
             <p>获得key后打开->API 设置->Moderate Key->填入 </p>
@@ -655,28 +661,26 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class=" tab-pane fade" id="Content8">
             <div class="alert alert-primary">
-                <h5>系统信息</h5>
-                <hr />
+                <h5 class="header-dividing">系统信息</h5>
                 <p class="text-ellipsis">服务系统: <?PHP echo php_uname('s') . ' <small class="text-muted">' . php_uname() . '</small>'; ?></p>
                 <p class="text-ellipsis">Web服务: <?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
                 <p class="text-ellipsis">服务器IP: <?PHP echo  $_SERVER["SERVER_ADDR"] ?></p>
                 <p class="text-ellipsis">系统时间: <?PHP echo date("Y-m-d H:i:s"); ?></p>
-                <p class="text-ellipsis">已用磁盘: <?php echo  getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) ?></p>
-                <p class="text-ellipsis">剩余磁盘: <?php echo  getDistUsed(disk_free_space(__DIR__)); ?></p>
-                <h5>PHP信息</h5>
-                <hr />
-                <p class="text-ellipsis">PHP Version: <?php echo  phpversion(); ?></p>
+                <p class="text-ellipsis">占用内存: <?php echo getDistUsed(memory_get_usage()); ?></p>
+                <p class="text-ellipsis">占用磁盘: <?php echo getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) ?></p>
+                <p class="text-ellipsis">剩余磁盘: <?php echo getDistUsed(disk_free_space(__DIR__)); ?></p>
+                <h5 class="header-dividing">PHP信息</h5>
+                <p class="text-ellipsis">PHP Version: <?php echo phpversion(); ?></p>
+                <p class="text-ellipsis">PHP Model: <?PHP echo php_sapi_name(); ?></p>
                 <p class="text-ellipsis">PHP Max UP: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
-                <p class="text-ellipsis">POST Max UP: <?php echo ini_get('post_max_size'); ?></p>
-                <p class="text-ellipsis">PHP Max Time: <?PHP echo get_cfg_var("max_execution_time") . "秒"; ?></p>
+                <p class="text-ellipsis">PHP Max Time: <?PHP echo get_cfg_var("max_execution_time") . "s"; ?></p>
                 <p class="text-ellipsis">PHP Max Memery: <?PHP echo get_cfg_var("memory_limit"); ?></p>
+                <p class="text-ellipsis">POST Max Upload: <?php echo ini_get('post_max_size'); ?></p>
                 <p class="text-ellipsis">GD: <?php echo (gd_info()["GD Version"]); ?></p>
-                <h5>我的信息</h5>
-                <hr />
+                <h5 class="header-dividing">我的信息</h5>
                 <p class="text-ellipsis">Your IP: <?php echo real_ip(); ?></p>
                 <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
-                <h5>图床信息</h5>
-                <hr />
+                <h5 class="header-dividing">图床信息</h5>
                 <h6>API 插件</h6>
                 <a href="https://microsoftedge.microsoft.com/addons/detail/%E7%AE%80%E5%8D%95%E5%9B%BE%E5%BA%8A-edge-version/hdafcoenpmebcjjcccojdlhfnndelefk" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Edge</span></a>
                 <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Chrome</span></a>
@@ -708,6 +712,34 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content9">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">页面展示开关</label>
+                <div class="form-group">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
+                        <input type="hidden" name="show_user_hash_del" value="0">
+                        <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">删除</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title=" 关闭后非登录状态不显示广场图片">
+                        <input type="hidden" name="showSwitch" value="0">
+                        <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">广场</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
+                        <input type="hidden" name="showSort" value="0">
+                        <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">排序</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片信息按钮">
+                        <input type="hidden" name="show_exif_info" value="0">
+                        <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">Exif</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
+                        <input type="hidden" name="chart_on" value="0">
+                        <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">统计</label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="配色样式文件夹位置: /public/static/zui/theme/">网站配色</label>
                     <select class="chosen-select form-control" name="theme">
@@ -731,7 +763,11 @@ if (isset($_GET['recycle_reimg'])) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <h5>上传首选显示</h5>
+                    <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景图</label>
+                    <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div>
+                <div class="form-group">
+                    <h5>上传首选显示链接</h5>
                     <label class="radio-inline">
                         <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
                         <i class="icon icon-link"></i>
@@ -754,41 +790,6 @@ if (isset($_GET['recycle_reimg'])) {
                     </label>
                 </div>
                 <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
-                        <input type="hidden" name="show_user_hash_del" value="0">
-                        <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">删除</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title=" 关闭后非登录状态不显示图片">
-                        <input type="hidden" name="showSwitch" value="0">
-                        <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">广场</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
-                        <input type="hidden" name="showSort" value="0">
-                        <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">排序</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片信息按钮">
-                        <input type="hidden" name="show_exif_info" value="0">
-                        <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">Exif</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
-                        <input type="hidden" name="chart_on" value="0">
-                        <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">统计</label>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label>广场默认浏览数量 | 当前: </label>
                     <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
 
@@ -801,8 +802,9 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content10">
+            <!-- 管理员账号 start-->
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
-                <h5>管理员账号管理 | 不变就不要保存更改</h5>
+                <h5 class="header-dividing">管理员账号<small> 不更改账号或者密码就不要保存</small></h5>
                 <div class="form-group">
                     <div class="input-control has-icon-left">
                         <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user']; ?>" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -817,7 +819,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
-                <button type="submit" class="btn btn btn-primary">更改管理 账号/密码</button>
+                <button type="submit" class="btn btn btn-primary">更改管理员 账号/密码</button>
                 <div class="alert alert-primary with-icon col-xs-8" style="margin-top: 5px;">
                     <i class="icon-info-sign"></i>
                     <div class="content">
@@ -829,9 +831,8 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
             </form>
             <!-- 上传用户管理 start-->
-            <hr>
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return uploader_md5_post()">
-                <h5>上传者账号 | 开启登陆上传后只能上传的账号</h5>
+                <h5 class="header-dividing">上传者账号<small> 账户只能用于上传</small></h5>
                 <div class="form-group">
                     <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
                         <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -846,7 +847,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="uploader_form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
-                <button type="submit" class="btn btn btn-danger">添加上传 账号/密码</button>
+                <button type="submit" class="btn btn btn-danger">添加/更改 上传者 账号/密码</button>
                 <div class="alert alert-primary with-icon col-xs-8" style="margin-top: 5px;">
                     <i class="icon-info-sign"></i>
                     <div class="content">
@@ -878,9 +879,21 @@ if (isset($_GET['recycle_reimg'])) {
                     </tbody>
                 </table>
             </div>
+            <!-- 源图加密Key start-->
+            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <h5 class="header-dividing">源图保护Key<small> *设定后请勿轻易更改,更改后所有源图加密链接失效</small></h5>
+                <div class="form-group">
+                    <div class="input-control has-icon-left">
+                        <input type="text" class="form-control" name="hide_key" required="required" value="<?php echo $config['hide_key']; ?>" onkeyup="this.value=this.value.trim()">
+                        <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
+                    </div>
+                </div>
+                <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                <button type="submit" class="btn btn btn-danger">保存源图加密Key</button>
+            </form>
         </div>
         <div class="tab-pane fade" id="Content11">
-            <h5>用户自行删除的会显示在这个页面</h5>
+            <h5 class="header-dividing">图片回收<small> 用户自行删除的会显示在这个页面</small></h5>
             <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed table-striped">
@@ -981,7 +994,8 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content13">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4>
+                <h5 class="header-dividing">前端裁剪/压缩 <small>优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</small></h5>
+                <!-- <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4> -->
                 <div class="form-group">
                     <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启下边五项不生效">
                         <input type="hidden" name="imgRatio" value="0">
@@ -1015,7 +1029,8 @@ if (isset($_GET['recycle_reimg'])) {
                     <label>前端压缩率(仅支持JPG) | 当前: </label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
                     <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">
                 </div>
-                <h4 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</h4>
+                <h5 class="header-dividing">后端压缩 <small>优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</small></h5>
+                <!-- <h4 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</h4> -->
                 <div class="form-group">
                     <div class="switch switch-inline">
                         <input type="hidden" name="compress" value="0">
@@ -1034,10 +1049,12 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content14">
-            <h4>文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h4>
+            <!-- <h4>文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h4> -->
+            <h5 class="header-dividing">文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h5>
             <a class="btn btn-mini btn-primary" href="<?php echo $config['domain'] . '/admin/manager.php?p=' . date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-            <hr />
-            <h4>删除文件 <small>* 删除后不可恢复</small></h4>
+
+            <!-- <h4>删除文件 <small>* 删除后不可恢复</small></h4> -->
+            <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank">
                 <p id="delimgurl"></p>
                 <div class="form-group">
@@ -1046,7 +1063,6 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
             </form>
-            <br />
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
                     <label for="delDir" class="text-danger">删除指定日期文件: </label>
@@ -1057,14 +1073,14 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
 <link href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css" rel="stylesheet">
+<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
-    //
+    // 水印字体颜色
     jscolor.presets.myPreset = {
         value: '<?php echo $config['textColor']; ?>',
         format: 'rgba',

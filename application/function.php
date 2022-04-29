@@ -482,7 +482,7 @@ function urlHash($data, $mode, $key = null)
 {
     global $config;
 
-    if ($key) {
+    if (!$key) {
         $key = $config['password'];
     }
 

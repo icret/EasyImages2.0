@@ -4,14 +4,16 @@
  * Program: EasyImage2.0
  * Author: Icret
  * Date: 2022/3/13 20:11
- * For: 原图保护解密
+ * For: 源图保护解密
  */
 
 require_once __DIR__ . '/function.php';
 
+
+
 if (isset($_GET['key'])) {
     $hide_original = $_GET['key'];
-    $real_path =  APP_ROOT . urlHash($hide_original, 1, crc32($config['password']));
+    $real_path =  APP_ROOT . urlHash($hide_original, 1, crc32($config['hide_key']));
 } else {
     $real_path = APP_ROOT . '/public/images/404.png';
 }

@@ -6,7 +6,7 @@ $config=Array
 	'description'=>'简单图床EasyImage是一款支持多文件上传的无数据库图床,可以完美替代PHP多图上传程序,最新html5自适应页面兼容手机电脑,上传后返回图片直链,markdown图片,论坛贴图bbscode链接,简单方便支持一键复制,支持多域名,api上传',
 	'tips'=>'<a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-github"> 如果你喜欢这种图床风格就下载喔 (๑•̀ㅂ•́)و✧</i></a>
 <a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-heart"> 简单图床是一款开源图床, 支持多文件上传无数据库</i></a>
-<a><li class="icon icon-bullhorn text-muted"> 单文件≤10M，单次上传≤30张</li></a>',
+<a><li class="icon icon-bullhorn text-muted"> 单文件≤10M,单次上传≤30张</li></a>',
 	'notice_status'=>0,
 	'notice'=>'<p>简单图床是一款开源图床, 支持多文件上传无数据库；</p>
 <p>如果你喜欢这种图床风格就<a href="https://github.com/icret/EasyImages2.0" target="_black">下载</a>喔 (๑•̀ㅂ•́)و✧</p>',
@@ -15,14 +15,14 @@ $config=Array
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>0,
+	'apiStatus'=>1,
 	'path'=>'/i/',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
-	'watermark'=>0,
+	'watermark'=>2,
 	'waterText'=>'简单图床 - png.cm',
-	'waterPosition'=>5,
+	'waterPosition'=>0,
 	'textColor'=>'rgba(255,0,0,1)',
 	'textSize'=>50,
 	'textFont'=>'/public/static/hkxzy.ttf',
@@ -66,7 +66,7 @@ var _hmt = _hmt || [];
     <a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
 </div>',
 	'ad_bot'=>0,
-	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;">
+	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;margin-bottom:10px;">
     <a href="../public/images/wechat.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
     <a href="../public/images/alipay.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
 </div>',
@@ -99,13 +99,15 @@ var _hmt = _hmt || [];
 		9=>'month'
 		),
 	'language'=>0,
+	'login_bg'=>'https://png.cm/public/images/login_bg.jpg',
 	'image_recycl'=>1,
 	'tinyfilemanager'=>1,
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
-	'version'=>'2.5.9',
-	'update'=>'2022-04-16 13:19:50',
-	'terms'=>'<div class="container">
+	'hide_key'=>'EasyImage2.0',
+	'version'=>'2.6.0',
+	'update'=>'2022-04-29 16:38:49',
+	'terms'=>'<div class="container" style="margin-bottom: 80px;">
   <div class="row">
     <div class="col-xs-3">
       <ul class="nav nav-tabs nav-stacked">

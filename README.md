@@ -13,7 +13,7 @@
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 [![QQ group](https://pub.idqqimg.com/wpa/images/group.png)](https://jq.qq.com/?_wv=1027&k=jfXRHU8Y)
 
->[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/)
+>[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/) | [Telegram](https://t.me/Easy_Image)
 >
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
@@ -149,12 +149,20 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
+* 2022-05-01 v2.6.0
+- 修复源图缺陷
+- 修复API回收不能还原问题
+- 布局修改
+- 登录页美化
+- 屏蔽登陆页面chrome类浏览器自动填充
+
 * 2022-04-02 v2.5.9
 - 增加安装提示
 - 增加忘记密码提示
 - 增加检测水印图片/水印字体是否存在
 - 修复登陆逻辑
 - 修复广场重复显示图片
+- 修改广场删除/回收样式
 - 调整了广告的位置
 - 调整后台设置分表
 
