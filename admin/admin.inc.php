@@ -679,7 +679,7 @@ if (isset($_GET['recycle_reimg'])) {
                             $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                  // 相对路径
                             $file_size =  getDistUsed(filesize($file_cache_path));                        // 大小
                             $filen_name = $cache_file[$i];                                                // 名称
-                            $url = rand_imgurl() . $config['path'] . 'suspic/' . $cache_file[$i];         // 网络连接
+                            $url = $config['domain'] . $config['path'] . 'suspic/' . $cache_file[$i];     // 网络连接
                             $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;   // 删除连接
                         ?>
                             <tr>
@@ -977,7 +977,7 @@ if (isset($_GET['recycle_reimg'])) {
                             $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                  // 相对路径
                             $file_size =  getDistUsed(filesize($file_cache_path));                         // 大小
                             $filen_name = $cache_file[$i];                                                 // 名称
-                            $url = rand_imgurl() . $config['path'] . 'recycle/' . $cache_file[$i];         // 网络连接
+                            $url = $config['domain'] . $config['path'] . 'recycle/' . $cache_file[$i];     // 网络连接
                             $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;    // 删除连接
                         ?>
                             <tr>
