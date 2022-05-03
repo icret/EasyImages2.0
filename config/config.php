@@ -21,7 +21,7 @@ $config=Array
 	'imgName'=>'default',
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
-	'watermark'=>1,
+	'watermark'=>0,
 	'waterText'=>'简单图床 - png.cm',
 	'waterPosition'=>0,
 	'textColor'=>'rgba(255,0,0,1)',
@@ -92,7 +92,7 @@ $config=Array
 	'token_path_status'=>0,
 	'admin_path'=>'u',
 	'version'=>'2.6.1',
-	'update'=>'2022-05-04 01:08:52',
+	'update'=>'2022-05-04 01:30:23',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];
