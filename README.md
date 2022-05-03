@@ -39,6 +39,27 @@
 - [x] 支持创建仅上传用户
 - [x] 更多支持请安装尝试···
 
+## 安装
+> 推荐环境：Nginx + PHP≥7.0 + linux
+#### windows:
+- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip)|[稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web根目录
+
+#### Linux:
+
+- `git clone https://github.com/icret/EasyImages2.0.git` 至web目录
+
+- 赋予web目录www:www和0755权限:
+```shell
+chmod 755 -R /web目录
+chown -R www:www /web目录
+```
+
+#### BT宝塔面板
+- 安装环境 Ngixn(推荐) / Apache + PHP(推荐≥7.0)
+- 软件商店搜索`简单图床`一键部署
+
+>更多安装方式和问题请查阅->[使用手册](https://www.kancloud.cn/easyimage/easyimage/2625222)
+
 ## 常见问题
 
 1. 请将所有文件赋予`0755`和`www`权限
@@ -63,25 +84,6 @@ location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
     access_log /dev/null;
 }
 ```
-
-## 安装
-> 推荐环境：Nginx + PHP≥7.0 + linux
-#### windows:
-- 下载简单图床 [最新版](https://github.com/icret/EasyImages2.0/archive/refs/heads/master.zip)|[稳定版](https://github.com/icret/EasyImages2.0/releases) 上传至web根目录
-
-#### Linux:
-
-- `git clone https://github.com/icret/EasyImages2.0.git` 至web目录
-
-- 赋予web目录www:www和0755权限:
-```shell
-chmod 755 -R /web目录
-chown -R www:www /web目录
-```
-
-#### BT宝塔面板
-- 安装环境 Ngixn(推荐) / Apache + PHP(推荐≥7.0)
-- 软件商店搜索`简单图床`一键部署
 
 #### API上传
 - 需要开启图床安全->API上传示例
@@ -175,6 +177,7 @@ $HTTP["url"] =~ "^/(i|public)/" {
 <details><summary>点击查看2.0版更新日志</summary>
 
 * 2022-05-04 v2.6.2 deving
+- 增加API/用户文件浏览和删除
 - 增加转换webp后也会添加水印 
 - webp水印会增大图片体积消耗更多PHP内存,PHP8以上有很大概率失败!
 - 修复一些bugs

@@ -81,10 +81,51 @@ if (isset($_GET['stop_token'])) {
         }).show();
         </script>  
   ';
-    header("refresh:2;url=" . $config['domain'] . "/admin/admin.inc.php");
+    header("refresh:1;url=/admin/admin.inc.php");
 }
 
-// 删除guset.config.php数组对
+// 删除Token
+if (isset($_GET['delete_token'])) {
+    unset($tokenList[$_GET['delete_token']]);
+    $config_file = APP_ROOT . '/config/api_key.php';
+    cache_write($config_file, $tokenList, 'tokenList');
+    echo '
+  <script>
+  new $.zui.Messager("删除Token用户成功!", {
+    type: "primary", // 定义颜色主题 
+    icon: "ok-sign" // 定义消息图标
+  }).show();
+  </script>  
+  ';
+    header("refresh:1;url=/admin/admin.inc.php");
+}
+
+// 禁用用户
+if (isset($_GET['stop_guest'])) {
+    $stop_guest =  $_GET['stop_guest'];
+    $postArr = array(
+        $stop_guest => array(
+            'password' => $guestConfig[$stop_guest]['password'],
+            'expired' => time(),
+            'add_time' => $guestConfig[$stop_guest]['add_time']
+        )
+    );
+    $new_config = array_replace($guestConfig, $postArr);
+    $config_file = APP_ROOT . '/config/config.guest.php';
+    cache_write($config_file, $new_config, 'guestConfig');
+    echo '
+        <script>
+        new $.zui.Messager("禁用上传用户成功!", {
+            type: "primary", // 定义颜色主题 
+            icon: "ok-sign" // 定义消息图标
+        }).show();
+        </script>  
+  ';
+    header("refresh:1;url=/admin/admin.inc.php");
+}
+
+
+// 删除用户
 if (isset($_GET['delete_guest'])) {
     unset($guestConfig[$_GET['delete_guest']]);
     $config_file = APP_ROOT . '/config/config.guest.php';
@@ -97,6 +138,7 @@ if (isset($_GET['delete_guest'])) {
   }).show();
   </script>  
   ';
+    header("refresh:1;url=/admin/admin.inc.php");
 }
 
 // 添加上传账号 修改config.guest.php
@@ -164,6 +206,8 @@ if (isset($_GET['suspic_reimg'])) {
         </script>
         ";
     }
+
+    header("refresh:1;url=/admin/admin.inc.php");
 }
 
 // 回收站恢复图片
@@ -188,6 +232,8 @@ if (isset($_GET['recycle_reimg'])) {
         </script>
         ";
     }
+
+    header("refresh:1;url=/admin/admin.inc.php");
 }
 ?>
 <div class="row" style="margin-bottom:100px">
@@ -407,7 +453,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn-mini btn-primary">保存</button>
             </form>
-            <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 删除按钮需开启Token分离, 删除后不可恢复</small>'; ?></h5>
+            <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p><kbd>API调用网址:<?php echo $config['domain']; ?>/api/index.php</kbd></p>
             <table class="table table-hover table-bordered table-condensed table-responsive visible-xs visible-sm" style="margin-top: 10px;">
                 <thead>
@@ -431,7 +477,9 @@ if (isset($_GET['recycle_reimg'])) {
                             <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?></td>
                             <td><?php echo $expired; ?></td>
                             <td>
-                                <a class="btn btn-mini btn-danger" href="admin.inc.php?stop_token=<?php echo $key; ?>">禁用</a>
+                                <a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a>
+                                <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a>
+                                <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a>
                                 <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>
                             </td>
                         </tr>
@@ -923,15 +971,19 @@ if (isset($_GET['recycle_reimg'])) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($guestConfig as $key => $value) : ?>
+                        <?php foreach ($guestConfig as $key => $value) :
+                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>';
+                        ?>
                             <tr>
                                 <td><?php echo $key; ?></td>
                                 <td><?php echo $value['password']; ?></td>
                                 <td> <?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
-                                <td> <?php echo date('Y年m月d日 H:i:s', $value['expired']); ?></td>
+                                <td> <?php echo $expired; ?></td>
                                 <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $key, $type = 'number'); ?></td>
                                 <td>
-                                    <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $key; ?>'>删除账户</a>
+                                    <a href='/admin/manager.php?p=<?php echo $key; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a>
+                                    <a href='admin.inc.php?stop_guest=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a>
+                                    <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $key; ?>'>删除</a>
                                     <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='admin.inc.php?delDir=<?php echo $key; ?>'>删除上传</a>
                                 </td>
                             </tr>
@@ -1109,8 +1161,7 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content14">
             <!-- <h4>文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h4> -->
             <h5 class="header-dividing">文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h5>
-            <a class="btn btn-mini btn-primary" href="<?php echo $config['domain'] . '/admin/manager.php?p=' . date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-
+            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
             <!-- <h4>删除文件 <small>* 删除后不可恢复</small></h4> -->
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank">
@@ -1260,7 +1311,7 @@ if (isset($_GET['recycle_reimg'])) {
                     name: 'manage',
                     label: '管理Token',
                     html: true,
-                    width: 0.2
+                    width: 0.25
                 },
             ],
             array: [
@@ -1271,7 +1322,7 @@ if (isset($_GET['recycle_reimg'])) {
                         add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
-                        manage: "<a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
+                        manage: "<a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
                     },
                 <?php endforeach; ?>
             ]
