@@ -861,14 +861,14 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
 
     /** # 如果违规则移动图片到违规文件夹 */
     if ($bad_pic == true) {
-        // $old_path = APP_ROOT . str_replace($config['domain'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-        $old_path = APP_ROOT . parse_url($imageUrl)['path']; // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        $old_path = APP_ROOT . parse_url($imageUrl)['path'];       // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        $name = parse_url($imageUrl)['path'];                      // 获得图片的相对地址
+        $name = str_replace($config['path'], '', $name);           // 去除 path目录
+        $name = str_replace('/', '_', $name);                      // 文件名 2021_10_30_p8vypd.png
+        $new_path = APP_ROOT . $config['path'] . $dir . $name;     // 新路径含文件名
+        $suspic_dir = APP_ROOT . $config['path'] . $dir;           // suspic路径
 
-        $name = date('Y_m_d') . '_' . basename($imageUrl);                    // 文件名 2021_10_30_p8vypd.png
-        $new_path = APP_ROOT . $config['path'] . $dir . $name;                // 新路径含文件名
-        $suspic_dir = APP_ROOT . $config['path'] . $dir;                      // suspic路径
-
-        if (!is_dir($suspic_dir)) {                                           // 创建suspic目录并移动
+        if (!is_dir($suspic_dir)) {                                // 创建suspic目录并移动
             mkdir($suspic_dir, 0777, true);
         }
         if (is_file($old_path)) {

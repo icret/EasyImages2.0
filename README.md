@@ -71,12 +71,37 @@ location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
 
 #### Linux:
 
-- `git clone https://github.com/icret/EasyImages2.0.git` 至web根目录赋予www:www和0755权限
+- `git clone https://github.com/icret/EasyImages2.0.git` 至web目录
+
+- 赋予web目录www:www和0755权限:
+```shell
+chmod 755 -R /web目录
+chown -R www:www /web目录
+```
 
 #### BT宝塔面板
 - 安装环境 Ngixn(推荐) / Apache + PHP(推荐≥7.0)
 - 软件商店搜索`简单图床`一键部署
 
+#### API使用
+- 示例
+```html
+<form action="http://127.0.0.1/api/index.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*">
+    <input type="text" name="token" placeholder="在tokenList文件找到token并输入" /> <input type="submit" />
+</form>
+```
+- 上传成功后返回JSON
+```json
+{
+    "result": "success",
+    "code": 200,
+    "url": "http://127.0.0.1/i/2022/05/03/vfyjtq-0.png",
+    "srcName": "2532516028",
+    "thumb": "http://127.0.0.1/application/thumb.php?img=/i/2022/05/03/vfyjtq-0.png",
+    "del": "http://127.0.0.1/application/del.php?hash=ZnVzYlZEM0dJUWhiQ2UzVVVsK1haMG5nNk92K0d3Q3JldjMyWlF5bHFxcz0="
+}
+```
  ## 程序升级
  
 - 备份`config`目录(没有增加上传用户和api可以只保留`config.php`文件)和`上传文件目录`
@@ -149,12 +174,13 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-04-30 v2.6.1
+* 2022-05-03 v2.6.1
 - 增加登陆用户有效期
 - 增加管理员/登陆用户/Token专用目录
 - 增加转换图片格式后压缩图片(不建议同时开启后端压缩)
 - 增加隐藏存储路径(网站域名与图片域名不同且图片域名需绑定到图片目录)
 - 直链缩略图支持bmp,webp
+- 本次更新较大,建议重新安装!
 
 * 2022-04-29 v2.6.0
 - 修复源图缺陷

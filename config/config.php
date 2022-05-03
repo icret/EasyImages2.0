@@ -11,11 +11,11 @@ $config=Array
 	'notice'=>'<p>简单图床是一款开源图床, 支持多文件上传无数据库；</p>
 <p>如果你喜欢这种图床风格就<a href="https://github.com/icret/EasyImages2.0" target="_black">下载</a>喔 (๑•̀ㅂ•́)و✧</p>',
 	'domain'=>'http://127.0.0.1',
-	'imgurl'=>'http://127.0.0.1',
+	'imgurl'=>'http://127.0.0.1,http://192.168.2.100',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>0,
+	'apiStatus'=>1,
 	'path'=>'/i/',
 	'mime'=>'image/*,video/*',
 	'imgName'=>'default',
@@ -92,7 +92,7 @@ $config=Array
 	'token_path_status'=>0,
 	'admin_path'=>'u',
 	'version'=>'2.6.1',
-	'update'=>'2022-05-03 00:57:40',
+	'update'=>'2022-05-03 19:00:49',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];

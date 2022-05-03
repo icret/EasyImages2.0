@@ -93,8 +93,12 @@ if ($handle->uploaded) {
     if ($handle->processed) {
         header('Content-type:text/json');
         // 上传成功后返回json数据
-        $pathIMG = $Img_path  . $handle->file_dst_name;
+        // 图片相对路径
+        $pathIMG = $Img_path . $handle->file_dst_name;
+        // 图片访问网址
         $imageUrl = rand_imgurl() . $pathIMG;
+        // 后续处理地址
+        $processUrl = $config['domain'] . $pathIMG;
 
         // 原图保护 key值是由crc32加密的hide_key
         // $hide_original = $config['hide'] == 1 ? $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key'])) : $imageUrl;
@@ -154,7 +158,7 @@ if ($handle->uploaded) {
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
         // 鉴黄
-        @process_checkImg($imageUrl);
+        @process_checkImg($processUrl);
         // 日志
         if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 水印        
@@ -163,7 +167,7 @@ if ($handle->uploaded) {
         @compress($handle->file_dst_pathname);
     } else {
         // 鉴黄
-        @process_checkImg($imageUrl);
+        @process_checkImg($processUrl);
         // 日志
         if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 水印

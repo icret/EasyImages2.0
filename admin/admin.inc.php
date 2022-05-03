@@ -535,7 +535,7 @@ if (isset($_GET['recycle_reimg'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="* 如果不懂就关闭<br /> * 1. 图片链接会隐藏<?php echo $config['path']; ?>目录<br />* 2. 网站与图片域名不能一样<br />* 3. 图片域名需绑定到<?php echo $config['path']; ?>目录">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="* 如果不懂就关闭<br /> * 1. 图片链接会隐藏<?php echo $config['path']; ?>目录<br />* 2. 网站与图片域名不能相同<br />* 3. 图片域名需绑定到<?php echo $config['path']; ?>目录">
                                 <input type="hidden" name="hide_path" value="0">
                                 <input type="checkbox" name="hide_path" value="1" <?php if ($config['hide_path']) echo 'checked="checked"'; ?> <?php if ($config['domain'] == $config['imgurl']) echo 'disabled'; ?>>
                                 <label style="font-weight: bold">隐藏<?php echo $config['path']; ?>目录</label>
@@ -558,21 +558,21 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                     <div class="col-md-12">
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="以登陆账号名称创建上传目录<br />* 会导致无法在图片回收和可疑图片中恢复上传者上传的图片">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="以登陆账号名称创建上传目录">
                                 <input type="hidden" name="guest_path_status" value="0">
                                 <input type="checkbox" name="guest_path_status" value="1" <?php if ($config['guest_path_status']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">用户分离</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="以Token ID创建目录<br />* 会导致无法在图片回收和可疑图片中恢复Token用户上传的图片">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="以Token ID创建目录">
                                 <input type="hidden" name="token_path_status" value="0">
                                 <input type="checkbox" name="token_path_status" value="1" <?php if ($config['token_path_status']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">Token分离</label>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="管理员独立上传目录<br />* 自定义目录暂未提供接口,如需修改请修改config.php中的admin_path<br />* 会导致无法在图片回收和可疑图片中恢复管理上传的图片">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="管理员独立上传目录<br />* 自定义目录暂未提供接口,如需修改请修改config.php中的admin_path">
                                 <input type="hidden" name="admin_path_status" value="0">
                                 <input type="checkbox" name="admin_path_status" value="1" <?php if ($config['admin_path_status']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">管理分离</label>
@@ -657,7 +657,6 @@ if (isset($_GET['recycle_reimg'])) {
             <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
             <p>获得key后打开->API 设置->Moderate Key->填入key</p>
             <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
-            <p>无法恢复 <kbd>用户分离</kbd> <kbd>Token分离</kbd> <kbd>管理分离</kbd> 的图片</p>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed table-striped">
                     <thead>
@@ -705,7 +704,8 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class=" tab-pane fade" id="Content8">
             <div class="alert alert-primary">
-                <h5 class="header-dividing">系统信息</h5>
+                <h5>系统信息</h5>
+                <hr />
                 <p class="text-ellipsis">服务系统: <?PHP echo php_uname('s') . ' <small class="text-muted">' . php_uname() . '</small>'; ?></p>
                 <p class="text-ellipsis">Web服务: <?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
                 <p class="text-ellipsis">服务器IP: <?PHP echo  $_SERVER["SERVER_ADDR"] ?></p>
@@ -713,7 +713,8 @@ if (isset($_GET['recycle_reimg'])) {
                 <p class="text-ellipsis">占用内存: <?php echo getDistUsed(memory_get_usage()); ?></p>
                 <p class="text-ellipsis">占用磁盘: <?php echo getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) ?></p>
                 <p class="text-ellipsis">剩余磁盘: <?php echo getDistUsed(disk_free_space(__DIR__)); ?></p>
-                <h5 class="header-dividing">PHP信息</h5>
+                <h5>PHP信息</h5>
+                <hr />
                 <p class="text-ellipsis">PHP Version: <?php echo phpversion(); ?></p>
                 <p class="text-ellipsis">PHP Model: <?PHP echo php_sapi_name(); ?></p>
                 <p class="text-ellipsis">PHP Max UP: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
@@ -721,10 +722,12 @@ if (isset($_GET['recycle_reimg'])) {
                 <p class="text-ellipsis">PHP Max Memery: <?PHP echo get_cfg_var("memory_limit"); ?></p>
                 <p class="text-ellipsis">POST Max Upload: <?php echo ini_get('post_max_size'); ?></p>
                 <p class="text-ellipsis">GD: <?php echo (gd_info()["GD Version"]); ?></p>
-                <h5 class="header-dividing">我的信息</h5>
-                <p class="text-ellipsis">Your IP: <?php echo real_ip(); ?></p>
+                <h5>我的信息</h5>
+                <hr />
+                <p class="text-ellipsis">IP: <?php echo real_ip(); ?></p>
                 <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
-                <h5 class="header-dividing">图床信息</h5>
+                <h5>图床信息</h5>
+                <hr />
                 <h6>API 插件</h6>
                 <a href="https://microsoftedge.microsoft.com/addons/detail/%E7%AE%80%E5%8D%95%E5%9B%BE%E5%BA%8A-edge-version/hdafcoenpmebcjjcccojdlhfnndelefk" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Edge</span></a>
                 <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Chrome</span></a>
@@ -906,7 +909,7 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                 </div>
             </form>
-            <?php if (!$config['guest_path_status']) echo '<h5>* 开启用户分离后删除上传按钮激活, 删除后不可恢复</h5>'; ?>
+            <h5>* 开启用户分离后删除上传按钮激活, 删除后不可恢复</h5>
             <div class="table-responsive">
                 <table class="table table-condensed table-hover table-bordered">
                     <thead>
@@ -952,7 +955,6 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content11">
             <h5 class="header-dividing">图片回收<small> 用户自行删除的会显示在这个页面</small></h5>
             <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
-            <p>无法恢复 <kbd>用户分离</kbd> <kbd>Token分离</kbd> <kbd>管理分离</kbd> 的图片</p>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed table-striped">
                     <thead>
