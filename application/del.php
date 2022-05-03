@@ -26,8 +26,6 @@ if (isset($_GET['hash'])) {
     $delHash = $_GET['hash'];
     $delHash = urlHash($delHash, 1);
 
-    // getDel($delHash, 'hash');
-
     if ($config['image_recycl']) {
         // 如果开启回收站则进入回收站
         if (checkImg($delHash, 3, 'recycle/') == true) {
@@ -57,9 +55,19 @@ if (isset($_GET['hash'])) {
 
 // 检查登录后再处理url删除请求
 if (is_who_login('admin')) {
-    // 删除
+
+    // 广场页面删除
     if (isset($_GET['url'])) {
         getDel($_GET['url'], 'url');
+    }
+
+    // 从管理页面删除
+    if (isset($_GET['url_admin_inc'])) {
+        $del_url = $_GET['url_admin_inc'];
+        if ($config['hide_path']) {
+            $del_url = $config['domain'] . $config['path'] . parse_url($del_url)['path'];
+        }
+        getDel($del_url, 'url');
     }
     // 回收
     if (isset($_GET['recycle_url'])) {

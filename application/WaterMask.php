@@ -78,6 +78,12 @@ class Imgs
                 imagecopyresampled($temp_img, $im, 0, 0, 0, 0, $temp_w, $temp_h, $width, $height);
                 imagepng($temp_img, $savepath, 100);
                 break;
+            case 18:
+                $im = imagecreatefromwebp($src);
+                imagesavealpha($im, true); //这里很重要;3-1
+                imagecopyresampled($temp_img, $im, 0, 0, 0, 0, $temp_w, $temp_h, $width, $height);
+                imagewebp($temp_img, $savepath, 100);
+                break;
         }
         imagedestroy($im);
         return $savepath;
@@ -162,6 +168,10 @@ class Imgs
                     $dst_img = imagecreatefrompng($src);
                     imagesavealpha($dst_img, true); //这里很重要;3-1
                     break;
+                case 18:
+                    $dst_img = imagecreatefromwebp($src);
+                    imagesavealpha($dst_img, true); //这里很重要;3-1
+                    break;
 
                 default:
                     return array('code' => false, 'msg' => '目标图片类型错误');
@@ -199,6 +209,9 @@ class Imgs
 
                 case 3:
                     $markim = imagecreatefrompng($def['res']);
+                    break;
+                case 18:
+                    $markim = imagecreatefromwebp($def['res']);
                     break;
 
                 default:
@@ -314,6 +327,9 @@ class Imgs
                 imagepng($dst_img, $def['name']);
                 break;
             case 'gif':
+                imagegif($dst_img, $def['name']);
+                break;
+            case 'webp':
                 imagegif($dst_img, $def['name']);
                 break;
             default:

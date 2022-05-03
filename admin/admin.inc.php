@@ -1117,7 +1117,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <p id="delimgurl"></p>
                 <div class="form-group">
                     <label for="del" class="text-primary">删除单张图片文件: </label>
-                    <input type="url" name="url" class="form-control input-sm" id="del" placeholder="请输入图片链接">
+                    <input type="url" name="url_admin_inc" class="form-control input-sm" id="del" placeholder="请输入图片链接">
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
             </form>

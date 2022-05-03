@@ -29,7 +29,7 @@ function water($source)
     // 文字水印
     if ($config['watermark'] == 1) {
         // 过滤gif
-        if (isAnimatedGif($source) === 0) {
+        if (!isAnimatedGifWebp($source)) {
             $arr = [
                 #  水印图片路径（如果不存在将会被当成是字符串水印）
                 'res' => $config['waterText'],
@@ -48,7 +48,7 @@ function water($source)
     // 图片水印
     if ($config['watermark'] == 2) {
         // 过滤gif
-        if (isAnimatedGif($source) === 0) {
+        if (!isAnimatedGifWebp($source)) {
             $arr = [
                 #  水印图片路径（如果不存在将会被当成是字符串水印）
                 'res' => APP_ROOT . $config['waterImg'],

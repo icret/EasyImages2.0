@@ -21,7 +21,7 @@ if (!IS_WIN) {
     } else {
         $file_php =  false;
     }
-    if (is_writable(APP_ROOT . '/i/')) {
+    if (is_writable(APP_ROOT . $config['path'])) {
         $i_wjj =  true;
     } else {
         $i_wjj =   false;

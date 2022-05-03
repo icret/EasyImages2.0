@@ -1311,6 +1311,8 @@ function is_local($url)
 
 /**
  * 将图片域名转换为数组并随即输出
+ * @param $text 字符串
+ * @return String 随机网址
  */
 function rand_imgurl($text = null)
 {
@@ -1318,4 +1320,29 @@ function rand_imgurl($text = null)
     $url = isset($text) ? $text : $config['imgurl'];
     $url = explode(',',  $url);
     return $url[array_rand($url, 1)];
+}
+
+/**
+ * 判断webp或gif动图是否为动态图片
+ * @param $src 图片的绝对路径
+ * @return bool 是|否
+ */
+function isAnimatedGifWebp($src)
+{
+    $ext = pathinfo($src)['extension'];
+    
+    if ($ext == 'webp') {
+        $webpContents = file_get_contents($src);
+        $where = strpos($webpContents, "ANMF");
+        if ($where !== FALSE) {
+            // animated
+            return true;
+        }
+        return false;
+    }
+
+    $fp = fopen($src, 'rb');
+    $filecontent = fread($fp, filesize($src));
+    fclose($fp);
+    return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? false : true;
 }
