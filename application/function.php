@@ -76,9 +76,10 @@ function checkLogin()
         }
 
         // 密码错误
-        if ($getCOK[1] !== $config['password'] && $getCOK[1] !== $guestConfig[$getCOK[0]]) {
+        if ($getCOK[1] !== $config['password'] && $getCOK[1] !== $guestConfig[$getCOK[0]]['password']) {
             return 203;
         }
+
 
         // 管理员登陆
         if ($getCOK[1] == $config['password']) {
@@ -86,7 +87,11 @@ function checkLogin()
         }
 
         // 上传者账号登陆
-        if ($getCOK[1] == $guestConfig[$getCOK[0]]) {
+        if ($getCOK[1] == $guestConfig[$getCOK[0]]['password']) {
+            if ($guestConfig[$getCOK[0]]['expired'] < time()) {
+                // 上传者账号过期
+                return 206;
+            }
             return 205;
         }
     }
@@ -134,10 +139,19 @@ function mustLogin()
             case 205:
                 echo '
                     <script> 
-                    new $.zui.Messager("上传者用户已登陆", {
+                    new $.zui.Messager("上传者账户已登陆", {
                         type: "success", // 定义颜色主题 
                         icon: "check", // 定义消息图标
                         placement:"bottom-right" // 消息位置
+                    }).show();
+                    </script>';
+                break;
+            case 206:
+                echo '
+                    <script> 
+                        new $.zui.Messager("上传者账户已过期", {
+                            type: "special", // 定义颜色主题 
+                            icon: "exclamation-sign" // 定义消息图标
                     }).show();
                     </script>';
                 break;
@@ -503,7 +517,7 @@ function getDel($url, $type)
 {
     global $config;
     // url本地化
-    $url = htmlspecialchars(str_replace($config['imgurl'], '', $url));   // 过滤html 获取url path
+    $url = htmlspecialchars(str_replace($config['domain'], '', $url));   // 过滤html 获取url path
     $url = urldecode(trim($url));
 
     if ($type == 'url') {
@@ -847,7 +861,9 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
 
     /** # 如果违规则移动图片到违规文件夹 */
     if ($bad_pic == true) {
-        $old_path = APP_ROOT . str_replace($config['imgurl'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        // $old_path = APP_ROOT . str_replace($config['domain'], '', $imageUrl); // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        $old_path = APP_ROOT . parse_url($imageUrl)['path']; // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+
         $name = date('Y_m_d') . '_' . basename($imageUrl);                    // 文件名 2021_10_30_p8vypd.png
         $new_path = APP_ROOT . $config['path'] . $dir . $name;                // 新路径含文件名
         $suspic_dir = APP_ROOT . $config['path'] . $dir;                      // suspic路径
@@ -935,7 +951,7 @@ function get_online_thumbnail($imgUrl)
 {
     global $config;
     if ($config['thumbnail']) {
-        $imgUrl = str_replace($config['imgurl'], '', $imgUrl);
+        $imgUrl = str_replace($config['domain'], '', $imgUrl);
         return $config['domain'] . '/application/thumb.php?img=' . $imgUrl;
     } else {
         return $imgUrl;
@@ -963,57 +979,59 @@ function creat_thumbnail_by_list($imgUrl)
     }
 
     // 将网址图片转换为相对路径
-    $pathName = str_replace($config['imgurl'], '', $imgUrl);
+    $pathName = str_replace($config['domain'], '', $imgUrl);
 
     // 图片绝对路径
     $abPathName = APP_ROOT . $pathName;
 
-    // 如果图像是gif则直接返回网址
-    if (isAnimatedGif($abPathName)) {
-        return $imgUrl;
+    // 将网址中的/i/去除
+    $pathName = str_replace($config['path'], '', $pathName);
+
+    // 将文件的/转换为_
+    $imgName = str_replace('/', '_', $pathName);
+
+    // 缓存文件是否存在
+    if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
+        // 存在则返回缓存文件
+        return $config['domain'] . $config['path'] . 'thumbnails/' . $imgName;
     } else {
 
-        // 将网址中的/i/去除
-        $pathName = str_replace($config['path'], '', $pathName);
-
-        // 将文件的/转换为_
-        $imgName = str_replace('/', '_', $pathName);
-
-        // 缓存文件是否存在
-        if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
-            // 存在则返回缓存文件
-            $tumImgUrl = $config['imgurl'] . $config['path'] . 'thumbnails/' . $imgName;
-            return $tumImgUrl;
-        } else {
-
-            // PHP老他妈缺图像扩展支持，不是缺webp就是缺ico，总不能都他妈装上吧，直接把这些二货扩展名忽略
-            if (!in_array(pathinfo(basename($pathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg'))) {
-                return $imgUrl;
-            }
-
-            // 不存在则创建缓存文件并输出文件链接
-            require_once __DIR__ . '/class.thumb.php';
-
-            // thumbnails目录的绝对路径
-            $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';
-
-            // 创建cache目录
-            if (!is_dir($cache_path)) {
-                mkdir($cache_path, 0777, true);
-            }
-
-            // 缩略图缓存的绝对路径
-            // $imgName 是不带/i/的相对路径
-
-            $new_imgName = $cache_path . $imgName;
-
-            // 创建并保存缩略图
-            Thumb::out($abPathName, $new_imgName, 258, 258);
-
-            // 输出缩略图
-            return $new_imgName;
-            // return $imgUrl;
+        // 如果图像是gif则直接返回网址
+        if (isAnimatedGif($abPathName)) {
+            return $imgUrl;
         }
+
+        // 如果是webp动图则直接返回网址    
+        if (isWebpAnimated($abPathName)) {
+            return $imgUrl;
+        }
+
+        // 过滤非指定格式
+        if (!in_array(pathinfo(basename($abPathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
+            return $imgUrl;
+        }
+
+        // 创建缓存文件并输出文件链接
+        require_once __DIR__ . '/class.thumb.php';
+
+        // thumbnails目录的绝对路径
+        $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';
+
+        // 创建cache目录
+        if (!is_dir($cache_path)) {
+            mkdir($cache_path, 0777, true);
+        }
+
+        // 缩略图缓存的绝对路径
+        // $imgName 是不带/i/的相对路径
+
+        $new_imgName = $cache_path . $imgName;
+
+        // 创建并保存缩略图
+        Thumb::out($abPathName, $new_imgName, 258, 258);
+
+        // 输出缩略图
+        return $new_imgName;
     }
 }
 
@@ -1289,4 +1307,15 @@ function is_local($url)
         return true;
     }
     return false;
+}
+
+/**
+ * 将图片域名转换为数组并随即输出
+ */
+function rand_imgurl($text = null)
+{
+    global $config;
+    $url = isset($text) ? $text : $config['imgurl'];
+    $url = explode(',',  $url);
+    return $url[array_rand($url, 1)];
 }

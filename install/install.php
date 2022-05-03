@@ -48,8 +48,8 @@ if ($state !== 'checked') {
 
 <body class="container">
     <!-- install header html end -->
-    <h1 class="header-dividing" style="text-align:center">EasyIamge 2.0 网站配置</h1>
-    <div class="col-md-12" style="text-align: center;">
+    <h1 class="header-dividing" style="text-align:center">EasyIamge 2.0 网站基础配置</h1>
+    <div class="col-md-10 col-md-offset-2" style="text-align: center;">
         <form class="form-horizontal" action="./contorl.php" method="post">
             <div class="form-group">
                 <label class="col-sm-2">网站域名,末尾不加"/"</label>
@@ -144,7 +144,7 @@ if ($state !== 'checked') {
         });
         NProgress.set(0.5);
         NProgress.set(0.9);
-        
+
         // js二维码 获取当前网址并赋值给id=text的value
         document.getElementById("text").value = window.location.href;
         var qrcode = new QRCode(document.getElementById("qrcode"), {

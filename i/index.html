@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>EasyImage2.0 简单图床</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Microsoft YaHei, '\9ed1\4f53';
+        }
+        
+        .main {
+            width: 80%;
+            margin: 50px auto;
+            box-sizing: border-box;
+            padding: 50px;
+            text-align: center;
+        }
+        
+        .main p {
+            display: block;
+            font-size: 24px;
+            font-weight: 300;
+            color: #839ca1;
+        }
+        
+        .main a {
+            color: #f9be99;
+            text-decoration: none;
+        }
+    </style>
+    <link href="data:image/x-icon;base64,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P//v1Zj/8N+1/+/Vmv/rt0D/6qwh/+qwK//qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn+6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6a4p/++0Kv/wtir/77Uq/+qvKf/prin/6q8p/+qvKf/qryn/6rAr/+qtI//ruUb/8u/m//T5///z9v3/9Pn///Pv6P/ruUj/6q0i/+qwK//qryn/6q8p/+qvKf/qryn/6q8p/+qvKf7qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6a4p/+mtKf/prin/6q8p/+qvKf/qryn/6q8p/+qvKf/qsCz/6asd//Dcrv/0+f//8/Hs//Py8f/z8ez/9Pj///Ddsv/pqx3/6rAs/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/uqvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKv/qrST/8ebM//P1+v/z8vH/8/Pz//Py8f/z9fn/8efP/+quJv/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn+6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6rAs/+mrHP/w2ab/9Pn///Px7P/z8vD/8/Hs//T5///w2qr/6asc/+qwLP/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf7qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryr/6q0k/+u1PP/y6tn/9Pn///T3///0+f//8uvb/+u2Pv/qrST/6q8q/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qsCv/6q0i/+qzNP/uzoT/79ii/+7Ohf/rszX/6q0i/+qwK//qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn56q8p/uqvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qsCv/6q4m/+mqG//pqhv/6aob/+quJv/qsCv/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn+6q8p+eqvKbrqryn/6q8p+uqvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryr/6rAs/+qwLP/qsCz/6q8q/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p+uqvKf/qrym76q8pJuqvKeLqryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p4+qvKSfqrykA6q8pJuqvKbLqryny6q8p/uqvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn/6q8p/+qvKf/qryn+6q8p8uqvKbLqrykm6q8pAIAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAE="
+        rel="icon" type="image/x-icon" />
+</head>
+
+<body>
+    <div class="main" style="margin-top: 200px;">
+        <p><a href="https://github.com/icret/EasyImages2.0">EasyImage2.0 简单图床</a> - 开源免费无数据库图床</p>
+        <p>这是本图床的图片 CDN 域名，所有内容均由用户自行上传，如有违反版权、涉及暴力色情恐怖等图片，请及时联系本网站管理员</p>
+        <p>This is the image CDN domain name of this image bed. All content is uploaded by the user. If there are any images that violate copyright, involve violence, pornography, horror, etc., please contact the administrator of this website in time</p>
+    </div>
+</body>
+
+</html>

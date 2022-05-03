@@ -3,40 +3,46 @@ include_once __DIR__ . "/header.php";
 
 if (!$config['show_exif_info']) exit(header('Location: ' . $config['domain'] . '?exif#closed'));
 
-// 获取图片
+// 获取图片地址
 if (isset($_GET['img'])) {
-
+    // 过滤特殊符号
     $getIMG = strip_tags($_GET['img']);
-    $img = parse_url($getIMG)["path"];
-
-    if (!file_exists(APP_ROOT . $img)) {
-
-        $img =  "/public/images/404.png";
-        $getIMG = $config['imgurl'] . $img;
-    }
 } else {
+    // 未获取到图片地址
+    $getIMG = rand_imgurl() . "/public/images/404.png";
+}
 
-    $img =  "/public/images/404.png";
-    $getIMG = $config['imgurl'] . $img;
+// 开启隐藏上传目录
+if ($config['hide_path']) {
+    $img_url = rand_imgurl() . str_replace($config['path'], '/', $getIMG);
+} else {
+    // 关闭隐藏上传目录
+    $img_url =   rand_imgurl() . $getIMG;
+}
+
+// 图片真实路径
+$imgABPath = APP_ROOT . $getIMG;
+
+// 图片是否存在
+if (!file_exists($imgABPath)) {
+    $imgABPath = APP_ROOT . "/public/images/404.png";
+    $getIMG = rand_imgurl() . "/public/images/404.png";
 }
 
 // 图片尺寸
-$imgSize = filesize(APP_ROOT . $img);
+$imgSize = filesize($imgABPath);
 // 上传时间
-$upTime = filemtime(APP_ROOT . $img);
-
-// 清除缓存
-clearstatcache();
+$upTime = filemtime($imgABPath);
 // 广告
 if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <a href="<?php echo $config['imgurl'] . $img; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo $config['imgurl'] . $img; ?>" id="img1" width="50%" height="50%" class="img-rounded" alt=" <?php echo basename($img); ?>"></a>
+        <a href="<?php echo $getIMG; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo parse_url($getIMG)['path']; ?>" id="img1" width="50%" height="50%" class="img-rounded" alt=" <?php echo basename($getIMG); ?>"></a>
     </div>
     <div class="col-md-6">
-        <h4>图片名称: <?php echo pathinfo($img, PATHINFO_FILENAME); ?></h4>
-        <h4>图片类型: <?php echo pathinfo($img, PATHINFO_EXTENSION); ?></h4>
+        <h4>图片名称: <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
+        <h4>图片类型: <?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
         <h4>图片宽高: <span id="wh"></span>px</h4>
         <h4>图片大小: <?php echo getDistUsed($imgSize); ?></h4>
         <h4>上传时间: <?php echo date("Y-m-d H:i:s", $upTime); ?></h4>
@@ -61,14 +67,14 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         <div class="col-md-6" style="padding-bottom: 10px;">
             <div class="input-group">
                 <span class="input-group-addon"><i class="icon icon-link"></i> 直连&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <input type="text" class="form-control" id="links" onclick="copyText()" value="<?php echo $getIMG; ?>">
+                <input type="text" class="form-control" id="links" onclick="copyText()" value="<?php echo $img_url; ?>">
                 <span class="input-group-btn"><button class="btn btn-default copyBtn1" type="button">复制</button></span>
             </div>
         </div>
         <div class="col-md-6" style="padding-bottom: 10px;">
             <div class="input-group">
                 <span class="input-group-addon"><i class="icon icon-chat"></i> 论坛代码&nbsp;&nbsp;&nbsp;</span>
-                <input type="text" class="form-control" id="bbscode" value="[img]<?php echo $getIMG; ?>[/img]">
+                <input type="text" class="form-control" id="bbscode" value="[img]<?php echo $img_url; ?>[/img]">
                 <span class="input-group-btn"><button class="btn btn-default copyBtn2" type="button">复制</button></span>
             </div>
         </div>
@@ -77,14 +83,14 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         <div class="col-md-6" style="padding-bottom: 10px;">
             <div class="input-group">
                 <span class="input-group-addon"><i class="icon icon-code"></i> MarkDown</span>
-                <input type="text" class="form-control" id="markdown" value="![简单图床 - EasyImage](<?php echo $getIMG; ?>)">
+                <input type="text" class="form-control" id="markdown" value="![简单图床 - EasyImage](<?php echo $img_url; ?>)">
                 <span class="input-group-btn"><button class="btn btn-default copyBtn3" type="button">复制</button></span>
             </div>
         </div>
         <div class="col-md-6" style="padding-bottom: 10px;">
             <div class="input-group">
                 <span class="input-group-addon"><i class="icon icon-html5"></i> HTML&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <input type="text" class="form-control" id="html" value='<img src="<?php echo $getIMG; ?>" alt="简单图床 - EasyImage" />'>
+                <input type="text" class="form-control" id="html" value='<img src="<?php echo $img_url; ?>" alt="简单图床 - EasyImage" />'>
                 <span class="input-group-btn"><button class="btn btn-default copyBtn4" type="button">复制</button></span>
             </div>
         </div>
@@ -147,7 +153,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         });
     }
     // 更改网页标题
-    document.title = "图片<?php echo basename($img); ?>的详细信息 - <?php echo $config['title']; ?>"
+    document.title = "图片<?php echo basename($getIMG); ?>的详细信息 - <?php echo $config['title']; ?>"
 </script>
 <?php
 /** 引入底部 */

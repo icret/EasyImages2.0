@@ -14,7 +14,7 @@ if (!is_who_login('admin')) {
 	  type: "danger", // 定义颜色主题 
 	  icon: "exclamation-sign" // 定义消息图标
   }).show();</script>';
-    header("refresh:21;url=" . $config['domain'] . "/admin/index.php");
+    header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
     require_once APP_ROOT . '/application/footer.php';
     exit;
 }
@@ -62,8 +62,6 @@ if (isset($_POST['add_token_id'])) {
 
 // 禁用Token 
 if (isset($_GET['stop_token'])) {
-
-    // unset($tokenList[$_GET['delete_token']]);
     $stop_token =  $_GET['stop_token'];
     $postArr = array(
         $stop_token => array(
@@ -103,7 +101,13 @@ if (isset($_GET['delete_guest'])) {
 
 // 添加上传账号 修改config.guest.php
 if (isset($_POST['uploader_form'])) {
-    $postArr = array($_POST['uploader_user'] => $_POST['uploader_password']);
+    $postArr = array(
+        $_POST['uploader_user'] => array(
+            'password' => $_POST['uploader_password'],
+            'expired' => $_POST['uploader_time'] * 86400 + time(),
+            'add_time' => time()
+        )
+    );
     $new_config = array_replace($guestConfig, $postArr);
     $config_file = APP_ROOT . '/config/config.guest.php';
     cache_write($config_file, $new_config, 'guestConfig');
@@ -119,8 +123,8 @@ if (isset($_POST['uploader_form'])) {
 }
 
 // 删除非空目录
-if (isset($_POST['delDir'])) {
-    $delDir = APP_ROOT . $config['path'] . $_POST['delDir'];
+if (isset($_REQUEST['delDir'])) {
+    $delDir = APP_ROOT . $config['path'] . $_REQUEST['delDir'];
     if (deldir($delDir)) {
         echo '
 		<script> new $.zui.Messager("删除成功! ", {
@@ -134,7 +138,8 @@ if (isset($_POST['delDir'])) {
 			icon: "exclamation-sign" // 定义消息图标
 		}).show();</script>';
     }
-    header("refresh:1;"); // 1s后刷新当前页面
+    // header("refresh:1;"); // 1s后刷新当前页面
+    header("refresh:1;url=/admin/admin.inc.php");
 }
 
 // 监黄恢复图片
@@ -225,8 +230,8 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="如果只有一个域名请与上边一致">图片域名 | 末尾不加'/' </label>
-                    <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同,比如A域名上传,可以返回B域名图片链接,A、B需绑定到同一空间下,如果不变的话,下边2个填写成一样的! ">
+                    <label data-toggle="tooltip" title="支持多个域名随机选择<br />* 多个域名请以英文 , 分割 <br />* 最后一个域名不要加<br/>* 只有一个域名请与上边一致">图片域名 | 末尾不加'/'</label>
+                    <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同,比如A域名上传,可以返回B域名图片链接,A、B需绑定到同一空间下">
                 </div>
                 <div class="form-group">
                     <label>网站标题</label>
@@ -269,21 +274,25 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content2">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="前后需加英文'/' 例: /i/">存储路径</label>
+                    <label data-toggle="tooltip" title="前后需加'/' 例: /i/">存储路径</label>
                     <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
                 </div>
+                <!-- <div class="form-group">
+                    <label data-toggle="tooltip" title="不懂就不要改本图床仅针对图片上传,如果想上传其他类型文件请更改此出,不同mime请以英文,分割">允许的MIME类型</label>
+                    <input type="text" class="form-control" name="mime" required="required" value="php echo $config['mime'];" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div> -->
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="请以英文 , 分割 最后一个扩展名后边不要加 ,">允许上传的图片扩展名</label>
+                    <label data-toggle="tooltip" title="请以英文 , 分割 最后一个扩展名后边不要加 ,">允许的扩展名</label>
                     <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
-                    <label>图片命名方式</label>
+                    <label>命名方式</label>
                     <select class="chosen-select form-control" name="imgName">
-                        <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 上传时间+4位随机数的36进制 >> vx77yu</option>
-                        <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>上传时间 >> 192704</option>
+                        <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 36进制时间+随机数 >> vx77yu</option>
+                        <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>时间 >> 192704</option>
+                        <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix >> 1635074840</option>
                         <option value="crc32" <?php if ($config['imgName'] == 'crc32') echo 'selected'; ?>>CRC32 >> 2495551279</option>
-                        <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix时间 >> 1635074840</option>
-                        <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>微秒时间 >> 6175436c73418</option>
+                        <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>微秒 >> 6175436c73418</option>
                         <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源文件名 >> 微信图片_20211228214754</option>
                         <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>MD5 >> 3888aa69eb321a2b61fcc63520bf6c82</option>
                         <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>SHA1 >> 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
@@ -291,7 +300,7 @@ if (isset($_GET['recycle_reimg'])) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>将上传图片转换为指定格式</label>
+                    <label data-toggle="tooltip" title="支持图片转换格式后压缩,压缩率与 上传压缩->后端压缩率关联<br />不建议同时启用后端压缩,避免重复压缩导致图片变大"> * 将上传图片转换为指定格式</label>
                     <select class="chosen-select form-control" name="imgConvert">
                         <option value="" <?php if (empty($config['imgConvert'])) echo 'selected'; ?>>不转换</option>
                         <option value="webp" <?php if ($config['imgConvert'] == 'webp') echo 'selected'; ?>>WEBP</option>
@@ -368,10 +377,10 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="text" class="form-control form-date input-sm" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
                 </div>
                 <div class="radio-primary">
-                    <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress" data-toggle="tooltip" title="压缩效率受后端压缩图片压缩率控制"> 使用本地</label>
+                    <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key,填入API设置的TinyPng Key中"> 使用TinyPng</label>
                 </div>
                 <div class="radio-primary">
-                    <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key,填入API设置的TinyPng Key中"> 使用TinyPng</label>
+                    <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress" data-toggle="tooltip" title="压缩效率受后端压缩图片压缩率控制"> 使用本地PHP</label>
                 </div>
                 <label>* 已开启上传压缩的不需重复压缩! </label><br />
                 <label>* 如果页面长时间没有响应,表示正面正在压缩! </label><br />
@@ -398,7 +407,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn-mini btn-primary">保存</button>
             </form>
-            <h5 class="page-header">Token列表:</h5>
+            <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 删除按钮需开启Token分离, 删除后不可恢复</small>'; ?></h5>
             <p><kbd>API调用网址:<?php echo $config['domain']; ?>/api/index.php</kbd></p>
             <table class="table table-hover table-bordered table-condensed table-responsive visible-xs visible-sm" style="margin-top: 10px;">
                 <thead>
@@ -407,7 +416,8 @@ if (isset($_GET['recycle_reimg'])) {
                         <th>列表</th>
                         <th>添加时间</th>
                         <th>有效期至</th>
-                        <th>禁用</th>
+                        <th>上传数量</th>
+                        <th>管理Token</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -418,14 +428,18 @@ if (isset($_GET['recycle_reimg'])) {
                             <td><?php echo $value['id']; ?></td>
                             <td><?php echo $key; ?></td>
                             <td><?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
+                            <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?></td>
                             <td><?php echo $expired; ?></td>
-                            <td><a class="btn btn-mini btn-danger" href="admin.inc.php?stop_token=<?php echo $key; ?>">禁用</a>
+                            <td>
+                                <a class="btn btn-mini btn-danger" href="admin.inc.php?stop_token=<?php echo $key; ?>">禁用</a>
+                                <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <div id="myDataGrid" class="datagrid visible-md visible-lg">
-                <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
+            <div id="myDataGrid" class="datagrid table-bordered visible-md visible-lg">
+                <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
                     <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="搜索Token">
                     <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
                     <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
@@ -498,9 +512,9 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <h5 class="header-dividing">其他设置</h5>
+                        <h5 class="header-dividing">高级设置 <?php if ($config['domain'] == $config['imgurl']) echo '<small> 网站域名与图片域名相同,锁定隐藏' . $config['path'] . '目录开关</small>'; ?></h5>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="每次重新打开浏览器访问网站会展示公告弹窗">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="网址设置->弹窗公告修改内容<br />重开浏览器访问网站会再次展示公告弹窗">
                                 <input type="hidden" name="notice_status" value="0">
                                 <input type="checkbox" name="notice_status" value="1" <?php if ($config['notice_status']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">弹窗公告</label>
@@ -521,7 +535,14 @@ if (isset($_GET['recycle_reimg'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="隐藏图片直链 | *注意: key值与账号密码->源图保护Key绑定,更改源图保护Key后所有链接失效">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="* 如果不懂就关闭<br /> * 1. 图片链接会隐藏<?php echo $config['path']; ?>目录<br />* 2. 网站与图片域名不能一样<br />* 3. 图片域名需绑定到<?php echo $config['path']; ?>目录">
+                                <input type="hidden" name="hide_path" value="0">
+                                <input type="checkbox" name="hide_path" value="1" <?php if ($config['hide_path']) echo 'checked="checked"'; ?> <?php if ($config['domain'] == $config['imgurl']) echo 'disabled'; ?>>
+                                <label style="font-weight: bold">隐藏<?php echo $config['path']; ?>目录</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="隐藏图片直链 | * 注意: key值与账号密码->源图保护Key绑定,更改源图保护Key后所有链接失效">
                                 <input type="hidden" name="hide" value="0">
                                 <input type="checkbox" name="hide" value="1" <?php if ($config['hide']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">源图保护</label>
@@ -534,6 +555,30 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label style="font-weight: bold">图片回收</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="以登陆账号名称创建上传目录<br />* 会导致无法在图片回收和可疑图片中恢复上传者上传的图片">
+                                <input type="hidden" name="guest_path_status" value="0">
+                                <input type="checkbox" name="guest_path_status" value="1" <?php if ($config['guest_path_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">用户分离</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="以Token ID创建目录<br />* 会导致无法在图片回收和可疑图片中恢复Token用户上传的图片">
+                                <input type="hidden" name="token_path_status" value="0">
+                                <input type="checkbox" name="token_path_status" value="1" <?php if ($config['token_path_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">Token分离</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="管理员独立上传目录<br />* 自定义目录暂未提供接口,如需修改请修改config.php中的admin_path<br />* 会导致无法在图片回收和可疑图片中恢复管理上传的图片">
+                                <input type="hidden" name="admin_path_status" value="0">
+                                <input type="checkbox" name="admin_path_status" value="1" <?php if ($config['admin_path_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">管理分离</label>
+                            </div>
+                            <!-- <input type="text" name="admin_path" class="form-control input-sm" value="echo $config['admin_path']" placeholder="请自定义管理的上传目录"> -->
+                        </div>
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="开启文件管理">
                                 <input type="hidden" name="tinyfilemanager" value="0">
@@ -541,8 +586,6 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label style="font-weight: bold">文件管理</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
                                 <input type="hidden" name="upload_logs" value="0">
@@ -571,10 +614,10 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
                                     <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
                                 </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=today">
+                                <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=today">
                                     <input type="checkbox" name="public_list[]" value="today" id="today" <?php if (in_array('today', $config['public_list']))  echo 'checked'; ?>><label for="today">今日</label>
                                 </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=yesterday">
+                                <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=yesterday">
                                     <input type="checkbox" name="public_list[]" value="yesterday" id="yesterday" <?php if (in_array('yesterday', $config['public_list']))  echo 'checked'; ?>><label for="yesterday">昨日</label>
                                 </label>
                                 <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=total_space">
@@ -595,7 +638,7 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=dir">
                                     <input type="checkbox" name="public_list[]" value="dir" id="dir" <?php if (in_array('dir', $config['public_list']))  echo 'checked'; ?>><label for="dir">文件夹数量</label>
                                 </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=month">
+                                <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=month">
                                     <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日上传</label>
                                 </label>
                             </div>
@@ -611,9 +654,10 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content7">
             <h5 class="header-dividing">可疑图片<small> 鉴黄查到的可疑图片</small></h5>
-            <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
             <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
-            <p>获得key后打开->API 设置->Moderate Key->填入 </p>
+            <p>获得key后打开->API 设置->Moderate Key->填入key</p>
+            <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
+            <p>无法恢复 <kbd>用户分离</kbd> <kbd>Token分离</kbd> <kbd>管理分离</kbd> 的图片</p>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed table-striped">
                     <thead>
@@ -622,22 +666,22 @@ if (isset($_GET['recycle_reimg'])) {
                             <th>缩略图</th>
                             <th>文件名</th>
                             <th>文件大小</th>
-                            <th>文件操作</th>
+                            <th>文件管理</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         // 获取被隔离的文件
-                        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                                // cache目录
-                        $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
-                        $cache_num = count($cache_file);                                                   // 统计目录文件个数
-                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
-                            $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];    // 图片绝对路径
-                            $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                    // 图片相对路径
-                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
-                            $filen_name = $cache_file[$i];                                                 // 图片名称
-                            $url = $config['imgurl'] . $config['path'] . 'suspic/' . $cache_file[$i];       // 图片网络连接
-                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
+                        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                              // cache目录
+                        $cache_file = get_file_by_glob($cache_dir . '*.*');                               // 获取所有文件
+                        $cache_num = count($cache_file);                                                  // 统计目录文件个数
+                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                 // 循环输出文件
+                            $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];  // 绝对路径
+                            $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                  // 相对路径
+                            $file_size =  getDistUsed(filesize($file_cache_path));                        // 大小
+                            $filen_name = $cache_file[$i];                                                // 名称
+                            $url = rand_imgurl() . $config['path'] . 'suspic/' . $cache_file[$i];         // 网络连接
+                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;   // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
@@ -712,6 +756,29 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content9">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <div class="form-group">
+                    <h5>上传首选显示链接</h5>
+                    <label class="radio-inline">
+                        <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
+                        <i class="icon icon-link"></i>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="upload_first_show" value="2" data-toggle="tooltip" title="论坛代码" <?php if ($config['upload_first_show'] == 2) echo 'checked'; ?>>
+                        <i class="icon icon-chat"></i>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="upload_first_show" value="3" data-toggle="tooltip" title="Markdown" <?php if ($config['upload_first_show'] == 3) echo 'checked'; ?>>
+                        <i class="icon icon-code"></i>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="upload_first_show" value="4" data-toggle="tooltip" title="HTML" <?php if ($config['upload_first_show'] == 4) echo 'checked'; ?>>
+                        <i class="icon icon-html5"></i>
+                    </label>
+                    <label class="radio-inline" data-toggle="tooltip" title="删除链接">
+                        <input type="radio" id="upload_first_show5" name="upload_first_show" value="5" <?php if ($config['upload_first_show'] == 5) echo 'checked'; ?>>
+                        <i class="icon icon-trash"></i>
+                    </label>
+                </div>
                 <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">页面展示开关</label>
                 <div class="form-group">
                     <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
@@ -741,6 +808,13 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <label data-toggle="tooltip" title="暂支持中文简繁体转换">界面语言</label>
+                    <select class="chosen-select form-control" name="language">
+                        <option value="0" <?php if ($config['language'] == '0') echo 'selected'; ?>>简体中文</option>
+                        <option value="1" <?php if ($config['language'] == '1') echo 'selected'; ?>>繁體中文</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label data-toggle="tooltip" title="配色样式文件夹位置: /public/static/zui/theme/">网站配色</label>
                     <select class="chosen-select form-control" name="theme">
                         <option value="default" <?php if ($config['theme'] == 'default') echo 'selected'; ?>>默认配色</option>
@@ -756,43 +830,12 @@ if (isset($_GET['recycle_reimg'])) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="暂支持中文简繁体转换">界面语言</label>
-                    <select class="chosen-select form-control" name="language">
-                        <option value="0" <?php if ($config['language'] == '0') echo 'selected'; ?>>简体中文</option>
-                        <option value="1" <?php if ($config['language'] == '1') echo 'selected'; ?>>繁體中文</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景图</label>
+                    <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景</label>
                     <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div>
-                <div class="form-group">
-                    <h5>上传首选显示链接</h5>
-                    <label class="radio-inline">
-                        <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
-                        <i class="icon icon-link"></i>
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="upload_first_show" value="2" data-toggle="tooltip" title="论坛代码" <?php if ($config['upload_first_show'] == 2) echo 'checked'; ?>>
-                        <i class="icon icon-chat"></i>
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="upload_first_show" value="3" data-toggle="tooltip" title="Markdown" <?php if ($config['upload_first_show'] == 3) echo 'checked'; ?>>
-                        <i class="icon icon-code"></i>
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="upload_first_show" value="4" data-toggle="tooltip" title="HTML" <?php if ($config['upload_first_show'] == 4) echo 'checked'; ?>>
-                        <i class="icon icon-html5"></i>
-                    </label>
-                    <label class="radio-inline" data-toggle="tooltip" title="删除链接">
-                        <input type="radio" id="upload_first_show5" name="upload_first_show" value="5" <?php if ($config['upload_first_show'] == 5) echo 'checked'; ?>>
-                        <i class="icon icon-trash"></i>
-                    </label>
                 </div>
                 <div class="form-group">
                     <label>广场默认浏览数量 | 当前: </label>
                     <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
-
                     <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" data-toggle="tooltip" title="可在网址后填写参数实时更改预览数量 如: https://png.cm/application/list.php?num=3">
                 </div>
                 <div class="form-group">
@@ -826,7 +869,7 @@ if (isset($_GET['recycle_reimg'])) {
                         <p>直接输入账号和密码即可完成修改.</p>
                         <p>更改后会立即生效并重新登录,请务必牢记账号和密码! </p>
                         <p>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到user对应的键值->填入</p>
-                        <p>如果忘记密码请将密码->转换成MD5小写-><a href="https://md5jiami.bmcx.com/" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
+                        <p>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
                     </div>
                 </div>
             </form>
@@ -835,13 +878,18 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5 class="header-dividing">上传者账号<small> 账户只能用于上传</small></h5>
                 <div class="form-group">
                     <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
-                        <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" autocomplete="off" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                     </div>
                     <div class="input-control has-icon-left" style="margin-top: 10px;">
-                        <input type="text" name="uploader_password" id="uploader_password" class="form-control" value="" required="required" placeholder="添加/更改 上传者密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" name="uploader_password" id="uploader_password" class="form-control" value="" required="required" autocomplete="off" placeholder="添加/更改 上传者密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <input type="hidden" name="uploader_password" id="uploader_md5_password">
                         <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
+                    </div>
+                    <div class="input-group col-md-4" style="margin-top: 10px;">
+                        <span class="input-group-addon">有效期: </span>
+                        <input type="number" class="form-control" name="uploader_time" value="30" id="uploader_time" required="required" placeholder="有效期 单位: 天">
+                        <span class="input-group-addon">天</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -851,29 +899,38 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="alert alert-primary with-icon col-xs-8" style="margin-top: 5px;">
                     <i class="icon-info-sign"></i>
                     <div class="content">
-                        <p>开启登录上传后,可以添加一些只能上传的账号.</p>
-                        <p>更改后会立即生效并重新登录,请将账号和密码发给使用者.</p>
                         <p>上传用户的配置文件在<code>config.guest.php</code></p>
+                        <p>开启登录上传后,可以添加一些只能上传的账号</p>
+                        <p>更改后会立即生效并重新登录,请将账号和密码发给使用者</p>
                         <p>如果忘记密码请填入账号并填写新的密码即可更正密码 | <b class="text-success">与更改管理 账号/密码不同!</b></p>
                     </div>
                 </div>
             </form>
-            <h5>当前所有上传者账号与密码 | 所有密码均经过MD5加密 | 账号<code>guest</code>的MD5为: <code>084e0343a0486ff05530df6c705c8bb4</code></h5>
+            <?php if (!$config['guest_path_status']) echo '<h5>* 开启用户分离后删除上传按钮激活, 删除后不可恢复</h5>'; ?>
             <div class="table-responsive">
                 <table class="table table-condensed table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>登录账号</th>
-                            <th>登录密码</th>
-                            <th>删除密码</th>
+                            <th>登录密码 (经过MD5加密)</th>
+                            <th>添加时间</th>
+                            <th>有效期至</th>
+                            <th>上传数量</th>
+                            <th>管理账号</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($guestConfig as $key => $value) : ?>
                             <tr>
                                 <td><?php echo $key; ?></td>
-                                <td><?php echo $value; ?></td>
-                                <td><a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $key; ?>'>删除</a></td>
+                                <td><?php echo $value['password']; ?></td>
+                                <td> <?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
+                                <td> <?php echo date('Y年m月d日 H:i:s', $value['expired']); ?></td>
+                                <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $key, $type = 'number'); ?></td>
+                                <td>
+                                    <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $key; ?>'>删除账户</a>
+                                    <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='admin.inc.php?delDir=<?php echo $key; ?>'>删除上传</a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -881,7 +938,7 @@ if (isset($_GET['recycle_reimg'])) {
             </div>
             <!-- 源图加密Key start-->
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <h5 class="header-dividing">源图保护Key<small> *设定后请勿轻易更改,更改后所有源图加密链接失效</small></h5>
+                <h5 class="header-dividing">源图保护Key<small> * 设定后请勿更改,否则所有加密链接失效</small></h5>
                 <div class="form-group">
                     <div class="input-control has-icon-left">
                         <input type="text" class="form-control" name="hide_key" required="required" value="<?php echo $config['hide_key']; ?>" onkeyup="this.value=this.value.trim()">
@@ -895,6 +952,7 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content11">
             <h5 class="header-dividing">图片回收<small> 用户自行删除的会显示在这个页面</small></h5>
             <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
+            <p>无法恢复 <kbd>用户分离</kbd> <kbd>Token分离</kbd> <kbd>管理分离</kbd> 的图片</p>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed table-striped">
                     <thead>
@@ -903,23 +961,22 @@ if (isset($_GET['recycle_reimg'])) {
                             <th>缩略图</th>
                             <th>文件名</th>
                             <th>文件大小</th>
-                            <th>文件操作</th>
+                            <th>文件管理</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         // 获取被隔离的文件
-                        $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                               // cache目录
-
-                        $cache_file = get_file_by_glob($cache_dir . '*.*');                                 // 获取所有文件
+                        $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                              // cache目录
+                        $cache_file = get_file_by_glob($cache_dir . '*.*');                                // 获取所有文件
                         $cache_num = count($cache_file);                                                   // 统计目录文件个数
-                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                   // 循环输出文件
-                            $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i];   // 图片绝对路径
-                            $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                   // 图片相对路径
-                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 图片大小
-                            $filen_name = $cache_file[$i];                                                 // 图片名称
-                            $url = $config['imgurl'] . $config['path'] . 'recycle/' . $cache_file[$i];      // 图片网络连接
-                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $url;           // 图片删除连接
+                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                  // 循环输出文件
+                            $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i];  // 绝对路径
+                            $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                  // 相对路径
+                            $file_size =  getDistUsed(filesize($file_cache_path));                         // 大小
+                            $filen_name = $cache_file[$i];                                                 // 名称
+                            $url = rand_imgurl() . $config['path'] . 'recycle/' . $cache_file[$i];         // 网络连接
+                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;    // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
@@ -997,18 +1054,18 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5 class="header-dividing">前端裁剪/压缩 <small>优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</small></h5>
                 <!-- <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4> -->
                 <div class="form-group">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启下边五项不生效">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启不生效">
                         <input type="hidden" name="imgRatio" value="0">
                         <input type="checkbox" name="imgRatio" value="1" <?php if ($config['imgRatio']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">前端修改图片</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>裁剪的宽度(0不生效) | 当前宽度: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>px</label>
+                    <label>压缩后的宽度 | 当前: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>px (0不生效)</label>
                     <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_x').innerHTML=value">
                 </div>
                 <div class="form-group">
-                    <label>裁剪的高度(0不生效) | 当前高度: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>px</label>
+                    <label>压缩后的高度 | 当前: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>px (0不生效)</label>
                     <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_y').innerHTML=value">
                 </div>
                 <div class="form-group">
@@ -1029,12 +1086,11 @@ if (isset($_GET['recycle_reimg'])) {
                     <label>前端压缩率(仅支持JPG) | 当前: </label><label id="imgRatio_quality"><?php echo $config['imgRatio_quality']; ?></label><label>%</label>
                     <input type="range" class="form-control" name="imgRatio_quality" value="<?php echo $config['imgRatio_quality']; ?>" min="10" max="100" step="5" onchange="document.getElementById('imgRatio_quality').innerHTML=value">
                 </div>
-                <h5 class="header-dividing">后端压缩 <small>优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</small></h5>
-                <!-- <h4 class="with-padding bg-blue" style="text-align: center;">后端压缩 - 优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</h4> -->
+                <h5 class="header-dividing">后端压缩 <small data-toggle="tooltip" title=" 有一定概率改变图片方向,有可能使图片变大(特别是小图片) !<br />开启转换图片格式后不建议开启此选项,可能会导致图片变大!">优点:避免用户端欺骗,效果更好 缺点:增加服务器压力</small></h5>
                 <div class="form-group">
                     <div class="switch switch-inline">
                         <input type="hidden" name="compress" value="0">
-                        <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) echo 'checked="checked"'; ?> data-toggle="tooltip" title=" 轻微有损压缩图片, 此压缩有可能使图片变大! 特别是小图片 也有一定概率改变图片方向">
+                        <input type="checkbox" name="compress" value="1" <?php if ($config['compress']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">后端压缩上传图片 | 更多图片格式的支持</label>
                     </div>
                 </div>
@@ -1118,7 +1174,7 @@ if (isset($_GET['recycle_reimg'])) {
     // tips提示
     $('[data-toggle="tooltip"]').tooltip({
         tipClass: 'tooltip',
-        placement: 'top',
+        placement: 'auto',
         html: true,
         delay: {
             show: 50,
@@ -1173,12 +1229,12 @@ if (isset($_GET['recycle_reimg'])) {
             cols: [{
                     name: 'id',
                     label: 'ID',
-                    width: 0.1
+                    width: 0.02
                 },
                 {
                     name: 'list',
                     label: '列表',
-                    width: 0.4
+                    width: 0.28
                 },
                 {
                     name: 'add_time',
@@ -1193,10 +1249,16 @@ if (isset($_GET['recycle_reimg'])) {
                     width: 0.2
                 },
                 {
-                    name: 'delete',
-                    label: '删除',
+                    name: 'number',
+                    label: '上传数量',
                     html: true,
                     width: 0.1
+                },
+                {
+                    name: 'manage',
+                    label: '管理Token',
+                    html: true,
+                    width: 0.2
                 },
             ],
             array: [
@@ -1206,7 +1268,8 @@ if (isset($_GET['recycle_reimg'])) {
                         list: '<?php echo $key; ?>',
                         add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
-                        delete: "<a class='btn btn-mini btn-danger' href='admin.inc.php?stop_token=<?php echo $key; ?>'>禁用</a>"
+                        number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
+                        manage: "<a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
                     },
                 <?php endforeach; ?>
             ]

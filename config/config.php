@@ -2,7 +2,7 @@
 $config=Array
 	(
 	'title'=>'简单图床 - EasyImage',
-	'keywords'=>'简单图床,easyimage,easyimage2.0,无数据库图床,PHP多图长传程序,自适应页面,HTML5,markdown,bbscode,一键复制',
+	'keywords'=>'简单图床,easyimage,easyimage2.0,无数据库图床,免费图床,PHP多图长传程序,自适应页面,一键复制链接,HTML5,markdown,bbscode',
 	'description'=>'简单图床EasyImage是一款支持多文件上传的无数据库图床,可以完美替代PHP多图上传程序,最新html5自适应页面兼容手机电脑,上传后返回图片直链,markdown图片,论坛贴图bbscode链接,简单方便支持一键复制,支持多域名,api上传',
 	'tips'=>'<a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-github"> 如果你喜欢这种图床风格就下载喔 (๑•̀ㅂ•́)و✧</i></a>
 <a href="https://github.com/icret/EasyImages2.0" target="_black"><i class="icon icon-heart"> 简单图床是一款开源图床, 支持多文件上传无数据库</i></a>
@@ -15,8 +15,9 @@ $config=Array
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'mustLogin'=>0,
-	'apiStatus'=>1,
+	'apiStatus'=>0,
 	'path'=>'/i/',
+	'mime'=>'image/*,video/*',
 	'imgName'=>'default',
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
@@ -37,10 +38,10 @@ $config=Array
 	'minWidth'=>5,
 	'minHeight'=>5,
 	'imgRatio'=>0,
-	'image_x'=>0,
-	'image_y'=>0,
+	'image_x'=>200,
+	'image_y'=>200,
 	'imgRatio_quality'=>80,
-	'imgRatio_crop'=>0,
+	'imgRatio_crop'=>1,
 	'imgRatio_preserve_headers'=>1,
 	'static_cdn'=>0,
 	'theme'=>'default',
@@ -50,26 +51,6 @@ $config=Array
 	'checkImg_value'=>50,
 	'moderatecontent_key'=>'',
 	'nsfwjs_url'=>'',
-	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c790ac2bdc2f385757ecd0183206108d";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>',
-	'ad_top'=>0,
-	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
-<div class="col-md-12" style="text-align: center;margin:2px;">
-    <a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
-</div>',
-	'ad_bot'=>0,
-	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;margin-bottom:10px;">
-    <a href="../public/images/wechat.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
-    <a href="../public/images/alipay.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
-</div>',
 	'showSwitch'=>1,
 	'showSort'=>1,
 	'listNumber'=>20,
@@ -105,8 +86,33 @@ var _hmt = _hmt || [];
 	'delDir'=>'thumbnails/',
 	'hide'=>0,
 	'hide_key'=>'EasyImage2.0',
-	'version'=>'2.6.0',
-	'update'=>'2022-04-29 16:49:44',
+	'hide_path'=>0,
+	'admin_path_status'=>0,
+	'guest_path_status'=>0,
+	'token_path_status'=>0,
+	'admin_path'=>'u',
+	'version'=>'2.6.1',
+	'update'=>'2022-05-03 00:57:40',
+	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "https://hm.baidu.com/hm.js?c790ac2bdc2f385757ecd0183206108d";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>',
+	'ad_top'=>0,
+	'ad_top_info'=>' <!--广告 按照这个范例替换相应链接，如果想多几个广告，就多复制几个-->
+	<div class="col-md-12" style="text-align: center;margin:2px;">
+		<a href="https://app.cloudcone.com.cn/?ref=3521" target="_blank"><img src="/public/images/EasyImage2.0.png" /></a>
+	</div>',
+	'ad_bot'=>0,
+	'ad_bot_info'=>'<div class="col-md-12" style="text-align: center;margin-bottom:10px;">
+		<a href="../public/images/wechat.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;" data-lightbox-group="group1644998953432"><i class="icon icon-wechat"></i> 打赏作者</a>
+		<a href="../public/images/alipay.jpg" alt="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#1970fc;" data-lightbox-group="group1644998953432"><i class="icon icon-zhifubao"></i> 打赏作者</a>
+	</div>',
 	'terms'=>'<div class="container" style="margin-bottom: 80px;">
   <div class="row">
     <div class="col-xs-3">

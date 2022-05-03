@@ -69,7 +69,7 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
             </div>
             <div class="modal-footer" style="text-align:left">
                 <p class="text-primary">安装环境检测弹窗仅在第一次访问主页时展示,弹出后会在<code>config</code>目录下生成<code>EasyIamge.lock</code>文件,如需再次弹出请删除<code>EasyIamge.lock</code>文件。</p>
-                <p class="text-primary">刷新或按<kbd>ESC</kbd>关闭安装环境检测弹窗。</p>
+                <p class="text-primary">刷新或<kbd>ESC</kbd>关闭安装环境检测弹窗。</p>
             </div>
         </div>
     </div>

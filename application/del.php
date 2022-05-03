@@ -16,7 +16,7 @@ if (empty($_REQUEST)) {
     ';
 }
 
-$img = $config['imgurl'] . '/public/images/404.png';
+$img = rand_imgurl() . '/public/images/404.png';
 if (isset($_GET['url'])) {
     $img = $_GET['url'];
 }

@@ -56,8 +56,8 @@ define('DEFAULT_ZC', 0);
 define('MAX_WIDTH', 10240);
 define('MAX_HEIGHT', 10240);
 define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'thumbnails');
-define('NOT_FOUND_IMAGE', $config['imgurl'] . '/public/images/404.png');
-define('ERROR_IMAGE', $config['imgurl'] . '/public/images/404.png');
+define('NOT_FOUND_IMAGE', $config['domain'] . '/public/images/404.png');
+define('ERROR_IMAGE', $config['domain'] . '/public/images/404.png');
 define('DISPLAY_ERROR_MESSAGES', false);
 define('MAX_FILE_SIZE', $config['maxSize']);     // 10 Megs 是 10485760。这是我们将处理的最大内部或外部文件大小。
 define('FILE_CACHE_TIME_BETWEEN_CLEANS', 86400); // 多久清理一次缓存
