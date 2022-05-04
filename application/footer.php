@@ -36,7 +36,7 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
     </div>
   </div>
 </div>
-<footer class="container text-muted small navbar-fixed-bottom" style="text-align: center;background-color:rgba(255,255,255,0.7);">
+<footer class="container text-muted small navbar-fixed-bottom" style="text-align: center;background-color:rgba(255,255,255,0.7);z-index: 0;">
   <hr>
   <?php /** 页脚信息 */ if (!empty($config['footer'])) echo $config['footer']; ?>
   <p>

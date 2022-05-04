@@ -454,8 +454,9 @@ if (isset($_GET['recycle_reimg'])) {
                 <button type="submit" class="btn btn-mini btn-primary">保存</button>
             </form>
             <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
-            <p><kbd>API调用网址:<?php echo $config['domain']; ?>/api/index.php</kbd></p>
-            <table class="table table-hover table-bordered table-condensed table-responsive visible-xs visible-sm" style="margin-top: 10px;">
+            <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
+            <div class="table-responsive">
+            <table class="table table-condensed table-hover table-bordered visible-xs visible-sm" style="margin-top: 10px;">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -486,6 +487,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
             <div id="myDataGrid" class="datagrid table-bordered visible-md visible-lg">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
                     <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="搜索Token">

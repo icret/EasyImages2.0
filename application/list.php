@@ -130,18 +130,33 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
       </form>
     </div>
+    <!-- 返回顶部-->
+    <div class="btn btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
   </div>
-</div>
-<!-- 返回顶部 -->
-<div style="display: none;" id="rocket-to-top">
-  <div style="opacity:0;display: block;" class="level-2"></div>
-  <div class="level-3"></div>
-</div>
 </div>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.css">
+<style>
+  /* 返回顶部 */
+  .btn-back-to-top {
+    padding: 0.5rem 1rem;
+    position: fixed;
+    right: 2rem;
+    bottom: 1rem;
+    z-index: 2;
+    -webkit-transition: -webkit-transform 0.2s ease;
+    transition: transform 0.2s ease;
+    -webkit-transform: translateY(200%);
+    transform: translateY(200%);
+  }
+
+  .btn-back-to-top.scrolled {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+</style>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
@@ -299,69 +314,24 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   }
 
   // 返回顶部
-  $(function() {
-    var e = $("#rocket-to-top"),
-      t = $(document).scrollTop(),
-      n,
-      r,
-      i = !0;
-    $(window).scroll(function() {
-        var t = $(document).scrollTop();
-        t == 0 ? e.css("background-position") == "0px 0px" ? e.fadeOut("slow") : i && (i = !1, $(".level-2").css("opacity", 1), e.delay(100).animate({
-            marginTop: "-1000px"
-          },
-          "normal",
-          function() {
-            e.css({
-                "margin-top": "-125px",
-                display: "none"
-              }),
-              i = !0
-          })) : e.fadeIn("slow")
-      }),
-      e.hover(function() {
-          $(".level-2").stop(!0).animate({
-            opacity: 1
-          })
-        },
-        function() {
-          $(".level-2").stop(!0).animate({
-            opacity: 0
-          })
-        }),
-      $(".level-3").click(function() {
-        function t() {
-          var t = e.css("background-position");
-          if (e.css("display") == "none" || i == 0) {
-            clearInterval(n),
-              e.css("background-position", "0px 0px");
-            return
-          }
-          switch (t) {
-            case "0px 0px":
-              e.css("background-position", "-298px 0px");
-              break;
-            case "-298px 0px":
-              e.css("background-position", "-447px 0px");
-              break;
-            case "-447px 0px":
-              e.css("background-position", "-596px 0px");
-              break;
-            case "-596px 0px":
-              e.css("background-position", "-745px 0px");
-              break;
-            case "-745px 0px":
-              e.css("background-position", "-298px 0px");
-          }
-        }
-        if (!i) return;
-        n = setInterval(t, 50),
-          $("html,body").animate({
-              scrollTop: 0
-            },
-            "slow");
-      });
+  var back_to_top_button = jQuery('.btn-back-to-top');
+  jQuery(window).scroll(function() {
+    if (jQuery(this).scrollTop() > 100 && !back_to_top_button.hasClass('scrolled')) {
+      back_to_top_button.addClass('scrolled');
+
+    } else if (jQuery(this).scrollTop() < 100 && back_to_top_button.hasClass('scrolled')) {
+      back_to_top_button.removeClass('scrolled');
+
+    }
   });
+  // 返回顶部
+  back_to_top_button.click(function() {
+    jQuery('html, body').animate({
+      scrollTop: 0
+    }, 800);
+    return false;
+  });
+
   //懒加载
   var lazy = new Lazy({
     onload: function(elem) {
