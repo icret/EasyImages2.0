@@ -80,7 +80,7 @@ $config=Array
 		9=>'month'
 		),
 	'language'=>0,
-	'login_bg'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0/public/images/login_bg.jpg',
+	'login_bg'=>'https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.6.2/public/images/login_bg.jpg',
 	'image_recycl'=>1,
 	'tinyfilemanager'=>1,
 	'delDir'=>'thumbnails/',
@@ -92,7 +92,7 @@ $config=Array
 	'token_path_status'=>0,
 	'admin_path'=>'u',
 	'version'=>'2.6.2',
-	'update'=>'2022-05-04 22:48:28',
+	'update'=>'2022-05-04 22:54:32',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];
