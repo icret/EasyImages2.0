@@ -38,7 +38,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <a href="<?php echo $img_url; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo parse_url($getIMG)['path']; ?>" id="img1" width="300px" height="200px" class="img-rounded" alt=" <?php echo basename($getIMG); ?>"></a>
+        <a href="<?php echo $img_url; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo creat_thumbnail_by_list($getIMG); ?>" id="img1" width="350px" height="200px" class="img-rounded" alt=" <?php echo basename($getIMG); ?>"></a>
     </div>
     <div class="col-md-6">
         <h4>图片名称: <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>

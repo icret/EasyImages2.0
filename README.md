@@ -4,14 +4,18 @@
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](https://www.jb51.net/codes/40544.html)
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
 
-[![PHP](https://img.shields.io/badge/PHP->=5.6-orange.svg)](http://php.net)
+[![PHP](https://img.shields.io/badge/php-5.6%20--%208.0-blue.svg)](http://php.net)
 [![Release](https://img.shields.io/github/v/release/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/releases)
-[![Issues](https://img.shields.io/github/issues/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/issues)
-[![stargazers](https://img.shields.io/github/stars/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/stargazers)
+[![EasyImage2.0 GitHub's stars](https://img.shields.io/github/stars/icret/easyImage2.0?style=social)](https://github.com/icret/EasyImages2.0/stargazers)
+[![EasyImage2.0 GitHub's forks](https://img.shields.io/github/forks/icret/easyimage2.0?style=social)](https://github.com/icret/EasyImages2.0/network/members)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/gh/icret/EasyImages2.0/badge)](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@EasyImage2.0/)
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 [![QQ group](https://pub.idqqimg.com/wpa/images/group.png)](https://jq.qq.com/?_wv=1027&k=jfXRHU8Y)
+<!-- 
+[![stargazers](https://img.shields.io/github/stars/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/stargazers)
+[![Issues](https://img.shields.io/github/issues/icret/EasyImages2.0)](https://github.com/icret/EasyImages2.0/issues)
+ -->
 
 >[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/) | [Telegram](https://t.me/Easy_Image)
 >
@@ -176,7 +180,7 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-05-04 v2.6.2 deving
+* 2022-05-04 v2.6.2
 - 增加API/用户文件浏览和删除
 - 增加转换webp后也会添加水印 
   - 转换成webp后不建议开启水印,会增大图片体积
