@@ -91,8 +91,8 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'version'=>'2.6.1',
-	'update'=>'2022-05-04 06:57:24',
+	'version'=>'2.6.2',
+	'update'=>'2022-05-04 19:57:16',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];

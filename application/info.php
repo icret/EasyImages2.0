@@ -38,7 +38,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <a href="<?php echo $getIMG; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo parse_url($getIMG)['path']; ?>" id="img1" width="50%" height="50%" class="img-rounded" alt=" <?php echo basename($getIMG); ?>"></a>
+        <a href="<?php echo $img_url; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo parse_url($getIMG)['path']; ?>" id="img1" width="300px" height="200px" class="img-rounded" alt=" <?php echo basename($getIMG); ?>"></a>
     </div>
     <div class="col-md-6">
         <h4>图片名称: <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
@@ -66,7 +66,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-12" style="padding-bottom: 10px;">
         <div class="col-md-6" style="padding-bottom: 10px;">
             <div class="input-group">
-                <span class="input-group-addon"><i class="icon icon-link"></i> 直连&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="input-group-addon"><i class="icon icon-link"></i> 直 连&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <input type="text" class="form-control" id="links" onclick="copyText()" value="<?php echo $img_url; ?>">
                 <span class="input-group-btn"><button class="btn btn-default copyBtn1" type="button">复制</button></span>
             </div>
