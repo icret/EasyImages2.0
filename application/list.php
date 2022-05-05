@@ -110,7 +110,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
           </div>
         </form>
       </div> -->
-    <div class="col-md-2 col-xs-6">
+    <div class="col-md-2 col-xs-7">
       <div class="btn-group">
         <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
         <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
@@ -119,7 +119,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       </div>
     </div>
     <!-- 按日期-->
-    <div class="col-md-2 col-xs-6">
+    <div class="col-md-2 col-xs-5">
       <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
         <div class="input-group">
           <span class="input-group-addon fix-border fix-padding"></span>

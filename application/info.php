@@ -7,9 +7,12 @@ if (!$config['show_exif_info']) exit(header('Location: ' . $config['domain'] . '
 if (isset($_GET['img'])) {
     // 过滤特殊符号
     $getIMG = strip_tags($_GET['img']);
+    $exif_url = $config['domain'] . $getIMG;
 } else {
     // 未获取到图片地址
     $getIMG = rand_imgurl() . "/public/images/404.png";
+
+    $exif_url = $config['domain'] . "/public/images/404.png";
 }
 
 // 开启隐藏上传目录
@@ -38,7 +41,9 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <a href="<?php echo $img_url; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo creat_thumbnail_by_list($getIMG); ?>" id="img1" width="350px" height="200px" class="img-rounded" alt=" <?php echo basename($getIMG); ?>"></a>
+        <a href="<?php echo $img_url; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo $getIMG; ?>" id="img1" width="350px" height="200px" class="img-rounded" alt="<?php echo basename($getIMG); ?>"></a>
+
+
     </div>
     <div class="col-md-6">
         <h4>图片名称: <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
@@ -61,7 +66,6 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 </div>
-<? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
 <div class="col-md-12" style="margin-top: 10px;">
     <div class="col-md-12" style="padding-bottom: 10px;">
         <div class="col-md-6" style="padding-bottom: 10px;">
@@ -96,43 +100,114 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 </div>
+<? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
 <script src="<?php static_cdn(); ?>/public/static/exif/exif.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>
-    // 获取图片长宽
-    function getImgNaturalDimensions(oImg, callback) {
-        var nWidth, nHeight;
-        if (!oImg.naturalWidth) { // 现代浏览器
+    // 获取图片长宽 https://www.cnblogs.com/houxianzhou/p/14807983.html
+    var imgReady = (function() {
+        var list = [],
+            intervalId = null,
+            // 用来执行队列
+            tick = function() {
+                var i = 0;
+                for (; i < list.length; i++) {
+                    list[i].end ? list.splice(i--, 1) : list[i]();
+                };
+                !list.length && stop();
+            },
+            // 停止所有定时器队列
+            stop = function() {
+                clearInterval(intervalId);
+                intervalId = null;
+            };
+        return function(url, ready, load, error) {
+            var onready, width, height, newWidth, newHeight,
+                img = new Image();
+            img.src = url;
+            // 如果图片被缓存，则直接返回缓存数据
+            if (img.complete) {
+                ready.call(img);
+                load && load.call(img);
+                return;
+            };
+            width = img.width;
+            height = img.height;
+            // 加载错误后的事件
+            img.onerror = function() {
+                error && error.call(img);
+                onready.end = true;
+                img = img.onload = img.onerror = null;
+            };
+            // 图片尺寸就绪
+            onready = function() {
+                newWidth = img.width;
+                newHeight = img.height;
+                if (newWidth !== width || newHeight !== height || newWidth * newHeight > 1024) {
+                    // 如果图片已经在其他地方加载可使用面积检测
+                    ready.call(img);
+                    onready.end = true;
+                };
+            };
+            onready();
+            // 完全加载完毕的事件
+            img.onload = function() {
+                // onload在定时器时间差范围内可能比onready快
+                // 这里进行检查并保证onready优先执行
+                !onready.end && onready();
+                load && load.call(img);
+                // IE gif动画会循环执行onload，置空onload即可
+                img = img.onload = img.onerror = null;
+            };
+            // 加入队列中定期执行
+            if (!onready.end) {
+                list.push(onready);
+                // 无论何时只允许出现一个定时器，减少浏览器性能损耗
+                if (intervalId === null) intervalId = setInterval(tick, 40);
+            };
+        };
+    })();
 
-            nWidth = oImg.naturalWidth;
-            nHeight = oImg.naturalHeight;
-            callback({
-                w: nWidth,
-                h: nHeight
-            });
+    imgReady('<?php echo $img_url; ?>', function() {
+        // alert('size ready: width=' + this.width + '; height=' + this.height);
+        var hw = document.getElementById("wh");
+        hw.innerHTML = this.width + "x" + this.height
+    });
 
-        } else { // IE6/7/8
-            var nImg = new Image();
+    /* 获取图片长宽    
+        function getImgNaturalDimensions(oImg, callback) {
+            var nWidth, nHeight;
+            if (!oImg.naturalWidth) { // 现代浏览器
 
-            nImg.onload = function() {
-                var nWidth = nImg.width,
-                    nHeight = nImg.height;
+                nWidth = oImg.naturalWidth;
+                nHeight = oImg.naturalHeight;
                 callback({
                     w: nWidth,
                     h: nHeight
                 });
+
+            } else { // IE6/7/8
+                var nImg = new Image();
+
+                nImg.onload = function() {
+                    var nWidth = nImg.width,
+                        nHeight = nImg.height;
+                    callback({
+                        w: nWidth,
+                        h: nHeight
+                    });
+                }
+                nImg.src = oImg.src;
             }
-            nImg.src = oImg.src;
         }
-    }
-    var img = document.getElementById("img1");
+        var img = document.getElementById("img1");
 
-    getImgNaturalDimensions(img, function(dimensions) {
-        var hw = document.getElementById("wh");
-        hw.innerHTML = dimensions.w + "x" + dimensions.h
-    })
-
+        getImgNaturalDimensions(img, function(dimensions) {
+            var hw = document.getElementById("wh");
+            hw.innerHTML = dimensions.w + "x" + dimensions.h
+        })
+    */
     // Exif信息
     window.onload = getExif;
 
