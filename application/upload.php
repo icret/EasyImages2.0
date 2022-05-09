@@ -28,6 +28,17 @@ if ($config['check_ip']) {
     }
 }
 
+// 无文件
+if (empty($_FILES['file'])) {
+    exit(json_encode(
+        array(
+            "result"    =>  "failed",
+            "code"      =>  204,
+            "message"   =>  "没有选择上传的文件",
+        )
+    ));
+}
+
 $handle = new Upload($_FILES['file'], 'zh_CN');
 
 if ($handle->uploaded) {
@@ -150,10 +161,10 @@ if ($handle->uploaded) {
         echo json_encode($reJson);
         $handle->clean();
     } else {
-        // 上传错误 code:400 客户端文件有问题
+        // 上传错误 code:206 客户端文件有问题
         $reJson = array(
             "result"    =>  "failed",
-            "code"      =>  400,
+            "code"      =>  206,
             "message"   =>  $handle->error,
         );
         unset($handle);

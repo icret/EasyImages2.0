@@ -2,6 +2,7 @@
 
 /** 广场页面 */
 require_once __DIR__ . '/header.php';
+
 /** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
@@ -12,7 +13,25 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       <div class="alert alert-info">管理员关闭了预览哦~~</div>
       <?php exit(require_once __DIR__ . '/footer.php');
     else :
-      $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                    // 获取指定目录
+      // $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                 // 获取指定目录
+      /* 限制GET浏览日期 有助于防止爬虫*/
+      $listDate = $config['listDate'];                                                                  // 配置限制日期
+      $path =  date('Y/m/d/');                                                                          // 当前日期
+      if (isset($_GET['date'])) {
+        if ($_GET['date'] < date('Y/m/d/', strtotime("- $listDate day"))) {                             // GET日期小于配置日期时返回当前日期
+          $path =  date('Y/m/d/');
+          echo '
+          <script>
+            new $.zui.Messager("已超出浏览页数, 返回今日上传列表", {
+            type: "info", // 定义颜色主题 
+            icon: "exclamation-sign" // 定义消息图标
+            }).show();
+          </script>';
+        } else {
+          $path = $_GET['date'];                                                                        // 如果不小于则返回当前GET日期
+        }
+      }
+
       $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));                      // 过滤非日期，删除空格
       $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
       $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
@@ -77,9 +96,9 @@ if ($config['ad_top']) echo $config['ad_top_info'];
           <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
           <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
           <?php
-          // 倒推日期显示上传图片
-          for ($x = 2; $x <= 6; $x++)
-            echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('m月d日', strtotime("-$x day")) . '</a>';
+          // 倒推日期显示上传图片 @param $listDate 配置的倒退日期
+          for ($x = 2; $x <= $listDate; $x++)
+            echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('j号', strtotime("-$x day")) . '</a>';
           ?>
         </div>
         <?php if (is_who_login('admin')) : ?>
@@ -131,7 +150,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       </form>
     </div>
     <!-- 返回顶部-->
-    <div class="btn btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
+    <div class="btn btn-sm btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
   </div>
 </div>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">

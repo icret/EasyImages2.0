@@ -240,13 +240,11 @@ if (isset($_GET['recycle_reimg'])) {
     <div class="alert alert-primary alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
         <h5>目录保存以 年/月/日/ 递进,非必要请勿修改! 否则会导致部分操作不可用;</h5>
-        <h5>本人仅为程序开源创作,如非法网站使用与本人无关,请勿用于非法用途;</h5>
-        <h5>请为本人博客<a class="alert-link" href="https://blog.png.cm/" target="_blank">blog.png.cm</a>加上网址链接,谢谢支持。作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中相关来源信息(例如: <a class="alert-link" href="https://blog.png.cm/">本人博客</a>,邮箱等)。</h5>
-        <a href="https://png.cm/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
+        <h5>本人仅为程序开源创作,如非法网站使用与本人无关,请勿用于非法用途 请勿用于非法用途;</h5>
+        <h5>作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中源作者信息。</h5>
+        <a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
         <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
-        <!-- <a href="https://support.qq.com/products/367633" target="_blank"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-bug"></i> 问题反馈</button></a> -->
-        <a href="https://jq.qq.com/?_wv=1027&k=OBIlf2y7" target="_blank" data-toggle="tooltip" title="954441002"><button type="button" class="btn btn-mini"><i class="icon icon-qq"></i> QQ群</button></a>
-        <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床TG群"><button type="button" class="btn btn-mini hidden-xs inline-block"><i class="icon icon-plane"></i> Telegram</button></a>
+        <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage Telegram Group"><button type="button" class="btn btn-mini"><i class="icon icon-plane"></i> Telegram</button></a>
         <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
         <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
     </div>
@@ -276,7 +274,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="支持多个域名随机选择<br />* 多个域名请以英文 , 分割 <br />* 最后一个域名不要加<br/>* 只有一个域名请与上边一致">图片域名 | 末尾不加'/'</label>
+                    <label data-toggle="tooltip" title="支持多个域名并随机选择<br/>* 只有一个域名请与上边一致<br />* 多个域名请以英文 , 分割 <br />* 最后一个域名不要加,">图片域名 | 末尾不加'/'</label>
                     <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同,比如A域名上传,可以返回B域名图片链接,A、B需绑定到同一空间下">
                 </div>
                 <div class="form-group">
@@ -456,37 +454,37 @@ if (isset($_GET['recycle_reimg'])) {
             <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
             <div class="table-responsive">
-            <table class="table table-condensed table-hover table-bordered visible-xs visible-sm" style="margin-top: 10px;">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>列表</th>
-                        <th>添加时间</th>
-                        <th>有效期至</th>
-                        <th>上传数量</th>
-                        <th>管理Token</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($tokenList as $key => $value) :
-                        $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>';
-                    ?>
+                <table class="table table-condensed table-hover table-bordered visible-xs visible-sm" style="margin-top: 10px;">
+                    <thead>
                         <tr>
-                            <td><?php echo $value['id']; ?></td>
-                            <td><?php echo $key; ?></td>
-                            <td><?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
-                            <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?></td>
-                            <td><?php echo $expired; ?></td>
-                            <td>
-                                <a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a>
-                                <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a>
-                                <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a>
-                                <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>
-                            </td>
+                            <th>ID</th>
+                            <th>列表</th>
+                            <th>添加时间</th>
+                            <th>有效期至</th>
+                            <th>上传数量</th>
+                            <th>管理Token</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($tokenList as $key => $value) :
+                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>';
+                        ?>
+                            <tr>
+                                <td><?php echo $value['id']; ?></td>
+                                <td><?php echo $key; ?></td>
+                                <td><?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
+                                <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?></td>
+                                <td><?php echo $expired; ?></td>
+                                <td>
+                                    <a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a>
+                                    <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a>
+                                    <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a>
+                                    <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
             <div id="myDataGrid" class="datagrid table-bordered visible-md visible-lg">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
@@ -884,14 +882,21 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <div class="form-group">
                     <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景</label>
-                    <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
-                    <label>广场默认浏览数量 | 当前: </label>
-                    <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
-                    <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value" data-toggle="tooltip" title="可在网址后填写参数实时更改预览数量 如: https://png.cm/application/list.php?num=3">
+
+                    <div class="col-md-9">
+                        <label data-toggle="tooltip" title="可在网址后填写参数更改预览数量 eg: /list.php?num=3">广场默认浏览数量 | 当前: </label>
+                        <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>
+                        <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value">
+                    </div>
+                    <div class="col-md-3">
+                        <label id="listDate" data-toggle="tooltip" title="有助于防爬虫抓取<br />建议不超10天,超过可能导致排版混乱">广场浏览往日限制 | 当前: <?php echo $config['listDate']; ?>天</label>
+                        <input type="number" class="form-control input-sm" id="listDate" name="listDate" value="<? if ($config['listDate']) echo $config['listDate']; ?>" min="1" max="100" required="required" placeholder="有助于防爬虫抓取 建议不超10天" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-12">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
                 <button type="submit" class="btn btn-primary">保存</button>
@@ -903,11 +908,11 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5 class="header-dividing">管理员账号<small> 不更改账号或者密码就不要保存</small></h5>
                 <div class="form-group">
                     <div class="input-control has-icon-left">
-                        <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user']; ?>" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user']; ?>" required="required" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                     </div>
                     <div class="input-control has-icon-left" style="margin-top: 10px;" data-toggle="tooltip" title="当前显示的是经过MD5加密的">
-                        <input type="text" name="password" id="password" class="form-control" value="<?php echo $config['password']; ?>" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" name="password" id="password" class="form-control" value="<?php echo $config['password']; ?>" required="required" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
                         <input type="hidden" name="password" id="md5_password">
                         <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                     </div>
@@ -974,7 +979,7 @@ if (isset($_GET['recycle_reimg'])) {
                     </thead>
                     <tbody>
                         <?php foreach ($guestConfig as $key => $value) :
-                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>';
+                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>';
                         ?>
                             <tr>
                                 <td><?php echo $key; ?></td>
@@ -1170,7 +1175,7 @@ if (isset($_GET['recycle_reimg'])) {
                 <p id="delimgurl"></p>
                 <div class="form-group">
                     <label for="del" class="text-primary">删除单张图片文件: </label>
-                    <input type="url" name="url_admin_inc" class="form-control input-sm" id="del" placeholder="请输入图片链接">
+                    <input type="url" name="url_admin_inc" class="form-control input-sm" id="del" required="required" placeholder="请输入图片链接">
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
             </form>
@@ -1318,7 +1323,7 @@ if (isset($_GET['recycle_reimg'])) {
             ],
             array: [
                 <?php foreach ($tokenList as $key => $value) :
-                    $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y年m月d日 H:i:s', $value['expired']) . '</p>'; ?> {
+                    $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>'; ?> {
                         id: '<?php echo $value['id']; ?>',
                         list: '<?php echo $key; ?>',
                         add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',

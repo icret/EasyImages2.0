@@ -8,32 +8,34 @@ require_once APP_ROOT . '/config/api_key.php';
 
 header('Access-Control-Allow-Origin:*');
 
+// 无文件
+if (empty($_FILES['image'])) {
+    exit(json_encode(
+        array(
+            "result"    =>  "failed",
+            "code"      =>  204,
+            "message"   =>  "没有选择上传的文件",
+        )
+    ));
+}
+
 // 黑/白IP名单上传
 if ($config['check_ip']) {
     if (checkIP(null, $config['check_ip_list'], $config['check_ip_model'])) {
-        // 上传错误 code:403 未授权IP
+        // 上传错误 code:205 未授权IP
         exit(json_encode(array(
             "result"    =>  "failed",
-            "code"      =>  401,
+            "code"      =>  205,
             "message"   =>  "黑名单内或白名单外用户不允许上传",
         )));
     }
 }
+
 $token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
 
 // 检查api合法性
 check_api($token);
 $tokenID = $tokenList[$token]['id'];
-
-if (empty($_FILES['image'])) {
-    exit(json_encode(
-        array(
-            "result"    =>  "NoFile",
-            "code"      =>  402,
-            "message"   =>  "没有选择上传的文件",
-        )
-    ));
-}
 
 $handle = new Upload($_FILES['image'], 'zh_CN');
 
@@ -141,10 +143,10 @@ if ($handle->uploaded) {
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean();
     } else {
-        // 上传错误 code:400 客户端文件有问题
+        // 上传错误 code:206 客户端文件有问题
         $reJson = array(
             "result"    =>  "failed",
-            "code"      =>  400,
+            "code"      =>  206,
             "message"   =>  $handle->error,
         );
 

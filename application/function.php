@@ -1237,8 +1237,8 @@ function privateToken($length = 32)
 /**
  * 检查Token
  * @param $token 要检查的Token
- * code:201 访问成功但是服务端关闭API上传
- * code:202 访问成功但是Token错误
+ * @return string 201 访问成功但是服务端关闭API上传
+ * @return string 202 访问成功但是Token错误
  */
 function check_api($token)
 {
@@ -1256,7 +1256,7 @@ function check_api($token)
     }
 
     if (!in_array($tokenList[$token], $tokenList)) {
-        // Token 存在
+        // Token 不存在
         $reJson = array(
             "result" => 'failed',
             'code' => 202,
@@ -1278,7 +1278,7 @@ function check_api($token)
 
 /**
  * 判断webp是否为动态图片
- * @param $src 图像文件
+ * @param string $src 图像文件
  * @return bool 是|否
  */
 function isWebpAnimated($src)
@@ -1298,7 +1298,7 @@ function isWebpAnimated($src)
 /**
  * 根据URL判断是否本地局域网访问(PHP代码函数)
  * https://blog.csdn.net/monxinmonxin0/article/details/44854383
- * @param $url 要判断的网址
+ * @param string $url 要判断的网址
  * @return bool 是|否
  */
 function is_local($url)
@@ -1311,7 +1311,7 @@ function is_local($url)
 
 /**
  * 将图片域名转换为数组并随即输出
- * @param $text 字符串
+ * @param string $text 字符串
  * @return String 随机网址
  */
 function rand_imgurl($text = null)
@@ -1330,7 +1330,7 @@ function rand_imgurl($text = null)
 function isAnimatedGifWebp($src)
 {
     $ext = pathinfo($src)['extension'];
-    
+
     if ($ext == 'webp') {
         $webpContents = file_get_contents($src);
         $where = strpos($webpContents, "ANMF");

@@ -54,6 +54,7 @@ $config=Array
 	'showSwitch'=>1,
 	'showSort'=>1,
 	'listNumber'=>20,
+	'listDate'=>10,
 	'customize'=>'',
 	'checkEnv'=>1,
 	'upload_logs'=>1,
@@ -92,7 +93,7 @@ $config=Array
 	'token_path_status'=>0,
 	'admin_path'=>'u',
 	'version'=>'2.6.2',
-	'update'=>'2022-05-05 07:00:52',
+	'update'=>'2022-05-09 00:40:59',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];

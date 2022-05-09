@@ -3,7 +3,7 @@
  * 简单图床-复制
  */
 var copyBtn = document.getElementsByClassName('copyBtn1')[0];
-copyBtn.onclick = function () {
+copyBtn.onclick = function() {
     var copyVal = document.getElementById("links");
     copyVal.select();
     try {
@@ -11,7 +11,7 @@ copyBtn.onclick = function () {
             //success info
             new $.zui.Messager("复制成功", {
                 type: "primary", // 定义颜色主题 
-                icon: 'ok-sign' // 定义消息图标
+                icon: "ok-sign" // 定义消息图标
             }).show();
             console.log("复制成功");
         } else {
@@ -25,7 +25,7 @@ copyBtn.onclick = function () {
 }
 
 var copyBtn = document.getElementsByClassName('copyBtn2')[0];
-copyBtn.onclick = function () {
+copyBtn.onclick = function() {
     var copyVal = document.getElementById("bbscode");
     copyVal.select();
     try {
@@ -47,7 +47,7 @@ copyBtn.onclick = function () {
 }
 
 var copyBtn = document.getElementsByClassName('copyBtn3')[0];
-copyBtn.onclick = function () {
+copyBtn.onclick = function() {
     var copyVal = document.getElementById("markdown");
     copyVal.select();
     try {
@@ -69,7 +69,7 @@ copyBtn.onclick = function () {
 }
 
 var copyBtn = document.getElementsByClassName('copyBtn4')[0];
-copyBtn.onclick = function () {
+copyBtn.onclick = function() {
     var copyVal = document.getElementById("html");
     copyVal.select();
     try {
@@ -91,7 +91,7 @@ copyBtn.onclick = function () {
 }
 
 var copyBtn = document.getElementsByClassName('copyBtn5')[0];
-copyBtn.onclick = function () {
+copyBtn.onclick = function() {
     var copyVal = document.getElementById("del");
     copyVal.select();
     try {
@@ -113,60 +113,60 @@ copyBtn.onclick = function () {
 }
 
 // btn状态
-$('#btnLinks').on('click', function () {
+$('#btnLinks').on('click', function() {
     var $btn = $(this);
     $btn.button('loading');
 
     // 此处使用 setTimeout 来模拟你的复杂功能逻辑
-    setTimeout(function () {
+    setTimeout(function() {
         $btn.button('reset');
     }, 2000);
 });
 
-$('#btnBbscode').on('click', function () {
+$('#btnBbscode').on('click', function() {
     var $btn = $(this);
     $btn.button('loading');
 
     // 此处使用 setTimeout 来模拟你的复杂功能逻辑
-    setTimeout(function () {
+    setTimeout(function() {
         $btn.button('reset');
     }, 2000);
 });
 
-$('#btnMarkDown').on('click', function () {
+$('#btnMarkDown').on('click', function() {
     var $btn = $(this);
     $btn.button('loading');
 
     // 此处使用 setTimeout 来模拟你的复杂功能逻辑
-    setTimeout(function () {
+    setTimeout(function() {
         $btn.button('reset');
     }, 2000);
 });
 
-$('#btnHtml').on('click', function () {
+$('#btnHtml').on('click', function() {
     var $btn = $(this);
     $btn.button('loading');
     // 此处使用 setTimeout 来模拟你的复杂功能逻辑
-    setTimeout(function () {
+    setTimeout(function() {
         $btn.button('reset');
     }, 2000);
 });
 
-$('#btndel').on('click', function () {
+$('#btndel').on('click', function() {
     var $btn = $(this);
     $btn.button('loading');
 
     // 此处使用 setTimeout 来模拟你的复杂功能逻辑
-    setTimeout(function () {
+    setTimeout(function() {
         $btn.button('reset');
     }, 2000);
 });
 
 /****************************************************************
-* 复制、截图 简单图床修改版
-*/
-(function () {
-    document.addEventListener('paste', function (e) {
+ * 复制、截图 简单图床修改版
+ */
+(function() {
+    document.addEventListener('paste', function(e) {
         var items = ((e.clipboardData || window.clipboardData).items) || [];
         var file = null;
 
@@ -187,7 +187,7 @@ $('#btndel').on('click', function () {
         formData.append('file', file);
 
         var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
+        xhr.onload = function() {
             try {
                 var result = JSON.parse(this.responseText);
                 if (result.result === 'success') {
@@ -213,7 +213,7 @@ $('#btndel').on('click', function () {
                 alert('上传失败2');
             }
         };
-        xhr.onerror = function () {
+        xhr.onerror = function() {
             alert('上传失败3');
         };
         xhr.open('POST', './application/upload.php', true);
@@ -222,7 +222,7 @@ $('#btndel').on('click', function () {
 })();
 /******************************************************************/
 var _hmt = _hmt || [];
-(function () {
+(function() {
     var hm = document.createElement("script");
     hm.src = "https://hm.baidu.com/hm.js?c790ac2bdc2f385757ecd0183206108d";
     var s = document.getElementsByTagName("script")[0];
