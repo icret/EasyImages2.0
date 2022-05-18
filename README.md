@@ -572,15 +572,15 @@ RewriteRule config/(.*).(php)$ – [F]
  
  |支付宝支持|微信支持| 
  |:----:|:----:|
- |![支付宝支持](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/public/images/alipay.jpg)|![微信支持](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/public/images/wechat.jpg)|
+ |![支付宝支持](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/public/images/alipay.jpg)|![微信支持](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/public/images/wechat.jpg)|
  
  ## 界面演示
  
- ![简单图床 - 上传界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/674074848.png)
- ![简单图床 - 广场界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/3053540273.png)
- ![简单图床 - 后台界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/2657944724.png)
- ![简单图床 - 统计界面](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/1305032567.png)
- ![简单图床 - 图片信息](https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.5.7/install/README/info.png)
+ ![简单图床 - 上传界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/674074848.png)
+ ![简单图床 - 广场界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/3053540273.png)
+ ![简单图床 - 后台界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/2657944724.png)
+ ![简单图床 - 统计界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/1305032567.png)
+ ![简单图床 - 图片信息](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/info.png)
 
   
 ## 兼容
