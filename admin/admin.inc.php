@@ -51,7 +51,7 @@ if (isset($_POST['add_token_id'])) {
     cache_write($config_file, $new_config, 'tokenList');
     echo '
   <script>
-  new $.zui.Messager("上传用户添加成功!", {
+  new $.zui.Messager("API Token 添加成功!", {
     type: "primary", // 定义颜色主题 
     icon: "ok-sign" // 定义消息图标
   }).show();
@@ -75,7 +75,7 @@ if (isset($_GET['stop_token'])) {
     cache_write($config_file, $new_config, 'tokenList');
     echo '
         <script>
-        new $.zui.Messager("禁用Token成功!", {
+        new $.zui.Messager("禁用 API Token 成功!", {
             type: "primary", // 定义颜色主题 
             icon: "ok-sign" // 定义消息图标
         }).show();
@@ -91,7 +91,7 @@ if (isset($_GET['delete_token'])) {
     cache_write($config_file, $tokenList, 'tokenList');
     echo '
   <script>
-  new $.zui.Messager("删除Token用户成功!", {
+  new $.zui.Messager("删除 API Token 成功!", {
     type: "primary", // 定义颜色主题 
     icon: "ok-sign" // 定义消息图标
   }).show();
@@ -453,8 +453,8 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
             <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
-            <div class="table-responsive">
-                <table class="table table-condensed table-hover table-bordered visible-xs visible-sm" style="margin-top: 10px;">
+            <div class="table-responsive table-condensed">
+                <table class="table table-hover table-bordered visible-xs visible-sm" style="margin-top: 10px;">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -693,10 +693,10 @@ if (isset($_GET['recycle_reimg'])) {
                         </div>
                     </div>
                 </div>
+                <button type="button" class="btn btn-mini btn-primary" data-moveable="true" data-remote="/application/read_upload_logs.php" data-toggle="modal" data-scroll-inside="true" data-title="可以使用 Ctrl+F 搜索指定信息" data-icon="info"><i class="icon icon-info" data-toggle="tooltip" title="最大读取壹佰万上传日志">当月日志</i></button>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
-                <button type="submit" class="btn btn-info" name="delDir" value="thumbnails/" data-toggle="tooltip" title="已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?>" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');">清理缓存</button>
                 <button type="submit" class="btn btn-primary">保存</button>
             </form>
         </div>
@@ -705,8 +705,8 @@ if (isset($_GET['recycle_reimg'])) {
             <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
             <p>获得key后打开->API 设置->Moderate Key->填入key</p>
             <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-condensed table-striped">
+            <div class="table-responsive table-condensed">
+                <table class="table table-hover table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>序号</th>
@@ -727,16 +727,17 @@ if (isset($_GET['recycle_reimg'])) {
                             $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                  // 相对路径
                             $file_size =  getDistUsed(filesize($file_cache_path));                        // 大小
                             $filen_name = $cache_file[$i];                                                // 名称
-                            $url = $config['domain'] . $config['path'] . 'suspic/' . $cache_file[$i];     // 网络连接
+                            $url = $config['domain'] . $file_path;                                        // 网络连接
                             $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;   // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
-                                <td><img data-toggle="lightbox" src="<?php echo get_online_thumbnail($file_path); ?>" data-image="<?php echo $url; ?>" class="img-thumbnail"></td>
+                                <td><a href="<?php echo $url; ?>" data-toggle="lightbox" data-group="suspic-image-group"><img src="<?php echo get_online_thumbnail($file_path); ?>" class="img-rounded" width="100px"></a></td>
                                 <td><?php echo $filen_name; ?></td>
                                 <td><?php echo $file_size; ?></td>
                                 <td>
-                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
+                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">源图</a>
+                                    <a class="btn btn-mini" href="/application/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="?suspic_reimg=<?php echo $filen_name; ?>">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
                                 </td>
@@ -965,8 +966,8 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
             </form>
             <h5>* 开启用户分离后删除上传按钮激活, 删除后不可恢复</h5>
-            <div class="table-responsive">
-                <table class="table table-condensed table-hover table-bordered">
+            <div class="table-responsive table-condensed">
+                <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>登录账号</th>
@@ -1014,8 +1015,8 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content11">
             <h5 class="header-dividing">图片回收<small> 用户自行删除的会显示在这个页面</small></h5>
             <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-condensed table-striped">
+            <div class="table-responsive table-condensed">
+                <table class="table table-hover table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>序号</th>
@@ -1036,16 +1037,17 @@ if (isset($_GET['recycle_reimg'])) {
                             $file_path =  $config['path'] . 'recycle/' . $cache_file[$i];                  // 相对路径
                             $file_size =  getDistUsed(filesize($file_cache_path));                         // 大小
                             $filen_name = $cache_file[$i];                                                 // 名称
-                            $url = $config['domain'] . $config['path'] . 'recycle/' . $cache_file[$i];     // 网络连接
+                            $url = $config['domain'] . $file_path;                                         // 网络连接
                             $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;    // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
-                                <td><img data-toggle="lightbox" src="<?php echo get_online_thumbnail($file_path); ?>" data-image="<?php echo $url; ?>" class="img-thumbnail"></td>
+                                <td><a href="<?php echo $url; ?>" data-toggle="lightbox" data-group="recycle-image-group"><img src="<?php echo get_online_thumbnail($file_path); ?>" class="img-rounded" width="100px"></a></td>
                                 <td><?php echo $filen_name; ?></td>
                                 <td><?php echo $file_size; ?></td>
                                 <td>
-                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">新窗口</a>
+                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">源图</a>
+                                    <a class="btn btn-mini" href="/application/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="?recycle_reimg=<?php echo $filen_name; ?>">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
                                 </td>
@@ -1166,10 +1168,13 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content14">
-            <!-- <h4>文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h4> -->
             <h5 class="header-dividing">文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h5>
             <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-            <!-- <h4>删除文件 <small>* 删除后不可恢复</small></h4> -->
+
+            <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?></small></h5>
+            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <button type="submit" class="btn btn-mini btn-success" name="delDir" value="thumbnails/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+            </form>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank">
                 <p id="delimgurl"></p>

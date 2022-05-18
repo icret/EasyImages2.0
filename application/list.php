@@ -131,10 +131,10 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       </div> -->
     <div class="col-md-2 col-xs-7">
       <div class="btn-group">
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
-        <a class="btn btn-sm" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
       </div>
     </div>
     <!-- 按日期-->
@@ -150,7 +150,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       </form>
     </div>
     <!-- 返回顶部-->
-    <div class="btn btn-sm btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
+    <div class="btn btn-mini btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
   </div>
 </div>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
@@ -372,6 +372,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     format: "yyyy/mm/dd/",
     endDate: new Date() // 只能选当前日期之前
   });
+
   // 更改网页标题
   document.title = "图床广场 - 今日上传<?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?>张 昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")) . '*.*', 'number'); ?>张 - <?php echo $config['title']; ?>"
 </script>

@@ -1346,3 +1346,31 @@ function isAnimatedGifWebp($src)
     fclose($fp);
     return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? false : true;
 }
+
+/**
+ * 读取日志
+ * @param filepath 文件路径
+ */
+function read_upload_logs($logs = null)
+{
+    global $config;
+
+    $logs = isset($logs) ? $logs : APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
+
+    if ($config['upload_logs'] == 0) {
+        $logs = '已经关闭了上传日志!';
+    } else {
+        if (file_exists($logs)) {
+            $logs = file_get_contents($logs, false, null, 274, 1000000);
+            $logs = str_replace(
+                array('{', '}}', '"', '\\', 'source:', 'date:', 'ip:', 'port:', 'user_agent:', 'path:', 'size:', 'checkImg:', 'from:'),
+                array('', '', '', '', '源名:', '日期:', 'IP:', '端口:', '信息:', '路径:', '大小:', '鉴黄状态:', '来源:'),
+                $logs
+            );
+        } else {
+            $logs =  "日志文件不存在,可能是当前月份没有新上传日志,请尝试上传一张!";
+        }
+    }
+
+    return $logs;
+}

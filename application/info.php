@@ -7,12 +7,11 @@ if (!$config['show_exif_info']) exit(header('Location: ' . $config['domain'] . '
 if (isset($_GET['img'])) {
     // 过滤特殊符号
     $getIMG = strip_tags($_GET['img']);
-    $exif_url = $config['domain'] . $getIMG;
+    $del_url = $config['domain'] . $getIMG;
 } else {
     // 未获取到图片地址
-    $getIMG = rand_imgurl() . "/public/images/404.png";
-
-    $exif_url = $config['domain'] . "/public/images/404.png";
+    $getIMG = "/public/images/404.png";
+    $del_url = "#";
 }
 
 // 开启隐藏上传目录
@@ -29,7 +28,7 @@ $imgABPath = APP_ROOT . $getIMG;
 // 图片是否存在
 if (!file_exists($imgABPath)) {
     $imgABPath = APP_ROOT . "/public/images/404.png";
-    $getIMG = rand_imgurl() . "/public/images/404.png";
+    $img_url = rand_imgurl() . "/public/images/404.png";
 }
 
 // 图片尺寸
@@ -41,36 +40,44 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <a href="<?php echo $img_url; ?>" data-toggle="lightbox" data-group="image-group-1"><img src="<?php echo $getIMG; ?>" id="img1" width="350px" height="200px" class="img-rounded" alt="<?php echo basename($getIMG); ?>"></a>
-
-
+        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="200px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
     </div>
     <div class="col-md-6">
         <h4>图片名称: <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
-        <h4>图片类型: <?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
-        <h4>图片宽高: <span id="wh"></span>px</h4>
         <h4>图片大小: <?php echo getDistUsed($imgSize); ?></h4>
+        <h4>图片类型: image/<?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
+        <h4>图片宽高: <span id="wh"></span>px</h4>
         <h4>上传时间: <?php echo date("Y-m-d H:i:s", $upTime); ?></h4>
+        <h4>文件操作：
+            <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
+            <?php if (is_who_login('admin')) : ?>
+                <a class="btn btn-mini btn-primary" href="/application/del.php?recycle_url=<?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
+                <a class="btn btn-mini btn-primary" href="/application/del.php?url=<?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
+            <?php endif; ?>
+        </h4>
+        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请联系管理员删除!</i></h4>
+        <!-- 读取Exif信息
         <h4>使用设备: <span id="makeAndModel"></span></h4>
         <div class="col-md-12">
             <p>
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseExample">Exif 信息 <i class="icon icon-caret-down"></i></button>
-                <a class="btn btn-primary btn-sm" href="<?php echo  $getIMG; ?>" target="_blank">查看图片 <i class="icon icon-picture"></i></a>
-                <a class="btn btn-primary btn-sm" href="/application/del.php?url=<?php echo  $getIMG; ?>" target="_blank">删除图片 <i class="icon icon-trash"></i></a>
+                <a class="btn btn-primary btn-sm" href="<php echo  $img_url; ?>" target="_blank">查看图片 <i class="icon icon-picture"></i></a>
+                <php if (is_who_login('admin')) : ?>
+                    <a class="btn btn-primary btn-sm" href="/application/del.php?url=<php echo $del_url; ?>" target="_blank">删除图片 <i class="icon icon-trash"></i></a>
+                <php endif; ?>
             </p>
             <div class="collapse" id="collapseExample">
-                <div class="bg-primary">
-                    <pre id="allMetaDataSpan"></pre><!-- style="background-color:transparent;"设置透明 -->
-                </div>
+                <pre id="allMetaDataSpan"></pre>
             </div>
         </div>
+        -->
     </div>
 </div>
 <div class="col-md-12" style="margin-top: 10px;">
     <div class="col-md-12" style="padding-bottom: 10px;">
         <div class="col-md-6" style="padding-bottom: 10px;">
             <div class="input-group">
-                <span class="input-group-addon"><i class="icon icon-link"></i> 直 连&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="input-group-addon"><i class="icon icon-link"></i> 直 链&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <input type="text" class="form-control" id="links" onclick="copyText()" value="<?php echo $img_url; ?>">
                 <span class="input-group-btn"><button class="btn btn-default copyBtn1" type="button">复制</button></span>
             </div>
@@ -101,7 +108,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     </div>
 </div>
 <? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
-<script src="<?php static_cdn(); ?>/public/static/exif/exif.js"></script>
+<!-- <script src="< php static_cdn(); ?>/public/static/exif/exif.js"></script> -->
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>
@@ -175,40 +182,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         hw.innerHTML = this.width + "x" + this.height
     });
 
-    /* 获取图片长宽    
-        function getImgNaturalDimensions(oImg, callback) {
-            var nWidth, nHeight;
-            if (!oImg.naturalWidth) { // 现代浏览器
-
-                nWidth = oImg.naturalWidth;
-                nHeight = oImg.naturalHeight;
-                callback({
-                    w: nWidth,
-                    h: nHeight
-                });
-
-            } else { // IE6/7/8
-                var nImg = new Image();
-
-                nImg.onload = function() {
-                    var nWidth = nImg.width,
-                        nHeight = nImg.height;
-                    callback({
-                        w: nWidth,
-                        h: nHeight
-                    });
-                }
-                nImg.src = oImg.src;
-            }
-        }
-        var img = document.getElementById("img1");
-
-        getImgNaturalDimensions(img, function(dimensions) {
-            var hw = document.getElementById("wh");
-            hw.innerHTML = dimensions.w + "x" + dimensions.h
-        })
-    */
     // Exif信息
+    /*
     window.onload = getExif;
 
     function getExif() {
@@ -227,6 +202,33 @@ if ($config['ad_top']) echo $config['ad_top_info'];
             allMetaDataSpan.innerHTML = EXIF.pretty(this);;
         });
     }
+    */
+    //禁用右键
+    document.onkeydown = function() {
+        var e = window.event || arguments[0];
+        if (e.keyCode == 123) {
+            //    alert('禁止F12');
+            return false;
+        } else if ((e.ctrlKey) && (e.shiftKey) && (e.keyCode == 73)) {
+            //    alert('禁止Ctrl+Shift+I');
+            return false;
+        } else if ((e.ctrlKey) && (e.keyCode == 85)) {
+            //    alert('禁止Ctrl+u');
+            return false;
+        } else if ((e.ctrlKey) && (e.keyCode == 83)) {
+            //    alert('禁止Ctrl+s');
+            return false;
+        }
+    }
+    // 屏蔽鼠标右键
+    document.oncontextmenu = function() {
+        new $.zui.Messager("正在查看图片详细信息", {
+            type: "success", // 定义颜色主题 
+            icon: "exclamation-sign" // 定义消息图标
+        }).show();
+        return false;
+    }
+
     // 更改网页标题
     document.title = "图片<?php echo basename($getIMG); ?>的详细信息 - <?php echo $config['title']; ?>"
 </script>
