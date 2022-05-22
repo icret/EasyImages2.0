@@ -572,16 +572,16 @@ RewriteRule config/(.*).(php)$ – [F]
  
  |支付宝支持|微信支持| 
  |:----:|:----:|
- |![支付宝支持](https://raw.githubusercontent.com/icret/EasyImages2.0/master/public/images/alipay.jpg)|![微信支持](https://raw.githubusercontent.com/icret/EasyImages2.0/master/public/images/wechat.jpg)|
+ |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
  
  ## 界面演示
  
- ![简单图床 - 上传界面](https://raw.githubusercontent.com/icret/EasyImages2.0/install/README/674074848.png)
- ![简单图床 - 广场界面](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/3053540273.png)
- ![简单图床 - 后台界面](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/2657944724.png)
- ![简单图床 - 统计界面](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/1305032567.png)
- ![简单图床 - 图片信息](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/info.png)
- ![简单图床 - 上传日志](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/log.png)
+ ![简单图床 - 上传界面](./install/README/674074848.png)
+ ![简单图床 - 广场界面](./install/README/3053540273.png)
+ ![简单图床 - 后台界面](./install/README/2657944724.png)
+ ![简单图床 - 统计界面](./install/README/1305032567.png)
+ ![简单图床 - 图片信息](./install/README/info.png)
+ ![简单图床 - 上传日志](./install/README/log.png)
 
   
 ## 兼容
