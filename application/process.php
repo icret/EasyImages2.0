@@ -119,29 +119,31 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "we
         'from'       => $from,                             // 图片上传来源
     ));
 
-    $logFileName = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
-
     // 创建日志文件夹
     if (!is_dir(APP_ROOT . '/admin/logs/upload/')) {
         mkdir(APP_ROOT . '/admin/logs/upload', 0755, true);
     }
 
-    // 写入禁止浏览器直接访问
-    if (filesize($logFileName) == 0) {
-        $php_exit = '<?php /** {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,port:IP端口,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:鉴黄状态,form:上传方式web/API ID}} */ exit;?>';
-        file_put_contents($logFileName, $php_exit);
-    }
+    // logs文件组成
+    $logFileName = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
 
-    $log = json_encode($log, JSON_UNESCAPED_UNICODE);
-    file_put_contents($logFileName, PHP_EOL . $log, FILE_APPEND | LOCK_EX);
-
-    /* 以数组存放 并发会丢日志
+    // 创建logs文件
     if (!is_file($logFileName)) {
         file_put_contents($logFileName, '<?php $logs=Array();?>');
     }
 
+    // 引入logs
     include $logFileName;
+
+    // // 写入禁止浏览器直接访问
+    // if (filesize($logFileName) == 0) {
+    //     $php_exit = '<?php /** {图片名称{source:源文件名称,date:上传日期(Asia/Shanghai),ip:上传者IP,port:IP端口,user_agent:上传者浏览器信息,path:文件相对路径,size:文件大小(格式化),md5:文件MD5,checkImg:鉴黄状态,form:上传方式web/API ID}} */ exit;? >';
+    //     file_put_contents($logFileName, $php_exit);
+    // }
+
+    // $log = json_encode($log, JSON_UNESCAPED_UNICODE);
+    // file_put_contents($logFileName, PHP_EOL . $log, FILE_APPEND | LOCK_EX);
+
     $log = array_replace($logs, $log);
     cache_write($logFileName, $log, 'logs');
-    */
 }

@@ -180,15 +180,15 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-05-18 v2.6.3 Deving 此版本正在开发中, 尚未发布
+* 2022-05-22 v2.6.3 Deving 此版本正在开发中, 更新到此版本需要删除上传日志
 - 增加读取上传日志
 - 增加广场浏览往日限制
   - 有助于防爬虫抓取
+- 删除图片详情页Exif信息
 - 文件管理中图片使用缩略图显示
 - 更改广场->信息中图片长宽获取方式
-- 删除图片详情页Exif信息
-- 优化图片详情页
-- 优化广场UI
+
+- 优化图片详情页/广场UI/日志/用户/api 列表
 
 * 2022-05-04 v2.6.2
 - 增加API/用户文件浏览和删除
@@ -572,15 +572,16 @@ RewriteRule config/(.*).(php)$ – [F]
  
  |支付宝支持|微信支持| 
  |:----:|:----:|
- |![支付宝支持](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/public/images/alipay.jpg)|![微信支持](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/public/images/wechat.jpg)|
+ |![支付宝支持](https://raw.githubusercontent.com/icret/EasyImages2.0/master/public/images/alipay.jpg)|![微信支持](https://raw.githubusercontent.com/icret/EasyImages2.0/master/public/images/wechat.jpg)|
  
  ## 界面演示
  
- ![简单图床 - 上传界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/674074848.png)
- ![简单图床 - 广场界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/3053540273.png)
- ![简单图床 - 后台界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/2657944724.png)
- ![简单图床 - 统计界面](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/1305032567.png)
- ![简单图床 - 图片信息](https://gitee.com/icret/EasyImages2.0/raw/2.6.2/install/README/info.png)
+ ![简单图床 - 上传界面](https://raw.githubusercontent.com/icret/EasyImages2.0/install/README/674074848.png)
+ ![简单图床 - 广场界面](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/3053540273.png)
+ ![简单图床 - 后台界面](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/2657944724.png)
+ ![简单图床 - 统计界面](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/1305032567.png)
+ ![简单图床 - 图片信息](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/info.png)
+ ![简单图床 - 上传日志](https://raw.githubusercontent.com/icret/EasyImages2.0/master/install/README/log.png)
 
   
 ## 兼容

@@ -453,40 +453,7 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
             <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
-            <div class="table-responsive table-condensed">
-                <table class="table table-hover table-bordered visible-xs visible-sm" style="margin-top: 10px;">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>列表</th>
-                            <th>添加时间</th>
-                            <th>有效期至</th>
-                            <th>上传数量</th>
-                            <th>管理Token</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($tokenList as $key => $value) :
-                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>';
-                        ?>
-                            <tr>
-                                <td><?php echo $value['id']; ?></td>
-                                <td><?php echo $key; ?></td>
-                                <td><?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
-                                <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?></td>
-                                <td><?php echo $expired; ?></td>
-                                <td>
-                                    <a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a>
-                                    <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a>
-                                    <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a>
-                                    <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-            <div id="myDataGrid" class="datagrid table-bordered visible-md visible-lg">
+            <div id="myDataGrid" class="datagrid table-bordered">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
                     <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="搜索Token">
                     <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
@@ -693,7 +660,7 @@ if (isset($_GET['recycle_reimg'])) {
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-mini btn-primary" data-moveable="true" data-remote="/application/read_upload_logs.php" data-toggle="modal" data-scroll-inside="true" data-title="可以使用 Ctrl+F 搜索指定信息" data-icon="info"><i class="icon icon-info" data-toggle="tooltip" title="最大读取壹佰万上传日志">当月日志</i></button>
+                <button type="button" class="btn btn-mini btn-primary" data-moveable="true" data-remote="/application/read_log.php?session=<?php echo md5($config['password'] . date('YMDH')); ?>" data-toggle="modal" data-scroll-inside="true" data-width="95%" data-height="768px" data-title="建议使用分辨率 ≥ 1366*768px" data-icon="info"><i class="icon icon-info" data-toggle="tooltip" title="最大读取壹佰万上传日志">当月日志</i></button>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
@@ -736,7 +703,7 @@ if (isset($_GET['recycle_reimg'])) {
                                 <td><?php echo $filen_name; ?></td>
                                 <td><?php echo $file_size; ?></td>
                                 <td>
-                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">源图</a>
+                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
                                     <a class="btn btn-mini" href="/application/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="?suspic_reimg=<?php echo $filen_name; ?>">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
@@ -966,38 +933,13 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
             </form>
             <h5>* 开启用户分离后删除上传按钮激活, 删除后不可恢复</h5>
-            <div class="table-responsive table-condensed">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th>登录账号</th>
-                            <th>登录密码 (经过MD5加密)</th>
-                            <th>添加时间</th>
-                            <th>有效期至</th>
-                            <th>上传数量</th>
-                            <th>管理账号</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($guestConfig as $key => $value) :
-                            $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>';
-                        ?>
-                            <tr>
-                                <td><?php echo $key; ?></td>
-                                <td><?php echo $value['password']; ?></td>
-                                <td> <?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?></td>
-                                <td> <?php echo $expired; ?></td>
-                                <td><?php echo get_file_by_glob(APP_ROOT . $config['path'] . $key, $type = 'number'); ?></td>
-                                <td>
-                                    <a href='/admin/manager.php?p=<?php echo $key; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a>
-                                    <a href='admin.inc.php?stop_guest=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a>
-                                    <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $key; ?>'>删除</a>
-                                    <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='admin.inc.php?delDir=<?php echo $key; ?>'>删除上传</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+            <div id="guest" class="datagrid table-bordered">
+                <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
+                    <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="上传用户搜索...">
+                    <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
+                    <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
+                </div>
+                <div class="datagrid-container"></div>
             </div>
             <!-- 源图加密Key start-->
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
@@ -1046,7 +988,7 @@ if (isset($_GET['recycle_reimg'])) {
                                 <td><?php echo $filen_name; ?></td>
                                 <td><?php echo $file_size; ?></td>
                                 <td>
-                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">源图</a>
+                                    <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
                                     <a class="btn btn-mini" href="/application/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="?recycle_reimg=<?php echo $filen_name; ?>">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
@@ -1297,8 +1239,9 @@ if (isset($_GET['recycle_reimg'])) {
                     width: 0.02
                 },
                 {
-                    name: 'list',
-                    label: '列表',
+                    name: 'token',
+                    label: 'Token',
+                    html: true,
                     width: 0.28
                 },
                 {
@@ -1321,7 +1264,7 @@ if (isset($_GET['recycle_reimg'])) {
                 },
                 {
                     name: 'manage',
-                    label: '管理Token',
+                    label: '管理',
                     html: true,
                     width: 0.25
                 },
@@ -1330,11 +1273,11 @@ if (isset($_GET['recycle_reimg'])) {
                 <?php foreach ($tokenList as $key => $value) :
                     $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>'; ?> {
                         id: '<?php echo $value['id']; ?>',
-                        list: '<?php echo $key; ?>',
+                        token: '<input class="form-control input-sm" type="text" value="<?php echo $key; ?>" readonly>',
                         add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
+                        manage: "<a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
                     },
                 <?php endforeach; ?>
             ]
@@ -1343,13 +1286,101 @@ if (isset($_GET['recycle_reimg'])) {
         hoverCell: true,
         showRowIndex: false,
         responsive: true,
+        height: 200,
         // ... 其他初始化选项
+        configs: {
+            R1: {
+                style: {
+                    color: '#00b8d4',
+                    backgroundColor: '#e0f7fa'
+                }
+            },
+        }
     });
     // 获取数据表格实例
-    var myDataGrid = $('#myDataGrid').data('zui.datagrid');
+    var tokenMyDataGrid = $('#myDataGrid').data('zui.datagrid');
 
     // 按照 `name` 列降序排序
-    myDataGrid.sortBy('expired', 'desc');
+    tokenMyDataGrid.sortBy('expired', 'desc');
+
+
+    // guest 上传用户数据表格
+    $('#guest').datagrid({
+        dataSource: {
+            height: 800,
+            cols: [{
+                    label: '账号',
+                    name: 'guest',
+                    html: true,
+                    width: 0.1
+                },
+                {
+                    label: '密码(md5)',
+                    name: 'password',
+                    html: true,
+                    width: 0.1
+                },
+                {
+                    label: '添加时间',
+                    name: 'add_time',
+                    html: true,
+                    width: 0.2
+
+                },
+                {
+                    label: '有效期至',
+                    name: 'expired',
+                    html: true,
+                    width: 0.2
+                },
+                {
+                    label: '上传数量',
+                    name: 'files',
+                    html: true,
+                    width: 0.1
+                },
+                {
+                    label: '管理账号',
+                    name: 'manage',
+                    html: true,
+                    width: 0.3
+
+                },
+            ],
+            array: [
+                <?php foreach ($guestConfig as $k => $v) :
+                    $expired = $v['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $v['expired']) . '</p>'; ?> {
+                        guest: '<?php echo $k; ?>',
+                        password: '<input class="form-control input-sm" type="text" value="<?php echo $v['password']; ?>" readonly>',
+                        add_time: '<?php echo date('Y年m月d日 H:i:s', $v['add_time']); ?>',
+                        expired: '<?php echo $expired; ?>',
+                        files: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $k, $type = 'number'); ?>,
+                        manage: "<a href='/admin/manager.php?p=<?php echo $k; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo $k; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $k; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='admin.inc.php?delDir=<?php echo $k; ?>'>删除上传</a>",
+                    },
+                <?php endforeach; ?>
+            ]
+        },
+        sortable: true,
+        hoverCell: true,
+        showRowIndex: true,
+        responsive: true,
+        height: 200,
+        // ... 其他初始化选项
+        configs: {
+            R1: {
+                style: {
+                    color: '#00b8d4',
+                    backgroundColor: '#e0f7fa'
+                }
+            },
+        }
+    });
+
+    // 获取数据表格实例
+    var guestMyDataGrid = $('#guest').data('zui.datagrid');
+
+    // 按照 `name` 列降序排序
+    guestMyDataGrid.sortBy('add_time', 'desc');
 
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
