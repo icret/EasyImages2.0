@@ -12,20 +12,51 @@ if (!is_who_login('admin')) {
 }
 
 // 禁止直接访问
-if (empty($_GET['session']) || $_GET['session'] !== md5($config['password'] . date('YMDH'))) exit;
+if (empty($_POST['pass']) || $_POST['pass'] !== md5($config['password'] . date('YMDH'))) exit('No permission!');
 
-require APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
+require_once APP_ROOT . '/application/header.php';
+
+if (isset($_POST['logDate'])) {
+    $logFile = APP_ROOT . '/admin/logs/upload/' . $_POST['logDate'] . '.php';
+} else {
+    $logFile = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
+}
+
+try {
+
+    if (is_file($logFile)) {
+        require_once $logFile;
+    } else {
+        throw new Exception('<div class="alert alert-info">日志文件不存在!<div>');
+    }
+    if (empty($logs)) {
+        throw new Exception('<div class="alert alert-info">没有上传日志!<div>');
+    }
+} catch (Exception $e) {
+    echo $e->getMessage();
+    require_once APP_ROOT . '/application/footer.php';
+    exit;
+}
 ?>
-<div id="logs" class="datagrid table-bordered">
-    <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
-        <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="日志搜索...">
-        <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
-        <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
+<div class="col-md-12" style="margin-bottom: 88px;">
+    <div id="logs" class="datagrid table-bordered">
+        <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
+            <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="日志搜索...">
+            <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
+            <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
+        </div>
+        <div class="datagrid-container"></div>
     </div>
-    <div class="datagrid-container"></div>
+    <p class="text-muted" style="font-size:10px;"><i class="modal-icon icon-info"></i> 建议使用分辨率 ≥ 1366*768px; 当前日志文件: <?php echo $logFile; ?></p>
 </div>
-<p class="text-muted" style="font-size:10px;">当前日志路径: /admin/logs/upload/<?php echo date('Y-m'); ?>.php</p>
+<link href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css" rel="stylesheet">
+<script src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
 <script>
+    // 更改页面布局
+    $(document).ready(function() {
+        $("body").removeClass("container").addClass("container-fixed-lg");
+    });
+
     // logs 数据表格
     $('#logs').datagrid({
         dataSource: {
@@ -107,7 +138,7 @@ require APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
         hoverCell: true,
         showRowIndex: true,
         responsive: true,
-        height: 640,
+        height: 666,
         // ... 其他初始化选项
         configs: {
             R1: {
@@ -122,10 +153,13 @@ require APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
     // 获取数据表格实例
     var logMyDataGrid = $('#logs').data('zui.datagrid');
 
-    var myDate = new Date();
-    
-    logMyDataGrid.showMessage(myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月上传日志已加载...... ', 'primary', 2500);
+    // var myDate = new Date();
+    // logMyDataGrid.showMessage(myDate.getFullYear() + '年' + (myDate.getMonth() + 1) + '月上传日志已加载完毕...... ', 'primary', 2500);
+
+    logMyDataGrid.showMessage('上传日志已加载完毕...... ', 'primary', 2500);
 
     // 按照 `name` 列降序排序
     logMyDataGrid.sortBy('date', 'desc');
 </script>
+<?php
+require_once APP_ROOT . '/application/footer.php';

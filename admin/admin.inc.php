@@ -660,7 +660,6 @@ if (isset($_GET['recycle_reimg'])) {
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-mini btn-primary" data-moveable="true" data-remote="/application/read_log.php?session=<?php echo md5($config['password'] . date('YMDH')); ?>" data-toggle="modal" data-scroll-inside="true" data-width="95%" data-height="768px" data-title="建议使用分辨率 ≥ 1366*768px" data-icon="info"><i class="icon icon-info" data-toggle="tooltip" title="最大读取壹佰万上传日志">当月日志</i></button>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
@@ -1110,28 +1109,37 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content14">
-            <h5 class="header-dividing">文件管理 <small>Tinyfilemanager是由作者定制开发,非必要请勿替换</small></h5>
-            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-
             <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?></small></h5>
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <button type="submit" class="btn btn-mini btn-success" name="delDir" value="thumbnails/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
             </form>
+            <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
+            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
+
+            <h5 class="header-dividing">上传日志 <small>需要在图床安全->开启上传日志</small></h5>
+            <form class="form-inline" action="../application/read_log.php" method="post" target="_blank">
+                <div class="form-group">
+                    <label for="logDate" class="text-primary">选择月份: </label>
+                    <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
+                    <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="隐藏的保存">
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary">查看</button>
+            </form>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
-            <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank">
+            <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">
                 <p id="delimgurl"></p>
                 <div class="form-group">
-                    <label for="del" class="text-primary">删除单张图片文件: </label>
+                    <label for="del" class="text-warning">删除单张图片文件: </label>
                     <input type="url" name="url_admin_inc" class="form-control input-sm" id="del" required="required" placeholder="请输入图片链接">
                 </div>
-                <button type="submit" class="btn btn-sm btn-primary" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除单文件</button>
+                <button type="submit" class="btn btn-sm btn-warning" onClick="return confirm('确认要删除？\n* 删除文件后将无法恢复! ');">删除</button>
             </form>
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
                     <label for="delDir" class="text-danger">删除指定日期文件: </label>
-                    <input type="text" class="form-control form-date input-sm" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly="">
+                    <input type="text" class="form-control form-date input-sm" name="delDir" value="<?php echo date('Y/m/d/'); ?>" readonly>
                 </div>
-                <button type="submit" class="btn btn-sm btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复! ');">删除文件夹</button>
+                <button type="submit" class="btn btn-sm btn-danger" onClick="return confirm('确认要删除？\n* 删除文件夹后将无法恢复! ');">删除</button>
             </form>
         </div>
     </div>
@@ -1204,6 +1212,7 @@ if (isset($_GET['recycle_reimg'])) {
         //可以校验判断表单内容,true就是通过提交,false,阻止提交
         return true;
     }
+
     // 动态显示要删除的图片
     var oBtn = document.getElementById('del');
     var oTi = document.getElementById('title');
@@ -1227,6 +1236,21 @@ if (isset($_GET['recycle_reimg'])) {
         minView: 2,
         forceParse: 0,
         format: "yyyy/mm/dd/",
+        endDate: new Date() // 只能选当前日期之前
+    });
+
+    // log日期选择
+    $(".logDate").datetimepicker({
+
+        format: 'yyyy-mm',
+        weekStart: 1,
+        autoclose: true,
+        startView: 3,
+        minView: 3,
+        forceParse: false,
+        language: 'zh-CN',
+        todayBtn: true,
+        todayHighlight: true,
         endDate: new Date() // 只能选当前日期之前
     });
 
