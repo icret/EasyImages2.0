@@ -73,10 +73,10 @@ chown -R www:www /web目录
 5. 首次使用会执行安装程序并生成`install.lock` 跳过安装流程请删除`install`目录
 6. 首次访问首页会检查环境并在`config`目录下生成`EasyImage.lock`
 7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
-8. 不显示验证码: 1. 权限问题见问题`1` 2. CDN缓存了 3. 开防火墙了
-9. `upload File size exceeds the maximum value` 调整`PHP`上传大小
-10. `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
-11. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
+8. `upload File size exceeds the maximum value` 调整`PHP`上传大小
+9. `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
+10. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
+11. 无法上传/访问/不显示验证码: 1. 权限问题见问题`1` 2. CDN缓存了 3. 开防火墙了
 12. `Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
 13. 开启原图保护功能后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
 ```Nginx
@@ -180,10 +180,13 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2022-05-22 v2.6.3 Deving 此版本正在开发中, 更新到此版本需要删除上传日志
+* 2022-05-24 v2.6.3 Deving 此版本正在开发中, 更新到此版本需要删除上传日志
+- 增加图片下载
+- 增加简单暗黑模式
 - 增加读取上传日志
 - 增加广场浏览往日限制
   - 有助于防爬虫抓取
+- 增加登陆验证码开关(默认关闭)
 - 删除图片详情页Exif信息
 - 文件管理中图片使用缩略图显示
 - 更改广场->信息中图片长宽获取方式

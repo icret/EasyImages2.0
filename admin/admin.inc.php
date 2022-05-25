@@ -476,6 +476,16 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content6">
+            <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
+            <form class="form-inline" action="../application/read_log.php" method="post" target="_blank">
+                <div class="form-group">
+                    <label for="logDate" class="text-primary">选择月份: </label>
+                    <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
+                    <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="隐藏的保存">
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary">查看</button>
+            </form>
+            <hr />
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
                     <label>缩略图生成方式</label>
@@ -618,6 +628,11 @@ if (isset($_GET['recycle_reimg'])) {
                     </div>
                 </div>
                 <div class="col-md-12">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="建议开启,有效防止因撞库导致账户密码被破解!">
+                        <input type="hidden" name="captcha" value="0">
+                        <input type="checkbox" name="captcha" value="1" <?php if ($config['captcha']) echo 'checked'; ?>>
+                        <label style="font-weight: bold">验证码</label>
+                    </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
                         <input type="hidden" name="public" value="0">
                         <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
@@ -672,7 +687,7 @@ if (isset($_GET['recycle_reimg'])) {
             <p>获得key后打开->API 设置->Moderate Key->填入key</p>
             <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
             <div class="table-responsive table-condensed">
-                <table class="table table-hover table-bordered table-striped">
+                <table class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>序号</th>
@@ -799,6 +814,11 @@ if (isset($_GET['recycle_reimg'])) {
                 </div>
                 <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">页面展示开关</label>
                 <div class="form-group">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="暗黑模式切换">
+                        <input type="hidden" name="dark-mode" value="0">
+                        <input type="checkbox" name="dark-mode" value="1" <?php if ($config['dark-mode']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">暗黑</label>
+                    </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
                         <input type="hidden" name="show_user_hash_del" value="0">
                         <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
@@ -814,10 +834,10 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">排序</label>
                     </div>
-                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片信息按钮">
+                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片详细信息按钮">
                         <input type="hidden" name="show_exif_info" value="0">
                         <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">Exif</label>
+                        <label style="font-weight: bold">详息</label>
                     </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
                         <input type="hidden" name="chart_on" value="0">
@@ -957,7 +977,7 @@ if (isset($_GET['recycle_reimg'])) {
             <h5 class="header-dividing">图片回收<small> 用户自行删除的会显示在这个页面</small></h5>
             <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
             <div class="table-responsive table-condensed">
-                <table class="table table-hover table-bordered table-striped">
+                <table class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>序号</th>
@@ -1056,7 +1076,6 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content13">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <h5 class="header-dividing">前端裁剪/压缩 <small>优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</small></h5>
-                <!-- <h4 class="with-padding bg-success" style="text-align: center;">前端裁剪压缩 - 优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</h4> -->
                 <div class="form-group">
                     <div class="switch switch-inline" data-toggle="tooltip" title="控制以下五项 不开启不生效">
                         <input type="hidden" name="imgRatio" value="0">
@@ -1109,21 +1128,11 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content14">
+            <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
+            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
             <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?></small></h5>
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <button type="submit" class="btn btn-mini btn-success" name="delDir" value="thumbnails/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
-            </form>
-            <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
-            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-
-            <h5 class="header-dividing">上传日志 <small>需要在图床安全->开启上传日志</small></h5>
-            <form class="form-inline" action="../application/read_log.php" method="post" target="_blank">
-                <div class="form-group">
-                    <label for="logDate" class="text-primary">选择月份: </label>
-                    <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
-                    <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="隐藏的保存">
-                </div>
-                <button type="submit" class="btn btn-sm btn-primary">查看</button>
             </form>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">
@@ -1186,16 +1195,6 @@ if (isset($_GET['recycle_reimg'])) {
         $('#Content1').addClass("active in")
     }
 
-    // tips提示
-    $('[data-toggle="tooltip"]').tooltip({
-        tipClass: 'tooltip',
-        placement: 'auto',
-        html: true,
-        delay: {
-            show: 50,
-            hide: 100
-        }
-    });
     // 账号密码 | 以md5加密方式发送
     function uploader_md5_post() {
         var password = document.getElementById('uploader_password');
@@ -1326,7 +1325,6 @@ if (isset($_GET['recycle_reimg'])) {
 
     // 按照 `name` 列降序排序
     tokenMyDataGrid.sortBy('expired', 'desc');
-
 
     // guest 上传用户数据表格
     $('#guest').datagrid({

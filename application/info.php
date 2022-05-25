@@ -40,22 +40,61 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
-        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="200px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
+        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="234px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
     </div>
-    <div class="col-md-6">
-        <h4>图片名称: <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
-        <h4>图片大小: <?php echo getDistUsed($imgSize); ?></h4>
-        <h4>图片类型: image/<?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
+    <div class="col-md-6 table-responsive table-condensed">
+        <table class="table table-hover table-striped table-bordered">
+            <tbody>
+                <tr>
+                    <td>图片名称</td>
+                    <td> <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></td>
+                </tr>
+                <tr>
+                    <td>图片大小</td>
+                    <td><?php echo getDistUsed($imgSize); ?></td>
+                </tr>
+                <tr>
+                    <td>图片类型</td>
+                    <td>image/<?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></td>
+                </tr>
+                <tr>
+                    <td>图片宽高</td>
+                    <td><span id="wh"></span>px</td>
+                </tr>
+                <tr>
+                    <td>上传时间</td>
+                    <td><?php echo date("Y-m-d H:i:s", $upTime); ?></td>
+                </tr>
+                <tr>
+                    <td>文件操作</td>
+                    <td>
+                        <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
+                        <a class="btn btn-mini btn-primary" href="/application/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
+                        <?php if (is_who_login('admin')) : ?>
+                            <a class="btn btn-mini btn-warning" href="/application/del.php?recycle_url=<?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
+                            <a class="btn btn-mini btn-danger" href="/application/del.php?url=<?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请联系管理员删除!</i></h4>
+        <!--
+
+        <h4>图片名称: < ?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
+        <h4>图片大小: < ?php echo getDistUsed($imgSize); ?></h4>
+        <h4>图片类型: image/< ?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
         <h4>图片宽高: <span id="wh"></span>px</h4>
-        <h4>上传时间: <?php echo date("Y-m-d H:i:s", $upTime); ?></h4>
+        <h4>上传时间: < ?php echo date("Y-m-d H:i:s", $upTime); ?></h4>
         <h4>文件操作：
-            <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
-            <?php if (is_who_login('admin')) : ?>
-                <a class="btn btn-mini btn-primary" href="/application/del.php?recycle_url=<?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
-                <a class="btn btn-mini btn-primary" href="/application/del.php?url=<?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
-            <?php endif; ?>
+            <a class="btn btn-mini btn-primary" href="< ?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
+            < ?php if (is_who_login('admin')) : ?>
+                <a class="btn btn-mini btn-primary" href="/application/del.php?recycle_url=< ?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
+                <a class="btn btn-mini btn-primary" href="/application/del.php?url=< ?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
+            < ?php endif; ?>
         </h4>
         <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请联系管理员删除!</i></h4>
+            -->
         <!-- 读取Exif信息
         <h4>使用设备: <span id="makeAndModel"></span></h4>
         <div class="col-md-12">

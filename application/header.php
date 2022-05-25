@@ -23,7 +23,6 @@
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/excanvas.js"></script>
   <![endif]-->
 	<?php /** 自定义代码 */ if ($config['customize']) echo $config['customize']; ?>
-
 </head>
 
 <body class="container">

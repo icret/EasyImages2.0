@@ -23,7 +23,6 @@ if (isset($_POST['logDate'])) {
 }
 
 try {
-
     if (is_file($logFile)) {
         require_once $logFile;
     } else {
