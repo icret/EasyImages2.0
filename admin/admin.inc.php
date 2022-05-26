@@ -780,11 +780,19 @@ if (isset($_GET['recycle_reimg'])) {
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
                     <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_verson(); ?></span>
                     <?php if (getVersion() !== get_current_verson()) : ?>
-                        <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-warning" data-toggle="tooltip" title="Github有更新,更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步最新版本号"><?php echo getVersion(); ?> New</span></a>
+                        <a href="#NewVersion" data-toggle="collapse" class="label label-badge label-warning" title="Github有更新"><?php echo getVersion(); ?> New</span></a>
                     <?php endif; ?>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
                 </p>
                 <p class="text-muted"><i class="icon icon-certificate"> EasyImage2.0简单图床构建于众多优秀的开源项目之上,非常感谢这些项目!</i></p>
+            </div>
+            <div class="collapse" id="NewVersion">
+                <div class="bg-primary with-padding">
+                    <p>最新版本: <?php echo getVersion('name'); ?> <a href="<?php echo getVersion('zipball_url'); ?>" target="_blank" class="label label-badge">点击下载</a></p>
+                    <p>更新日期: <?php echo getVersion('created_at'); ?></p>
+                    <p>更新内容: <br /><?php echo getVersion('body'); ?></p>
+                    <p>更新后删除<small style="color: black;">/admin/logs/verson/</small>文件夹会自动同步最新版本号</p>
+                </div>
             </div>
         </div>
         <div class="tab-pane fade" id="Content9">

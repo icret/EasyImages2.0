@@ -80,7 +80,6 @@ function checkLogin()
             return 203;
         }
 
-
         // 管理员登陆
         if ($getCOK[1] == $config['password']) {
             return 204;
@@ -179,7 +178,7 @@ function config_path($path = null)
     global $config;
     // php5.6 兼容写法：
     $path = isset($path) ? $path : date('Y/m/d/');
-    // php7.0 $path = $path ?? date('Y/m/d/');
+    // php7.0 $path = $path ?? date('Y/m/d/');    
     $img_path = $config['path'] . $path;
 
     if (!is_dir($img_path)) {
@@ -662,7 +661,7 @@ function imgRatio()
  * 定时获取GitHub 最新版本
  * @return mixed|null 读取版本信息
  */
-function getVersion()
+function getVersion($name = 'tag_name')
 {
     global $config;
 
@@ -677,7 +676,7 @@ function getVersion()
         $get_ver_day = array('1006', '2501');   // 检测日期的时间
 
         foreach ($get_ver_day as $day) {
-            if (empty($getVersion->readJson())) { // 不存在就下载
+            if (empty($getVersion->readJson($name))) { // 不存在就下载
                 $getVersion->downJson();
             } else if ($day == $now) { // 是否在需要更新的日期
                 $getVersion->downJson();
@@ -686,7 +685,7 @@ function getVersion()
                 return null;
             */
             } else { // 返回版本
-                return $getVersion->readJson();
+                return $getVersion->readJson($name);
             }
         }
     }
@@ -1348,40 +1347,12 @@ function isAnimatedGifWebp($src)
 }
 
 /**
- * 读取日志
- * @param String $logs 文件路径
- */
-function read_upload_logs($logs = null)
-{
-    global $config;
-
-    $logs = isset($logs) ? $logs : APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
-
-    if ($config['upload_logs'] == 0) {
-        $logs = '已经关闭了上传日志!';
-    } else {
-        if (file_exists($logs)) {
-            $logs = file_get_contents($logs, false, null, 274, 1000000);
-            $logs = str_replace(
-                array('{', '}}', '"', '\\', 'source:', 'date:', 'ip:', 'port:', 'user_agent:', 'path:', 'size:', 'checkImg:', 'from:'),
-                array('', '', '', '', '源名:', '日期:', 'IP:', '端口:', '信息:', '路径:', '大小:', '鉴黄状态:', '来源:'),
-                $logs
-            );
-        } else {
-            $logs =  "日志文件不存在,可能是当前月份没有新上传日志,请尝试上传一张!";
-        }
-    }
-
-    return $logs;
-}
-
-/**
  * 获取当前版本号
  * @param String $file 文件相对路径
  * @return String 内容信息
  */
 
-function get_current_verson($file = '/config/verson.txt')
+function get_current_verson($file = '/admin/verson.txt')
 {
     $file = APP_ROOT . $file;
 
@@ -1390,5 +1361,5 @@ function get_current_verson($file = '/config/verson.txt')
         return file_get_contents($file);
     }
 
-    return 'No Verson file';
+    return 'No Verson';
 }

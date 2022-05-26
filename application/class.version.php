@@ -14,13 +14,13 @@ class getVerson
         $this->url = $url;
     }
 
-    public function readJson()
+    public function readJson($name = 'tag_name')
     {
         if (file_exists(__DIR__ . '/../admin/logs/verson/verson.json')) {
             $file = fopen(__DIR__ . '/../admin/logs/verson/verson.json', 'r');
             $test = fread($file, filesize(__DIR__ . '/../admin/logs/verson/verson.json'));
             $verson = json_decode($test, true);
-            return $verson['tag_name'];
+            return $verson[$name];
             fclose($file);
         } else {
             $this->downJson();
@@ -30,9 +30,8 @@ class getVerson
     public function downJson()
     {
 
-        if(!is_dir(__DIR__.'/../admin/logs/verson/'))
-        {
-            mkdir(__DIR__.'/../admin/logs/verson/',0755,true);
+        if (!is_dir(__DIR__ . '/../admin/logs/verson/')) {
+            mkdir(__DIR__ . '/../admin/logs/verson/', 0755, true);
         }
 
         $verson = $this->geturl($this->url);

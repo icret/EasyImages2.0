@@ -14,7 +14,7 @@ $config=Array
 	'imgurl'=>'http://127.0.0.1',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
-	'captcha'=>0,
+	'captcha'=>1,
 	'mustLogin'=>0,
 	'apiStatus'=>0,
 	'path'=>'/i/',
@@ -94,7 +94,7 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2022-05-26 15:21:42',
+	'update'=>'2022-05-27 00:06:41',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];
