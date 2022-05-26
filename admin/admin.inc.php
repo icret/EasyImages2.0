@@ -236,7 +236,7 @@ if (isset($_GET['recycle_reimg'])) {
     header("refresh:1;url=/admin/admin.inc.php");
 }
 ?>
-<div class="row" style="margin-bottom:100px">
+<div class="row">
     <div class="alert alert-primary alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
         <h5>目录保存以 年/月/日/ 递进,非必要请勿修改! 否则会导致部分操作不可用;</h5>

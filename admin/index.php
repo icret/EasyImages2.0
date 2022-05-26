@@ -133,12 +133,12 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                     <input type="password" name="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required">
                     <input type="hidden" name="password" id="md5_password">
                     <?php if ($config['captcha']) : ?>
-                        <input class="form-control" type="text" name="code" value="" placeholder="输入下方4位数验证码" autocomplete="off" required="required" />
-                        <div class="form-group">
-                            <div class="col">
-                                <label><img src="../application/captcha.php" onClick="this.src='../application/captcha.php?nocache='+Math.random()" title="点击换一张" /></label>
-                            </div>
+                    <input class="form-control" type="text" name="code" value="" placeholder="输入下方4位数验证码" autocomplete="off" required="required" />
+                    <div class="form-group">
+                        <div class="col">
+                            <label><img src="../application/captcha.php" onClick="this.src='../application/captcha.php?nocache='+Math.random()" title="点击换一张" /></label>
                         </div>
+                    </div>
                     <?php endif; ?>
                     <button type="submit" class="btn btn-block btn-primary">登 录</button>
                     <p class="signup">忘记账号或密码请查看<a href="#fogot" data-moveable="inside" data-remember-pos="false" data-toggle="modal" data-target="#fogot" data-position="center">帮助信息</a></p>

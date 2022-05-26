@@ -37,7 +37,7 @@ try {
     exit;
 }
 ?>
-<div class="col-md-12" style="margin-bottom: 88px;">
+<div class="col-md-12">
     <div id="logs" class="datagrid table-bordered">
         <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
             <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="日志搜索...">
@@ -128,7 +128,7 @@ try {
                         md5: '<input class="form-control input-sm" type="text" value="<?php echo $v['md5']; ?>" readonly>',
                         checkImg: '<?php echo $v['checkImg']; ?>',
                         from: '<?php echo $v['from']; ?>',
-                        manage: "<a href='<?php echo $config['domain'] . $v['path']; ?>' target='_blank' class='btn btn-mini btn-success'>查看</a> <a href='/application/del.php?recycle_url=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini btn-info'>回收</a> <a href='/application/del.php?url=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini btn-danger'>删除</a> ",
+                        manage: "<div class='btn-group'><a href='<?php echo $config['domain'] . $v['path']; ?>' target='_blank' class='btn btn-mini btn-success'>查看</a> <a href='/application/info.php?img=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini'>信息</a> <a href='/application/del.php?recycle_url=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini btn-info'>回收</a> <a href='/application/del.php?url=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini btn-danger'>删除</a></div>",
                     },
                 <?php endforeach; ?>
             ]

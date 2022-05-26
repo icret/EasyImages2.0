@@ -19,7 +19,7 @@ mustLogin();
       <div class="content"></div>
       <button type="button" class="close">x</button>
     </div>
-    <div class="uploader-files file-list file-list-lg file-rename-by-click" data-drag-placeholder="选择文件/Ctrl+V粘贴/拖拽至此处" style="min-height: 160px; border-style: dashed;"></div>
+    <div class="uploader-files file-list file-list-lg file-rename-by-click" data-drag-placeholder="选择文件/Ctrl+V粘贴/拖拽至此处" style="min-height: 188px; border-style: dashed;"></div>
     <div class="uploader-actions">
       <div class="uploader-status pull-right text-muted"></div>
       <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
@@ -27,7 +27,7 @@ mustLogin();
       <button type="button" class="btn btn-link uploader-btn-stop"><i class="icon icon-pause"></i> 暂停上传</button>
     </div>
   </div>
-  <div class="col-md-12 clo-xs-12" style="margin-bottom:90px;">
+  <div class="col-md-12 clo-xs-12">
     <ul class="nav nav-tabs">
       <li <?php if ($config['upload_first_show'] == 1) echo 'class="active"'; ?>>
         <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"></i> 直链</a>

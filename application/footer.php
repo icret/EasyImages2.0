@@ -36,6 +36,8 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
     </div>
   </div>
 </div>
+<!-- 占位符 -->
+<div class="col-md-12 clo-xs-12" style="margin-bottom: 108px;position:relative;"></div>
 <footer class="container text-muted small navbar-fixed-bottom" style="text-align: center;background-color:rgba(255,255,255,0.7);z-index: 0;">
   <hr>
   <?php /** 页脚信息 */ if (!empty($config['footer'])) echo $config['footer']; ?>
@@ -119,7 +121,7 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
       setItem: function(name, value, days) {
         var date = new Date();
         date.setDate(date.getDate() + days);
-        document.cookie = name + '=' + value + ';expires=' + date;
+        document.cookie = name + '=' + value + ';expires=' + date + ';path=' + '/';
       },
       // 获取cookie
       getItem: function(name) {

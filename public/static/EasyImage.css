@@ -85,8 +85,13 @@
   }
   
   .bottom-bar {
+      opacity: 0;
       width: 100%;
       position: absolute;
       bottom: 0.1px;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .bottom-bar:hover {
+      opacity: 1;
   }

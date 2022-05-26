@@ -6,7 +6,7 @@ require_once __DIR__ . '/header.php';
 /** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
-<div class="row" style="margin-bottom:100px">
+<div class="row">
   <div class="col-md-12">
     <?php
     if (!$config['showSwitch'] && !is_who_login('admin')) : ?>
@@ -88,33 +88,34 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     /** 底部广告 */
     if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
   </div>
-  <div class="col-md-12">
-    <hr />
-    <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
-      <div class="btn-toolbar">
-        <div class="btn-group">
-          <a class="btn btn-danger btn-mini" href="?<?php echo http_build_query($httpUrl); ?>">当前<?php echo $allUploud; ?></a>
-          <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
-          <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
-          <?php
-          // 倒推日期显示上传图片 @param $listDate 配置的倒退日期
-          for ($x = 2; $x <= $listDate; $x++)
-            echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('j号', strtotime("-$x day")) . '</a>';
-          ?>
-        </div>
-        <?php if (is_who_login('admin')) : ?>
+  <div class="row">
+    <div class="col-md-12">
+      <hr />
+      <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
+        <div class="btn-toolbar">
           <div class="btn-group">
-            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
-            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
-            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
-            <a class="btn btn-mini" onclick="recycle_img()">回收</a>
-            <a class="btn btn-mini" onclick="delete_img()">删除</a>
+            <a class="btn btn-danger btn-mini" href="?<?php echo http_build_query($httpUrl); ?>">当前<?php echo $allUploud; ?></a>
+            <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
+            <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
+            <?php
+            // 倒推日期显示上传图片 @param $listDate 配置的倒退日期
+            for ($x = 2; $x <= $listDate; $x++)
+              echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('j号', strtotime("-$x day")) . '</a>';
+            ?>
           </div>
-        <?php endif; ?>
+          <?php if (is_who_login('admin')) : ?>
+            <div class="btn-group">
+              <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
+              <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
+              <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
+              <a class="btn btn-mini" onclick="recycle_img()">回收</a>
+              <a class="btn btn-mini" onclick="delete_img()">删除</a>
+            </div>
+          <?php endif; ?>
+        </div>
       </div>
-    </div>
-    <!-- 按格式 -->
-    <!-- <div class="row">
+      <!-- 按格式 -->
+      <!-- <div class="row">
       <div class="col-md-2 col-xs-6">
         <form action="<php echo '?' . http_build_query($httpUrl) . '&'; ?>" method="get">
           <div class="input-group">
@@ -130,247 +131,247 @@ if ($config['ad_top']) echo $config['ad_top_info'];
           </div>
         </form>
       </div> -->
-    <div class="col-md-2 col-xs-7">
-      <div class="btn-group">
-        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
-        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
-        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
-        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
-      </div>
-    </div>
-    <!-- 按日期-->
-    <div class="col-md-2 col-xs-5">
-      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
-        <div class="input-group">
-          <span class="input-group-addon fix-border fix-padding"></span>
-          <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
-          <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary input-sm">按日期</button>
-          </span>
+      <div class="col-md-2 col-xs-7">
+        <div class="btn-group">
+          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
+          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
+          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
+          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
         </div>
-      </form>
+      </div>
+      <!-- 按日期-->
+      <div class="col-md-2 col-xs-5">
+        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+          <div class="input-group">
+            <span class="input-group-addon fix-border fix-padding"></span>
+            <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-primary input-sm">按日期</button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <!-- 返回顶部-->
+      <div class="btn btn-mini btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
     </div>
-    <!-- 返回顶部-->
-    <div class="btn btn-mini btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
   </div>
-</div>
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
-<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.css">
-<style>
-  /* 返回顶部 */
-  .btn-back-to-top {
-    padding: 0.5rem 1rem;
-    position: fixed;
-    right: 2rem;
-    bottom: 1rem;
-    z-index: 2;
-    -webkit-transition: -webkit-transform 0.2s ease;
-    transition: transform 0.2s ease;
-    -webkit-transform: translateY(200%);
-    transform: translateY(200%);
-  }
+  <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
+  <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
+  <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
+  <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.css">
+  <style>
+    /* 返回顶部 */
+    .btn-back-to-top {
+      padding: 0.5rem 1rem;
+      position: fixed;
+      right: 2rem;
+      bottom: 1rem;
+      z-index: 2;
+      -webkit-transition: -webkit-transform 0.2s ease;
+      transition: transform 0.2s ease;
+      -webkit-transform: translateY(200%);
+      transform: translateY(200%);
+    }
 
-  .btn-back-to-top.scrolled {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-  }
-</style>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
-<script>
-  // viewjs
-  new Viewer(document.getElementById('viewjs'), {
-    url: 'data-original',
-  });
+    .btn-back-to-top.scrolled {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+    }
+  </style>
+  <script src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
+  <script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
+  <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
+  <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
+  <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+  <script>
+    // viewjs
+    new Viewer(document.getElementById('viewjs'), {
+      url: 'data-original',
+    });
 
-  // 复制url
-  var clipboard = new Clipboard('.copy');
-  clipboard.on('success', function(e) {
-    new $.zui.Messager("复制直链成功", {
-      type: "success", // 定义颜色主题 
-      icon: "ok-sign" // 定义消息图标
-    }).show();
+    // 复制url
+    var clipboard = new Clipboard('.copy');
+    clipboard.on('success', function(e) {
+      new $.zui.Messager("复制直链成功", {
+        type: "success", // 定义颜色主题 
+        icon: "ok-sign" // 定义消息图标
+      }).show();
 
-  });
-  clipboard.on('error', function(e) {
-    document.querySelector('.copy');
-    new $.zui.Messager("复制失败", {
-      type: "danger", // 定义颜色主题 
-      icon: "exclamation-sign" // 定义消息图标
-    }).show();
-  });
+    });
+    clipboard.on('error', function(e) {
+      document.querySelector('.copy');
+      new $.zui.Messager("复制失败", {
+        type: "danger", // 定义颜色主题 
+        icon: "exclamation-sign" // 定义消息图标
+      }).show();
+    });
 
-  // 取消/全选文件
-  function opcheckboxed(objName, type) {
-    var objNameList = document.getElementsByName(objName);
-    if (null != objNameList) {
-      for (var i = 0; i < objNameList.length; i++) {
-        if (objNameList[i].checked == true) {
-          if (type != 'checkall') { // 非全选
-            objNameList[i].checked = false;
-          }
-        } else {
-          if (type != 'uncheckall') { // 非取消全选
-            objNameList[i].checked = true;
+    // 取消/全选文件
+    function opcheckboxed(objName, type) {
+      var objNameList = document.getElementsByName(objName);
+      if (null != objNameList) {
+        for (var i = 0; i < objNameList.length; i++) {
+          if (objNameList[i].checked == true) {
+            if (type != 'checkall') { // 非全选
+              objNameList[i].checked = false;
+            }
+          } else {
+            if (type != 'uncheckall') { // 非取消全选
+              objNameList[i].checked = true;
+            }
           }
         }
       }
     }
-  }
-  // 回收图片
-  function recycle_img() {
-    bootbox.confirm({
-      message: "确认要放入回收站? <br /> 可在可疑图片中恢复!",
-      buttons: {
-        confirm: {
-          label: '确定',
-          className: 'btn-success'
-        },
-        cancel: {
-          label: '取消',
-          className: 'btn-danger'
-        }
-      },
-      callback: function(result) {
-        if (result == true) {
-          obj = document.getElementsByName("checkbox");
-          check_val = [];
-          for (k in obj) {
-            //判断复选框是否被选中
-            if (obj[k].checked)
-              //获取被选中的复选框的值
-              check_val.push(obj[k].value);
-            console.log(check_val);
+    // 回收图片
+    function recycle_img() {
+      bootbox.confirm({
+        message: "确认要放入回收站? <br /> 可在可疑图片中恢复!",
+        buttons: {
+          confirm: {
+            label: '确定',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '取消',
+            className: 'btn-danger'
           }
-          $.post("./post_del.php", {
-            'recycle_url_array': check_val
-          }, );
-          new $.zui.Messager("放入回收站成功", {
-            type: "success", // 定义颜色主题 
-            icon: "ok-sign" // 定义消息图标
-          }).show();
-          // 延时2秒刷新
-          window.setTimeout(function() {
-            window.location.reload();
-          }, 1500)
-        } else {
-          new $.zui.Messager("取消回收", {
-            type: "primary", // 定义颜色主题 
-            icon: "info-sign" // 定义消息图标
-          }).show();
-        }
-        console.log('是否回收图片: ' + result);
-      }
-    });
-
-  }
-  // 删除图片
-  function delete_img() {
-    bootbox.confirm({
-      message: "确认要删除?<br />* 删除文件夹后将无法恢复!",
-      buttons: {
-        confirm: {
-          label: '确定',
-          className: 'btn-success'
         },
-        cancel: {
-          label: '取消',
-          className: 'btn-danger'
-        }
-      },
-      callback: function(result) {
-        if (result == true) {
-          obj = document.getElementsByName("checkbox");
-          check_val = [];
-          for (k in obj) {
-            //判断复选框是否被选中
-            if (obj[k].checked)
-              //获取被选中的复选框的值
-              check_val.push(obj[k].value);
-            console.log(check_val);
+        callback: function(result) {
+          if (result == true) {
+            obj = document.getElementsByName("checkbox");
+            check_val = [];
+            for (k in obj) {
+              //判断复选框是否被选中
+              if (obj[k].checked)
+                //获取被选中的复选框的值
+                check_val.push(obj[k].value);
+              console.log(check_val);
+            }
+            $.post("./post_del.php", {
+              'recycle_url_array': check_val
+            }, );
+            new $.zui.Messager("放入回收站成功", {
+              type: "success", // 定义颜色主题 
+              icon: "ok-sign" // 定义消息图标
+            }).show();
+            // 延时2秒刷新
+            window.setTimeout(function() {
+              window.location.reload();
+            }, 1500)
+          } else {
+            new $.zui.Messager("取消回收", {
+              type: "primary", // 定义颜色主题 
+              icon: "info-sign" // 定义消息图标
+            }).show();
           }
-          $.post("./post_del.php", {
-              'del_url_array': check_val
-            },
-            function(data) {
-              if (data.search('success') > 0) {
-                new $.zui.Messager("删除成功", {
-                  type: "success", // 定义颜色主题 
-                  icon: "ok-sign" // 定义消息图标
-                }).show();
-                // 延时2秒刷新
-                window.setTimeout(function() {
-                  window.location.reload();
-                }, 1500)
-              } else {
-                new $.zui.Messager("删除失败 请登录后再删除!", {
-                  type: "danger", // 定义颜色主题 
-                  icon: "exclamation-sign" // 定义消息图标
-                }).show();
-                // 延时2s跳转			
-                window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
-              }
-            });
-        } else {
-          new $.zui.Messager("取消删除", {
-            type: "primary", // 定义颜色主题 
-            icon: "info-sign" // 定义消息图标
-          }).show();
+          console.log('是否回收图片: ' + result);
         }
-        console.log('是否删除图片: ' + result);
-      }
-    });
-  }
-
-  // 返回顶部
-  var back_to_top_button = jQuery('.btn-back-to-top');
-  jQuery(window).scroll(function() {
-    if (jQuery(this).scrollTop() > 100 && !back_to_top_button.hasClass('scrolled')) {
-      back_to_top_button.addClass('scrolled');
-
-    } else if (jQuery(this).scrollTop() < 100 && back_to_top_button.hasClass('scrolled')) {
-      back_to_top_button.removeClass('scrolled');
+      });
 
     }
-  });
-  // 返回顶部
-  back_to_top_button.click(function() {
-    jQuery('html, body').animate({
-      scrollTop: 0
-    }, 800);
-    return false;
-  });
+    // 删除图片
+    function delete_img() {
+      bootbox.confirm({
+        message: "确认要删除?<br />* 删除文件夹后将无法恢复!",
+        buttons: {
+          confirm: {
+            label: '确定',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '取消',
+            className: 'btn-danger'
+          }
+        },
+        callback: function(result) {
+          if (result == true) {
+            obj = document.getElementsByName("checkbox");
+            check_val = [];
+            for (k in obj) {
+              //判断复选框是否被选中
+              if (obj[k].checked)
+                //获取被选中的复选框的值
+                check_val.push(obj[k].value);
+              console.log(check_val);
+            }
+            $.post("./post_del.php", {
+                'del_url_array': check_val
+              },
+              function(data) {
+                if (data.search('success') > 0) {
+                  new $.zui.Messager("删除成功", {
+                    type: "success", // 定义颜色主题 
+                    icon: "ok-sign" // 定义消息图标
+                  }).show();
+                  // 延时2秒刷新
+                  window.setTimeout(function() {
+                    window.location.reload();
+                  }, 1500)
+                } else {
+                  new $.zui.Messager("删除失败 请登录后再删除!", {
+                    type: "danger", // 定义颜色主题 
+                    icon: "exclamation-sign" // 定义消息图标
+                  }).show();
+                  // 延时2s跳转			
+                  window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
+                }
+              });
+          } else {
+            new $.zui.Messager("取消删除", {
+              type: "primary", // 定义颜色主题 
+              icon: "info-sign" // 定义消息图标
+            }).show();
+          }
+          console.log('是否删除图片: ' + result);
+        }
+      });
+    }
 
-  //懒加载
-  var lazy = new Lazy({
-    onload: function(elem) {
-      console.log(elem)
-    },
-    delay: 300
-  })
+    // 返回顶部
+    var back_to_top_button = jQuery('.btn-back-to-top');
+    jQuery(window).scroll(function() {
+      if (jQuery(this).scrollTop() > 100 && !back_to_top_button.hasClass('scrolled')) {
+        back_to_top_button.addClass('scrolled');
 
-  // 按日期浏览
-  $(".form-date").datetimepicker({
-    weekStart: 1,
-    todayBtn: 1,
-    autoclose: 1,
-    todayHighlight: 1,
-    startView: 2,
-    minView: 2,
-    forceParse: 0,
-    pickerPosition: "top-right",
-    format: "yyyy/mm/dd/",
-    endDate: new Date() // 只能选当前日期之前
-  });
+      } else if (jQuery(this).scrollTop() < 100 && back_to_top_button.hasClass('scrolled')) {
+        back_to_top_button.removeClass('scrolled');
 
-  // 更改网页标题
-  document.title = "图床广场 - 今日上传<?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?>张 昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")) . '*.*', 'number'); ?>张 - <?php echo $config['title']; ?>"
-</script>
-<?php
-/** 引入底部 */
-require_once APP_ROOT . '/application/footer.php';
+      }
+    });
+    // 返回顶部
+    back_to_top_button.click(function() {
+      jQuery('html, body').animate({
+        scrollTop: 0
+      }, 800);
+      return false;
+    });
+
+    //懒加载
+    var lazy = new Lazy({
+      onload: function(elem) {
+        console.log(elem)
+      },
+      delay: 300
+    })
+
+    // 按日期浏览
+    $(".form-date").datetimepicker({
+      weekStart: 1,
+      todayBtn: 1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+      minView: 2,
+      forceParse: 0,
+      pickerPosition: "top-right",
+      format: "yyyy/mm/dd/",
+      endDate: new Date() // 只能选当前日期之前
+    });
+
+    // 更改网页标题
+    document.title = "图床广场 - 今日上传<?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?>张 昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")) . '*.*', 'number'); ?>张 - <?php echo $config['title']; ?>"
+  </script>
+  <?php
+  /** 引入底部 */
+  require_once APP_ROOT . '/application/footer.php';

@@ -65,7 +65,7 @@ if (is_array($char_data)) {
         box-shadow: 3px 2px 3px 2px rgba(19, 17, 36, 0.5);
     }
 </style>
-<div class="row" style="margin-bottom:100px">
+<div class="row">
     <div class="clo-md-12">
         <div class="alert alert-warning">
             <form action="chart.php" method="post">
