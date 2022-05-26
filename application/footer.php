@@ -44,7 +44,7 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
   <p>
     © 2018-<?php echo date("Y"); ?>
     <a href="https://png.cm/" target="_blank"> EasyImage</a>
-    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow"><?php echo $config['version']; ?></a> By
+    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow"><?php echo get_current_verson(); ?></a> By
     <a href="https://blog.png.cm" target="_blank">Icret</a>
     <a href="/admin/terms.php" target="_blank"> DMCA</a>
     <!-- 二维码按钮 -->

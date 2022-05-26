@@ -94,7 +94,6 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'version'=>'2.6.2',
 	'update'=>'2022-05-26 15:21:42',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>

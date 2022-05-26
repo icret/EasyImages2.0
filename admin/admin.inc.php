@@ -778,8 +778,8 @@ if (isset($_GET['recycle_reimg'])) {
                     <a href="https://easysoft.github.io/zui/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="前端框架">ZUI</span></a>
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="图像处理类">verot</span></a>
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
-                    <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo $config['version']; ?></span>
-                    <?php if (getVersion() !== $config['version']) : ?>
+                    <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_verson(); ?></span>
+                    <?php if (getVersion() !== get_current_verson()) : ?>
                         <a href="https://github.com/icret/EasyImages2.0/releases" target="_blank"><span class="label label-badge label-warning" data-toggle="tooltip" title="Github有更新,更新后删除<p>/admin/logs/verson/</p>文件夹会自动同步最新版本号"><?php echo getVersion(); ?> New</span></a>
                     <?php endif; ?>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>

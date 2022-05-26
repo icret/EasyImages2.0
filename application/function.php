@@ -1349,7 +1349,7 @@ function isAnimatedGifWebp($src)
 
 /**
  * 读取日志
- * @param filepath 文件路径
+ * @param String $logs 文件路径
  */
 function read_upload_logs($logs = null)
 {
@@ -1373,4 +1373,22 @@ function read_upload_logs($logs = null)
     }
 
     return $logs;
+}
+
+/**
+ * 获取当前版本号
+ * @param String $file 文件相对路径
+ * @return String 内容信息
+ */
+
+function get_current_verson($file = '/config/verson.txt')
+{
+    $file = APP_ROOT . $file;
+
+    if (is_file($file)) {
+
+        return file_get_contents($file);
+    }
+
+    return 'No Verson file';
 }

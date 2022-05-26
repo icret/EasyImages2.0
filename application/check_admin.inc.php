@@ -63,7 +63,7 @@ if (file_exists(APP_ROOT . '/.user.ini')) {
 }
 
 // 检查当前版本与GitHub版本
-if (getVersion() !== $config['version']) {
+if (getVersion() !== get_current_verson()) {
     echo '
     <script>
     new $.zui.Messager("当前版本与GitHub不一致,请检查当前是否最新版本!",{
