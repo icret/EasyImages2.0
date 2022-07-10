@@ -405,11 +405,27 @@ class Upload {
 
     /**
      * Set this variable to false if you don't want to turn dangerous scripts into simple text files
+     * The list of blacklisted extensions is in {@link dangerous}
+     *
+     * Note that this check happens before checking for forbidden MIME types or extensions
+     * If you want to forbid uploads rather than turning scripts into text files, 
+     * set {@link no_script} to false and use {@link forbidden} instead
      *
      * @access public
      * @var boolean
      */
     var $no_script;
+
+    /**
+     * Dangerous file extensions
+     *
+     * List of dangerous extensions, that are enforced if {@link no_script} is true
+     * If the file has such extension, then it is turned into a text file
+     *
+     * @access public
+     * @var array
+     */
+    var $dangerous;
 
     /**
      * Set this variable to true to allow automatic renaming of the file
@@ -1662,12 +1678,12 @@ class Upload {
     var $mime_types;
 
     /**
-     * Allowed MIME types
+     * Allowed MIME types or file extensions
      *
      * Default is a selection of safe mime-types, but you might want to change it
      *
-     * Simple wildcards are allowed, such as image/* or application/*
-     * If there is only one MIME type allowed, then it can be a string instead of an array
+     * Simple wildcards are allowed for MIME types, such as image/* or application/*
+     * If there is only one MIME type allowed or file extension, then it can be a string instead of an array
      *
      * @access public
      * @var array OR string
@@ -1675,29 +1691,22 @@ class Upload {
     var $allowed;
 
     /**
-     * Forbidden MIME types
+     * Forbidden MIME types or file extensions
      *
-     * Default is a selection of safe mime-types, but you might want to change it
+     * Default is a selection of forbidden file extensions, but you might want to change it
      * To only check for forbidden MIME types, and allow everything else, set {@link allowed} to array('* / *') without the spaces
      *
-     * Simple wildcards are allowed, such as image/* or application/*
-     * If there is only one MIME type forbidden, then it can be a string instead of an array
+     * Note that if {@link no_script} is activated, dangerous scripts with extensions in {@link dangerous}
+     * will be set to have a .txt extension prior to checking for forbidden extensions
+     * If you want to forbid uploads rather than turning scripts into text files, set {@link no_script}  to false
+     *
+     * Simple wildcards are allowed for MIME types, such as image/* or application/*
+     * If there is only one MIME type or file extension forbidden, then it can be a string instead of an array
      *
      * @access public
      * @var array OR string
      */
     var $forbidden;
-
-    /**
-     * Blacklisted file extensions
-     *
-     * List of blacklisted extensions, that are enforced if {@link no_script} is true
-     *
-     * @access public
-     * @var array
-     */
-    var $blacklist;
-
 
     /**
      * Array of translated error messages
@@ -1853,7 +1862,35 @@ class Upload {
         $this->image_frame_colors       = '#FFFFFF #999999 #666666 #000000';
         $this->image_frame_opacity      = 100;
 
-        $this->forbidden = array();
+        $this->dangerous = array(
+            'php',
+            'php7',
+            'php6',
+            'php5',
+            'php4',
+            'php3',
+            'phtml',
+            'pht',
+            'phpt',
+            'phtm',
+            'phps',
+            'inc',
+            'pl',
+            'py',
+            'cgi',
+            'asp',
+            'js',
+            'sh',
+            'bat',
+            'phar',
+            'wsdl',
+        );
+        
+        $this->forbidden = array_merge($this->dangerous, array(
+            'exe',
+            'dll',
+        ));
+        
         $this->allowed = array(
             'application/arj',
             'application/excel',
@@ -2036,27 +2073,6 @@ class Upload {
             'csv' => 'text/csv',
         );
 
-        $this->blacklist = array(
-            'php',
-            'php7',
-            'php6',
-            'php5',
-            'php4',
-            'php3',
-            'phtml',
-            'pht',
-            'phpt',
-            'phtm',
-            'phps',
-            'inc',
-            'pl',
-            'py',
-            'cgi',
-            'asp',
-            'js',
-            'sh',
-            'phar',
-        );
 
     }
 
@@ -2093,7 +2109,7 @@ class Upload {
      */
     function upload($file, $lang = 'en_GB') {
 
-        $this->version            = '05/10/2021';
+        $this->version            = '13/06/2022';
 
         $this->file_src_name      = '';
         $this->file_src_name_body = '';
@@ -2429,7 +2445,7 @@ class Upload {
             // checks MIME type with Fileinfo PECL extension
             if (!$this->file_src_mime || !is_string($this->file_src_mime) || empty($this->file_src_mime) || strpos($this->file_src_mime, '/') === false) {
                 if ($this->mime_fileinfo) {
-                    $this->log .= '- Checking MIME type with Fileinfo PECL extension<br />';
+                    $this->log .= '- checking MIME type with Fileinfo PECL extension<br />';
                     if ($this->function_enabled('finfo_open')) {
                         $path = null;
                         if ($this->mime_fileinfo !== '') {
@@ -2493,7 +2509,7 @@ class Upload {
             // checks MIME type with shell if unix access is authorized
             if (!$this->file_src_mime || !is_string($this->file_src_mime) || empty($this->file_src_mime) || strpos($this->file_src_mime, '/') === false) {
                 if ($this->mime_file) {
-                    $this->log .= '- Checking MIME type with UNIX file() command<br />';
+                    $this->log .= '- checking MIME type with UNIX file() command<br />';
                     if (substr(PHP_OS, 0, 3) != 'WIN') {
                         if ($this->function_enabled('exec') && $this->function_enabled('escapeshellarg')) {
                             if (strlen($mime = @exec("file -bi ".escapeshellarg($this->file_src_pathname))) != 0) {
@@ -2522,7 +2538,7 @@ class Upload {
             // checks MIME type with mime_magic
             if (!$this->file_src_mime || !is_string($this->file_src_mime) || empty($this->file_src_mime) || strpos($this->file_src_mime, '/') === false) {
                 if ($this->mime_magic) {
-                    $this->log .= '- Checking MIME type with mime.magic file (mime_content_type())<br />';
+                    $this->log .= '- checking MIME type with mime.magic file (mime_content_type())<br />';
                     if ($this->function_enabled('mime_content_type')) {
                         $this->file_src_mime = mime_content_type($this->file_src_pathname);
                         $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;MIME type detected as ' . $this->file_src_mime . ' by mime_content_type()<br />';
@@ -2543,7 +2559,7 @@ class Upload {
             // checks MIME type with getimagesize()
             if (!$this->file_src_mime || !is_string($this->file_src_mime) || empty($this->file_src_mime) || strpos($this->file_src_mime, '/') === false) {
                 if ($this->mime_getimagesize) {
-                    $this->log .= '- Checking MIME type with getimagesize()<br />';
+                    $this->log .= '- checking MIME type with getimagesize()<br />';
                     $info = getimagesize($this->file_src_pathname);
                     if (is_array($info) && array_key_exists('mime', $info)) {
                         $this->file_src_mime = trim($info['mime']);
@@ -2586,7 +2602,7 @@ class Upload {
             // we need to work some magic if we upload via Flash
             if ($this->file_src_mime == 'application/octet-stream' || !$this->file_src_mime || !is_string($this->file_src_mime) || empty($this->file_src_mime) || strpos($this->file_src_mime, '/') === false) {
                 if ($this->file_src_mime == 'application/octet-stream') $this->log .= '- Flash may be rewriting MIME as application/octet-stream<br />';
-                $this->log .= '- Try to guess MIME type from file extension (' . $this->file_src_name_ext . '): ';
+                $this->log .= '- try to guess MIME type from file extension (' . $this->file_src_name_ext . '): ';
                 if (array_key_exists($this->file_src_name_ext, $this->mime_types)) $this->file_src_mime = $this->mime_types[$this->file_src_name_ext];
                 if ($this->file_src_mime == 'application/octet-stream') {
                     $this->log .= 'doesn\'t look like anything known<br />';
@@ -2600,9 +2616,14 @@ class Upload {
             }
 
             // determine whether the file is an image
-            if ($this->file_src_mime && is_string($this->file_src_mime) && !empty($this->file_src_mime) && array_key_exists($this->file_src_mime, $this->image_supported)) {
-                $this->file_is_image = true;
-                $this->image_src_type = $this->image_supported[$this->file_src_mime];
+            if ($this->file_src_mime && is_string($this->file_src_mime) && !empty($this->file_src_mime)) {
+                if (array_key_exists($this->file_src_mime, $this->image_supported)) {
+                    $this->file_is_image = true;
+                    $this->image_src_type = $this->image_supported[$this->file_src_mime];
+                    $this->log .= '- file is an image, and its type is supported by GD<br />';
+                } else if (strpos($this->file_src_mime, 'image/') !== FALSE && sizeof($this->image_supported) == 0) {
+                    $this->log .= '- file may be an image, but its type is not supported; is GD installed ?<br />';
+                }
             }
 
             // if the file is an image, we gather some useful data
@@ -2629,7 +2650,7 @@ class Upload {
             }
 
             $this->log .= '<b>source variables</b><br />';
-            $this->log .= '- You can use all these before calling process()<br />';
+            $this->log .= '- you can use all these before calling process()<br />';
             $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;file_src_name         : ' . $this->file_src_name . '<br />';
             $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;file_src_name_body    : ' . $this->file_src_name_body . '<br />';
             $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;file_src_name_ext     : ' . $this->file_src_name_ext . '<br />';
@@ -3120,7 +3141,7 @@ class Upload {
                 }
                 // if the file is text based, or has a dangerous extension, we rename it as .txt
                 if ((((substr($this->file_src_mime, 0, 5) == 'text/' && $this->file_src_mime != 'text/rtf') || strpos($this->file_src_mime, 'javascript') !== false)  && (substr($file_src_name, -4) != '.txt'))
-                    || preg_match('/\.(' . implode('|', $this->blacklist) . ')$/i', $this->file_src_name)
+                    || preg_match('/\.(' . implode('|', $this->dangerous) . ')$/i', $this->file_src_name)
                     || $this->file_force_extension && empty($file_src_name_ext)) {
                     $this->file_src_mime = 'text/plain';
                     if ($this->file_src_name_ext) $file_src_name_body = $file_src_name_body . '.' . $this->file_src_name_ext;
@@ -3136,22 +3157,39 @@ class Upload {
             } else if ($this->mime_check && !empty($this->file_src_mime) && strpos($this->file_src_mime, '/') !== false) {
                 list($m1, $m2) = explode('/', $this->file_src_mime);
                 $allowed = false;
-                // check wether the mime type is allowed
+                // check wether the mime type or file extension is allowed
                 if (!is_array($this->allowed)) $this->allowed = array($this->allowed);
                 foreach($this->allowed as $k => $v) {
-                    list($v1, $v2) = explode('/', $v);
-                    if (($v1 == '*' && $v2 == '*') || ($v1 == $m1 && ($v2 == $m2 || $v2 == '*'))) {
-                        $allowed = true;
-                        break;
+                    if (strpos($v, '/') == false) {
+                        if ($v == '*' || strtolower($v) == strtolower($file_src_name_ext)) {
+                            $allowed = true;
+                            break;                        
+                        }
+                    } else {
+                        list($v1, $v2) = explode('/', $v);
+                        if (($v1 == '*' && $v2 == '*') || ($v1 == $m1 && ($v2 == $m2 || $v2 == '*'))) {
+                            $allowed = true;
+                            break;
+                        }
                     }
                 }
-                // check wether the mime type is forbidden
+                if (!$allowed) $this->log .= '- MIME type and/or extension is not allowed !<br />';
+                // check wether the mime type or file extension is forbidden
                 if (!is_array($this->forbidden)) $this->forbidden = array($this->forbidden);
                 foreach($this->forbidden as $k => $v) {
-                    list($v1, $v2) = explode('/', $v);
-                    if (($v1 == '*' && $v2 == '*') || ($v1 == $m1 && ($v2 == $m2 || $v2 == '*'))) {
-                        $allowed = false;
-                        break;
+                    if (strpos($v, '/') == false) {
+                        if ($v == '*' || strtolower($v) == strtolower($file_src_name_ext)) {
+                            $allowed = false;
+                            $this->log .= '- extension ' . $v . ' is forbidden !<br />';
+                            break;                        
+                        }
+                    } else {
+                        list($v1, $v2) = explode('/', $v);
+                        if (($v1 == '*' && $v2 == '*') || ($v1 == $m1 && ($v2 == $m2 || $v2 == '*'))) {
+                            $allowed = false;
+                            $this->log .= '- MIME type ' . $v . ' is forbidden !<br />';
+                            break;
+                        }
                     }
                 }
                 if (!$allowed) {
@@ -3159,6 +3197,7 @@ class Upload {
                     $this->error = $this->translate('incorrect_file');
                 } else {
                     $this->log .= '- file mime OK : ' . $this->file_src_mime . '<br />';
+                    $this->log .= '- file extension OK : ' . $file_src_name_ext . '<br />';
                 }
             } else {
                 $this->log .= '- file mime (not checked) : ' . $this->file_src_mime . '<br />';
@@ -4504,10 +4543,9 @@ class Upload {
                                 $this->log .=  'error<br />';
                                 $this->image_text_font = 5;
                             }
-                        }
 
                         // if the font is a string with a TTF font path, we check if we can access the font file
-                        if (!is_numeric($this->image_text_font) && strlen($this->image_text_font) > 4 && substr(strtolower($this->image_text_font), -4) == '.ttf') {
+                        } else if (!is_numeric($this->image_text_font) && strlen($this->image_text_font) > 4 && substr(strtolower($this->image_text_font), -4) == '.ttf') {
                             $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;try to load font ' . $this->image_text_font . '... ';
                             if (strpos($this->image_text_font, '/') === false) $this->image_text_font = "./" . $this->image_text_font;
                             if (file_exists($this->image_text_font) && is_readable($this->image_text_font)) {

@@ -245,6 +245,10 @@ function imgName($source = null)
             // crc32加密微秒 例：2495551279
             return crc32(microtime());
             break;
+        case "snowflake":
+            include __DIR__ . '/class.snowflake.php';
+            return SnowFlake::createOnlyId(); //分布式id
+            break;
         default:
             // 将上传时间+随机数转换为36进制 例：vx77yu
             return base_convert(date('His') . mt_rand(1001, 9999), 10, 36);

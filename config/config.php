@@ -14,9 +14,9 @@ $config=Array
 	'imgurl'=>'http://127.0.0.1',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
-	'captcha'=>1,
+	'captcha'=>0,
 	'mustLogin'=>0,
-	'apiStatus'=>0,
+	'apiStatus'=>1,
 	'path'=>'/i/',
 	'mime'=>'image/*,video/*',
 	'imgName'=>'default',
@@ -64,6 +64,7 @@ $config=Array
 	'dark-mode'=>1,
 	'show_user_hash_del'=>1,
 	'show_exif_info'=>1,
+	'info_rand_pic'=>1,
 	'chart_on'=>1,
 	'check_ip'=>0,
 	'check_ip_model'=>0,
@@ -84,6 +85,7 @@ $config=Array
 		),
 	'language'=>0,
 	'login_bg'=>'https://img.paulzzh.com/touhou/random',
+	'report'=>'',
 	'image_recycl'=>1,
 	'tinyfilemanager'=>1,
 	'delDir'=>'thumbnails/',
@@ -94,7 +96,7 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2022-05-27 00:06:41',
+	'update'=>'2022-07-09 18:39:54',
 	'footer'=>'<a href="/admin/terms.php" target="_blank">请勿上传违反中国政策的图片</a>
 	<script>
 	var _hmt = _hmt || [];

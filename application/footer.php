@@ -42,13 +42,11 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
   <hr>
   <?php /** 页脚信息 */ if (!empty($config['footer'])) echo $config['footer']; ?>
   <p>
-    © 2018-<?php echo date("Y"); ?>
-    <a href="https://png.cm/" target="_blank"> EasyImage</a>
-    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow"><?php echo get_current_verson(); ?></a> By
-    <a href="https://blog.png.cm" target="_blank">Icret</a>
-    <a href="/admin/terms.php" target="_blank"> DMCA</a>
+    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="开源地址">© 2018-<?php echo date("Y"); ?></a>
+    <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="<?php echo get_current_verson(); ?>"> EasyImage</a>
+    <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议"> DMCA</a>
     <!-- 二维码按钮 -->
-    <a data-toggle="modal" href="#qr"><i class="icon icon-qrcode hidden-xs inline-block" data-toggle="tooltip" title="扫描二维码"></i></a>
+    <a data-toggle="modal" href="#qr"><i class="icon icon-qrcode hidden-xs inline-block" data-toggle="tooltip" title="二维码"></i></a>
     <?php /** 暗黑模式 */ if ($config['dark-mode']) : ?>
       <a id="dark" data-toggle="tooltip" title="暗黑模式"><i class="icon icon-lightbulb" id="dark_ico"></i></a>
     <?php endif;

@@ -337,7 +337,8 @@ if (isset($_GET['recycle_reimg'])) {
                         <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix >> 1635074840</option>
                         <option value="crc32" <?php if ($config['imgName'] == 'crc32') echo 'selected'; ?>>CRC32 >> 2495551279</option>
                         <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>微秒 >> 6175436c73418</option>
-                        <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源文件名 >> 微信图片_20211228214754</option>
+                        <option value="snowflake" <?php if ($config['imgName'] == 'snowflake') echo 'selected'; ?>>雪花 >> 5357520647037653166</option>
+                        <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源名 >> 微信图片_20211228214754</option>
                         <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>MD5 >> 3888aa69eb321a2b61fcc63520bf6c82</option>
                         <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>SHA1 >> 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
                         <option value="guid" <?php if ($config['imgName'] == 'guid') echo 'selected'; ?>>全局唯一标识符 >> 6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
@@ -780,7 +781,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
                     <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_verson(); ?></span>
                     <?php if (getVersion() !== get_current_verson()) : ?>
-                        <a href="#NewVersion" data-toggle="collapse" class="label label-badge label-warning" title="Github有更新"><?php echo getVersion(); ?> New</span></a>
+                        <a href="#NewVersion" data-toggle="collapse" class="label label-badge label-warning" title="Github有更新"><?php echo getVersion(); ?></span><i class="icon icon-angle-down"></i></a>
                     <?php endif; ?>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
                 </p>
@@ -842,15 +843,20 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">排序</label>
                     </div>
-                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片详细信息按钮">
-                        <input type="hidden" name="show_exif_info" value="0">
-                        <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">详息</label>
-                    </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
                         <input type="hidden" name="chart_on" value="0">
                         <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">统计</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片详细信息按钮">
+                        <input type="hidden" name="show_exif_info" value="0">
+                        <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">详情页</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="图片详细信息显示随机图片">
+                        <input type="hidden" name="info_rand_pic" value="0">
+                        <input type="checkbox" name="info_rand_pic" value="1" <?php if ($config['info_rand_pic']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">随机图片</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -880,7 +886,10 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
-
+                    <label for="report" data-toggle="tooltip" title="举报图片链接网址 (推荐ZOHO)<br/>留空则不显示">举报链接 | <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank">申请</a></label>
+                    <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div>
+                <div class="form-group">
                     <div class="col-md-9">
                         <label data-toggle="tooltip" title="可在网址后填写参数更改预览数量 eg: /list.php?num=3">广场默认浏览数量 | 当前: </label>
                         <label id="listNumber"><?php echo $config['listNumber']; ?>张</label>

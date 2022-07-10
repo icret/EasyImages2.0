@@ -37,6 +37,7 @@ $imgSize = filesize($imgABPath);
 $upTime = filemtime($imgABPath);
 // 广告
 if ($config['ad_top']) echo $config['ad_top_info'];
+
 ?>
 <div class="col-md-12">
     <div class="col-md-6" style="text-align: center;">
@@ -70,6 +71,9 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                     <td>
                         <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
                         <a class="btn btn-mini btn-primary" href="/application/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
+                        <?php if (!empty($config['report'])) : ?>
+                            <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
+                        <?php endif; ?>
                         <?php if (is_who_login('admin')) : ?>
                             <a class="btn btn-mini btn-warning" href="/application/del.php?recycle_url=<?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
                             <a class="btn btn-mini btn-danger" href="/application/del.php?url=<?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
@@ -78,9 +82,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 </tr>
             </tbody>
         </table>
-        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请联系管理员删除!</i></h4>
+        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请举报或联系管理员!</i></h4>
         <!--
-
         <h4>图片名称: < ?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
         <h4>图片大小: < ?php echo getDistUsed($imgSize); ?></h4>
         <h4>图片类型: image/< ?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
@@ -112,41 +115,68 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         -->
     </div>
 </div>
-<div class="col-md-12" style="margin-top: 10px;">
-    <div class="col-md-12" style="padding-bottom: 10px;">
-        <div class="col-md-6" style="padding-bottom: 10px;">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="icon icon-link"></i> 直 链&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <input type="text" class="form-control" id="links" onclick="copyText()" value="<?php echo $img_url; ?>">
-                <span class="input-group-btn"><button class="btn btn-default copyBtn1" type="button">复制</button></span>
-            </div>
-        </div>
-        <div class="col-md-6" style="padding-bottom: 10px;">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="icon icon-chat"></i> 论坛代码&nbsp;&nbsp;&nbsp;</span>
-                <input type="text" class="form-control" id="bbscode" value="[img]<?php echo $img_url; ?>[/img]">
-                <span class="input-group-btn"><button class="btn btn-default copyBtn2" type="button">复制</button></span>
-            </div>
+<div class="col-md-12" style="padding-bottom: 10px;">
+    <div class="col-md-6" style="padding-bottom: 10px;">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="icon icon-link"></i> 直 链&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <input type="text" class="form-control" id="links" onclick="copyText()" value="<?php echo $img_url; ?>">
+            <span class="input-group-btn"><button class="btn btn-default copyBtn1" type="button">复制</button></span>
         </div>
     </div>
-    <div class="col-md-12" style="padding-bottom: 10px;">
-        <div class="col-md-6" style="padding-bottom: 10px;">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="icon icon-code"></i> MarkDown</span>
-                <input type="text" class="form-control" id="markdown" value="![简单图床 - EasyImage](<?php echo $img_url; ?>)">
-                <span class="input-group-btn"><button class="btn btn-default copyBtn3" type="button">复制</button></span>
-            </div>
-        </div>
-        <div class="col-md-6" style="padding-bottom: 10px;">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="icon icon-html5"></i> HTML&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <input type="text" class="form-control" id="html" value='<img src="<?php echo $img_url; ?>" alt="简单图床 - EasyImage" />'>
-                <span class="input-group-btn"><button class="btn btn-default copyBtn4" type="button">复制</button></span>
-            </div>
+    <div class="col-md-6" style="padding-bottom: 10px;">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="icon icon-chat"></i> 论坛代码&nbsp;&nbsp;&nbsp;</span>
+            <input type="text" class="form-control" id="bbscode" value="[img]<?php echo $img_url; ?>[/img]">
+            <span class="input-group-btn"><button class="btn btn-default copyBtn2" type="button">复制</button></span>
         </div>
     </div>
 </div>
+<div class="col-md-12" style="padding-bottom: 10px;">
+    <div class="col-md-6" style="padding-bottom: 10px;">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="icon icon-code"></i> MarkDown</span>
+            <input type="text" class="form-control" id="markdown" value="![简单图床 - EasyImage](<?php echo $img_url; ?>)">
+            <span class="input-group-btn"><button class="btn btn-default copyBtn3" type="button">复制</button></span>
+        </div>
+    </div>
+    <div class="col-md-6" style="padding-bottom: 10px;">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="icon icon-html5"></i> HTML&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <input type="text" class="form-control" id="html" value='<img src="<?php echo $img_url; ?>" alt="简单图床 - EasyImage" />'>
+            <span class="input-group-btn"><button class="btn btn-default copyBtn4" type="button">复制</button></span>
+        </div>
+    </div>
+</div>
+
 <? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
+
+<!-- 随机图片 -->
+<?php if ($config['info_rand_pic']) : ?>
+    <div class="col-md-12" style="padding-bottom: 10px;">
+        <h4 class="header-dividing">当月随机图片：</h4>
+        <div class="cards cards-borderless">
+            <?php
+            $logFile = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
+            if (is_file($logFile)) {
+                include_once $logFile;
+                for ($i = 0; $i <= 7; $i++) {
+                    $randName = array_rand($logs, 1);
+                    // echo  $img_url . $logs[$randName]['path'];
+                    echo '
+                <div class="col-md-4 col-sm-6 col-lg-3">
+                    <a class="card" href="?img=' . $logs[$randName]['path'] . '" target="_blank">
+                    <img src="' . $logs[$randName]['path'] . '">
+                    <div class="card-content text-muted text-ellipsis">' . $logs[$randName]['source'] . '</div>
+                    </a>
+                </div>';
+                }
+            } else {
+                echo '<div class="alert alert-danger">本月还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
+            }
+            ?>
+        </div>
+    </div>
+<?php endif; ?>
 <!-- <script src="< php static_cdn(); ?>/public/static/exif/exif.js"></script> -->
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
