@@ -221,14 +221,6 @@ $('#btndel').on('click', function() {
     });
 })();
 /******************************************************************/
-var _hmt = _hmt || [];
-(function() {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?c790ac2bdc2f385757ecd0183206108d";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
-
 
 // 导航状态
 $('.nav-pills').find('a').each(function() {

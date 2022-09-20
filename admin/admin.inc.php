@@ -240,7 +240,7 @@ if (isset($_GET['recycle_reimg'])) {
     <div class="alert alert-primary alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
         <h5>目录保存以 年/月/日/ 递进,非必要请勿修改! 否则会导致部分操作不可用;</h5>
-        <h5>本人仅为程序开源创作,如非法网站使用与本人无关,请勿用于非法用途 请勿用于非法用途;</h5>
+        <h5>本人仅为程序开源创作,如遇非法网站使用与本人无关,请勿用于商业用途;</h5>
         <h5>作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中源作者信息。</h5>
         <a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
         <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
@@ -317,7 +317,7 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content2">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group">
+                <div class="form-group col-md-1">
                     <label data-toggle="tooltip" title="前后需加'/' 例: /i/">存储路径</label>
                     <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
                 </div>
@@ -325,12 +325,12 @@ if (isset($_GET['recycle_reimg'])) {
                     <label data-toggle="tooltip" title="不懂就不要改本图床仅针对图片上传,如果想上传其他类型文件请更改此出,不同mime请以英文,分割">允许的MIME类型</label>
                     <input type="text" class="form-control" name="mime" required="required" value="php echo $config['mime'];" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div> -->
-                <div class="form-group">
+                <div class="form-group col-md-5">
                     <label data-toggle="tooltip" title="请以英文 , 分割 最后一个扩展名后边不要加 ,">允许的扩展名</label>
                     <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
-                <div class="form-group">
-                    <label>命名方式</label>
+                <div class="form-group col-md-4">
+                    <label>上传图片的命名方式</label>
                     <select class="chosen-select form-control" name="imgName">
                         <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 36进制时间+随机数 >> vx77yu</option>
                         <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>时间 >> 192704</option>
@@ -341,11 +341,12 @@ if (isset($_GET['recycle_reimg'])) {
                         <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源名 >> 微信图片_20211228214754</option>
                         <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>MD5 >> 3888aa69eb321a2b61fcc63520bf6c82</option>
                         <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>SHA1 >> 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
+                        <option value="uuid" <?php if ($config['imgName'] == 'uuid') echo 'selected'; ?>>通用唯一识别码 >> 668ab647-c874-51e8-cc98-ac5c24a472b0</option>
                         <option value="guid" <?php if ($config['imgName'] == 'guid') echo 'selected'; ?>>全局唯一标识符 >> 6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label data-toggle="tooltip" title="支持图片转换格式后压缩,压缩率与 上传压缩->后端压缩率关联<br />不建议同时启用后端压缩,避免重复压缩导致图片变大"> * 将上传图片转换为指定格式</label>
+                <div class="form-group col-md-2">
+                    <label data-toggle="tooltip" title="支持图片转换格式后压缩,压缩率与 上传压缩->后端压缩率关联<br />不建议同时启用后端压缩,避免重复压缩导致图片变大"> * 将上传图片转换格式</label>
                     <select class="chosen-select form-control" name="imgConvert">
                         <option value="" <?php if (empty($config['imgConvert'])) echo 'selected'; ?>>不转换</option>
                         <option value="webp" <?php if ($config['imgConvert'] == 'webp') echo 'selected'; ?>>WEBP</option>
@@ -436,21 +437,21 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade " id="Content5">
             <h5 class="header-dividing">外部KEY</h5>
             <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
-                <div class="form-group">
-                    <label for="TinyPng" data-toggle="tooltip" title="申请网址"><a href="https://tinypng.com/developers" target="_blank">TinyPng Key &nbsp;</a></label>
+                <div class="form-group col-md-4">
+                    <label for="TinyPng" data-toggle="tooltip" title="TinyPng 申请网址">TinyPng Key <a href="https://tinypng.com/developers" target="_blank"><i class="icon icon-external-link"></i></a></label>
                     <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
-                <div class="form-group">
-                    <label for="moderatecontent_key" data-toggle="tooltip" title="申请网址"><a href="https://client.moderatecontent.com" target="_blank">Moderate Key</a></label>
+                <div class="form-group col-md-4">
+                    <label for="moderatecontent_key" data-toggle="tooltip" title="moderatecontent 申请网址">Moderate Key <a href="https://client.moderatecontent.com" target="_blank"><i class="icon icon-external-link"></i></a></label>
                     <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响,国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
-                <div class="form-group">
-                    <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs github"><a href="https://github.com/infinitered/nsfwjs" target="_blank">nsfwjs url &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></label>
+                <div class="form-group col-md-4">
+                    <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs 开源地址">nsfwjs url <a href="https://github.com/infinitered/nsfwjs" target="_blank"><i class="icon icon-external-link"></i></a></label>
                     <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://ip:3307/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                <button type="submit" class="btn btn-mini btn-primary">保存</button>
+                <button type="submit" class="btn btn-mini btn-primary">保存KEY</button>
             </form>
             <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
@@ -488,16 +489,30 @@ if (isset($_GET['recycle_reimg'])) {
             </form>
             <hr />
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group">
-                    <label>缩略图生成方式</label>
-                    <div class="radio-primary">
-                        <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
+                <div class="form-group col-md-12">
+                    <div class="form-group col-md-6">
+                        <label>缩略图生成方式</label>
+                        <div class="radio-primary">
+                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
+                        </div>
+                        <div class="radio-primary">
+                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: 无法被cdn缓存"> 访问时生成 | 推荐</label>
+                        </div>
+                        <div class="radio-primary">
+                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问广场需刷新一次,有缓存不失效"> 访问时生成 | 直链</label>
+                        </div>
                     </div>
-                    <div class="radio-primary">
-                        <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: 无法被cdn缓存"> 访问时生成 | 推荐</label>
-                    </div>
-                    <div class="radio-primary">
-                        <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问广场需刷新一次,有缓存不失效"> 访问时生成 | 直链</label>
+                    <div class="form-group col-md-6">
+                        <label data-toggle="tooltip" title="更改后已经生成的缩略图不会失效 需清除缓存">缩略图尺寸</label>
+                        <div class="input-group">
+                            <span class="input-group-addon input-sm">宽</span>
+                            <input type="number" name="thumbnail_w" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_w'])) echo $config['thumbnail_w']; ?>">
+                            <span class="input-group-addon input-sm">px</span>
+                            <span class="input-group-addon fix-border fix-padding"></span>
+                            <span class="input-group-addon input-sm">高</span>
+                            <input type="number" name="thumbnail_h" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_h'])) echo $config['thumbnail_h']; ?>">
+                            <span class="input-group-addon input-sm">px</span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -517,6 +532,10 @@ if (isset($_GET['recycle_reimg'])) {
                     <label>缓存周期 | 当前: </label>
                     <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
                     <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
+                </div>
+                <div class="form-group">
+                    <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)<br/>留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
+                    <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <div class="switch switch-inline">
@@ -776,9 +795,9 @@ if (isset($_GET['recycle_reimg'])) {
                     <?php else : ?>
                         <span class="label label-badge label-success" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</span>
                     <?php endif; ?>
-                    <a href="https://easysoft.github.io/zui/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="前端框架">ZUI</span></a>
-                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="图像处理类">verot</span></a>
-                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
+                    <a href="https://www.openzui.com/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="前端框架">ZUI</span></a>
+                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="图像处理类">Verot</span></a>
+                    <a href="https://tinyfilemanager.github.io/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
                     <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_verson(); ?></span>
                     <?php if (getVersion() !== get_current_verson()) : ?>
                         <a href="#NewVersion" data-toggle="collapse" class="label label-badge label-warning" title="Github有更新"><?php echo getVersion(); ?></span><i class="icon icon-angle-down"></i></a>
@@ -799,7 +818,7 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content9">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
-                    <h5>上传首选显示链接</h5>
+                    <h5>上传首选</h5>
                     <label class="radio-inline">
                         <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
                         <i class="icon icon-link"></i>
@@ -821,8 +840,8 @@ if (isset($_GET['recycle_reimg'])) {
                         <i class="icon icon-trash"></i>
                     </label>
                 </div>
-                <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">页面展示开关</label>
                 <div class="form-group">
+                    <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">对外展示</label><br />
                     <div class="switch switch-inline" data-toggle="tooltip" title="暗黑模式切换">
                         <input type="hidden" name="dark-mode" value="0">
                         <input type="checkbox" name="dark-mode" value="1" <?php if ($config['dark-mode']) echo 'checked="checked"'; ?>>
@@ -859,35 +878,32 @@ if (isset($_GET['recycle_reimg'])) {
                         <label style="font-weight: bold">随机图片</label>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-3">
                     <label data-toggle="tooltip" title="暂支持中文简繁体转换">界面语言</label>
                     <select class="chosen-select form-control" name="language">
                         <option value="0" <?php if ($config['language'] == '0') echo 'selected'; ?>>简体中文</option>
                         <option value="1" <?php if ($config['language'] == '1') echo 'selected'; ?>>繁體中文</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-3">
                     <label data-toggle="tooltip" title="配色样式文件夹位置: /public/static/zui/theme/">网站配色</label>
                     <select class="chosen-select form-control" name="theme">
-                        <option value="default" <?php if ($config['theme'] == 'default') echo 'selected'; ?>>默认配色</option>
-                        <option value="red" <?php if ($config['theme'] == 'red') echo 'selected'; ?>>红色</option>
-                        <option value="green" <?php if ($config['theme'] == 'green') echo 'selected'; ?>>绿色</option>
-                        <option value="blue" <?php if ($config['theme'] == 'blue') echo 'selected'; ?>>蓝色</option>
-                        <option value="bluegrey" <?php if ($config['theme'] == 'bluegrey') echo 'selected'; ?>>蓝灰</option>
-                        <option value="indigo" <?php if ($config['theme'] == 'indigo') echo 'selected'; ?>>靛青</option>
-                        <option value="brown" <?php if ($config['theme'] == 'brown') echo 'selected'; ?>>棕色</option>
-                        <option value="yellow" <?php if ($config['theme'] == 'yellow') echo 'selected'; ?>>黄色</option>
-                        <option value="purple" <?php if ($config['theme'] == 'purple') echo 'selected'; ?>>紫色</option>
-                        <option value="black" <?php if ($config['theme'] == 'black') echo 'selected'; ?>>黑色</option>
+                        <option value="default" style="background: #3280fc;" <?php if ($config['theme'] == 'default') echo 'selected'; ?>>默认配色</option>
+                        <option value="red" style="background: #d9534f;" <?php if ($config['theme'] == 'red') echo 'selected'; ?>>红色</option>
+                        <option value="green" style="background: #4caf50;" <?php if ($config['theme'] == 'green') echo 'selected'; ?>>绿色</option>
+                        <option value="blue" style="background: #039be5;" <?php if ($config['theme'] == 'blue') echo 'selected'; ?>>蓝色</option>
+                        <option value="bluegrey" style="background: #607D8B;" <?php if ($config['theme'] == 'bluegrey') echo 'selected'; ?>>蓝灰</option>
+                        <option value="indigo" style="background: #3F51B5;" <?php if ($config['theme'] == 'indigo') echo 'selected'; ?>>靛青</option>
+                        <option value="brown" style="background: #8D6E63;" <?php if ($config['theme'] == 'brown') echo 'selected'; ?>>棕色</option>
+                        <option value="yellow" style="background: #d0884d;" <?php if ($config['theme'] == 'yellow') echo 'selected'; ?>>黄色</option>
+                        <option value="purple" style="background: #8666b8;" <?php if ($config['theme'] == 'purple') echo 'selected'; ?>>紫色</option>
+                        <option value="black" style="background: #333;" <?php if ($config['theme'] == 'black') echo 'selected'; ?>>黑色</option>
+                        <option value="grey" style="background: grey;" <?php if ($config['theme'] == 'grey') echo 'selected'; ?>>纪念灰</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-6">
                     <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景</label>
                     <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div>
-                <div class="form-group">
-                    <label for="report" data-toggle="tooltip" title="举报图片链接网址 (推荐ZOHO)<br/>留空则不显示">举报链接 | <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank">申请</a></label>
-                    <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <div class="col-md-9">
@@ -896,7 +912,7 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="range" class="form-control" name="listNumber" value="<?php echo $config['listNumber']; ?>" min="10" max="100" step="10" onchange="document.getElementById('listNumber').innerHTML=value">
                     </div>
                     <div class="col-md-3">
-                        <label id="listDate" data-toggle="tooltip" title="有助于防爬虫抓取<br />建议不超10天,超过可能导致排版混乱">广场浏览往日限制 | 当前: <?php echo $config['listDate']; ?>天</label>
+                        <label id="listDate" data-toggle="tooltip" title="广场往日浏览限制<br />有助于防爬虫抓取<br />建议不超10天,否则页面导致排版混乱">广场限制 | 当前: <?php echo $config['listDate']; ?>天</label>
                         <input type="number" class="form-control input-sm" id="listDate" name="listDate" value="<? if ($config['listDate']) echo $config['listDate']; ?>" min="1" max="100" required="required" placeholder="有助于防爬虫抓取 建议不超10天" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                 </div>
@@ -921,9 +937,7 @@ if (isset($_GET['recycle_reimg'])) {
                         <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                </div>
+                <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn btn-primary">更改管理员 账号/密码</button>
                 <div class="alert alert-primary with-icon col-xs-8" style="margin-top: 5px;">
                     <i class="icon-info-sign"></i>
@@ -1041,7 +1055,7 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content12">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group">
+                <div class="form-group col-md-4">
                     <label>水印方式</label>
                     <select class="chosen-select form-control" name="watermark">
                         <option value="0" <?php if (!$config['watermark']) echo 'selected'; ?>>关闭水印</option>
@@ -1049,11 +1063,11 @@ if (isset($_GET['recycle_reimg'])) {
                         <option value="2" <?php if ($config['watermark'] == 2) echo 'selected'; ?>>图片水印</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>水印文字</label>
+                <div class="form-group col-md-4">
+                    <label>文字水印</label>
                     <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                     <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
                     <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
                 </div>
@@ -1061,15 +1075,15 @@ if (isset($_GET['recycle_reimg'])) {
                     <label>水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
                     <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="5" max="200" step="5" onchange="document.getElementById('textSize').innerHTML=value">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                     <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字字体路径</label>
                     <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                     <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
                     <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                     <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
                     <select class="chosen-select form-control" name="waterPosition">
                         <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>

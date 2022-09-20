@@ -61,7 +61,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 $linkUrl = rand_imgurl() . $config_path . $value; // 图片复制与原图地址
             ?>
                 <div class="col-md-4 col-sm-6 col-lg-3">
-                  <div class="card" id="card">
+                  <div class="card">
                     <li><img src="../public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
                     <div class="bottom-bar">
                       <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>

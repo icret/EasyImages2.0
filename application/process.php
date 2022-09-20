@@ -103,7 +103,7 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "we
 {
     global $config;
 
-    $checkImg = $config['checkImg'] == true ? "Enabled" : "Disabled";
+    $checkImg = $config['checkImg'] == true ? "ON" : "OFF";
 
     // $name = trim(basename($filePath), " \t\n\r\0\x0B"); // 当前图片名称
     $log = array(basename($filePath) => array(             // 以上传图片名称为Array

@@ -43,7 +43,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-6" style="text-align: center;">
         <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="234px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
     </div>
-    <div class="col-md-6 table-responsive table-condensed">
+    <div class="col-md-6 table-responsive table-condensed" style="margin-top: 10px;">
         <table class="table table-hover table-striped table-bordered">
             <tbody>
                 <tr>
@@ -83,36 +83,6 @@ if ($config['ad_top']) echo $config['ad_top_info'];
             </tbody>
         </table>
         <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请举报或联系管理员!</i></h4>
-        <!--
-        <h4>图片名称: < ?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></h4>
-        <h4>图片大小: < ?php echo getDistUsed($imgSize); ?></h4>
-        <h4>图片类型: image/< ?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></h4>
-        <h4>图片宽高: <span id="wh"></span>px</h4>
-        <h4>上传时间: < ?php echo date("Y-m-d H:i:s", $upTime); ?></h4>
-        <h4>文件操作：
-            <a class="btn btn-mini btn-primary" href="< ?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
-            < ?php if (is_who_login('admin')) : ?>
-                <a class="btn btn-mini btn-primary" href="/application/del.php?recycle_url=< ?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
-                <a class="btn btn-mini btn-primary" href="/application/del.php?url=< ?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
-            < ?php endif; ?>
-        </h4>
-        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请联系管理员删除!</i></h4>
-            -->
-        <!-- 读取Exif信息
-        <h4>使用设备: <span id="makeAndModel"></span></h4>
-        <div class="col-md-12">
-            <p>
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseExample">Exif 信息 <i class="icon icon-caret-down"></i></button>
-                <a class="btn btn-primary btn-sm" href="<php echo  $img_url; ?>" target="_blank">查看图片 <i class="icon icon-picture"></i></a>
-                <php if (is_who_login('admin')) : ?>
-                    <a class="btn btn-primary btn-sm" href="/application/del.php?url=<php echo $del_url; ?>" target="_blank">删除图片 <i class="icon icon-trash"></i></a>
-                <php endif; ?>
-            </p>
-            <div class="collapse" id="collapseExample">
-                <pre id="allMetaDataSpan"></pre>
-            </div>
-        </div>
-        -->
     </div>
 </div>
 <div class="col-md-12" style="padding-bottom: 10px;">
@@ -177,7 +147,6 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 <?php endif; ?>
-<!-- <script src="< php static_cdn(); ?>/public/static/exif/exif.js"></script> -->
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>

@@ -210,6 +210,12 @@ function imgName($source = null)
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
+    function uuid() // 生成uuid
+    {
+        $chars = md5(uniqid(mt_rand(), true));
+        return substr($chars, 0, 8) . '-' . substr($chars, 8, 4) . '-' . substr($chars, 12, 4) . '-' . substr($chars, 16, 4) . '-' . substr($chars, 20, 12); // return $uuid;
+    }
+
     switch ($config['imgName']) {
 
         case "source":
@@ -247,7 +253,10 @@ function imgName($source = null)
             break;
         case "snowflake":
             include __DIR__ . '/class.snowflake.php';
-            return SnowFlake::createOnlyId(); //分布式id
+            return SnowFlake::createOnlyId(); // 分布式id
+            break;
+        case "uuid":
+            return uuid(); // uuid
             break;
         default:
             // 将上传时间+随机数转换为36进制 例：vx77yu
@@ -912,12 +921,21 @@ function creat_thumbnail_images($imgName)
     $old_img_path = APP_ROOT . config_path() . $imgName;                                               // 获取要创建缩略图文件的绝对路径
     $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';                                          // cache目录的绝对路径
 
+    // 自定义缩略图长宽
+    $thumbnail_w = 258;
+    $thumbnail_h = 258;
+
+    if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
+        $thumbnail_w = $config['thumbnail_w'];
+        $thumbnail_h = $config['thumbnail_h'];
+    }
+
     if (!is_dir($cache_path)) {                                                                        // 创建cache目录
         mkdir($cache_path, 0777, true);
     }
     if (!isAnimatedGif($old_img_path)) {                                                               // 仅针对非gif创建图片缩略图
         $new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName;    // 缩略图缓存的绝对路径
-        Thumb::out($old_img_path, $new_imgName, 258, 258);                                             // 保存缩略图
+        Thumb::out($old_img_path, $new_imgName, $thumbnail_w, $thumbnail_h);                           // 保存缩略图
     }
 }
 
@@ -1025,13 +1043,21 @@ function creat_thumbnail_by_list($imgUrl)
             mkdir($cache_path, 0777, true);
         }
 
+        // 自定义缩略图长宽
+        $thumbnail_w = 258;
+        $thumbnail_h = 258;
+
+        if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
+            $thumbnail_w = $config['thumbnail_w'];
+            $thumbnail_h = $config['thumbnail_h'];
+        }
+
         // 缩略图缓存的绝对路径
         // $imgName 是不带/i/的相对路径
-
         $new_imgName = $cache_path . $imgName;
 
         // 创建并保存缩略图
-        Thumb::out($abPathName, $new_imgName, 258, 258);
+        Thumb::out($abPathName, $new_imgName, $thumbnail_w, $thumbnail_h);
 
         // 输出缩略图
         return $new_imgName;
@@ -1070,7 +1096,14 @@ function cache_write($filename, $values, $var = 'config', $format = false)
 {
     $cachefile = $filename;
     $cachetext = "<?php\r\n" . '$' . $var . '=' . arrayeval($values, $format) . ";";
-    return writefile($cachefile, $cachetext);
+    $result = writefile($cachefile, $cachetext);
+
+    // 清除Opcache缓存
+    if (function_exists('opcache_reset')) {
+        opcache_reset();
+    }
+
+    return $result;
 }
 
 /**
