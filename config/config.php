@@ -10,13 +10,24 @@ $config=Array
 	'notice_status'=>0,
 	'notice'=>'<p>简单图床是一款开源图床, 支持多文件上传无数据库；</p>
 <p>如果你喜欢这种图床风格就<a href="https://github.com/icret/EasyImages2.0" target="_black">下载</a>喔 (๑•̀ㅂ•́)و✧</p>',
+	'set_notice'=>'<div class="alert alert-primary alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <h5>目录保存以 年/月/日/ 递进,非必要请勿修改! 否则会导致部分操作不可用;</h5>
+        <h5>本人仅为程序开源创作,如遇非法网站使用与本人无关,请勿用于商业用途;</h5>
+        <h5>作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中源作者信息。</h5>
+        <a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
+        <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
+        <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage Telegram Group"><button type="button" class="btn btn-mini"><i class="icon icon-plane"></i> Telegram</button></a>
+        <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
+        <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
+    </div>',
 	'domain'=>'http://127.0.0.1',
 	'imgurl'=>'http://127.0.0.1',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'captcha'=>0,
 	'mustLogin'=>0,
-	'apiStatus'=>1,
+	'apiStatus'=>0,
 	'path'=>'/i/',
 	'mime'=>'image/*,video/*',
 	'imgName'=>'default',
@@ -27,9 +38,9 @@ $config=Array
 	'waterPosition'=>0,
 	'textColor'=>'rgba(255,0,0,1)',
 	'textSize'=>50,
-	'textFont'=>'/public/static/hkxzy.ttf',
+	'textFont'=>'/public/static/pang_men_zheng_dao_biao_ti_ti_3.0.ttf',
 	'waterImg'=>'/public/images/watermark.png',
-	'extensions'=>'gif,jpeg,png,tif,bmp,tif,svg,webp,jpg,tga,svg,ico',
+	'extensions'=>'gif,jpeg,png,tif,bmp,tif,svg,webp,jpg,tga,ico',
 	'compress'=>0,
 	'compress_ratio'=>80,
 	'thumbnail'=>1,
@@ -60,6 +71,7 @@ $config=Array
 	'listDate'=>10,
 	'customize'=>'',
 	'checkEnv'=>1,
+	'allowed'=>1,
 	'upload_logs'=>1,
 	'cache_freq'=>2,
 	'upload_first_show'=>1,
@@ -98,9 +110,8 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2022-08-13 23:53:14',
-	'footer'=>'<small>友情链接: </small><a href="https://png.cm/?Links" target="_blank">简单图床</a><br/>
-<a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Since 2018 - Github">© Since 2018</a>
+	'update'=>'2022-12-30 02:49:26',
+	'footer'=>'<a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Since 2018 - Github">© Since 2018</a>
 <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床">EasyImage</a>
 <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
 <script>

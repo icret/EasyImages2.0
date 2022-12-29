@@ -94,7 +94,7 @@ if ($handle->uploaded) {
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
-        // 上传成功后返回json数据
+        
         // 图片相对路径
         $pathIMG = $Img_path . $handle->file_dst_name;
         // 图片访问网址
@@ -132,6 +132,28 @@ if ($handle->uploaded) {
             $delUrl = "Admin closed delete";
         }
 
+        // 当设置访问生成缩略图时自动生成 2022-12-30
+        if($config['thumbnail'] == 2) {
+            // 自定义缩略图长宽
+            $thumbnail_w = 258; 
+            $thumbnail_h = 258;
+            
+            $handle->image_resize = true;
+            
+            if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
+                $handle->image_x = $config['thumbnail_w'];
+                $handle->image_y = $config['thumbnail_h'];
+            }
+            // 如果调整后的图像大于原始图像，则取消调整大小，以防止放大
+            $handle->image_no_enlarging = true;
+
+            $handle->file_new_name_body = date('Y_m_d_') . $handle->file_dst_name_body;
+
+            $handle->process(APP_ROOT . $config['path']. 'thumbnails/');    
+        
+        }
+
+        // 上传成功后返回json数据
         $reJson = array(
             "result"    => "success",
             "code"      => 200,

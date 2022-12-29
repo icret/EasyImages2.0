@@ -43,7 +43,10 @@ $handle = new Upload($_FILES['file'], 'zh_CN');
 
 if ($handle->uploaded) {
     // 允许上传的mime类型
-    $handle->allowed = array('image/*');
+    if($config['allowed'] === 1){
+        $handle->allowed = array('image/*');
+    }
+    
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
 
@@ -107,7 +110,7 @@ if ($handle->uploaded) {
         }
     }
 
-    // 存储图片路径:images/201807/
+    // 存储图片路径:i/201807/
     $handle->process(APP_ROOT . $Img_path);
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
@@ -149,6 +152,27 @@ if ($handle->uploaded) {
             $delUrl = "Admin closed delete";
         }
 
+        // 当设置访问生成缩略图时自动生成 2022-12-30
+        if($config['thumbnail'] == 2) {
+            // 自定义缩略图长宽
+            $thumbnail_w = 258; 
+            $thumbnail_h = 258;
+            
+            $handle->image_resize = true;
+            
+            if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
+                $handle->image_x = $config['thumbnail_w'];
+                $handle->image_y = $config['thumbnail_h'];
+            }
+            // 如果调整后的图像大于原始图像，则取消调整大小，以防止放大
+            $handle->image_no_enlarging = true;
+
+            $handle->file_new_name_body = date('Y_m_d_') . $handle->file_dst_name_body;
+
+            $handle->process(APP_ROOT . $config['path']. 'thumbnails/');    
+        
+        }
+
         // 上传成功后返回json数据
         $reJson = array(
             "result"    => "success",
@@ -159,7 +183,7 @@ if ($handle->uploaded) {
             "del"       => $delUrl,
         );
         echo json_encode($reJson);
-        $handle->clean();
+        $handle->clean(); // 如果取消上传生成缩略图需要恢复此选项功能
     } else {
         // 上传错误 code:206 客户端文件有问题
         $reJson = array(
@@ -174,6 +198,7 @@ if ($handle->uploaded) {
 
     /** 后续处理 */
     require __DIR__ . '/process.php';
+
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
@@ -185,7 +210,7 @@ if ($handle->uploaded) {
         @water($handle->file_dst_pathname);
         // 压缩        
         @compress($handle->file_dst_pathname);
-    } else {
+    } else {        
         // 普通模式鉴黄
         @process_checkImg($processUrl);
         // 日志
@@ -195,5 +220,6 @@ if ($handle->uploaded) {
         // 压缩
         @compress($handle->file_dst_pathname);
     }
+    
     unset($handle);
 }

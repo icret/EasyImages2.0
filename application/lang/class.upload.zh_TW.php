@@ -84,4 +84,3 @@
     $translation['no_conversion_type']          = '未定義的轉換類型。';
     $translation['copy_failed']                 = '在伺服端複製檔案時出錯，copy() 操作失敗。';
     $translation['reading_failed']              = '讀檔過程中出錯。';
-?>

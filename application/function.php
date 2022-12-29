@@ -974,9 +974,9 @@ function get_online_thumbnail($imgUrl)
     if ($config['thumbnail']) {
         $imgUrl = str_replace($config['domain'], '', $imgUrl);
         return $config['domain'] . '/application/thumb.php?img=' . $imgUrl;
-    } else {
-        return $imgUrl;
     }
+    
+    return $imgUrl;
 }
 
 /**
@@ -988,15 +988,17 @@ function creat_thumbnail_by_list($imgUrl)
 {
     global $config;
 
-    ini_set('max_execution_time', '60');  // 脚本运行的时间（以秒为单位）0不限制
+    ini_set('max_execution_time', '300');  // 脚本运行的时间（以秒为单位）0不限制
 
-    // 关闭缩略图
-    if ($config['thumbnail'] === 0) {
-        return $imgUrl;
-    }
-    // 实时生成
-    if ($config['thumbnail'] === 1) {
-        return get_online_thumbnail($imgUrl);
+    switch ($config['thumbnail']){
+        // 输出原图
+        case 0:
+            return $imgUrl;
+        break;
+        // 访问生成
+        case 1:
+            return get_online_thumbnail($imgUrl);
+        break;
     }
 
     // 将网址图片转换为相对路径
@@ -1012,7 +1014,7 @@ function creat_thumbnail_by_list($imgUrl)
     $imgName = str_replace('/', '_', $pathName);
 
     // 缓存文件是否存在
-    if (file_exists(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
+    if (is_file(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
         // 存在则返回缓存文件
         return $config['domain'] . $config['path'] . 'thumbnails/' . $imgName;
     } else {
@@ -1028,7 +1030,7 @@ function creat_thumbnail_by_list($imgUrl)
         }
 
         // 过滤非指定格式
-        if (!in_array(pathinfo(basename($abPathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
+        if (!in_array(pathinfo(basename($abPathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp' ,'ico'))) {
             return $imgUrl;
         }
 
@@ -1398,5 +1400,5 @@ function get_current_verson($file = '/admin/verson.txt')
         return file_get_contents($file);
     }
 
-    return 'No Verson';
+    return 'No Verson File';
 }

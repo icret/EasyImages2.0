@@ -82,5 +82,3 @@
     $translation['no_conversion_type']          = 'δ����ת������';
     $translation['copy_failed']                 = '�ڷ������ϸ����ļ�ʱ���� copy() ����ʧ��.';
     $translation['reading_failed']              = '��ȡ�����г���';
-
-?>

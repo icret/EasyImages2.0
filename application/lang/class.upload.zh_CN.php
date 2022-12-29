@@ -81,5 +81,3 @@
     $translation['no_conversion_type']          = '未定义转换类型';
     $translation['copy_failed']                 = '在服务器上复制文件时出错。 copy() 操作失败.';
     $translation['reading_failed']              = '读取过程中出错。';
-
-?>

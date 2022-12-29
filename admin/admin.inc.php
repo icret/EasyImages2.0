@@ -237,17 +237,7 @@ if (isset($_GET['recycle_reimg'])) {
 }
 ?>
 <div class="row">
-    <div class="alert alert-primary alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-        <h5>目录保存以 年/月/日/ 递进,非必要请勿修改! 否则会导致部分操作不可用;</h5>
-        <h5>本人仅为程序开源创作,如遇非法网站使用与本人无关,请勿用于商业用途;</h5>
-        <h5>作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中源作者信息。</h5>
-        <a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示网站</button></a>
-        <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-hand-right"></i> 使用手册</button></a>
-        <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage Telegram Group"><button type="button" class="btn btn-mini"><i class="icon icon-plane"></i> Telegram</button></a>
-        <a href="../public/images/wechat.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏作者</a>
-        <a href="../public/images/alipay.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
-    </div>
+    <?php echo $config['set_notice'];?>
     <div class="col-md-2 col-xs-4">
         <ul class="nav nav-tabs nav-stacked">
             <li><a data-tab href="#Content1">网站设置</a></li>
@@ -290,7 +280,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <textarea class="form-control" rows="2" name="description" required="required" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['description']; ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="不同公告以a标签分割">网站公告 | 支持html</label>
+                    <label data-toggle="tooltip" title="不同公告以a标签换行分割">滚动公告 | 支持html</label>
                     <textarea class="form-control" rows="2" name="tips"><?php echo $config['tips']; ?></textarea>
                 </div>
                 <div class="form-group">
@@ -304,6 +294,10 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <label data-toggle="tooltip" title="HTML / 统计代码 / JS / CSS">页脚代码 | 需闭合标签</label>
                     <textarea class="form-control" rows="2" name="footer"><?php echo $config['footer']; ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-toggle="tooltip" title="管理页面顶部提示信息, 可用于一些备注">管理提示 | 支持html</label>
+                    <textarea class="form-control" rows="2" name="set_notice" placeholder="管理设置页面的提示信息"><?php echo $config['set_notice']; ?></textarea>
                 </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="服务条款 / 隐私政策 / DMCA">使用条款| 支持HTML</label>
@@ -326,7 +320,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="text" class="form-control" name="mime" required="required" value="php echo $config['mime'];" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div> -->
                 <div class="form-group col-md-5">
-                    <label data-toggle="tooltip" title="请以英文 , 分割 最后一个扩展名后边不要加 ,">允许的扩展名</label>
+                    <label data-toggle="tooltip" title="请以英文 , 分割 最后一个不加 , <br/>想上传图片以外的格式？请关闭图床安全->图床模式">允许的扩展名</label>
                     <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group col-md-4">
@@ -493,13 +487,13 @@ if (isset($_GET['recycle_reimg'])) {
                     <div class="form-group col-md-6">
                         <label>缩略图生成方式</label>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 关闭</label>
+                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 原图</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: 无法被cdn缓存"> 访问时生成 | 推荐</label>
+                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: cdn无法缓存"> 访问生成 | 推荐</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 每日首次访问广场需刷新一次,有缓存不失效"> 访问时生成 | 直链</label>
+                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 缓存不失效, 低配vps负载较大,影响前端上传速度"> 访问生成 | 直链</label>
                         </div>
                     </div>
                     <div class="form-group col-md-6">
@@ -646,7 +640,17 @@ if (isset($_GET['recycle_reimg'])) {
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="危险：关闭后除图片外不验证文件是否正常，代表可以上传任意指定格式!">
+                                <input type="hidden" name="allowed" value="0">
+                                <input type="checkbox" name="allowed" value="1" <?php if ($config['allowed']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">图床模式</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+               
                 <div class="col-md-12">
                     <div class="switch switch-inline" data-toggle="tooltip" title="建议开启,有效防止因撞库导致账户密码被破解!">
                         <input type="hidden" name="captcha" value="0">

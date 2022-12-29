@@ -3,6 +3,7 @@
 演示地址：[https://png.cm/](https://png.cm/) 
 之前一直用的图床程序是:[PHP多图长传程序2.4.3](https://www.jb51.net/codes/40544.html)
 由于版本过老并且使用falsh上传，在当前html5流行大势所趋下，遂利用基础知识新写了一个以html5为默认上传并且支持flash,向下兼容至IE9。
+***本程序环境要求极低，适用于单一场景（游客上传）和个人使用，不适于多用户复杂场景***
 
 [![EasyImage2.0 GitHub's stars](https://img.shields.io/github/stars/icret/easyImage2.0?style=social)](https://github.com/icret/EasyImages2.0/stargazers)
 [![EasyImage2.0 GitHub's forks](https://img.shields.io/github/forks/icret/easyimage2.0?style=social)](https://github.com/icret/EasyImages2.0/network/members)
@@ -41,7 +42,8 @@
 - [x] 支持自定义代码
 - [x] 支持上传IP黑白名单
 - [x] 支持创建仅上传用户
-- [x] 更多支持请安装尝试···
+- [x] 对于安装环境要求极低
+- [x] 更多功能支持请安装尝试···
 
 ## 安装
 > 推荐环境：Nginx + PHP≥7.0 + linux
@@ -50,12 +52,12 @@
 
 #### Linux:
 
-- `git clone https://github.com/icret/EasyImages2.0.git` 至web目录
+- `git clone https://github.com/icret/EasyImages2.0.git` 至安装目录
 
-- 赋予web目录www:www和0755权限:
+- 赋予安装目录www:www和0755权限:
 ```shell
-chmod 755 -R /web目录
-chown -R www:www /web目录
+chmod -R 755 /安装目录
+chown -R www:www /安装目录
 ```
 
 #### BT宝塔面板
@@ -77,8 +79,9 @@ chown -R www:www /web目录
 9. `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
 10. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
 11. 无法上传/访问/不显示验证码: 1. 权限问题见问题`1` 2. CDN缓存了 3. 开防火墙了
-12. `Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
-13. 开启原图保护功能后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
+12. 宝塔或者其他环境安装成功但是上传失败，多数原因是防火墙拦截上传，取消拦截即可
+13. `Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
+14. 开启原图保护功能后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
 ```Nginx
 # 把Nginx这段配置删掉
 location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
@@ -180,10 +183,20 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
+* 2022-12-30 v2.6.8
+- 上传组件支持到 PHP 8.2
+- 修复下载任意文件漏洞 [#75](https://github.com/icret/EasyImages2.0/issues/75)
+- 增加自定义底部信息
+- 增加自定义管理提示
+- 增加图床模式
+  - 危险：除图片外不验证文件是否正常，也代表可以上传任意指定格式!
+- 增加上传时生成缩略图(仅设置直链缩略图时生效)，低配vps负载较大,影响前端上传速度!
+- 其他一些优化
+
 * 2022-09-20 v2.6.7
 - 优化后台显示
 - 增加控制缩略图尺寸
-- 修复启用Opcache带来的问题  [#57](https://github.com/icret/EasyImages2.0/issues/)
+- 修复启用Opcache带来的问题  [#57](https://github.com/icret/EasyImages2.0/issues/57)
 
 * 2022-07-10 v2.6.6
 - 增加文件uuid命名
