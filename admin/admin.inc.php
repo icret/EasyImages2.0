@@ -10,7 +10,7 @@ require_once  APP_ROOT  . '/config/config.guest.php';
 // 检查登录
 if (!is_who_login('admin')) {
     echo '
-  <script> new $.zui.Messager("请登录后再修改! ", {
+  <script> new $.zui.Messager("请使用管理员账户登录! ", {
 	  type: "danger", // 定义颜色主题 
 	  icon: "exclamation-sign" // 定义消息图标
   }).show();</script>';
@@ -36,11 +36,13 @@ if (isset($_POST['update'])) {
     header("refresh:1;");
 }
 
-// 添加token
+/**
+ * 添加token
+ *  $_POST['add_token'] 生成的Token
+ * $_POST['add_token_id'] Token的ID
+ * $_POST['add_token_expired'] 过期时间
+ */
 if (isset($_POST['add_token_id'])) {
-    // $_POST['add_token'] 生成的Token
-    // $_POST['add_token_id'] Token的ID
-    //  $_POST['add_token_expired'] 过期时间
     $postArr = array(
         $_POST['add_token'] => array(
             'id' => $_POST['add_token_id'], 'expired' => $_POST['add_token_expired'] * 86400 + time(), 'add_time' => time()
@@ -237,7 +239,7 @@ if (isset($_GET['recycle_reimg'])) {
 }
 ?>
 <div class="row">
-    <?php echo $config['set_notice'];?>
+    <?php echo $config['set_notice']; ?>
     <div class="col-md-2 col-xs-4">
         <ul class="nav nav-tabs nav-stacked">
             <li><a data-tab href="#Content1">网站设置</a></li>
@@ -311,73 +313,81 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content2">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group col-md-1">
-                    <label data-toggle="tooltip" title="前后需加'/' 例: /i/">存储路径</label>
-                    <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
-                </div>
-                <!-- <div class="form-group">
+                <div class="form-group col-md-12">
+                    <div class="form-group col-md-1">
+                        <label data-toggle="tooltip" title="前后需加'/' 例: /i/">存储目录</label>
+                        <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="storage_path" data-toggle="tooltip" title="图片的分类目录<br>更改会导致广场无法使用<br>非必要不要修改,末尾需要加'/' <br />PHP date() 函数参考">存储分类路径 <a href="https://www.runoob.com/php/php-date.html" target="_blank"><i class="icon icon-external-link"></i></a></label>
+                        <input type="text" class="form-control" name="storage_path" required="required" value="<?php echo $config['storage_path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="参考PHP date() 函数">
+                    </div>
+                    <!-- <div class="form-group">
                     <label data-toggle="tooltip" title="不懂就不要改本图床仅针对图片上传,如果想上传其他类型文件请更改此出,不同mime请以英文,分割">允许的MIME类型</label>
                     <input type="text" class="form-control" name="mime" required="required" value="php echo $config['mime'];" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div> -->
-                <div class="form-group col-md-5">
-                    <label data-toggle="tooltip" title="请以英文 , 分割 最后一个不加 , <br/>想上传图片以外的格式？请关闭图床安全->图床模式">允许的扩展名</label>
-                    <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    </div> -->
+                    <div class="form-group col-md-4">
+                        <label data-toggle="tooltip" title="请以英文 , 分割 最后一个不加 , <br/>想上传图片以外的格式？请关闭图床安全->图床模式">允许的扩展名</label>
+                        <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>已上传文件的命名方式</label>
+                        <select class="chosen-select form-control" name="imgName">
+                            <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 36进制时间+随机数 >> vx77yu</option>
+                            <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>时间 >> 192704</option>
+                            <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix >> 1635074840</option>
+                            <option value="crc32" <?php if ($config['imgName'] == 'crc32') echo 'selected'; ?>>CRC32 >> 2495551279</option>
+                            <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>微秒 >> 6175436c73418</option>
+                            <option value="snowflake" <?php if ($config['imgName'] == 'snowflake') echo 'selected'; ?>>雪花 >> 5357520647037653166</option>
+                            <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源名 >> 微信图片_20211228214754</option>
+                            <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>MD5 >> 3888aa69eb321a2b61fcc63520bf6c82</option>
+                            <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>SHA1 >> 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
+                            <option value="uuid" <?php if ($config['imgName'] == 'uuid') echo 'selected'; ?>>通用唯一识别码 >> 668ab647-c874-51e8-cc98-ac5c24a472b0</option>
+                            <option value="guid" <?php if ($config['imgName'] == 'guid') echo 'selected'; ?>>全局唯一标识符 >> 6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label data-toggle="tooltip" title="支持图片转换格式后压缩,压缩率与 上传压缩->后端压缩率关联<br />不建议同时启用后端压缩,避免重复压缩导致图片变大"> * 将上传图片转换格式</label>
+                        <select class="chosen-select form-control" name="imgConvert">
+                            <option value="" <?php if (empty($config['imgConvert'])) echo 'selected'; ?>>不转换</option>
+                            <option value="webp" <?php if ($config['imgConvert'] == 'webp') echo 'selected'; ?>>WEBP</option>
+                            <option value="png" <?php if ($config['imgConvert'] == 'png') echo 'selected'; ?>>PNG</option>
+                            <option value="jpeg" <?php if ($config['imgConvert'] == 'jpeg') echo 'selected'; ?>>JPG</option>
+                            <option value="gif" <?php if ($config['imgConvert'] == 'gif') echo 'selected'; ?>>GIF</option>
+                            <option value="bmp" <?php if ($config['imgConvert'] == 'bmp') echo 'selected'; ?>>BMP</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label>上传图片的命名方式</label>
-                    <select class="chosen-select form-control" name="imgName">
-                        <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 36进制时间+随机数 >> vx77yu</option>
-                        <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>时间 >> 192704</option>
-                        <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix >> 1635074840</option>
-                        <option value="crc32" <?php if ($config['imgName'] == 'crc32') echo 'selected'; ?>>CRC32 >> 2495551279</option>
-                        <option value="uniqid" <?php if ($config['imgName'] == 'uniqid') echo 'selected'; ?>>微秒 >> 6175436c73418</option>
-                        <option value="snowflake" <?php if ($config['imgName'] == 'snowflake') echo 'selected'; ?>>雪花 >> 5357520647037653166</option>
-                        <option value="source" <?php if ($config['imgName'] == 'source') echo 'selected'; ?>>源名 >> 微信图片_20211228214754</option>
-                        <option value="md5" <?php if ($config['imgName'] == 'md5') echo 'selected'; ?>>MD5 >> 3888aa69eb321a2b61fcc63520bf6c82</option>
-                        <option value="sha1" <?php if ($config['imgName'] == 'sha1') echo 'selected'; ?>>SHA1 >> 654faac01499e0cb5fb0e9d78b21e234c63d842a</option>
-                        <option value="uuid" <?php if ($config['imgName'] == 'uuid') echo 'selected'; ?>>通用唯一识别码 >> 668ab647-c874-51e8-cc98-ac5c24a472b0</option>
-                        <option value="guid" <?php if ($config['imgName'] == 'guid') echo 'selected'; ?>>全局唯一标识符 >> 6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA</option>
-                    </select>
+                <div class="form-group col-md-12">
+                    <div class="form-group">
+                        <label>单次最多上传 | 当前: </label><label id="maxUploadFiles"><?php echo $config['maxUploadFiles']; ?></label><label>张</label>
+                        <input type="range" class="form-control" name="maxUploadFiles" value="<?php echo $config['maxUploadFiles']; ?>" min="1" max="200" step="1" onchange="document.getElementById('maxUploadFiles').innerHTML=value">
+                    </div>
+                    <div class="form-group">
+                        <label>最大上传宽度 | 当前: </label><label id="maxWidth"><?php echo $config['maxWidth']; ?></label><label>px</label>
+                        <input type="range" class="form-control" name="maxWidth" value="<?php echo $config['maxWidth']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxWidth').innerHTML=value">
+                    </div>
+                    <div class="form-group">
+                        <label>最大上传高度 | 当前: </label><label id="maxHeight"><?php echo $config['maxHeight']; ?></label><label>px</label>
+                        <input type="range" class="form-control" name="maxHeight" value="<?php echo $config['maxHeight']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxHeight').innerHTML=value">
+                    </div>
+                    <div class="form-group">
+                        <label>单文件最大上传(1-100MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
+                        <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="104857600" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
+                    </div>
+                    <div class="form-group">
+                        <label>最小上传宽度 | 当前: </label><label id="minWidth"><?php echo $config['minWidth']; ?></label><label>px</label>
+                        <input type="range" class="form-control" name="minWidth" value="<?php echo $config['minWidth']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minWidth').innerHTML=value">
+                    </div>
+                    <div class="form-group">
+                        <label>最小上传高度 | 当前: </label><label id="minHeight"><?php echo $config['minHeight']; ?></label><label>px</label>
+                        <input type="range" class="form-control" name="minHeight" value="<?php echo $config['minHeight']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minHeight').innerHTML=value">
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存</button>
                 </div>
-                <div class="form-group col-md-2">
-                    <label data-toggle="tooltip" title="支持图片转换格式后压缩,压缩率与 上传压缩->后端压缩率关联<br />不建议同时启用后端压缩,避免重复压缩导致图片变大"> * 将上传图片转换格式</label>
-                    <select class="chosen-select form-control" name="imgConvert">
-                        <option value="" <?php if (empty($config['imgConvert'])) echo 'selected'; ?>>不转换</option>
-                        <option value="webp" <?php if ($config['imgConvert'] == 'webp') echo 'selected'; ?>>WEBP</option>
-                        <option value="png" <?php if ($config['imgConvert'] == 'png') echo 'selected'; ?>>PNG</option>
-                        <option value="jpeg" <?php if ($config['imgConvert'] == 'jpeg') echo 'selected'; ?>>JPG</option>
-                        <option value="gif" <?php if ($config['imgConvert'] == 'gif') echo 'selected'; ?>>GIF</option>
-                        <option value="bmp" <?php if ($config['imgConvert'] == 'bmp') echo 'selected'; ?>>BMP</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>单次最多上传 | 当前: </label><label id="maxUploadFiles"><?php echo $config['maxUploadFiles']; ?></label><label>张</label>
-                    <input type="range" class="form-control" name="maxUploadFiles" value="<?php echo $config['maxUploadFiles']; ?>" min="1" max="200" step="1" onchange="document.getElementById('maxUploadFiles').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label>最大上传宽度 | 当前: </label><label id="maxWidth"><?php echo $config['maxWidth']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="maxWidth" value="<?php echo $config['maxWidth']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxWidth').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label>最大上传高度 | 当前: </label><label id="maxHeight"><?php echo $config['maxHeight']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="maxHeight" value="<?php echo $config['maxHeight']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxHeight').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label>单文件最大上传(1-100MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
-                    <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="104857600" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
-                </div>
-                <div class="form-group">
-                    <label>最小上传宽度 | 当前: </label><label id="minWidth"><?php echo $config['minWidth']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="minWidth" value="<?php echo $config['minWidth']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minWidth').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label>最小上传高度 | 当前: </label><label id="minHeight"><?php echo $config['minHeight']; ?></label><label>px</label>
-                    <input type="range" class="form-control" name="minHeight" value="<?php echo $config['minHeight']; ?>" min="5" max="1024" step="10" onchange="document.getElementById('minHeight').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                </div>
-                <button type="submit" class="btn btn-primary">保存</button>
             </form>
         </div>
         <div class="tab-pane fade" id="Content3">
@@ -528,7 +538,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
                 </div>
                 <div class="form-group">
-                    <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)<br/>留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
+                    <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
                     <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
@@ -550,8 +560,8 @@ if (isset($_GET['recycle_reimg'])) {
                     <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
                 </div>
                 <div class="row">
+                    <h5 class="header-dividing">高级设置 <?php if ($config['domain'] == $config['imgurl']) echo '<small> 网站域名与图片域名相同,锁定隐藏' . $config['path'] . '目录开关</small>'; ?></h5>
                     <div class="col-md-12">
-                        <h5 class="header-dividing">高级设置 <?php if ($config['domain'] == $config['imgurl']) echo '<small> 网站域名与图片域名相同,锁定隐藏' . $config['path'] . '目录开关</small>'; ?></h5>
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="网址设置->弹窗公告修改内容<br />重开浏览器访问网站会再次展示公告弹窗">
                                 <input type="hidden" name="notice_status" value="0">
@@ -588,14 +598,12 @@ if (isset($_GET['recycle_reimg'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="所有用户上传的图片使用加密链接删除的图片会进入回收站">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="使用加密链接删除的图片移动至图片回收">
                                 <input type="hidden" name="image_recycl" value="0">
                                 <input type="checkbox" name="image_recycl" value="1" <?php if ($config['image_recycl']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">图片回收</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="以登陆账号名称创建上传目录">
                                 <input type="hidden" name="guest_path_status" value="0">
@@ -616,9 +624,9 @@ if (isset($_GET['recycle_reimg'])) {
                                 <input type="checkbox" name="admin_path_status" value="1" <?php if ($config['admin_path_status']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">管理分离</label>
                             </div>
-                            <!-- <input type="text" name="admin_path" class="form-control input-sm" value="echo $config['admin_path']" placeholder="请自定义管理的上传目录"> -->
                         </div>
                         <div class="col-md-2">
+                            <!-- <input type="text" name="admin_path" class="form-control input-sm" value="echo $config['admin_path']" placeholder="请自定义管理的上传目录"> -->
                             <div class="switch switch-inline" data-toggle="tooltip" title="开启文件管理">
                                 <input type="hidden" name="tinyfilemanager" value="0">
                                 <input type="checkbox" name="tinyfilemanager" value="1" <?php if ($config['tinyfilemanager']) echo 'checked="checked"'; ?>>
@@ -626,7 +634,28 @@ if (isset($_GET['recycle_reimg'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
+                                <input type="hidden" name="show_user_hash_del" value="0">
+                                <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">显示删除</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
+                                <input type="hidden" name="showSort" value="0">
+                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">广场排序</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
+                                <input type="hidden" name="chart_on" value="0">
+                                <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">显示统计</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="上传日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
                                 <input type="hidden" name="upload_logs" value="0">
                                 <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">上传日志</label>
@@ -639,8 +668,6 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label style="font-weight: bold">图床自检</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="危险：关闭后除图片外不验证文件是否正常，代表可以上传任意指定格式!">
                                 <input type="hidden" name="allowed" value="0">
@@ -648,15 +675,16 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label style="font-weight: bold">图床模式</label>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="建议开启,有效防止因撞库导致账户密码被破解!">
+                                <input type="hidden" name="captcha" value="0">
+                                <input type="checkbox" name="captcha" value="1" <?php if ($config['captcha']) echo 'checked'; ?>>
+                                <label style="font-weight: bold">验证码</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-               
                 <div class="col-md-12">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="建议开启,有效防止因撞库导致账户密码被破解!">
-                        <input type="hidden" name="captcha" value="0">
-                        <input type="checkbox" name="captcha" value="1" <?php if ($config['captcha']) echo 'checked'; ?>>
-                        <label style="font-weight: bold">验证码</label>
-                    </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
                         <input type="hidden" name="public" value="0">
                         <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
@@ -769,13 +797,13 @@ if (isset($_GET['recycle_reimg'])) {
                 <p class="text-ellipsis">剩余磁盘: <?php echo getDistUsed(disk_free_space(__DIR__)); ?></p>
                 <h5>PHP信息</h5>
                 <hr />
-                <p class="text-ellipsis">PHP Version: <?php echo phpversion(); ?></p>
-                <p class="text-ellipsis">PHP Model: <?PHP echo php_sapi_name(); ?></p>
-                <p class="text-ellipsis">PHP Max UP: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
-                <p class="text-ellipsis">PHP Max Time: <?PHP echo get_cfg_var("max_execution_time") . "s"; ?></p>
-                <p class="text-ellipsis">PHP Max Memery: <?PHP echo get_cfg_var("memory_limit"); ?></p>
-                <p class="text-ellipsis">POST Max Upload: <?php echo ini_get('post_max_size'); ?></p>
-                <p class="text-ellipsis">GD: <?php echo (gd_info()["GD Version"]); ?></p>
+                <p class="text-ellipsis">PHP版本: <?php echo phpversion(); ?></p>
+                <p class="text-ellipsis">运行模式: <?PHP echo php_sapi_name(); ?></p>
+                <p class="text-ellipsis">上传限制: <?PHP echo get_cfg_var("upload_max_filesize"); ?></p>
+                <p class="text-ellipsis">运行时间限制: <?PHP echo get_cfg_var("max_execution_time") . "s"; ?></p>
+                <p class="text-ellipsis">最大占用内存: <?PHP echo get_cfg_var("memory_limit"); ?></p>
+                <p class="text-ellipsis">POST上传限制: <?php echo ini_get('post_max_size'); ?></p>
+                <p class="text-ellipsis">GD版本: <?php echo (gd_info()["GD Version"]); ?></p>
                 <h5>我的信息</h5>
                 <hr />
                 <p class="text-ellipsis">IP: <?php echo real_ip(); ?></p>
@@ -822,7 +850,7 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content9">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
-                    <h5>上传首选</h5>
+                    <h5>上传后首选显示</h5>
                     <label class="radio-inline">
                         <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
                         <i class="icon icon-link"></i>
@@ -840,37 +868,23 @@ if (isset($_GET['recycle_reimg'])) {
                         <i class="icon icon-html5"></i>
                     </label>
                     <label class="radio-inline" data-toggle="tooltip" title="删除链接">
-                        <input type="radio" id="upload_first_show5" name="upload_first_show" value="5" <?php if ($config['upload_first_show'] == 5) echo 'checked'; ?>>
+                        <input <?php if ($config['show_user_hash_del'] == 0) echo 'disabled'; ?> type="radio" id="upload_first_show5" name="upload_first_show" value="5" <?php if ($config['upload_first_show'] == 5) echo 'checked'; ?>>
                         <i class="icon icon-trash"></i>
                     </label>
                 </div>
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">对外展示</label><br />
+                    <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">对外功能展示</label><br />
                     <div class="switch switch-inline" data-toggle="tooltip" title="暗黑模式切换">
                         <input type="hidden" name="dark-mode" value="0">
                         <input type="checkbox" name="dark-mode" value="1" <?php if ($config['dark-mode']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">暗黑</label>
-                    </div>
-                    <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
-                        <input type="hidden" name="show_user_hash_del" value="0">
-                        <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">删除</label>
                     </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title=" 关闭后非登录状态不显示广场图片">
                         <input type="hidden" name="showSwitch" value="0">
                         <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">广场</label>
                     </div>
-                    <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
-                        <input type="hidden" name="showSort" value="0">
-                        <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">排序</label>
-                    </div>
-                    <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
-                        <input type="hidden" name="chart_on" value="0">
-                        <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">统计</label>
-                    </div>
+
                     <div class="switch switch-inline" data-toggle="tooltip" title="广场图片详细信息按钮">
                         <input type="hidden" name="show_exif_info" value="0">
                         <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
@@ -948,8 +962,8 @@ if (isset($_GET['recycle_reimg'])) {
                     <div class="content">
                         <p>直接输入账号和密码即可完成修改.</p>
                         <p>更改后会立即生效并重新登录,请务必牢记账号和密码! </p>
-                        <p>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到user对应的键值->填入</p>
-                        <p>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到password对应的键值->填入</p>
+                        <p>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</p>
+                        <p>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
                     </div>
                 </div>
             </form>

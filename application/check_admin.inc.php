@@ -78,7 +78,7 @@ if (getVersion() !== get_current_verson()) {
 if ($config['mustLogin']) {
     echo '
     <script>
-    $.zui.browser.tip("请注意: 当前已开启登录上传,非登录用户不可上传图片!");
+    $.zui.browser.tip("请注意: 当前已开启登录上传,游客不能上传图片!");
     </script>
     ';
 }

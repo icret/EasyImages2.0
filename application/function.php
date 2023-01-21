@@ -52,8 +52,81 @@ function isAnimatedGif($filename)
     return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? 0 : 1;
 }
 
+
 /**
- * 校验登录
+ * 2023-01-06 校验登录
+ * @param $user String 登录用户名
+ * @param $password 登录密码
+ * 返回参数解析 code=>状态码 200成功，400失败; 登录用户级别level => 0无状态, 1管理员, 2上传者, messege => 提示信息
+ */
+
+function _login($user = null, $password = null)
+{
+    global $config;
+    global $guestConfig;
+
+    // cookie验证
+    if ($user == null and $password == null) {
+        // 无cookie
+        if (empty($_COOKIE['auth'])) {
+            return json_encode(array('code' => 400, 'level' => 0, 'messege' => '请登录'));
+        }
+        // 存在cookie
+        if (isset($_COOKIE['auth'])) {
+            $browser_cookie = unserialize($_COOKIE['auth']);
+            // cookie无法读取
+            if (!$browser_cookie) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '登录已过期,请重新登录'));
+            // 判断账号是否存在
+            if ($browser_cookie[0] !== $config['user'] && !array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
+            // 判断是否管理员
+            if ($browser_cookie[0] == $config['user'] && $browser_cookie[1] == $config['password']) return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
+            // 判断是否上传者
+            if (array_key_exists($browser_cookie[0], $guestConfig) && $browser_cookie[1] == $guestConfig[$browser_cookie[0]]['password']) {
+                // 判断上车者是否过期
+                if ($guestConfig[$browser_cookie[0]]['expired'] < time()) {
+                    // 上传者账户密码正确,但是账户过期
+                    return json_encode(array('code' => 400, 'level' => 0, 'messege' => $browser_cookie[0] . '账号已过期'));
+                }
+                return json_encode(array('code' => 200, 'level' => 2, 'messege' => $browser_cookie[0] . '用户已登录'));
+            }
+            // 账号存在,密码错误
+            if ($browser_cookie[0] == $config['user'] || array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
+        }
+    }
+
+    // 前端验证
+    $user = strip_tags($user);
+    $password = strip_tags($password);
+    // 是否管理员
+    if ($user == $config['user'] && $password == $config['password']) {
+        // 将账号密码序列化后存储
+        $browser_cookie = serialize(array($user, $password));
+        setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
+        return json_encode(array('code' => 200, 'level' => 1, 'messege' => '管理员登录成功'));
+    }
+    // 是否上传者
+    if (array_key_exists($user, $guestConfig) && $password == $guestConfig[$user]['password']) {
+        // 上传者账号过期
+        if ($guestConfig[$user]['expired'] < time()) return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
+        // 未过期设置cookie
+        $browser_cookie = serialize(array($user, $password));
+        setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
+        return json_encode(array('code' => 200, 'level' => 2, 'messege' => $user . '用户登录成功'));
+    }
+    // 检查账号是否存在
+    if (array_key_exists($user, $guestConfig) || $user == $config['user']) {
+        // 账号存在,密码错误
+        if ($user == $config['user'] || array_key_exists($user, $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
+    } else {
+        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
+    }
+
+    // 未知错误
+    return json_encode(array('code' => 400, 'level' => 0, 'messege' => '未知错误'));
+}
+
+/**
+ * 校验登录 2023-01-05弃用
  */
 function checkLogin()
 {
@@ -81,7 +154,7 @@ function checkLogin()
         }
 
         // 管理员登陆
-        if ($getCOK[1] == $config['password']) {
+        if ($getCOK[0] == $config['user'] && $getCOK[1] == $config['password']) {
             return 204;
         }
 
@@ -97,9 +170,43 @@ function checkLogin()
 }
 
 /**
- * 仅允许登录后上传
+ * 2023-01-06 仅允许登录上传
  */
 function mustLogin()
+{
+    global $config;
+    if ($config['mustLogin']) {
+        $status = _login();
+        $status = json_decode($status, true);
+
+        if ($status['code'] == 200) {
+            echo '
+            <script> 
+                new $.zui.Messager("' . $status["messege"] . '", {
+                type: "success", // 定义颜色主题 
+                icon: "linux", // 定义消息图标
+                placement:"bottom-right" // 消息位置
+                }).show();
+            </script>';
+        }
+
+        if ($status['code'] == 400) {
+            echo '
+            <script>
+                new $.zui.Messager("' . $status["messege"] . '", {
+                type: "danger", // 定义颜色主题 
+                icon: "bullhorn" // 定义消息图标
+            }).show();
+            </script>';
+            header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
+        }
+    }
+}
+
+/**
+ * 仅允许登录后上传 2023-01-05弃用
+ */
+function mustLogin_a()
 {
     global $config;
     if ($config['mustLogin']) {
@@ -108,7 +215,7 @@ function mustLogin()
             case 201:
                 echo '
                 <script>
-                new $.zui.Messager("本站已开启登陆上传, 请登录!", {
+                new $.zui.Messager("请登录 !", {
                     type: "danger", // 定义颜色主题 
                     icon: "bullhorn" // 定义消息图标
                 }).show();
@@ -135,6 +242,16 @@ function mustLogin()
                     </script>';
                 exit(header("refresh:2;url=" . $config['domain'] . "/admin/index.php"));
                 break;
+            case 204:
+                echo '
+                    <script> 
+                    new $.zui.Messager("管理员已登陆", {
+                        type: "success", // 定义颜色主题 
+                        icon: "check", // 定义消息图标
+                        placement:"bottom-right" // 消息位置
+                    }).show();
+                    </script>';
+                break;
             case 205:
                 echo '
                     <script> 
@@ -154,15 +271,14 @@ function mustLogin()
                     }).show();
                     </script>';
                 break;
-            case 204:
+            case 206:
                 echo '
-                    <script> 
-                    new $.zui.Messager("管理员已登陆", {
-                        type: "success", // 定义颜色主题 
-                        icon: "check", // 定义消息图标
-                        placement:"bottom-right" // 消息位置
+                <script> 
+                    new $.zui.Messager("登录失败！", {
+                    type: "special", // 定义颜色主题 
+                    icon: "exclamation-sign" // 定义消息图标
                     }).show();
-                    </script>';
+                </script>';
                 break;
         }
     }
@@ -176,9 +292,18 @@ function mustLogin()
 function config_path($path = null)
 {
     global $config;
-    // php5.6 兼容写法：
-    $path = isset($path) ? $path : date('Y/m/d/');
-    // php7.0 $path = $path ?? date('Y/m/d/');    
+
+    if (empty($path)) {
+        if (array_key_exists('storage_path', $config)) {
+            $path = date($config['storage_path']);
+        } else {
+            $path = date('Y/m/d/');
+        }
+    }
+    // 2023-01-06弃用 php5.6 兼容写法：
+    // $path = isset($path) ? $path : date('Y/m/d/');
+    // php7.0 $path = $path ?? date('Y/m/d/');
+
     $img_path = $config['path'] . $path;
 
     if (!is_dir($img_path)) {
@@ -549,8 +674,8 @@ function getDel($url, $type)
                 type: "success", // 定义颜色主题 
                 icon: "ok-sign" // 定义消息图标
             }).show();
-			// 延时2s跳转			
-            // window.setTimeout("window.location=\'/../ \'",3500);
+			// 延时5s跳转			
+            // window.setTimeout("window.location=\'/../ \'",5000);
             </script>
 			';
         } else {
@@ -584,21 +709,13 @@ function getDel($url, $type)
  */
 function is_who_login($user)
 {
-    global $config;
-    global $guestConfig;
-    if (isset($_COOKIE['auth'])) {
-        $getCOK = unserialize($_COOKIE['auth']);
-        if (!$getCOK) {
-            return false;
-        }
-        if ($user == 'admin') {
-            if ($getCOK[1] == $config['password']) return true;
-        }
-        if ($user == 'guest') {
-            if ($getCOK[0] !== $guestConfig[$getCOK[0]]) return true;
-        }
+    $status = json_decode(_login(), true);
+    if ($user == 'admin') {
+        if ($status['level'] == 1) return true;
     }
-
+    if ($user == 'guest') {
+        if ($status['level'] == 2) return true;
+    }
     return false;
 }
 
@@ -975,7 +1092,7 @@ function get_online_thumbnail($imgUrl)
         $imgUrl = str_replace($config['domain'], '', $imgUrl);
         return $config['domain'] . '/application/thumb.php?img=' . $imgUrl;
     }
-    
+
     return $imgUrl;
 }
 
@@ -990,15 +1107,15 @@ function creat_thumbnail_by_list($imgUrl)
 
     ini_set('max_execution_time', '300');  // 脚本运行的时间（以秒为单位）0不限制
 
-    switch ($config['thumbnail']){
-        // 输出原图
+    switch ($config['thumbnail']) {
+            // 输出原图
         case 0:
             return $imgUrl;
-        break;
-        // 访问生成
+            break;
+            // 访问生成
         case 1:
             return get_online_thumbnail($imgUrl);
-        break;
+            break;
     }
 
     // 将网址图片转换为相对路径
@@ -1030,7 +1147,7 @@ function creat_thumbnail_by_list($imgUrl)
         }
 
         // 过滤非指定格式
-        if (!in_array(pathinfo(basename($abPathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp' ,'ico'))) {
+        if (!in_array(pathinfo(basename($abPathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp', 'ico'))) {
             return $imgUrl;
         }
 
@@ -1391,7 +1508,7 @@ function isAnimatedGifWebp($src)
  * @return String 内容信息
  */
 
-function get_current_verson($file = '/admin/verson.txt')
+function get_current_verson($file = '/admin/verson.php')
 {
     $file = APP_ROOT . $file;
 

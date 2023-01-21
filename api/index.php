@@ -47,7 +47,7 @@ if ($handle->uploaded) {
     // 添加Token ID
     $handle->file_name_body_add = '-' . $tokenID;
     // 最大上传限制
-    $handle->file_max_sizes = $config['maxSize'];
+    $handle->file_max_size = $config['maxSize'];
     // 最大宽度
     $handle->image_max_width = $config['maxWidth'];
     // 最大高度
@@ -56,19 +56,16 @@ if ($handle->uploaded) {
     $handle->image_min_width = $config['minWidth'];
     // 最小高度
     $handle->image_min_height = $config['minHeight'];
-    // 转换图片为指定格式
-    if ($config['imgConvert']) {
-        // 只转换非webp格式和非动态图片
-        if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
-            $handle->image_convert = $config['imgConvert'];
-            // PNG  图像的压缩级别，介于 1（快速但大文件）和 9（慢但较小文件）之间
-            $handle->png_compression = 9 - round($config['compress_ratio'] / 11.2);
-            // WEBP 图像的压缩质量 1-100
-            $handle->webp_quality = $config['compress_ratio'];
-            // JPEG 图像的压缩质量 1-100
-            $handle->jpeg_quality = $config['compress_ratio'];
-        }
+    // 2023-01-06 转换图片为指定格式 只转换非webp格式和非动态图片
+    if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
+        $handle->image_convert = $config['imgConvert'];
     }
+    // 2023-01-06 PNG 图像的压缩级别，介于 1（快速但大文件）和 9（慢但较小文件）之间
+    $handle->png_compression = 9 - round($config['compress_ratio'] / 11.2);
+    // WEBP 图像的压缩质量 1-100
+    $handle->webp_quality = $config['compress_ratio'];
+    // JPEG 图像的压缩质量 1-100
+    $handle->jpeg_quality = $config['compress_ratio'];
 
     /* 等比例缩减图片 放到前端了*/
     /*
@@ -94,7 +91,7 @@ if ($handle->uploaded) {
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
         header('Content-type:text/json');
-        
+
         // 图片相对路径
         $pathIMG = $Img_path . $handle->file_dst_name;
         // 图片访问网址
@@ -129,17 +126,17 @@ if ($handle->uploaded) {
                 $delUrl = "Sever PHP version lower 7.0";
             }
         } else {
-            $delUrl = "Admin closed delete";
+            $delUrl = "Admin closed user delete";
         }
 
         // 当设置访问生成缩略图时自动生成 2022-12-30
-        if($config['thumbnail'] == 2) {
+        if ($config['thumbnail'] == 2) {
             // 自定义缩略图长宽
-            $thumbnail_w = 258; 
+            $thumbnail_w = 258;
             $thumbnail_h = 258;
-            
+
             $handle->image_resize = true;
-            
+
             if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
                 $handle->image_x = $config['thumbnail_w'];
                 $handle->image_y = $config['thumbnail_h'];
@@ -149,8 +146,7 @@ if ($handle->uploaded) {
 
             $handle->file_new_name_body = date('Y_m_d_') . $handle->file_dst_name_body;
 
-            $handle->process(APP_ROOT . $config['path']. 'thumbnails/');    
-        
+            $handle->process(APP_ROOT . $config['path'] . 'thumbnails/');
         }
 
         // 上传成功后返回json数据
@@ -170,6 +166,8 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  206,
             "message"   =>  $handle->error,
+            // 'up_log' => $handle->log,(仅用作调试用)
+
         );
 
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));

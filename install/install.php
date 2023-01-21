@@ -66,20 +66,20 @@ if ($state !== 'checked') {
             <div class="form-group">
                 <label class="col-sm-2 ">管理账号</label>
                 <div class="col-md-6 col-sm-10">
-                    <input type="text" class="form-control" name="user" value="" placeholder="请以大小写英文或数字输入管理员账号" onkeyup="this.value=this.value.replace(/[^\w\.\/]/ig,'')">
+                    <input type="text" class="form-control" name="user" value="admin" placeholder="请以大小写英文或数字输入管理员账号" onkeyup="this.value=this.value.replace(/[^\w\.\/]/ig,'')">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 ">管理密码</label>
                 <span class="message">请输入8~18位密码</span>
                 <div class="col-md-6 col-sm-10 register">
-                    <input type="text" class="form-control inp" name="password" value="" required="required" placeholder="请使用英文输入法输入密码并不小于8位数" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control inp" name="password" value="admin@123" required="required" placeholder="请使用英文输入法输入密码并不小于8位数" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 ">确认密码</label>
                 <div class="col-md-6 col-sm-10">
-                    <input type="text" class="form-control" name="repassword" value="" required="required" placeholder="确认密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" name="repassword" value="admin@123" required="required" placeholder="确认密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
             </div>
             <div class="form-group">

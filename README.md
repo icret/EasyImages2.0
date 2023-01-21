@@ -183,6 +183,15 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
+* 2023-01-21 v2.6.9 Happy New Year
+- 修复BMP格式无法增加水印(不建议开启,非常耗时)
+- 修复上传用户组会串联变成管理员权限 [#61](https://github.com/icret/EasyImages2.0/issues/61)
+- 增加了上传提示和登录提示
+- 增加自定义存储分类路径 设置方法参考 [PHP date() 函数](https://www.runoob.com/php/php-date.html)
+- 更改后台部分管理设置的位置
+- 优化操作逻辑和信息提示
+
+
 * 2022-12-30 v2.6.8
 - 上传组件支持到 PHP 8.2
 - 修复下载任意文件漏洞 [#75](https://github.com/icret/EasyImages2.0/issues/75)
@@ -607,9 +616,9 @@ RewriteRule config/(.*).(php)$ – [F]
 
  ## 支持开发者
  
- |支付宝支持|微信支持| 
- |:----:|:----:|
- |![支付宝支持](./public/images/alipay.jpg)|![微信支持](./public/images/wechat.jpg)|
+ |                支付宝支持                 |                微信支持                 |
+ | :---------------------------------------: | :-------------------------------------: |
+ | ![支付宝支持](./public/images/alipay.jpg) | ![微信支持](./public/images/wechat.jpg) |
  
  ## 界面演示
  

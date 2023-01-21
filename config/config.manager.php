@@ -29,7 +29,7 @@ $auth_users = array(
     'admin' => password_hash($config['password'], PASSWORD_DEFAULT), // 登录密码
     'user' => '$2y$10$iPtSuvQnv0FnqdWdQsuWMOGxlul/VQzcKl3q1K7VU/QTw102IU5yi' //密码：CQ4CdBGjGJnA 
     // 先写一个密码然后获取密码Hash填上去- https://tinyfilemanager.github.io/docs/pwd.html
-  );
+);
 
 // Readonly users
 // e.g. array('users', 'guest', ...)

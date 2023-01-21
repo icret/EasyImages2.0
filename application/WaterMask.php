@@ -78,6 +78,12 @@ class Imgs
                 imagecopyresampled($temp_img, $im, 0, 0, 0, 0, $temp_w, $temp_h, $width, $height);
                 imagepng($temp_img, $savepath, 100);
                 break;
+            case 6:
+                $im = imagecreatefrombmp($src);
+                imagesavealpha($im, true); //这里很重要;3-1
+                imagecopyresampled($temp_img, $im, 0, 0, 0, 0, $temp_w, $temp_h, $width, $height);
+                imagebmp($temp_img, $savepath, 100);
+                break;
             case 18:
                 $im = imagecreatefromwebp($src);
                 imagesavealpha($im, true); //这里很重要;3-1
@@ -168,6 +174,11 @@ class Imgs
                     $dst_img = imagecreatefrompng($src);
                     imagesavealpha($dst_img, true); //这里很重要;3-1
                     break;
+
+                case 6:
+                    $dst_img = imagecreatefrombmp($src);
+                    imagesavealpha($dst_img, true); //这里很重要;3-1
+                    break;
                 case 18:
                     $dst_img = imagecreatefromwebp($src);
                     imagesavealpha($dst_img, true); //这里很重要;3-1
@@ -202,18 +213,18 @@ class Imgs
                 case 1:
                     $markim = imagecreatefromgif($def['res']);
                     break;
-
                 case 2:
                     $markim = imagecreatefromjpeg($def['res']);
                     break;
-
                 case 3:
                     $markim = imagecreatefrompng($def['res']);
+                    break;
+                case 6:
+                    $markim = imagecreatefrombmp($def['res']);
                     break;
                 case 18:
                     $markim = imagecreatefromwebp($def['res']);
                     break;
-
                 default:
                     return array('code' => false, 'msg' => '水印图片类型错误');
                     exit;
@@ -329,8 +340,11 @@ class Imgs
             case 'gif':
                 imagegif($dst_img, $def['name']);
                 break;
+            case 'bmp':
+                imagebmp($dst_img, $def['name']);
+                break;
             case 'webp':
-                imagegif($dst_img, $def['name']);
+                imagewebp($dst_img, $def['name']);
                 break;
             default:
                 return array('code' => false, 'msg' => '保存图片类型有误');

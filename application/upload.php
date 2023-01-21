@@ -43,15 +43,15 @@ $handle = new Upload($_FILES['file'], 'zh_CN');
 
 if ($handle->uploaded) {
     // 允许上传的mime类型
-    if($config['allowed'] === 1){
+    if ($config['allowed'] === 1) {
         $handle->allowed = array('image/*');
     }
-    
+
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
 
     // 最大上传限制
-    $handle->file_max_sizes = $config['maxSize'];
+    $handle->file_max_size = $config['maxSize'];
     // 最大宽度
     $handle->image_max_width = $config['maxWidth'];
     // 最大高度
@@ -60,19 +60,16 @@ if ($handle->uploaded) {
     $handle->image_min_width = $config['minWidth'];
     // 最小高度
     $handle->image_min_height = $config['minHeight'];
-    // 转换图片为指定格式
-    if ($config['imgConvert']) {
-        // 只转换非webp格式和非动态图片
-        if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
-            $handle->image_convert = $config['imgConvert'];
-            // PNG  图像的压缩级别，介于 1（快速但大文件）和 9（慢但较小文件）之间
-            $handle->png_compression = 9 - round($config['compress_ratio'] / 11.2);
-            // WEBP 图像的压缩质量 1-100
-            $handle->webp_quality = $config['compress_ratio'];
-            // JPEG 图像的压缩质量 1-100
-            $handle->jpeg_quality = $config['compress_ratio'];
-        }
+    // 2023-01-06 转换图片为指定格式 只转换非webp格式和非动态图片
+    if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
+        $handle->image_convert = $config['imgConvert'];
     }
+    // 2023-01-06 PNG 图像的压缩级别，介于 1（快速但大文件）和 9（慢但较小文件）之间
+    $handle->png_compression = 9 - round($config['compress_ratio'] / 11.2);
+    // WEBP 图像的压缩质量 1-100
+    $handle->webp_quality = $config['compress_ratio'];
+    // JPEG 图像的压缩质量 1-100
+    $handle->jpeg_quality = $config['compress_ratio'];
 
     /* 等比例缩减图片 放到前端了*/
     /*
@@ -149,17 +146,17 @@ if ($handle->uploaded) {
                 $delUrl = "Sever PHP version lower 7.0";
             }
         } else {
-            $delUrl = "Admin closed delete";
+            $delUrl = "Admin closed user delete";
         }
 
         // 当设置访问生成缩略图时自动生成 2022-12-30
-        if($config['thumbnail'] == 2) {
+        if ($config['thumbnail'] == 2) {
             // 自定义缩略图长宽
-            $thumbnail_w = 258; 
+            $thumbnail_w = 258;
             $thumbnail_h = 258;
-            
+
             $handle->image_resize = true;
-            
+
             if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
                 $handle->image_x = $config['thumbnail_w'];
                 $handle->image_y = $config['thumbnail_h'];
@@ -169,8 +166,7 @@ if ($handle->uploaded) {
 
             $handle->file_new_name_body = date('Y_m_d_') . $handle->file_dst_name_body;
 
-            $handle->process(APP_ROOT . $config['path']. 'thumbnails/');    
-        
+            $handle->process(APP_ROOT . $config['path'] . 'thumbnails/');
         }
 
         // 上传成功后返回json数据
@@ -190,6 +186,7 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  206,
             "message"   =>  $handle->error,
+            // 'up_log' => $handle->log,(仅用作调试用)
         );
         unset($handle);
         header('Content-Type:application/json; charset=utf-8');
@@ -210,7 +207,7 @@ if ($handle->uploaded) {
         @water($handle->file_dst_pathname);
         // 压缩        
         @compress($handle->file_dst_pathname);
-    } else {        
+    } else {
         // 普通模式鉴黄
         @process_checkImg($processUrl);
         // 日志
@@ -220,6 +217,6 @@ if ($handle->uploaded) {
         // 压缩
         @compress($handle->file_dst_pathname);
     }
-    
+
     unset($handle);
 }
