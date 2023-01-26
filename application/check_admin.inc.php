@@ -1,4 +1,16 @@
 <?php
+
+// 检查当前PHP版本是否大于7.0
+if (PHP_VERSION < 7) {
+    echo '
+    <script>
+    new $.zui.Messager("当前PHP版本<7.0, 部分功能受限!",{
+        type: "primary", // 定义颜色主题 
+        time:7000
+    }).show();
+    </script>
+    ';
+}
 // 扩展检测
 $expand = array('fileinfo', 'iconv', 'gd', 'mbstring', 'openssl',);
 foreach ($expand as $val) {
@@ -26,21 +38,8 @@ if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     ';
 }
 
-/*
-// 检测是否更改默认域名
-if (strstr('localhost|127.0.0.1|192.168.', $_SERVER['HTTP_HOST'])) {
-    echo '
-    <script>
-    new $.zui.Messager("请修改默认域名,可能会导致网站访问异常! ",{
-        type: "black" // 定义颜色主题 
-    }).show();
-    </script>
-    ';
-}
-*/
-
 // 检测是否局域网访问
-if (is_local($config['domain'])) {
+if (is_local($config['domain']) || is_local($config['imgurl'])) {
     echo '
     <script>
     new $.zui.Messager("当前使用局域网,可能会导致外网访问异常!",{

@@ -57,7 +57,7 @@ if ($handle->uploaded) {
     // 最小高度
     $handle->image_min_height = $config['minHeight'];
     // 2023-01-06 转换图片为指定格式 只转换非webp格式和非动态图片
-    if ($handle->file_src_name_ext !== 'webp' && !isAnimatedGif($handle->file_src_pathname)) {
+    if ($handle->file_src_name_ext !== 'webp' && !isGifAnimated($handle->file_src_pathname)) {
         $handle->image_convert = $config['imgConvert'];
     }
     // 2023-01-06 PNG 图像的压缩级别，介于 1（快速但大文件）和 9（慢但较小文件）之间
@@ -129,23 +129,15 @@ if ($handle->uploaded) {
             $delUrl = "Admin closed user delete";
         }
 
-        // 当设置访问生成缩略图时自动生成 2022-12-30
+        // 当设置访问生成缩略图时自动生成 2022-12-30 修正 2023-01-24
         if ($config['thumbnail'] == 2) {
             // 自定义缩略图长宽
-            $thumbnail_w = 258;
-            $thumbnail_h = 258;
-
             $handle->image_resize = true;
-
-            if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
-                $handle->image_x = $config['thumbnail_w'];
-                $handle->image_y = $config['thumbnail_h'];
-            }
+            $handle->image_x = $config['thumbnail_w'];
+            $handle->image_y = $config['thumbnail_h'];
             // 如果调整后的图像大于原始图像，则取消调整大小，以防止放大
             $handle->image_no_enlarging = true;
-
             $handle->file_new_name_body = date('Y_m_d_') . $handle->file_dst_name_body;
-
             $handle->process(APP_ROOT . $config['path'] . 'thumbnails/');
         }
 

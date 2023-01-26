@@ -24,7 +24,7 @@ function compress($floder, $type = 'Imgcompress', $source = '')
         foreach ($pic as $value) {
             $boxImg = $floder . $value;
             // 跳过动态图片
-            if (!isAnimatedGif($boxImg)) {
+            if (!isGifAnimated($boxImg)) {
                 $img = new Imgcompress($boxImg, $percent);
                 $img->compressImg($boxImg);
                 echo '<pre>' . $boxImg . '</pre><br />';

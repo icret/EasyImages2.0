@@ -9,7 +9,7 @@ function compress($absolutePath)
     global $config;
     // 压缩图片 后压缩模式，不影响前台输出速度
     if ($config['compress']) {
-        if (!isAnimatedGif($absolutePath)) {
+        if (!is_Gif_Webp_Animated($absolutePath)) {
             require_once __DIR__ . '/compress/Imagick/class.Imgcompress.php';
             $percent = $config['compress_ratio'] / 100; // 压缩率
             $img = new Imgcompress($absolutePath, $percent);
@@ -29,7 +29,7 @@ function water($source)
     // 文字水印
     if ($config['watermark'] == 1) {
         // 过滤gif
-        if (!isAnimatedGifWebp($source)) {
+        if (!is_Gif_Webp_Animated($source)) {
             $arr = [
                 #  水印图片路径（如果不存在将会被当成是字符串水印）
                 'res' => $config['waterText'],
@@ -48,7 +48,7 @@ function water($source)
     // 图片水印
     if ($config['watermark'] == 2) {
         // 过滤gif
-        if (!isAnimatedGifWebp($source)) {
+        if (!is_Gif_Webp_Animated($source)) {
             $arr = [
                 #  水印图片路径（如果不存在将会被当成是字符串水印）
                 'res' => APP_ROOT . $config['waterImg'],

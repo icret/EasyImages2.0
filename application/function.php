@@ -44,12 +44,67 @@ require_once APP_ROOT . '/config/config.guest.php';
  * @param $filename string 文件
  * @return int 是|否
  */
-function isAnimatedGif($filename)
+function isGifAnimated($filename)
 {
     $fp = fopen($filename, 'rb');
     $filecontent = fread($fp, filesize($filename));
     fclose($fp);
     return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? 0 : 1;
+}
+
+/**
+ * 判断webp是否为动态图片
+ * @param string $src 图像文件
+ * @return bool 是|否
+ */
+function isWebpAnimated($src)
+{
+    $webpFile = file_get_contents($src);
+    $info = strpos($webpFile, "ANMF");
+    if ($info !== FALSE) {
+        // animated
+        return true;
+    }
+    // not animated
+    return false;
+
+    /* 2023-01-24 判断webp是否为动画    
+    $result = false;
+    $fh = fopen($src, "rb");
+    fseek($fh, 12);
+    if (fread($fh, 4) === 'VP8X') {
+        fseek($fh, 16);
+        $myByte = fread($fh, 1);
+        $result = ((ord($myByte) >> 1) & 1) ? true : false;
+    }
+    fclose($fh);
+    return $result;
+    */
+}
+
+/**
+ * 判断webp或gif动图是否为动态图片
+ * @param $src 图片的绝对路径
+ * @return bool 是|否
+ */
+function is_Gif_Webp_Animated($src)
+{
+    $ext = pathinfo($src)['extension'];
+
+    if ($ext == 'webp') {
+        $webpContents = file_get_contents($src);
+        $where = strpos($webpContents, "ANMF");
+        if ($where !== FALSE) {
+            // animated
+            return true;
+        }
+        return false;
+    }
+
+    $fp = fopen($src, 'rb');
+    $filecontent = fread($fp, filesize($src));
+    fclose($fp);
+    return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? false : true;
 }
 
 
@@ -1038,21 +1093,12 @@ function creat_thumbnail_images($imgName)
     $old_img_path = APP_ROOT . config_path() . $imgName;                                               // 获取要创建缩略图文件的绝对路径
     $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';                                          // cache目录的绝对路径
 
-    // 自定义缩略图长宽
-    $thumbnail_w = 258;
-    $thumbnail_h = 258;
-
-    if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
-        $thumbnail_w = $config['thumbnail_w'];
-        $thumbnail_h = $config['thumbnail_h'];
-    }
-
     if (!is_dir($cache_path)) {                                                                        // 创建cache目录
         mkdir($cache_path, 0777, true);
     }
-    if (!isAnimatedGif($old_img_path)) {                                                               // 仅针对非gif创建图片缩略图
+    if (!isGifAnimated($old_img_path)) {                                                               // 仅针对非gif创建图片缩略图
         $new_imgName = APP_ROOT . $config['path'] . 'thumbnails/' . date('Y_m_d') . '_' . $imgName;    // 缩略图缓存的绝对路径
-        Thumb::out($old_img_path, $new_imgName, $thumbnail_w, $thumbnail_h);                           // 保存缩略图
+        Thumb::out($old_img_path, $new_imgName, $config['thumbnail_w'], $config['thumbnail_h']);                           // 保存缩略图
     }
 }
 
@@ -1066,7 +1112,7 @@ function return_thumbnail_images($url)
     global $config;
     $cache_image_file = str_replace($config['imgurl'], '', $url);
 
-    if (isAnimatedGif(APP_ROOT . $cache_image_file)) {                                      // 仅读取非gif的缩略图
+    if (isGifAnimated(APP_ROOT . $cache_image_file)) {                                      // 仅读取非gif的缩略图
         return $url;                                                                        // 如果是gif则直接返回url
     } else {
         $cache_image_file = str_replace($config['path'], '', $cache_image_file);            // 将网址中的/i/去除
@@ -1105,6 +1151,16 @@ function creat_thumbnail_by_list($imgUrl)
 {
     global $config;
 
+    // 过滤非指定格式
+    if (!in_array(pathinfo($imgUrl, PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
+
+        // ico格式直接返回直链
+        if (pathinfo($imgUrl, PATHINFO_EXTENSION) === 'ico') return $imgUrl;
+
+        // 其他格式直接返回指定图标
+        return '/../public/images/file_10_icon-icons.com_68948.svg';
+    }
+
     ini_set('max_execution_time', '300');  // 脚本运行的时间（以秒为单位）0不限制
 
     switch ($config['thumbnail']) {
@@ -1120,16 +1176,12 @@ function creat_thumbnail_by_list($imgUrl)
 
     // 将网址图片转换为相对路径
     $pathName = str_replace($config['domain'], '', $imgUrl);
-
     // 图片绝对路径
     $abPathName = APP_ROOT . $pathName;
-
     // 将网址中的/i/去除
     $pathName = str_replace($config['path'], '', $pathName);
-
     // 将文件的/转换为_
     $imgName = str_replace('/', '_', $pathName);
-
     // 缓存文件是否存在
     if (is_file(APP_ROOT . $config['path'] . 'thumbnails/' . $imgName)) {
         // 存在则返回缓存文件
@@ -1137,46 +1189,35 @@ function creat_thumbnail_by_list($imgUrl)
     } else {
 
         // 如果图像是gif则直接返回网址
-        if (isAnimatedGif($abPathName)) {
+        if (isGifAnimated($abPathName)) {
             return $imgUrl;
         }
-
         // 如果是webp动图则直接返回网址    
         if (isWebpAnimated($abPathName)) {
             return $imgUrl;
         }
 
-        // 过滤非指定格式
-        if (!in_array(pathinfo(basename($abPathName), PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp', 'ico'))) {
-            return $imgUrl;
-        }
-
-        // 创建缓存文件并输出文件链接
-        require_once __DIR__ . '/class.thumb.php';
+        /** 创建缓存文件并输出文件链接 */
 
         // thumbnails目录的绝对路径
         $cache_path = APP_ROOT . $config['path'] . 'thumbnails/';
-
         // 创建cache目录
         if (!is_dir($cache_path)) {
             mkdir($cache_path, 0777, true);
         }
-
-        // 自定义缩略图长宽
-        $thumbnail_w = 258;
-        $thumbnail_h = 258;
-
-        if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
-            $thumbnail_w = $config['thumbnail_w'];
-            $thumbnail_h = $config['thumbnail_h'];
-        }
-
-        // 缩略图缓存的绝对路径
-        // $imgName 是不带/i/的相对路径
+        // 缩略图缓存的绝对路径 $imgName 是不带/i/的相对路径
         $new_imgName = $cache_path . $imgName;
-
         // 创建并保存缩略图
-        Thumb::out($abPathName, $new_imgName, $thumbnail_w, $thumbnail_h);
+        if ($config['thumbnail'] == 2) {
+            require_once __DIR__ . '/class_Zebra_Image.php';
+            $image = new Zebra_Image();
+            $image->source_path = $abPathName;
+            $image->target_path = $new_imgName;
+            $image->resize($config['thumbnail_w'], $config['thumbnail_h'], ZEBRA_IMAGE_CROP_CENTER);
+        } else {
+            require_once __DIR__ . '/class.thumb.php';
+            Thumb::out($abPathName, $new_imgName, $config['thumbnail_w'], $config['thumbnail_h']);
+        }
 
         // 输出缩略图
         return $new_imgName;
@@ -1431,24 +1472,6 @@ function check_api($token)
     }
 }
 
-/**
- * 判断webp是否为动态图片
- * @param string $src 图像文件
- * @return bool 是|否
- */
-function isWebpAnimated($src)
-{
-    $webpContents = file_get_contents($src);
-    $where = strpos($webpContents, "ANMF");
-    if ($where !== FALSE) {
-        // animated
-        $isAnimated = true;
-    } else {
-        // not animated
-        $isAnimated = false;
-    }
-    return $isAnimated;
-}
 
 /**
  * 根据URL判断是否本地局域网访问(PHP代码函数)
@@ -1475,31 +1498,6 @@ function rand_imgurl($text = null)
     $url = isset($text) ? $text : $config['imgurl'];
     $url = explode(',',  $url);
     return $url[array_rand($url, 1)];
-}
-
-/**
- * 判断webp或gif动图是否为动态图片
- * @param $src 图片的绝对路径
- * @return bool 是|否
- */
-function isAnimatedGifWebp($src)
-{
-    $ext = pathinfo($src)['extension'];
-
-    if ($ext == 'webp') {
-        $webpContents = file_get_contents($src);
-        $where = strpos($webpContents, "ANMF");
-        if ($where !== FALSE) {
-            // animated
-            return true;
-        }
-        return false;
-    }
-
-    $fp = fopen($src, 'rb');
-    $filecontent = fread($fp, filesize($src));
-    fclose($fp);
-    return strpos($filecontent, chr(0x21) . chr(0xff) . chr(0x0b) . 'NETSCAPE2.0') === FALSE ? false : true;
 }
 
 /**

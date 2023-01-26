@@ -41,7 +41,8 @@ mustLogin();
       <li <?php if ($config['upload_first_show'] == 4) echo 'class="active"'; ?>>
         <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"></i> HTML</a>
       </li>
-      <li <?php if ($config['upload_first_show'] == 5) echo 'class="active"'; ?>>
+      <li <?php if ($config['upload_first_show'] == 5) echo 'class="active"';
+          if ($config['show_user_hash_del'] == 0) echo 'style="display:none;"' ?>>
         <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"></i> 删除</a>
       </li>
     </ul>
@@ -149,6 +150,11 @@ mustLogin();
         document.getElementById("markdown").innerHTML += "![" + obj.srcName + "](" + obj.url + ")\r\n";
         document.getElementById("html").innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
         document.getElementById("del").innerHTML += obj.del + "\r\n";
+        new $.zui.Messager(obj.srcName + "上传成功", {
+          type: "primary", // 定义颜色主题
+          placement: 'bottom-right',
+          icon: "check" // 定义消息图标
+        }).show();
       } else {
         return '上传失败,错误信息:' + obj.message;
       }

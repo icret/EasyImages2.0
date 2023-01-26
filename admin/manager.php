@@ -4,6 +4,7 @@ $CONFIG = '{"lang":"zh-CN","error_reporting":false,"show_hidden":true,"hide_Cols
 
 require_once __DIR__ . '/../application/function.php';
 
+// 是否管理员登录
 if(!is_who_login('admin')){
     require_once APP_ROOT.'/application/header.php';
     echo '<div class="alert alert-danger">还没有登陆哦~~</div>';

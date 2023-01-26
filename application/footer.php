@@ -83,8 +83,9 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
 
   // 二维码对话框属性
   $('#qr').modal({
+    moveable: true,
     moveable: "inside",
-    backdrop: false,
+    backdrop: true,
     show: false,
   })
 

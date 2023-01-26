@@ -95,7 +95,7 @@ try {
                     html: true,
                 },
                 {
-                    label: 'MD5',
+                    label: 'FILE-MD5',
                     name: 'md5',
                     html: true,
                 },

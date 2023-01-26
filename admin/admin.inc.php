@@ -503,7 +503,7 @@ if (isset($_GET['recycle_reimg'])) {
                             <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: cdn无法缓存"> 访问生成 | 推荐</label>
                         </div>
                         <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链 | 缺点: 缓存不失效, 低配vps负载较大,影响前端上传速度"> 访问生成 | 直链</label>
+                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链,缓存不失效 | 低配vps负载较大,影响前端上传速度"> 访问生成 | 直链</label>
                         </div>
                     </div>
                     <div class="form-group col-md-6">

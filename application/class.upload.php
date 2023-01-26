@@ -2030,6 +2030,7 @@ class Upload {
             'mpg' => 'video/mpeg',
             'mpe' => 'video/mpeg',
             'mp3' => 'audio/mpeg3',
+            'mp4' => 'video/mp4',
             'wav' => 'audio/wav',
             'aiff' => 'audio/aiff',
             'aif' => 'audio/aiff',
@@ -2117,7 +2118,7 @@ class Upload {
      */
     function upload($file, $lang = 'en_GB') {
 
-        $this->version            = '30/08/2022';
+        $this->version            = '09/12/2022';
 
         $this->file_src_name      = '';
         $this->file_src_name_body = '';

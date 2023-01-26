@@ -46,28 +46,20 @@ Thumb::show($src, $w, $h);
 
 require_once __DIR__ . '/function.php';
 
-// 自定义缩略图长宽
-$thumbnail_w = 258;
-$thumbnail_h = 258;
-if (!empty($config['thumbnail_w']) || !empty($config['thumbnail_h'])) {
-    $thumbnail_w = $config['thumbnail_w'];
-    $thumbnail_h = $config['thumbnail_h'];
-}
-
 // 缓存时间
 $cache_freq = $config['cache_freq'] * 60 * 60;
 
 // 中文翻译 https://my.oschina.net/whrlmc/blog/81739
 define('LOCAL_FILE_BASE_DIRECTORY', APP_ROOT);
 define('MEMORY_LIMIT', '256M');
-define('DEFAULT_WIDTH', $thumbnail_w);
-define('DEFAULT_HEIGHT', $thumbnail_h);
+define('DEFAULT_WIDTH', $config['thumbnail_w']);
+define('DEFAULT_HEIGHT', $config['thumbnail_h']);
 define('FILE_CACHE_PREFIX', 'EasyImage');
 define('DEFAULT_ZC', 0);
 
 define('MAX_WIDTH', 10240);
 define('MAX_HEIGHT', 10240);
-define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'thumbnails');
+define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'thumbnails/');
 define('NOT_FOUND_IMAGE', $config['domain'] . '/public/images/404.png');
 define('ERROR_IMAGE', $config['domain'] . '/public/images/404.png');
 define('DISPLAY_ERROR_MESSAGES', false);
@@ -80,18 +72,6 @@ global $ALLOWED_SITES;
 $ALLOWED_SITES = array(
     $config['domain'],
     $config['imgurl'],
-    'flickr.com',
-    'staticflickr.com',
-    'picasa.com',
-    'img.youtube.com',
-    'upload.wikimedia.org',
-    'photobucket.com',
-    'imgur.com',
-    'imageshack.us',
-    'tinypic.com',
-    'mind.sh',
-    'mindsharelabs.com',
-    'mindsharestudios.com'
 );
 
 /**
