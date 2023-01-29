@@ -22,7 +22,7 @@ $config=Array
         <a href="https://s2.loli.net/2023/01/20/rREU1dJk9HMxDFA.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao"></i> 打赏作者</a>
     </div>',
 	'domain'=>'http://127.0.0.1',
-	'imgurl'=>'http://192.168.1.13',
+	'imgurl'=>'http://127.0.0.1',
 	'user'=>'admin',
 	'password'=>'e6e061838856bf47e1de730719fb2609',
 	'captcha'=>0,
@@ -111,7 +111,7 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2023-01-30 05:58:27',
+	'update'=>'2023-01-30 06:40:54',
 	'footer'=>'<a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Since 2018 - Github">© Since 2018</a>
 <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床">EasyImage</a>
 <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>

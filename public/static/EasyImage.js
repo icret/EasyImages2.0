@@ -1,10 +1,10 @@
 /**
  * 来自于copy_btn.js paste.js合并
- * 简单图床-复制
+ * 简单图床-复制链接
  * 2023-01-30
  */
-var copyBtn = document.getElementsByClassName('copyBtn1')[0];
-copyBtn.onclick = function () {
+
+document.getElementsByClassName('copyBtn1')[0].onclick = function () {
     var copyVal = document.getElementById("links");
     copyVal.select();
     try {
@@ -24,8 +24,7 @@ copyBtn.onclick = function () {
     }
 }
 
-var copyBtn = document.getElementsByClassName('copyBtn2')[0];
-copyBtn.onclick = function () {
+document.getElementsByClassName('copyBtn2')[0].onclick = function () {
     var copyVal = document.getElementById("bbscode");
     copyVal.select();
     try {
@@ -45,8 +44,7 @@ copyBtn.onclick = function () {
     }
 }
 
-var copyBtn = document.getElementsByClassName('copyBtn3')[0];
-copyBtn.onclick = function () {
+document.getElementsByClassName('copyBtn3')[0].onclick = function () {
     var copyVal = document.getElementById("markdown");
     copyVal.select();
     try {
@@ -66,8 +64,7 @@ copyBtn.onclick = function () {
     }
 }
 
-var copyBtn = document.getElementsByClassName('copyBtn4')[0];
-copyBtn.onclick = function () {
+document.getElementsByClassName('copyBtn4')[0].onclick = function () {
     var copyVal = document.getElementById("html");
     copyVal.select();
     try {
@@ -87,8 +84,7 @@ copyBtn.onclick = function () {
     }
 }
 
-var copyBtn = document.getElementsByClassName('copyBtn5')[0];
-copyBtn.onclick = function () {
+document.getElementsByClassName('copyBtn5')[0].onclick = function () {
     var copyVal = document.getElementById("thumb");
     copyVal.select();
     try {
@@ -108,8 +104,7 @@ copyBtn.onclick = function () {
     }
 }
 
-var copyBtn = document.getElementsByClassName('copyBtn6')[0];
-copyBtn.onclick = function () {
+document.getElementsByClassName('copyBtn6')[0].onclick = function () {
     var copyVal = document.getElementById("del");
     copyVal.select();
     try {
@@ -130,18 +125,13 @@ copyBtn.onclick = function () {
 }
 
 // 按钮状态
-
 $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('click', function () {
     $(this).button('loading').delay(2000).queue(function () {
         $(this).button('reset');
     })
 });
 
-
-/****************************************************************
- * 复制、截图 简单图床修改版
- */
-
+/** 粘贴上传 2023-01-30 */
 (function () {
     document.addEventListener('paste', function (e) {
         var items = ((e.clipboardData || window.clipboardData).items) || [];
@@ -241,9 +231,8 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
         xhr.send(formData);
     });
 })();
-/******************************************************************/
 
-// 导航状态
+/** 导航状态 */
 $('.nav-pills').find('a').each(function () {
     if (this.href == document.location.href) {
         $(this).parent().addClass('active'); // this.className = 'active';
