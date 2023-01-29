@@ -14,7 +14,7 @@ mustLogin();
       </div>
     </div>
   </div>
-  <div id='upShowID' class="uploader col-md-12 clo-xs-12" readonly="readonly" data-ride="uploader" data-url="/application/upload.php">
+  <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="/application/upload.php">
     <div class="uploader-message text-center">
       <div class="content"></div>
       <button type="button" class="close">x</button>
