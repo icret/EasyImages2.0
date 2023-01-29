@@ -63,11 +63,12 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 <div class="col-md-4 col-sm-6 col-lg-3">
                   <div class="card">
                     <li><img src="../public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
+                    <!-- <li><img src="holder.js/258x258?theme=sky&text=EasyImage2.0" data-image="< php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="< php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li> -->
                     <div class="bottom-bar">
-                      <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="原图" style="margin-left:10px;"></i></a>
+                      <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a>
                       <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrl; ?>" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
-                      <a href="/application/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
                       <a href="/application/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                      <a href="/application/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
                       <?php if (!empty($config['report'])) : ?>
                         <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报" style="margin-left:10px;"></i></a>
                       <?php endif; ?>
@@ -181,11 +182,12 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       transform: translateY(0);
     }
   </style>
-  <script src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
-  <script src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
-  <script src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
-  <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
-  <script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/holder.min.js"></script>
   <script>
     // viewjs
     new Viewer(document.getElementById('viewjs'), {

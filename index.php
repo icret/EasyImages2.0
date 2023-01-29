@@ -14,7 +14,7 @@ mustLogin();
       </div>
     </div>
   </div>
-  <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="/application/upload.php">
+  <div id='upShowID' class="uploader col-md-12 clo-xs-12" readonly="readonly" data-ride="uploader" data-url="/application/upload.php">
     <div class="uploader-message text-center">
       <div class="content"></div>
       <button type="button" class="close">x</button>
@@ -29,21 +29,24 @@ mustLogin();
   </div>
   <div class="col-md-12 clo-xs-12">
     <ul class="nav nav-tabs">
-      <li <?php if ($config['upload_first_show'] == 1) echo 'class="active"'; ?>>
-        <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-link"></i> 直链</a>
+      <li <?php if ($config['upload_first_show'] == 1) echo 'class="active"'; ?> data-toggle="tooltip" title="图片直链">
+        <a href="#" data-target="#tab2Content1" data-toggle="tab"><i class="icon icon-picture"></i></a>
       </li>
-      <li <?php if ($config['upload_first_show'] == 2) echo 'class="active"'; ?>>
-        <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"></i> 论坛代码</a>
+      <li <?php if ($config['upload_first_show'] == 2) echo 'class="active"'; ?> data-toggle="tooltip" title="论坛代码">
+        <a href="#" data-target="#tab2Content2" data-toggle="tab"><i class="icon icon-chat"></i></a>
       </li>
-      <li <?php if ($config['upload_first_show'] == 3) echo 'class="active"'; ?>>
-        <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"></i> MarkDown</a>
+      <li <?php if ($config['upload_first_show'] == 3) echo 'class="active"'; ?> data-toggle="tooltip" title="Markdown">
+        <a href="#" data-target="#tab2Content3" data-toggle="tab"><i class="icon icon-code"></i></a>
       </li>
-      <li <?php if ($config['upload_first_show'] == 4) echo 'class="active"'; ?>>
-        <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"></i> HTML</a>
+      <li <?php if ($config['upload_first_show'] == 4) echo 'class="active"'; ?> data-toggle="tooltip" title="HTML链接">
+        <a href="#" data-target="#tab2Content4" data-toggle="tab"><i class="icon icon-html5"></i></a>
       </li>
-      <li <?php if ($config['upload_first_show'] == 5) echo 'class="active"';
-          if ($config['show_user_hash_del'] == 0) echo 'style="display:none;"' ?>>
-        <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-trash"></i> 删除</a>
+      <li <?php if ($config['upload_first_show'] == 5) echo 'class="active"'; ?> data-toggle="tooltip" title="缩略图">
+        <a href="#" data-target="#tab2Content5" data-toggle="tab"><i class="icon icon-camera"></i></a>
+      </li>
+      <li <?php if ($config['upload_first_show'] == 6) echo 'class="active"';
+          if ($config['show_user_hash_del'] == 0) echo 'style="display:none;"' ?> data-toggle="tooltip" title="删除链接">
+        <a href="#" data-target="#tab2Content6" data-toggle="tab"><i class="icon icon-trash"></i></a>
       </li>
     </ul>
     <div class="tab-content" style="text-align:right;">
@@ -68,9 +71,14 @@ mustLogin();
         <button id="btnHtml" class="btn btn-primary copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
       </div>
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 5) echo 'active in';  ?>" id="tab2Content5">
+        <textarea class="form-control" rows="5" id="thumb" readonly></textarea>
+        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
+        <button id="btnThumb" class="btn btn-primary copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+      </div>
+      <div class="tab-pane fade <?php if ($config['upload_first_show'] == 6) echo 'active in';  ?>" id="tab2Content6">
         <textarea class="form-control" rows="5" id="del" readonly></textarea>
         <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btndel" class="btn btn-primary copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button id="btnDel" class="btn btn-primary copyBtn6" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
       </div>
     </div>
   </div>
@@ -149,6 +157,7 @@ mustLogin();
         document.getElementById("bbscode").innerHTML += "[img]" + obj.url + "[/img]\r\n";
         document.getElementById("markdown").innerHTML += "![" + obj.srcName + "](" + obj.url + ")\r\n";
         document.getElementById("html").innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
+        document.getElementById("thumb").innerHTML += obj.thumb + "\r\n";
         document.getElementById("del").innerHTML += obj.del + "\r\n";
         new $.zui.Messager(obj.srcName + "上传成功", {
           type: "primary", // 定义颜色主题

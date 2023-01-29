@@ -853,7 +853,7 @@ if (isset($_GET['recycle_reimg'])) {
                     <h5>上传后首选显示</h5>
                     <label class="radio-inline">
                         <input type="radio" name="upload_first_show" value="1" data-toggle="tooltip" title="图片直链" <?php if ($config['upload_first_show'] == 1) echo 'checked'; ?>>
-                        <i class="icon icon-link"></i>
+                        <i class="icon icon-picture"></i>
                     </label>
                     <label class="radio-inline">
                         <input type="radio" name="upload_first_show" value="2" data-toggle="tooltip" title="论坛代码" <?php if ($config['upload_first_show'] == 2) echo 'checked'; ?>>
@@ -867,8 +867,12 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="radio" name="upload_first_show" value="4" data-toggle="tooltip" title="HTML" <?php if ($config['upload_first_show'] == 4) echo 'checked'; ?>>
                         <i class="icon icon-html5"></i>
                     </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="upload_first_show" value="5" data-toggle="tooltip" title="缩略图" <?php if ($config['upload_first_show'] == 5) echo 'checked'; ?>>
+                        <i class="icon icon-camera"></i>
+                    </label>
                     <label class="radio-inline" data-toggle="tooltip" title="删除链接">
-                        <input <?php if ($config['show_user_hash_del'] == 0) echo 'disabled'; ?> type="radio" id="upload_first_show5" name="upload_first_show" value="5" <?php if ($config['upload_first_show'] == 5) echo 'checked'; ?>>
+                        <input <?php if ($config['show_user_hash_del'] == 0) echo 'disabled'; ?> type="radio" name="upload_first_show" value="6" <?php if ($config['upload_first_show'] == 6) echo 'checked'; ?>>
                         <i class="icon icon-trash"></i>
                     </label>
                 </div>
@@ -1179,9 +1183,9 @@ if (isset($_GET['recycle_reimg'])) {
         <div class="tab-pane fade" id="Content14">
             <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
             <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-            <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'thumbnails/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'thumbnails/')); ?></small></h5>
+            <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <button type="submit" class="btn btn-mini btn-success" name="delDir" value="thumbnails/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+                <button type="submit" class="btn btn-mini btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
             </form>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">

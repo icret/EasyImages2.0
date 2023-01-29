@@ -17,9 +17,23 @@ if (isset($_GET['img'])) {
 // 开启隐藏上传目录
 if ($config['hide_path']) {
     $img_url = rand_imgurl() . str_replace($config['path'], '/', $getIMG);
+
+    // 获取当前图片日志文件
+    $logs = str_replace('/', '-', substr(parse_url($img_url, PHP_URL_PATH), 1, 7));
 } else {
     // 关闭隐藏上传目录
     $img_url =   rand_imgurl() . $getIMG;
+
+    // 获取当前图片日志文件
+    $logs = str_replace('/', '-', substr(str_replace($config['path'], '', parse_url($img_url, PHP_URL_PATH)), 0, 7));
+}
+
+// 导入日志文件
+$logsName = basename($img_url);
+if (is_file(APP_ROOT . '/admin/logs/upload/' . $logs . '.php')) {
+    include APP_ROOT . '/admin/logs/upload/' . $logs . '.php';
+} else {
+    $logs = array($logsName => array('source' => '日志文件不存在', 'date' => '日志文件不存在', 'ip' => '日志文件不存在', 'port' => '日志文件不存在', 'user_agent' => '日志文件不存在', 'path' => '日志文件不存在', 'size' => '日志文件不存在', 'md5' => '日志文件不存在', 'checkImg' => '日志文件不存在', 'from' => '日志文件不存在'));
 }
 
 // 图片真实路径
@@ -37,11 +51,10 @@ $imgSize = filesize($imgABPath);
 $upTime = filemtime($imgABPath);
 // 广告
 if ($config['ad_top']) echo $config['ad_top_info'];
-
 ?>
 <div class="col-md-12">
-    <div class="col-md-6" style="text-align: center;">
-        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="234px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
+    <div class="col-md-5" style="text-align: center;">
+        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="432px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
     </div>
     <div class="col-md-6 table-responsive table-condensed" style="margin-top: 10px;">
         <table class="table table-hover table-striped table-bordered">
@@ -64,19 +77,50 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 </tr>
                 <tr>
                     <td>上传时间</td>
-                    <td><?php echo date("Y-m-d H:i:s", $upTime); ?></td>
+                    <td><?php echo $logs[$logsName]['date']; ?></td>
                 </tr>
+                <?php if (is_who_login('admin')) : ?>
+                    <tr class="text-primary">
+                        <td>原始名称</td>
+                        <td> <?php echo pathinfo($logs[$logsName]['source'], PATHINFO_FILENAME); ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>原始大小</td>
+                        <td><?php echo $logs[$logsName]['size']; ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>上传者IP</td>
+                        <td><?php echo $logs[$logsName]['ip']; ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>是否监黄</td>
+                        <td><?php echo $logs[$logsName]['checkImg']; ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>上传来源</td>
+                        <td><?php echo $logs[$logsName]['from']; ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>文件路径</td>
+                        <td><?php echo $logs[$logsName]['path']; ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>文件MD5</td>
+                        <td><?php echo $logs[$logsName]['md5']; ?></td>
+                    </tr>
+                <?php endif; ?>
                 <tr>
                     <td>文件操作</td>
                     <td>
                         <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
+                        <a class="btn btn-mini btn-primary" href="" onclick="window.location.replace;"><i class="icon icon-spin icon-refresh"></i> 刷新</a>
                         <a class="btn btn-mini btn-primary" href="/application/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
-                        <?php if (!empty($config['report'])) : ?>
+                        <?php if (isset($config['report'])) : ?>
                             <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
                         <?php endif; ?>
                         <?php if (is_who_login('admin')) : ?>
                             <a class="btn btn-mini btn-warning" href="/application/del.php?recycle_url=<?php echo $getIMG; ?>" target="_blank"><i class="icon icon-undo"> 回收</i></a>
-                            <a class="btn btn-mini btn-danger" href="/application/del.php?url=<?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
+                            <a class="btn btn-mini btn-warning" href="/application/del.php?url=<?php echo $del_url; ?>" target="_blank"><i class="icon icon-trash"> 删除</i></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -125,28 +169,24 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-12" style="padding-bottom: 10px;">
         <h4 class="header-dividing">当月随机图片：</h4>
         <div class="cards cards-borderless">
-            <?php
-            $logFile = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
-            if (is_file($logFile)) {
-                include_once $logFile;
-                for ($i = 0; $i <= 7; $i++) {
-                    $randName = array_rand($logs, 1);
-                    // echo  $img_url . $logs[$randName]['path'];
-                    echo '
-                <div class="col-md-4 col-sm-6 col-lg-3">
-                    <a class="card" href="?img=' . $logs[$randName]['path'] . '" target="_blank">
-                    <img src="' . $logs[$randName]['path'] . '">
-                    <div class="card-content text-muted text-ellipsis">' . $logs[$randName]['source'] . '</div>
-                    </a>
-                </div>';
-                }
-            } else {
-                echo '<div class="alert alert-danger">本月还没有上传的图片哟~~ <br />快来上传第一张吧~!</div>';
-            }
+            <?php if (is_file(APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php')) :
+                include_once APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
+                for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1) // echo  $img_url . $logs[$randName]['path'];
             ?>
+                    <div class="col-md-4 col-sm-6 col-lg-3">
+                        <a class="card" href="?img=<?php echo $logs[$randName]['path']; ?>" target="_blank">
+                            <img src="thumb.php?img=<?php echo $logs[$randName]['path']; ?>">
+                            <div class="caption"><?php echo  $logs[$randName]['source']; ?></div>
+                        </a>
+                    </div>
+                <?php endfor;
+            else : ?>
+                <p class="alert alert-danger">本月还没有上传的图片哟~~ <br />快来上传第一张吧~!</p>
+            <?php endif; ?>
         </div>
     </div>
 <?php endif; ?>
+
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>

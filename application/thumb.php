@@ -59,7 +59,7 @@ define('DEFAULT_ZC', 0);
 
 define('MAX_WIDTH', 10240);
 define('MAX_HEIGHT', 10240);
-define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'thumbnails/');
+define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'cache/');
 define('NOT_FOUND_IMAGE', $config['domain'] . '/public/images/404.png');
 define('ERROR_IMAGE', $config['domain'] . '/public/images/404.png');
 define('DISPLAY_ERROR_MESSAGES', false);
