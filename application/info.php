@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . "/header.php";
 
-if (!$config['show_exif_info']) exit(header('Location: ' . $config['domain'] . '?exif#closed'));
+if (!$config['show_exif_info'] && !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?exif#closed'));
 
 // 获取图片地址
 if (isset($_GET['img'])) {
@@ -82,23 +82,23 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 <?php if (is_who_login('admin')) : ?>
                     <tr class="text-primary">
                         <td>原始名称</td>
-                        <td> <?php echo pathinfo($logs[$logsName]['source'], PATHINFO_FILENAME); ?></td>
+                        <td> <?php echo pathinfo($logs[$logsName]['source'], PATHINFO_BASENAME); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>原始大小</td>
                         <td><?php echo $logs[$logsName]['size']; ?></td>
                     </tr>
                     <tr class="text-primary">
-                        <td>上传者IP</td>
-                        <td><?php echo $logs[$logsName]['ip']; ?></td>
+                        <td>上传用户</td>
+                        <td><?php echo $logs[$logsName]['ip'] . ':' . $logs[$logsName]['port']; ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>是否监黄</td>
-                        <td><?php echo $logs[$logsName]['checkImg']; ?></td>
+                        <td><?php if ($logs[$logsName]['checkImg'] == 'OFF') {echo "关闭";} else {echo '开启';} ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>上传来源</td>
-                        <td><?php echo $logs[$logsName]['from']; ?></td>
+                        <td><?php if ($logs[$logsName]['from'] == 'web') {echo "通过网页";} else {echo '通过API';} ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>文件路径</td>
@@ -115,7 +115,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
                         <a class="btn btn-mini btn-primary" href="" onclick="window.location.replace;"><i class="icon icon-spin icon-refresh"></i> 刷新</a>
                         <a class="btn btn-mini btn-primary" href="/application/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
-                        <?php if (isset($config['report'])) : ?>
+                        <?php if (isset($config['report']) && !is_who_login('admin')) : ?>
                             <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
                         <?php endif; ?>
                         <?php if (is_who_login('admin')) : ?>
@@ -161,9 +161,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 </div>
-
 <? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
-
 <!-- 随机图片 -->
 <?php if ($config['info_rand_pic']) : ?>
     <div class="col-md-12" style="padding-bottom: 10px;">
@@ -171,7 +169,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         <div class="cards cards-borderless">
             <?php if (is_file(APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php')) :
                 include_once APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
-                for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1) // echo  $img_url . $logs[$randName]['path'];
+                for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1)
+                    /** echo  $img_url . $logs[$randName]['path']; */
             ?>
                     <div class="col-md-4 col-sm-6 col-lg-3">
                         <a class="card" href="?img=<?php echo $logs[$randName]['path']; ?>" target="_blank">
@@ -186,7 +185,6 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 <?php endif; ?>
-
 <script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>

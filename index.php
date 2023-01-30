@@ -150,8 +150,8 @@ mustLogin();
     <?php echo imgRatio(); ?>,
     responseHandler: function(responseObject, file) {
       var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
-      console.log(obj); // 输出log
-      console.log(file); // 输出log
+      console.log(file); // 输出上传log
+      console.log(obj); // 输出回传log
       if (obj.result === 'success') {
         document.getElementById("links").innerHTML += obj.url + "\r\n";
         document.getElementById("bbscode").innerHTML += "[img]" + obj.url + "[/img]\r\n";
@@ -159,6 +159,7 @@ mustLogin();
         document.getElementById("html").innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
         document.getElementById("thumb").innerHTML += obj.thumb + "\r\n";
         document.getElementById("del").innerHTML += obj.del + "\r\n";
+
         new $.zui.Messager(obj.srcName + "上传成功", {
           type: "primary", // 定义颜色主题
           placement: 'bottom-right',
@@ -166,6 +167,13 @@ mustLogin();
         }).show();
       } else {
         return '上传失败,错误信息:' + obj.message;
+      }
+
+      try { // 储存上传历史
+        console.log('localStorage ok!');
+        $.zui.store.set(obj.srcName, obj)
+      } catch (err) {
+        console.log('localStorage failed:' + err);
       }
     }
   });

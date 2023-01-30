@@ -29,18 +29,18 @@
 	<div class="page-header">
 		<ul class="nav nav-pills">
 			<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
-			<?php // 关闭广场非登录状态不显示广场导航
-			if ($config['showSwitch'] || is_who_login('admin')) echo '
-			<li><a href="' . $config['domain'] . '/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary">' . get_file_by_glob(APP_ROOT . config_path(), 'number') . '</span></a></li>';
-			// 登陆状态显示设置页面
-			if (is_who_login('admin')) {
-				echo '				
-			<li><a href="' . $config['domain'] . '/admin/admin.inc.php' . '"><i class="icon icon-cogs"></i> 设置</a></li>';
-				// 登陆状态下开启统计页面与导航
-				if ($config['chart_on']) echo '
-			<li><a href="' . $config['domain'] . '/admin/chart.php' . '"><i class="icon icon-pie-chart"></i> 统计</a>
-			</li>';
-			} ?>
+			<?php if ($config['showSwitch'] || is_who_login('admin')) : /** 非管理或未开启不显示广场 */ ?>
+				<li><a href="<?php echo $config['domain']; ?>/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
+			<?php endif; ?>
+			<?php if ($config['history'] || is_who_login('admin')) : /** 非管理或未开启不显示上传历史 */ ?>
+				<li><a href="<?php $config['domain']; ?>/application/history.php"><i class="icon icon-history"></i> 历史<span class="label label-badge label-primary"></span></a></li>
+			<?php endif; ?>
+			<?php if (is_who_login('admin')) : /** 非管理不显示设置 */ ?>
+				<li><a href="<?php echo $config['domain']; ?>/admin/admin.inc.php"><i class="icon icon-cogs"></i> 设置</a></li>
+			<?php endif; ?>
+			<?php if ($config['chart_on'] && is_who_login('admin')) : /** 非管理或未开启不显示统计 */ ?>
+				<li><a href="<?php echo $config['domain']; ?>/admin/chart.php"><i class="icon icon-pie-chart"></i> 统计</a></li>
+			<?php endif; ?>
 
 		</ul>
 	</div>

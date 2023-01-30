@@ -1149,7 +1149,7 @@ function get_online_thumbnail($imgUrl)
  */
 function creat_thumbnail_by_list($imgUrl)
 {
-    
+
     global $config;
     ini_set('max_execution_time', '300');  // 脚本运行的时间（以秒为单位）0不限制
 
@@ -1160,7 +1160,7 @@ function creat_thumbnail_by_list($imgUrl)
         // 其他格式直接返回指定图标
         return '../public/images/file.svg';
     }
-    
+
     switch ($config['thumbnail']) {
             // 输出原图
         case 0:
@@ -1173,7 +1173,7 @@ function creat_thumbnail_by_list($imgUrl)
     }
 
     // 将网址图片转换为相对路径
-    $pathName = parse_url($imgUrl,PHP_URL_PATH);
+    $pathName = parse_url($imgUrl, PHP_URL_PATH);
     // 图片绝对路径
     $abPathName = APP_ROOT . $pathName;
     // 将网址中的/i/去除
@@ -1505,14 +1505,13 @@ function rand_imgurl($text = null)
  * @return String 内容信息
  */
 
-function get_current_verson($file = '/admin/verson.php')
+function get_current_version($file = '/admin/version.php')
 {
     $file = APP_ROOT . $file;
 
     if (is_file($file)) {
-
         return file_get_contents($file);
     }
-
+    
     return 'No Verson File';
 }

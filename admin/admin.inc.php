@@ -830,8 +830,8 @@ if (isset($_GET['recycle_reimg'])) {
                     <a href="https://www.openzui.com/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="前端框架">ZUI</span></a>
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="图像处理类">Verot</span></a>
                     <a href="https://tinyfilemanager.github.io/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
-                    <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_verson(); ?></span>
-                    <?php if (getVersion() !== get_current_verson()) : ?>
+                    <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_version(); ?></span>
+                    <?php if (getVersion() !== get_current_version()) : ?>
                         <a href="#NewVersion" data-toggle="collapse" class="label label-badge label-warning" title="Github有更新"><?php echo getVersion(); ?></span><i class="icon icon-angle-down"></i></a>
                     <?php endif; ?>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
@@ -888,11 +888,15 @@ if (isset($_GET['recycle_reimg'])) {
                         <input type="checkbox" name="showSwitch" value="1" <?php if ($config['showSwitch']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">广场</label>
                     </div>
-
                     <div class="switch switch-inline" data-toggle="tooltip" title="广场图片详细信息按钮">
                         <input type="hidden" name="show_exif_info" value="0">
                         <input type="checkbox" name="show_exif_info" value="1" <?php if ($config['show_exif_info']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">详情页</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="非上传记录|清空缓存|浏览器版本低不显示">
+                        <input type="hidden" name="history" value="0">
+                        <input type="checkbox" name="history" value="1" <?php if ($config['history']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">历史记录</label>
                     </div>
                     <div class="switch switch-inline" data-toggle="tooltip" title="图片详细信息显示随机图片">
                         <input type="hidden" name="info_rand_pic" value="0">
@@ -1312,25 +1316,25 @@ if (isset($_GET['recycle_reimg'])) {
             cols: [{
                     name: 'id',
                     label: 'ID',
-                    width: 0.02
+                    width: 0.05
                 },
                 {
                     name: 'token',
                     label: 'Token',
                     html: true,
-                    width: 0.28
+                    width: 0.25
                 },
                 {
                     name: 'add_time',
                     label: '添加时间',
                     html: true,
-                    width: 0.2
+                    width: 0.15
                 },
                 {
                     name: 'expired',
                     label: '有效期至',
                     html: true,
-                    width: 0.2
+                    width: 0.15
                 },
                 {
                     name: 'number',
@@ -1342,7 +1346,7 @@ if (isset($_GET['recycle_reimg'])) {
                     name: 'manage',
                     label: '管理',
                     html: true,
-                    width: 0.25
+                    width: 0.3
                 },
             ],
             array: [
@@ -1350,7 +1354,7 @@ if (isset($_GET['recycle_reimg'])) {
                     $expired = $value['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $value['expired']) . '</p>'; ?> {
                         id: '<?php echo $value['id']; ?>',
                         token: '<input class="form-control input-sm" type="text" value="<?php echo $key; ?>" readonly>',
-                        add_time: '<?php echo date('Y年m月d日 H:i:s', $value['add_time']); ?>',
+                        add_time: '<?php echo date('Y-m-d H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
                         manage: "<a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='admin.inc.php?delDir=<?php echo $value['id']; ?>' class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
@@ -1393,20 +1397,20 @@ if (isset($_GET['recycle_reimg'])) {
                     label: '密码(md5)',
                     name: 'password',
                     html: true,
-                    width: 0.1
+                    width: 0.2
                 },
                 {
                     label: '添加时间',
                     name: 'add_time',
                     html: true,
-                    width: 0.2
+                    width: 0.15
 
                 },
                 {
                     label: '有效期至',
                     name: 'expired',
                     html: true,
-                    width: 0.2
+                    width: 0.15
                 },
                 {
                     label: '上传数量',
@@ -1427,7 +1431,7 @@ if (isset($_GET['recycle_reimg'])) {
                     $expired = $v['expired'] < time() ? '<p class="text-gray">已过期</p>' : '<p class="text-green">' . date('Y-m-d H:i:s', $v['expired']) . '</p>'; ?> {
                         guest: '<?php echo $k; ?>',
                         password: '<input class="form-control input-sm" type="text" value="<?php echo $v['password']; ?>" readonly>',
-                        add_time: '<?php echo date('Y年m月d日 H:i:s', $v['add_time']); ?>',
+                        add_time: '<?php echo date('Y-m-d H:i:s', $v['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         files: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $k, $type = 'number'); ?>,
                         manage: "<a href='/admin/manager.php?p=<?php echo $k; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo $k; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $k; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='admin.inc.php?delDir=<?php echo $k; ?>'>删除上传</a>",

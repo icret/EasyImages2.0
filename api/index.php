@@ -160,10 +160,10 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  206,
             "message"   =>  $handle->error,
-            // 'up_log' => $handle->log,(仅用作调试用)
-
+            // 'log' => $handle->log,(仅用作调试用)
         );
-
+        unset($handle);
+        header('Content-Type:application/json; charset=utf-8');
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 

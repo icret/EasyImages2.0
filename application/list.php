@@ -11,8 +11,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <?php
     if (!$config['showSwitch'] && !is_who_login('admin')) : ?>
       <div class="alert alert-info">管理员关闭了预览哦~~</div>
-      <?php exit(require_once __DIR__ . '/footer.php');
-    else :
+      <?php exit(require_once __DIR__ . '/footer.php'); ?>
+      <?php else :
       // $path = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');                                 // 获取指定目录
       /* 限制GET浏览日期 有助于防止爬虫*/
       $listDate = $config['listDate'];                                                                  // 配置限制日期
@@ -67,7 +67,9 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                     <div class="bottom-bar">
                       <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a>
                       <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrl; ?>" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
-                      <a href="/application/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                      <?php if ($config['show_exif_info'] || is_who_login('admin')) : ?>
+                        <a href="/application/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                      <?php endif; ?>
                       <a href="/application/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
                       <?php if (!empty($config['report'])) : ?>
                         <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报" style="margin-left:10px;"></i></a>
@@ -187,7 +189,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
-  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/holder.min.js"></script>
+  <!-- <script type="application/javascript" src="< php static_cdn(); ?>/public/static/holder.min.js"></script> -->
   <script>
     // viewjs
     new Viewer(document.getElementById('viewjs'), {

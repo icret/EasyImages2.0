@@ -2,9 +2,7 @@
 require_once __DIR__ . '/function.php';
 require_once __DIR__ . '/total_files.php';
 
-/**
- * 统计最近一个月上传文件数与空间占用
- */
+/** 统计最近一个月上传文件数与空间占用 */
 
 // 获取最近一周，一个月，一年 https://www.cnblogs.com/-mrl/p/7680700.html
 function getLatelyTime($type = '')

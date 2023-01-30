@@ -9,8 +9,6 @@
 
 require_once __DIR__ . '/function.php';
 
-
-
 if (isset($_GET['key'])) {
     $hide_original = $_GET['key'];
     $real_path =  APP_ROOT . urlHash($hide_original, 1, crc32($config['hide_key']));
