@@ -210,6 +210,13 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                     placement: 'top'
                 });
 
+                try { // 储存上传记录
+                    console.log('localStorage ok!');
+                    $.zui.store.set(result.srcName, result)
+                } catch (err) {
+                    console.log('localStorage failed:' + err);
+                }
+
             } else {
                 $.zui.messager.show('上传失败...' + result.message, {
                     icon: 'bell',
