@@ -6,7 +6,7 @@
  * 简单图床 EasyImage2.0 2021-5-10 14:17:25
  */
 
-class getVerson
+class getVersion
 {
     private $url;
     public function __construct($url)
@@ -16,11 +16,11 @@ class getVerson
 
     public function readJson($name = 'tag_name')
     {
-        if (file_exists(__DIR__ . '/../admin/logs/verson/verson.json')) {
-            $file = fopen(__DIR__ . '/../admin/logs/verson/verson.json', 'r');
-            $test = fread($file, filesize(__DIR__ . '/../admin/logs/verson/verson.json'));
-            $verson = json_decode($test, true);
-            return $verson[$name];
+        if (file_exists(__DIR__ . '/../admin/logs/version/version.json')) {
+            $file = fopen(__DIR__ . '/../admin/logs/version/version.json', 'r');
+            $test = fread($file, filesize(__DIR__ . '/../admin/logs/version/version.json'));
+            $version = json_decode($test, true);
+            return $version[$name];
             fclose($file);
         } else {
             $this->downJson();
@@ -30,14 +30,14 @@ class getVerson
     public function downJson()
     {
 
-        if (!is_dir(__DIR__ . '/../admin/logs/verson/')) {
-            mkdir(__DIR__ . '/../admin/logs/verson/', 0755, true);
+        if (!is_dir(__DIR__ . '/../admin/logs/version/')) {
+            mkdir(__DIR__ . '/../admin/logs/version/', 0755, true);
         }
 
-        $verson = $this->geturl($this->url);
-        $verson = json_decode($verson, true);
-        $file = fopen(__DIR__ . '/../admin/logs/verson/verson.json', 'w+');
-        fwrite($file, $verson);
+        $version = $this->geturl($this->url);
+        $version = json_decode($version, true);
+        $file = fopen(__DIR__ . '/../admin/logs/version/version.json', 'w+');
+        fwrite($file, $version);
         fclose($file);
     }
 
@@ -61,6 +61,6 @@ class getVerson
 /////////// TEST /////////
 /*
 $url = "https://api.github.com/repositories/188228357/releases/latest";
-$test = new getVerson($url);
+$test = new getVersion($url);
 echo $test->readJson();
 */

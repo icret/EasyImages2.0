@@ -1210,12 +1210,12 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
     </div>
 </div>
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css" rel="stylesheet">
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
 <script>
     // 水印字体颜色
     jscolor.presets.myPreset = {
@@ -1234,6 +1234,12 @@ if (isset($_GET['recycle_reimg'])) {
     }
 
     // 使用本地存储记录当前tab页面
+    if ($.zui.store.enable == false) {
+        new $.zui.Messager("localStorage 错误,无法存储上传历史记录", {
+            type: "special", // 定义颜色主题 
+            time: 9000
+        }).show();
+    }
     $('[data-tab]').on('shown.zui.tab', function(e) {
         var cookie_value = e.delegateTarget.attributes[1].value;
         $.zui.store.pageSet('data-tab-now', cookie_value);

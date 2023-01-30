@@ -19,12 +19,10 @@ include_once __DIR__ . "/header.php";
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>
-    if ($.zui.store.length() > 0) {
+    if ($.zui.store.length() > 1) {
+        console.log('saved: ' + $.zui.store.length()) // 获取总数
         $.zui.store.forEach(function(key, value) { // 遍历所有本地存储的条目
-
-            console.log('saved: ' + $.zui.store.length())
-            console.log('url list: ' + value['url'])
-
+            console.log('url list: ' + value['url']) // 获取所有链接
             if (value['url'] !== undefined) {
                 let v_url = parseURL(value['url']); // 获取链接路径 console.log(parseURL(value['url']).path);
                 $('.listNum').append('<div class="col-md-4 col-sm-6 col-lg-3"><div class="card"><li><img src="../public/images/loading.svg" data-image="' + value['thumb'] + '" data-original="" alt="简单图床-EasyImage"></li><div class="bottom-bar"><a href="' + value['url'] + '" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a><a href="#" class="copy" data-clipboard-text="' + value['url'] + '" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a><a href="info.php?img=' + v_url.path + '" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a><a href="down.php?dw=' + v_url.path + '" data-toggle="tooltip" title="下载" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a><a href="' + value['del'] + '" target="_blank"><i class="icon icon-trash" data-toggle="tooltip" title="删除" style="margin-left:10px;"></i></a><a href="#" data-toggle="tooltip" title="文件名" class="copy text-ellipsis" data-clipboard-text="' + value['srcName'] + '" style="margin-left:10px;">' + value['srcName'] + '</a></div></div></div>')
@@ -34,7 +32,6 @@ include_once __DIR__ . "/header.php";
     } else {
         $('.listNum').append('<h2 class="alert alert-danger">上传历史记录不存在~~ <br /><small>非上传记录 | 清空缓存 | 浏览器版本低不显示~!</small></h2>');
     };
-
     // 清空所有本地存储的条目
     $('button').on('click', function() {
         new $.zui.Messager('已清空' + $.zui.store.length() + "条历史记录", {

@@ -19,8 +19,8 @@ if (isset($_POST['del_total'])) {
 		}).show();
 		</script>
 		';
-    // 延时1s刷新
-    Header("refresh:1;url=chart.php");
+    // 延时2s刷新
+    Header("refresh:2;url=chart.php");
 }
 // 统计图表
 // array_reverse($arr,true) 倒叙数组并保持键值关系

@@ -855,7 +855,7 @@ function getVersion($name = 'tag_name')
         require_once APP_ROOT . '/application/class.version.php';
         // 获取版本地址
         $url = "https://api.github.com/repositories/188228357/releases/latest";
-        $getVersion = new getVerson($url);
+        $getVersion = new getVersion($url);
 
         $now = date('dH'); // 当前日期时间
         $get_ver_day = array('1006', '2501');   // 检测日期的时间
@@ -1512,6 +1512,6 @@ function get_current_version($file = '/admin/version.php')
     if (is_file($file)) {
         return file_get_contents($file);
     }
-    
-    return 'No Verson File';
+
+    return 'No Version File';
 }
