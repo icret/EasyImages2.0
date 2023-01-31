@@ -33,7 +33,7 @@ $logsName = basename($img_url);
 if (is_file(APP_ROOT . '/admin/logs/upload/' . $logs . '.php')) {
     include APP_ROOT . '/admin/logs/upload/' . $logs . '.php';
 } else {
-    $logs = array($logsName => array('source' => '日志文件不存在', 'date' => '日志文件不存在', 'ip' => '日志文件不存在', 'port' => '日志文件不存在', 'user_agent' => '日志文件不存在', 'path' => '日志文件不存在', 'size' => '日志文件不存在', 'md5' => '日志文件不存在', 'checkImg' => '日志文件不存在', 'from' => '日志文件不存在'));
+    $logs = array($logsName => array('source' => '日志文件不存在', 'date' => '日志文件不存在', 'ip' => '0.0.0.0', 'port' => '日志文件不存在', 'user_agent' => '日志文件不存在', 'path' => '日志文件不存在', 'size' => '日志文件不存在', 'md5' => '日志文件不存在', 'checkImg' => '日志文件不存在', 'from' => '日志文件不存在'));
 }
 
 // 图片真实路径
@@ -57,11 +57,11 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="432px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
     </div>
     <div class="col-md-6 table-responsive table-condensed" style="margin-top: 10px;">
-        <table class="table table-hover table-striped table-bordered">
+        <table class="table table-hover table-striped table-bordered text-nowrap">
             <tbody>
                 <tr>
                     <td>图片名称</td>
-                    <td> <?php echo pathinfo($getIMG, PATHINFO_FILENAME); ?></td>
+                    <td> <?php echo basename($getIMG); ?></td>
                 </tr>
                 <tr>
                     <td>图片大小</td>
@@ -82,7 +82,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 <?php if (is_who_login('admin')) : ?>
                     <tr class="text-primary">
                         <td>原始名称</td>
-                        <td> <?php echo pathinfo($logs[$logsName]['source'], PATHINFO_BASENAME); ?></td>
+                        <td><?php echo $logs[$logsName]['source']; ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>原始大小</td>
@@ -93,12 +93,16 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <td><?php echo $logs[$logsName]['ip'] . ':' . $logs[$logsName]['port']; ?></td>
                     </tr>
                     <tr class="text-primary">
-                        <td>是否监黄</td>
-                        <td><?php if ($logs[$logsName]['checkImg'] == 'OFF') {echo "关闭";} else {echo '开启';} ?></td>
+                        <td>上传地址</td>
+                        <td><?php echo Ip2Region($logs[$logsName]['ip']); ?></td>
                     </tr>
                     <tr class="text-primary">
-                        <td>上传来源</td>
-                        <td><?php if ($logs[$logsName]['from'] == 'web') {echo "通过网页";} else {echo '通过API';} ?></td>
+                        <td>监黄状态</td>
+                        <td><?php echo strstr('OFF', $logs[$logsName]['checkImg']) ? '未开启' : '已通过'; ?></td>
+                    </tr>
+                    <tr class="text-primary">
+                        <td>上传方式</td>
+                        <td><?php echo is_numeric($logs[$logsName]['from']) ?  '通过API | Token ID: ' . $logs[$logsName]['from']  : "通过网页"; ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>文件路径</td>

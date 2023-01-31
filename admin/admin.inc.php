@@ -483,7 +483,7 @@ if (isset($_GET['recycle_reimg'])) {
         </div>
         <div class="tab-pane fade" id="Content6">
             <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
-            <form class="form-inline" action="../application/read_log.php" method="post" target="_blank">
+            <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
                 <div class="form-group">
                     <label for="logDate" class="text-primary">选择月份: </label>
                     <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
@@ -811,41 +811,51 @@ if (isset($_GET['recycle_reimg'])) {
                 <h5>图床信息</h5>
                 <hr />
                 <h6>API 插件</h6>
-                <a href="https://microsoftedge.microsoft.com/addons/detail/%E7%AE%80%E5%8D%95%E5%9B%BE%E5%BA%8A-edge-version/hdafcoenpmebcjjcccojdlhfnndelefk" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Edge</span></a>
-                <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="浏览器插件">Chrome</span></a>
-                <a href="https://www.kancloud.cn/easyimage/easyimage/2625228" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="使用ShareX上传">ShareX</span></a>
-                <a href="https://www.kancloud.cn/easyimage/easyimage/2625229" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="使用PicGo上传">PicGo</span></a>
+                <a href="https://microsoftedge.microsoft.com/addons/detail/%E7%AE%80%E5%8D%95%E5%9B%BE%E5%BA%8A-edge-version/hdafcoenpmebcjjcccojdlhfnndelefk" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="浏览器插件">Edge</span></a>
+                <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="浏览器插件">Chrome</span></a>
+                <a href="https://www.kancloud.cn/easyimage/easyimage/2625228" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用ShareX上传">ShareX</span></a>
+                <a href="https://www.kancloud.cn/easyimage/easyimage/2625229" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用PicGo上传">PicGo</span></a>
                 <h6>图床依赖</h6>
                 <p>
+                    <a href="https://www.openzui.com/" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="前端框架">ZUI</span></a>
+                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="图像处理类">Verot</span></a>
+                    <a href="https://tinyfilemanager.github.io/" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
+                    <a href="#Ip2Region" data-toggle="collapse" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="IP地址数据库">Ip2Region<i class="icon icon-angle-down"></i></span></a>
                     <?php if (empty($config['TinyPng_key'])) : ?>
-                        <span class="label label-badge label-warning" data-toggle="tooltip" title="图片压缩TinyPng未填写">TinyPng</span>
+                        <span class="label label-badge label-warning" data-toggle="tooltip" title="压缩图片 TinyPng<br/>未填写">TinyPng</span>
                     <?php else : ?>
-                        <span class="label label-badge label-success" data-toggle="tooltip" title="图片压缩TinyPng已填写">TinyPng</span>
+                        <span class="label label-badge label-primary" data-toggle="tooltip" title="压缩图片 TinyPng<br/>已填写">TinyPng</span>
                     <?php endif; ?>
                     <?php if (empty($config['moderatecontent_key'])) : ?>
-                        <span class="label label-badge label-warning" data-toggle="tooltip" title="图片审查moderatecontent未填写">Moderatecontent</span>
+                        <span class="label label-badge label-warning" data-toggle="tooltip" title="监黄 moderatecontent<br/>未填写">Moderatecontent</span>
                     <?php else : ?>
-                        <span class="label label-badge label-success" data-toggle="tooltip" title="图片审查moderatecontent已填写">Moderatecontent</span>
+                        <span class="label label-badge label-primary" data-toggle="tooltip" title="监黄 moderatecontent<br/>已填写">Moderatecontent</span>
                     <?php endif; ?>
-                    <a href="https://www.openzui.com/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="前端框架">ZUI</span></a>
-                    <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="图像处理类">Verot</span></a>
-                    <a href="https://tinyfilemanager.github.io/" target="_blank"><span class="label label-badge label-success" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
-                    <span class="label label-badge label-success" data-toggle="tooltip" title="当前版本"><?php echo get_current_version(); ?></span>
-                    <?php if (getVersion() !== get_current_version()) : ?>
-                        <a href="#NewVersion" data-toggle="collapse" class="label label-badge label-warning" title="Github有更新"><?php echo getVersion(); ?></span><i class="icon icon-angle-down"></i></a>
-                    <?php endif; ?>
-                    <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="许可证">GPL-2.0</span></a>
+                    <span class="label label-badge label-primary" data-toggle="tooltip" title="当前版本"><?php echo get_current_version(); ?></span>
+                    <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="开源许可证">GPL-2.0</span></a>
                 </p>
                 <p class="text-muted"><i class="icon icon-certificate"> EasyImage2.0简单图床构建于众多优秀的开源项目之上,非常感谢这些项目!</i></p>
             </div>
-            <div class="collapse" id="NewVersion">
+            <div class="collapse" id="Ip2Region">
                 <div class="bg-primary with-padding">
-                    <p>最新版本: <?php echo getVersion('name'); ?> <a href="<?php echo getVersion('zipball_url'); ?>" target="_blank" class="label label-badge">点击下载</a></p>
-                    <p>更新日期: <?php echo getVersion('created_at'); ?></p>
-                    <p>更新内容: <br /><?php echo getVersion('body'); ?></p>
-                    <p>更新后删除<small style="color: black;">/admin/logs/verson/</small>文件夹会自动同步最新版本号</p>
+                    <h4>Ip2region - IP地址数据库 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank" class="label label-badge">下载 / 更新</a></h4>
+                    <hr />
+                    <p>
+                        Ip2region (2.0 - xdb) 是一个离线 IP 数据管理框架和定位库,支持亿级别的数据段,10微秒级别的查询性能,提供了许多主流编程语言的 xdb 数据管理引擎的实现。
+                        每个 ip 数据段的 region 信息都固定了格式：国家|区域|省份|城市|ISP, 只有中国的数据绝大部分精确到了城市, 其他国家部分数据只能定位到国家, 后前的选项全部是0。
+                    </p>
+                    <h6>* 下载 ip2region.xdb IP数据库上传到 <small style="color: black;">/application/ip2region/</small> 文件夹, 如遇到下载失败可访问开源地址下载: [ <a href="https://github.com/lionsoul2014/ip2region" target="_blank"><small style="color: black;">Github</small></a> | <a href="https://gitee.com/lionsoul/ip2region" target="_blank"><small style="color: black;">Gitee</small></a> ] 更新方法与此相同。</h6>
                 </div>
             </div>
+            <?php if (getVersion() !== get_current_version()) : ?>
+                <div class="bg-warning with-padding">
+                    <h4>最新版本: <?php echo getVersion('name'); ?> <a href="<?php echo getVersion('zipball_url'); ?>" target="_blank" class="label label-badge">下载新版本</a></h4>
+                    <hr />
+                    <p>更新日期: <?php echo getVersion('created_at'); ?></p>
+                    <p>更新内容: <br /><?php echo getVersion('body'); ?></p>
+                    <h6>更新后删除 <small style="color: black;">/admin/logs/verson/</small> 文件夹会自动同步最新版本号</h6>
+                </div>
+            <?php endif; ?>
         </div>
         <div class="tab-pane fade" id="Content9">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">

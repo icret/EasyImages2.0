@@ -185,25 +185,14 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
         xhr.onload = function () {
             var result = JSON.parse(this.responseText);
             if (result.result === 'success') {
-                var links = document.getElementById("links");
-                links.innerHTML += result.url + "\n";
+                document.getElementById("links").innerHTML += result.url + "\r\n";
+                document.getElementById("bbscode").innerHTML += "[img]" + result.url + "[/img]\r\n";
+                document.getElementById("markdown").innerHTML += "![" + result.srcName + "](" + result.url + ")\r\n";
+                document.getElementById("html").innerHTML += '<img src="' + result.url + '" alt="' + result.srcName + '" />\r\n';
+                document.getElementById("thumb").innerHTML += result.thumb + "\r\n";
+                document.getElementById("del").innerHTML += result.del + "\r\n";
 
-                var bbscode = document.getElementById("bbscode");
-                bbscode.innerHTML += "[img]" + result.url + "[/img]\n";
-
-                var markdown = document.getElementById("markdown");
-                markdown.innerHTML += "![](" + result.url + ")\n";
-
-                var html = document.getElementById("html");
-                html.innerHTML += "&lt;img src=\"" + result.url + "\" /&#62;\n";
-
-                var del = document.getElementById("thumb");
-                del.innerHTML += result.thumb + "\n";
-
-                var del = document.getElementById("del");
-                del.innerHTML += result.del + "\n";
-
-                $.zui.messager.show('粘贴上传成功...', {
+                $.zui.messager.show(result.srcName + '上传成功', {
                     icon: 'bell',
                     time: 4000,
                     type: 'success',
@@ -226,6 +215,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 });
             }
         };
+
         xhr.onerror = function () {
             $.zui.messager.show('因网络问题导致的上传失败...', {
                 icon: 'bell',

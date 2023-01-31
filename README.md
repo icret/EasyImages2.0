@@ -73,12 +73,12 @@ chown -R www:www /安装目录
 3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如`宝塔面板`|`军哥lnmp`
 4. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
 5. 首次使用会执行安装程序并生成`install.lock` 跳过安装流程请删除`install`目录
-6. 首次访问首页会检查环境并在`config`目录下生成`EasyImage.lock`
+6. 首次访问首页会检查环境并在`admin`目录下生成`EasyImage.lock`
 7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
-8. `upload File size exceeds the maximum value` 调整`PHP`上传大小
-9. `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
-10. `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
-11. 无法上传/访问/不显示验证码: 1. 权限问题见问题`1` 2. CDN缓存了 3. 开防火墙了
+8. 提示 `upload File size exceeds the maximum value` 调整`PHP`上传大小
+9. 提示 `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
+10. 提示 `Warning: is_dir(): open_basedir restriction in effect`解决方法同`3`
+11. 无法上传/访问/不显示验证码: 1. 权限问题见问题`1` 2. CDN缓存了 3. 防火墙拦截
 12. 宝塔或者其他环境安装成功但是上传失败，多数原因是防火墙拦截上传，取消拦截即可
 13. `Fatal error: Allowed memory size......`主机内存或分配给PHP的内存不够 解决方法百度
 14. 开启原图保护功能后打开图片链接显示`404`是因为`nginx`或`Apache`页面缓存导致的,`Nginx`解决办法:
@@ -192,7 +192,6 @@ $HTTP["url"] =~ "^/(i|public)/" {
 	fastcgi.server = ()
 }
 ```
- - 或者参考：[https://blog.png.cm/996.html](https://blog.png.cm/996.html)
 
 ## 鉴黄
 图床支持moderatecontent和nsfwjs方式鉴黄
@@ -231,13 +230,14 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2023-01-31 v2.7.0 dev
+* 2023-02-01 v2.7.0 dev
 - 增加上传历史记录
 - 增加粘贴上传状态
 - 增加广场非图片图标
 - 增加前端显示缩略图链接
 - 增加每日获取Bing图片背景
 - 增加图片详细信息管理登录后显示更多信息
+- 增加解析上传IP地址 (使用方法参考提示信息)
 - 修复图片详细信息中随机图片排版混乱
 - 替换访问生成缩略图代码
 - 更新一些组件

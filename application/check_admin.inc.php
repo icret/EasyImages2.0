@@ -6,7 +6,7 @@ if (PHP_VERSION < 7) {
     <script>
     new $.zui.Messager("当前PHP版本<7.0, 部分功能受限!",{
         type: "primary", // 定义颜色主题 
-        time:7000
+        time:3000
     }).show();
     </script>
     ';
@@ -19,7 +19,8 @@ foreach ($expand as $val) {
         <script>
         new $.zui.Messager("扩展:' . $val . '- 未安装,可能导致图片上传失败! 请尽快修复。",{
 			type: "black", // 定义颜色主题
-			icon: "exclamation-sign" // 定义消息图标
+			icon: "exclamation-sign", // 定义消息图标
+            time:3500
         }).show();
         </script>
     ';
@@ -32,7 +33,7 @@ if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
     <script>
     new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
         type: "warning", // 定义颜色主题 
-        time:6000
+        time:4000
     }).show();
     </script>
     ';
@@ -43,7 +44,8 @@ if (is_local($config['domain']) || is_local($config['imgurl'])) {
     echo '
     <script>
     new $.zui.Messager("当前使用局域网,可能会导致外网访问异常!",{
-        type: "black" // 定义颜色主题 
+        type: "black", // 定义颜色主题 
+        time:4500
     }).show();
     </script>
     ';
@@ -55,7 +57,19 @@ if (file_exists(APP_ROOT . '/.user.ini')) {
     <script>
         new $.zui.Messager("请关闭防跨目录读写或删除.user.ini文件",{
             type: "danger", // 定义颜色主题 
-            time:7000
+            time:5000
+        }).show();
+    </script>
+    ';
+}
+
+// 检测是否存在 IP数据库文件 ip2region.xdb
+if (!file_exists(__DIR__ . '/ip2region/ip2region.xdb')) {
+    echo '
+    <script>
+        new $.zui.Messager("IP 数据库不存在, 请在系统信息中查看 Ip2region",{
+            type: "danger", // 定义颜色主题 
+            time:5500
         }).show();
     </script>
     ';
@@ -67,7 +81,7 @@ if (getVersion() !== get_current_version()) {
     <script>
     new $.zui.Messager("当前版本与GitHub不一致,请检查当前是否最新版本!",{
         type: "danger", // 定义颜色主题 
-        time:9000
+        time:6000
     }).show();
     </script>
     ';
@@ -88,7 +102,7 @@ if (!is_file(APP_ROOT . $config['waterImg'])) {
     <script>
     new $.zui.Messager("水印图片不存在,请检测路径或者文件是否存在!",{
         type: "danger", // 定义颜色主题 
-        time:10000
+        time:6500
     }).show();
     </script>
     ';
@@ -100,7 +114,7 @@ if (!is_file(APP_ROOT . $config['textFont'])) {
     <script>
     new $.zui.Messager("水印字体不存在,请检测路径或者文件是否存在!",{
         type: "danger", // 定义颜色主题 
-        time:10000
+        time:6500
     }).show();
     </script>
     ';
@@ -115,7 +129,8 @@ if ($config['checkImg'] !== 0) {
             echo '
             <script>
                 new $.zui.Messager("moderatecontent 鉴黄接口无法ping通! ",{
-                    type: "warning" // 定义颜色主题 
+                    type: "warning", // 定义颜色主题 
+                    time:7000
                 }).show();
             </script>
             ';
@@ -132,7 +147,8 @@ if ($config['checkImg'] !== 0) {
                 echo '
                 <script>
                     new $.zui.Messager("' . $ip . $port . ' 鉴黄接口无法ping通! ",{
-                        type: "warning" // 定义颜色主题 
+                        type: "warning", // 定义颜色主题 
+                        time:7000
                     }).show();
                 </script>
                 ';
@@ -142,7 +158,8 @@ if ($config['checkImg'] !== 0) {
                 echo '
                 <script>
                     new $.zui.Messager("' . $ip . ' 鉴黄接口无法ping通! ",{
-                        type: "warning" // 定义颜色主题 
+                        type: "warning", // 定义颜色主题 
+                        time:7000
                     }).show();
                 </script>
                 ';

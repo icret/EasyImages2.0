@@ -1515,3 +1515,43 @@ function get_current_version($file = '/admin/version.php')
 
     return 'No Version File';
 }
+
+/**
+ * IP地址查询
+ */
+function ip2region(String $IP)
+{
+    $db = __DIR__ . '/ip2region/ip2region.xdb';
+
+    if (!is_file($db)) {
+        return '<a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank"><span class="label label-primary" data-toggle="tooltip" title="点击下载 IP数据库 并上传到<br/><code>/application/ip2region/</code>">IP数据库不存在</span></a>';
+    }
+
+    try {
+        require_once __DIR__ . '/ip2region/Ip2Region.php';
+        $ip2region = new Ip2Region();
+        $location = $ip2region->memorySearch($IP);
+        $location = $location['region'];
+        $location =  str_replace(array('0', '||'), '', $location);
+        return $location;
+    } catch (Exception $e) {
+        return '查询失败: ' . $e->getMessage();
+    }
+
+    /* 官方查询示例
+    require 'Ip2Region.php';
+
+    $ip2region = new Ip2Region();
+
+    $ip = '107.148.129.110';
+    echo PHP_EOL;
+    echo "查询IP:{$ip}" . PHP_EOL;
+    $info = $ip2region->btreeSearch($ip);
+    var_export($info);
+
+    echo PHP_EOL;
+    $info = $ip2region->memorySearch($ip);
+    var_export($info);
+    echo PHP_EOL;
+    */
+}
