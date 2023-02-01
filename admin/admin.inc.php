@@ -237,6 +237,30 @@ if (isset($_GET['recycle_reimg'])) {
 
     header("refresh:1;url=/admin/admin.inc.php");
 }
+
+// 删除版本信息文件
+if (isset($_POST['del_version_file'])) {
+    try {
+        unlink(APP_ROOT . $_POST['del_version_file']);
+        echo "
+        <script>
+        new $.zui.Messager('删除成功', {
+            type: 'success', // 定义颜色主题
+            icon: 'ok'
+        }).show();
+        </script>
+        ";
+    } catch (Exception $e) {
+        echo "
+        <script>
+        new $.zui.Messager('删除失败: '" . $e->getMessage() . ", {
+            type: 'danger', // 定义颜色主题
+            icon: 'ok'
+        }).show();
+        </script>
+        ";
+    }
+}
 ?>
 <div class="row">
     <?php echo $config['set_notice']; ?>
@@ -874,7 +898,11 @@ if (isset($_GET['recycle_reimg'])) {
                     <hr />
                     <p>更新日期: <?php echo getVersion('created_at'); ?></p>
                     <p>更新内容: <br /><?php echo getVersion('body'); ?></p>
-                    <h6>更新后删除 <small style="color: black;">/admin/logs/verson/</small> 文件夹会自动同步最新版本号</h6>
+                    <h6>* 更新后点击更新版本号</h6>
+                    <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                        <input class="form-control" type="hidden" name="del_version_file" value="/admin/logs/version/version.json" readonly="">
+                        <button class="btn btn-mini btn-danger">更新版本号</button>
+                    </form>
                 </div>
             <?php endif; ?>
         </div>
