@@ -787,7 +787,7 @@ function is_who_login($user)
 function checkEnv($mode)
 {
     // 初始化安装
-    if (!is_file(APP_ROOT . '/install/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
+    if (!is_file(APP_ROOT . '/config/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
         echo '<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>';
     }
 

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../application/function.php';
 // 存在程序锁则跳转主页
-if (file_exists(APP_ROOT . '/install/install.lock')) {
+if (file_exists(APP_ROOT . '/config/install.lock')) {
     exit(header("Location:/../index.php"));
 }
 

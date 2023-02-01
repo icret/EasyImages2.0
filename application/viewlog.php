@@ -26,7 +26,7 @@ try {
     if (is_file($logFile)) {
         require_once $logFile;
     } else {
-        throw new Exception('<div class="alert alert-info">日志文件不存在!<div>');
+        throw new Exception('<h3 class="alert alert-danger">日志文件不存在, 请在图床安全中开启上传日志!</h3>');
     }
     if (empty($logs)) {
         throw new Exception('<div class="alert alert-info">没有上传日志!<div>');

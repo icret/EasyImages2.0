@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../application/function.php';
 
-if (file_exists(APP_ROOT . '/install/install.lock')) {
+if (file_exists(APP_ROOT . '/config/install.lock')) {
   exit(header("Location:/../index.php"));
 }
 
@@ -27,7 +27,7 @@ if (isset($_POST['imgurl'])) {
 $config_file = APP_ROOT . '/config/config.php';
 cache_write($config_file, $config);
 
-file_put_contents(APP_ROOT . '/install/install.lock', '安装程序锁定文件。'); // 创建安装程序锁
+file_put_contents(APP_ROOT . '/config/install.lock', '安装程序锁定文件。'); // 创建安装程序锁
 
 // 删除安装目录
 if (isset($_POST['del_install'])) {

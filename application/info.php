@@ -33,9 +33,11 @@ $logsName = basename($img_url);
 if (is_file(APP_ROOT . '/admin/logs/upload/' . $logs . '.php')) {
     include APP_ROOT . '/admin/logs/upload/' . $logs . '.php';
 } else {
-    $logs = array($logsName => array('source' => '日志文件不存在', 'date' => '日志文件不存在', 'ip' => '0.0.0.0', 'port' => '日志文件不存在', 'user_agent' => '日志文件不存在', 'path' => '日志文件不存在', 'size' => '日志文件不存在', 'md5' => '日志文件不存在', 'checkImg' => '日志文件不存在', 'from' => '日志文件不存在'));
+    $logs = array($logsName => array('source' => '日志文件不存在, 请在图床安全中开启上传日志!', 'date' => '日志文件不存在, 请在图床安全中开启上传日志!', 'ip' => '0.0.0.0', 'port' => '0', 'user_agent' => '日志文件不存在, 请在图床安全中开启上传日志!', 'path' => '日志文件不存在, 请在图床安全中开启上传日志!', 'size' => '日志文件不存在, 请在图床安全中开启上传日志!', 'md5' => '日志文件不存在, 请在图床安全中开启上传日志!', 'checkImg' => '日志文件不存在, 请在图床安全中开启上传日志!', 'from' => '日志文件不存在, 请在图床安全中开启上传日志!'));
 }
-
+if (empty($logs[$logsName])) {
+    $logs = array($logsName => array('source' => '日志不存在', 'date' => '日志不存在', 'ip' => '0.0.0.0', 'port' => '0', 'user_agent' => '日志不存在', 'path' => '日志不存在', 'size' => '日志不存在', 'md5' => '日志不存在', 'checkImg' => '日志不存在', 'from' => '日志不存在'));
+}
 // 图片真实路径
 $imgABPath = APP_ROOT . $getIMG;
 
@@ -171,20 +173,16 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-12" style="padding-bottom: 10px;">
         <h4 class="header-dividing">当月随机图片：</h4>
         <div class="cards cards-borderless">
-            <?php if (is_file(APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php')) :
-                include_once APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
-                for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1)
-                    /** echo  $img_url . $logs[$randName]['path']; */
-            ?>
+            <?php if ($logs[$logsName]['port'] != 0) : for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1) ?>
                     <div class="col-md-4 col-sm-6 col-lg-3">
                         <a class="card" href="?img=<?php echo $logs[$randName]['path']; ?>" target="_blank">
                             <img src="thumb.php?img=<?php echo $logs[$randName]['path']; ?>">
                             <div class="caption"><?php echo  $logs[$randName]['source']; ?></div>
                         </a>
                     </div>
-                <?php endfor;
-            else : ?>
-                <p class="alert alert-danger">本月还没有上传的图片哟~~ <br />快来上传第一张吧~!</p>
+                <?php endfor; ?>
+            <?php else : ?>
+                <h3 class="alert alert-danger">本月没有上传图片或上传日志不存在~~</h3>
             <?php endif; ?>
         </div>
     </div>
