@@ -48,7 +48,7 @@ $imgABPath = APP_ROOT . $getIMG;
 // 图片是否存在
 if (!is_file($imgABPath)) {
     $imgABPath = APP_ROOT . "/public/images/404.png";
-    $img_url = rand_imgurl() . "/public/images/404.png";
+    $img_url = $config['domain'] . "/public/images/404.png";
 }
 
 // 图片尺寸
@@ -60,7 +60,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12">
     <div class="col-md-5" style="text-align: center;">
-        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" data-image="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="432px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
+        <img data-toggle="lightbox" src="<?php echo $img_url; ?>" id="img1" class="img-rounded" height="432px" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
     </div>
     <div class="col-md-6 table-responsive table-condensed" style="margin-top: 10px;">
         <table class="table table-hover table-striped table-bordered text-nowrap">
