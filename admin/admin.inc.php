@@ -487,9 +487,9 @@ if (isset($_GET['recycle_reimg'])) {
                 <div class="form-group">
                     <label for="logDate" class="text-primary">选择月份: </label>
                     <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
-                    <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="隐藏的保存">
+                    <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="日志访问秘钥">
                 </div>
-                <button type="submit" class="btn btn-sm btn-primary">查看</button>
+                <button type="submit" class="btn btn-sm btn-primary">查看日志</button>
             </form>
             <hr />
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
@@ -518,24 +518,6 @@ if (isset($_GET['recycle_reimg'])) {
                             <span class="input-group-addon input-sm">px</span>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">图片鉴黄</label>
-                    <select class="chosen-select form-control" name="checkImg">
-                        <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
-                        <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
-                        <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?> title="">nsfwjs | API 设置中填入nsfwjs url</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>图片违规判断率 | 当前: </label>
-                    <label id="checkImg_value"><?php echo $config['checkImg_value']; ?></label><label>%</label>
-                    <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
-                </div>
-                <div class="form-group">
-                    <label>缓存周期 | 当前: </label>
-                    <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
-                    <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
                 </div>
                 <div class="form-group">
                     <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
@@ -723,6 +705,45 @@ if (isset($_GET['recycle_reimg'])) {
                                 <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=month">
                                     <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日上传</label>
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>缓存周期 | 当前: </label>
+                            <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
+                            <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>图片违规判断率 | 当前: </label>
+                            <label id="checkImg_value"><?php echo $config['checkImg_value']; ?></label><label>%</label>
+                            <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group" data-toggle="tooltip" title="请输入限制数量 | 0 为不限制<br /> 开启监黄,水印等受网络波动和机器性能,执行完毕前限制不生效!">
+                                <span class="input-group-addon">游客上传限制</span>
+                                <input class="form-control input-sm" type="number" name="ip_upload_counts" value="<?php echo $config['ip_upload_counts']; ?>">
+                                <span class="input-group-addon">张</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group" data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">
+                                <span class="input-group-addon input-sm">图片鉴黄</span>
+                                <select class="form-control input-sm" name="checkImg">
+                                    <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
+                                    <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
+                                    <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?> title="">nsfwjs | API 设置中填入nsfwjs url</option>
+                                </select>
                             </div>
                         </div>
                     </div>

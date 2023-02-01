@@ -31,6 +31,25 @@ if ($config['check_ip']) {
     }
 }
 
+// 根据IP限制游客每日上传数量
+if ($config['ip_upload_counts'] > 0 && !is_who_login(null)) {
+    $ipList = APP_ROOT . '/admin/logs/ipcounts/' . date('Ymd') . '.php';
+    if (is_file($ipList)) {
+        $ipList = file_get_contents($ipList);
+        $ipList = explode(PHP_EOL, $ipList);
+        if (array_count_values($ipList)[real_ip()] >= $config['ip_upload_counts']) {
+            exit(json_encode(
+                array(
+                    "result"    =>  "failed",
+                    "code"      =>  403,
+                    "message"   =>  "游客限制每日上传 " . $config['ip_upload_counts'] . ' 张',
+                )
+            ));
+        }
+        clearstatcache();
+    }
+}
+
 $token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
 
 // 检查api合法性
@@ -168,8 +187,6 @@ if ($handle->uploaded) {
     }
 
     /** 后续处理 */
-    require APP_ROOT . '/application/process.php';
-
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) {
         fastcgi_finish_request();
@@ -181,6 +198,8 @@ if ($handle->uploaded) {
         @water($handle->file_dst_pathname);
         // 压缩        
         @compress($handle->file_dst_pathname);
+        // 记录同IP上传次数
+        @ip_upload_counts();
     } else {
         // 鉴黄
         @process_checkImg($processUrl);
@@ -190,6 +209,8 @@ if ($handle->uploaded) {
         @water($handle->file_dst_pathname);
         // 压缩
         @compress($handle->file_dst_pathname);
+        // 记录同IP上传次数
+        @ip_upload_counts();
     }
 
     unset($handle);

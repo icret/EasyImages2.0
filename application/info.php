@@ -8,11 +8,16 @@ if (isset($_GET['img'])) {
     // 过滤特殊符号
     $getIMG = strip_tags($_GET['img']);
     $del_url = $config['domain'] . $getIMG;
+} elseif (isset($_GET['history'])) {
+    // 过滤特殊符号
+    $getIMG = $config['path'] . ltrim(strip_tags($_GET['history']), '/');
+    $del_url = $config['domain'] . $getIMG;
 } else {
     // 未获取到图片地址
     $getIMG = "/public/images/404.png";
     $del_url = "#";
 }
+
 
 // 开启隐藏上传目录
 if ($config['hide_path']) {
@@ -40,9 +45,8 @@ if (empty($logs[$logsName])) {
 }
 // 图片真实路径
 $imgABPath = APP_ROOT . $getIMG;
-
 // 图片是否存在
-if (!file_exists($imgABPath)) {
+if (!is_file($imgABPath)) {
     $imgABPath = APP_ROOT . "/public/images/404.png";
     $img_url = rand_imgurl() . "/public/images/404.png";
 }
