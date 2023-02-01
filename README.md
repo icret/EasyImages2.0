@@ -72,8 +72,8 @@ chown -R www:www /安装目录
 2. 对`PHP`不太熟悉的请不要将图床程序放置于二级目录
 3. 请关闭防跨站或删除域名文件夹内的`user.ini`文件 如`宝塔面板`|`军哥lnmp`
 4. 网站域名与图片域名必须填写，如果只有一个域名请填写成一样的
-5. 首次使用会执行安装程序并生成`install.lock` 跳过安装流程请删除`install`目录
-6. 首次访问首页会检查环境并在`admin`目录下生成`EasyImage.lock`
+5. 首次使用会执行安装程序并并在`config`目录生成`install.lock` 跳过安装流程请删除`install`目录
+6. 首次访问首页会检查环境并在`config`目录下生成`EasyImage.lock`
 7. 可以使用谷歌浏览器的调试模式查看错误`F12->console`
 8. 提示 `upload File size exceeds the maximum value` 调整`PHP`上传大小
 9. 提示 `undefined function imagecreatefromwebp()`GD没安装webp, 以此类推
