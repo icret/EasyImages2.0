@@ -74,6 +74,7 @@ $ALLOWED_SITES = array(
     $config['imgurl'],
 );
 
+
 /**
  * 修复无法生成生成webp动态图片的缩略图bug
  */
@@ -81,6 +82,15 @@ if (isset($_GET['img'])) {
 
     // 引入文件
     require_once __DIR__ . '/TimThumb.php';
+    $src = $_GET['img'];
+
+    // 重定向不包含存储路径的缩略图地址
+    if (!stristr($src, $config['path'])) {
+        $src = $config['path'] . $src;
+        header("Location:thumb.php?img=$src");
+        exit();
+    }
+
     // 图片绝对路径
     $src = APP_ROOT . $_GET['img'];
     // 获取文件后缀

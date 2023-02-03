@@ -285,6 +285,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         });
     }
     */
+
     //禁用右键
     document.onkeydown = function() {
         var e = window.event || arguments[0];

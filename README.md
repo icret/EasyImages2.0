@@ -18,7 +18,7 @@
 [![Code size](https://img.shields.io/github/languages/code-size/icret/EasyImages2.0?color=blueviolet)](https://github.com/icret/EasyImages2.0)
  -->
 
->[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/) | [Telegram](https://t.me/Easy_Image)
+>[演示](https://png.cm/) | [Chrome/Edge 插件](https://github.com/icret/EasyImage-Browser-Extension) | [使用手册](https://www.kancloud.cn/easyimage/easyimage/) | [社区讨论](https://github.com/icret/EasyImages2.0/discussions) | [Telegram](https://t.me/Easy_Image)
 >
 >本人善写bug 发现bug可提交 [issues](https://github.com/icret/EasyImages2.0/issues) 追求稳定请下载 [稳定版](https://github.com/icret/EasyImages2.0/releases)
 
@@ -230,7 +230,12 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2023-02-01 v2.7.1 dev
+* 2023-02-03 v2.7.2 dev
+- 增加 [web-indexr](https://github.com/rehiy/web-indexr) 文件管理
+- - web-indexr处于实验中,作为Tinyfilemanager的替代
+- 优化排版
+
+* 2023-02-01 v2.7.1
 - 更新版本号
 
 * 2023-02-01 v2.7.0 dev

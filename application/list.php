@@ -184,7 +184,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     }
   </style>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
-  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
@@ -357,7 +357,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       onload: function(elem) {
         console.log(elem)
       },
-      delay: 300
+      delay: 300,
     })
 
     // 按日期浏览

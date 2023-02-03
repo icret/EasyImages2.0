@@ -3,9 +3,9 @@
  * 简单图床设置页面
  * 2022-1-24 05:57:35
  */
-require_once __DIR__  . '/../application/header.php';
+require_once __DIR__ . '/../application/header.php';
 require_once APP_ROOT . '/config/api_key.php';
-require_once  APP_ROOT  . '/config/config.guest.php';
+require_once APP_ROOT . '/config/config.guest.php';
 
 // 检查登录
 if (!is_who_login('admin')) {
@@ -31,14 +31,14 @@ if (isset($_POST['update'])) {
     type: "primary", // 定义颜色主题 
     icon: "ok-sign" // 定义消息图标
   }).show();
-  </script>  
+  </script>
   ';
     header("refresh:1;");
 }
 
 /**
  * 添加token
- *  $_POST['add_token'] 生成的Token
+ * $_POST['add_token'] 生成的Token
  * $_POST['add_token_id'] Token的ID
  * $_POST['add_token_expired'] 过期时间
  */
@@ -57,14 +57,14 @@ if (isset($_POST['add_token_id'])) {
     type: "primary", // 定义颜色主题 
     icon: "ok-sign" // 定义消息图标
   }).show();
-  </script>  
+  </script>
   ';
     header("refresh:1;");
 }
 
 // 禁用Token 
 if (isset($_GET['stop_token'])) {
-    $stop_token =  $_GET['stop_token'];
+    $stop_token = $_GET['stop_token'];
     $postArr = array(
         $stop_token => array(
             'id' => 0,
@@ -81,7 +81,7 @@ if (isset($_GET['stop_token'])) {
             type: "primary", // 定义颜色主题 
             icon: "ok-sign" // 定义消息图标
         }).show();
-        </script>  
+        </script>
   ';
     header("refresh:1;url=/admin/admin.inc.php");
 }
@@ -97,14 +97,14 @@ if (isset($_GET['delete_token'])) {
     type: "primary", // 定义颜色主题 
     icon: "ok-sign" // 定义消息图标
   }).show();
-  </script>  
+  </script>
   ';
     header("refresh:1;url=/admin/admin.inc.php");
 }
 
 // 禁用用户
 if (isset($_GET['stop_guest'])) {
-    $stop_guest =  $_GET['stop_guest'];
+    $stop_guest = $_GET['stop_guest'];
     $postArr = array(
         $stop_guest => array(
             'password' => $guestConfig[$stop_guest]['password'],
@@ -336,6 +336,7 @@ if (isset($_POST['del_version_file'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content2">
+
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group col-md-12">
                     <div class="form-group col-md-1">
@@ -414,6 +415,7 @@ if (isset($_POST['del_version_file'])) {
                 </div>
             </form>
         </div>
+
         <div class="tab-pane fade" id="Content3">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
@@ -506,68 +508,76 @@ if (isset($_POST['del_version_file'])) {
             </form>
         </div>
         <div class="tab-pane fade" id="Content6">
-            <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
-            <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
-                <div class="form-group">
-                    <label for="logDate" class="text-primary">选择月份: </label>
-                    <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
-                    <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="日志访问秘钥">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
+                    <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
+                        <div class="form-group">
+                            <label for="logDate" class="text-primary">选择月份: </label>
+                            <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
+                            <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="日志访问秘钥">
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">查看日志</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-sm btn-primary">查看日志</button>
-            </form>
-            <hr />
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="form-group col-md-12">
-                    <div class="form-group col-md-6">
-                        <label>缩略图生成方式</label>
-                        <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="0" <?php if ($config['thumbnail'] === 0) echo 'checked="checked"'; ?> id="thumbnail0"><label for="thumbnail0" data-toggle="tooltip" title="直接输出上传图片,会导致流量增加"> 原图</label>
+                <div class="col-md-6">
+                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
+                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                        <button type="submit" class="btn btn-mini btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h5 class="header-dividing">缩略图</h5>
+                <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
+                            <label data-toggle="tooltip" title="请选择合适的缩略图生成方式">生成方式</label>
+                            <div class="input-group" data-toggle="tooltip" title="原图 | 直接输出上传链接,会导致流量增加<br/>缓存方式 (推荐) | 利用TimThumb生成 优点: 带缓存周期 | 缺点: cdn无法缓存<br/>上传生成 | 优点: 缩略图直链,缓存不失效 | 低配vps负载较大,影响前端上传速度">
+                                <span class="input-group-addon input-sm">生成模式</span>
+                                <select class="form-control input-sm" name="thumbnail">
+                                    <option value="0" <?php if ($config['thumbnail'] == 0) echo 'selected'; ?>>原图</option>
+                                    <option value="1" <?php if ($config['thumbnail'] == 1) echo 'selected'; ?>>缓存方式 | 推荐</option>
+                                    <option value="2" <?php if ($config['thumbnail'] == 2) echo 'selected'; ?>>上传生成 | 直链</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="1" <?php if ($config['thumbnail'] === 1) echo 'checked="checked"'; ?> id="thumbnail1"><label for="thumbnail1" data-toggle="tooltip" title="利用TimThumb生成 | 优点: 带缓存周期 | 缺点: cdn无法缓存"> 访问生成 | 推荐</label>
-                        </div>
-                        <div class="radio-primary">
-                            <input type="radio" name="thumbnail" value="2" <?php if ($config['thumbnail'] === 2) echo 'checked="checked"'; ?> id="thumbnail2"><label for="thumbnail2" data-toggle="tooltip" title="优点: 缩略图直链,缓存不失效 | 低配vps负载较大,影响前端上传速度"> 访问生成 | 直链</label>
+                        <div class="form-group col-md-6">
+                            <label data-toggle="tooltip" title="已生成的缩略图不会失效 需清理缓存">生成大小</label>
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">宽</span>
+                                <input type="number" name="thumbnail_w" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_w'])) echo $config['thumbnail_w']; ?>">
+                                <span class="input-group-addon input-sm">px</span>
+                                <span class="input-group-addon input-sm">高</span>
+                                <input type="number" name="thumbnail_h" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_h'])) echo $config['thumbnail_h']; ?>">
+                                <span class="input-group-addon input-sm">px</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label data-toggle="tooltip" title="更改后已经生成的缩略图不会失效 需清除缓存">缩略图尺寸</label>
-                        <div class="input-group">
-                            <span class="input-group-addon input-sm">宽</span>
-                            <input type="number" name="thumbnail_w" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_w'])) echo $config['thumbnail_w']; ?>">
-                            <span class="input-group-addon input-sm">px</span>
-                            <span class="input-group-addon fix-border fix-padding"></span>
-                            <span class="input-group-addon input-sm">高</span>
-                            <input type="number" name="thumbnail_h" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_h'])) echo $config['thumbnail_h']; ?>">
-                            <span class="input-group-addon input-sm">px</span>
+                    <div class="form-group">
+                        <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
+                        <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    </div>
+                    <div class="form-group">
+                        <div class="switch switch-inline">
+                            <input type="hidden" name="static_cdn" value="0">
+                            <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">静态文件CDN地址 | 末尾不加'/'</label>
                         </div>
+                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                    <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline">
-                        <input type="hidden" name="static_cdn" value="0">
-                        <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">静态文件CDN地址 | 末尾不加'/'</label>
+                    <div class="form-group">
+                        <div class="switch switch-inline">
+                            <input type="hidden" name="check_ip" value="0">
+                            <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">黑/白IP名单上传</label>
+                        </div>
+                        <textarea class="form-control" rows="5" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
+                        <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
+                        <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
                     </div>
-                    <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
-                </div>
-                <div class="form-group">
-                    <div class="switch switch-inline">
-                        <input type="hidden" name="check_ip" value="0">
-                        <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">黑/白IP名单上传</label>
-                    </div>
-                    <textarea class="form-control" rows="5" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
-                    <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
-                    <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
-                </div>
-                <div class="row">
-                    <h5 class="header-dividing">高级设置 <?php if ($config['domain'] == $config['imgurl']) echo '<small> 网站域名与图片域名相同,锁定隐藏' . $config['path'] . '目录开关</small>'; ?></h5>
                     <div class="col-md-12">
+                        <h5 class="header-dividing">高级设置 <?php if ($config['domain'] == $config['imgurl']) echo '<small> 网站域名与图片域名相同,锁定隐藏' . $config['path'] . '目录开关</small>'; ?></h5>
                         <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="网址设置->弹窗公告修改内容<br />重开浏览器访问网站会再次展示公告弹窗">
                                 <input type="hidden" name="notice_status" value="0">
@@ -689,94 +699,94 @@ if (isset($_POST['del_version_file'])) {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
-                        <input type="hidden" name="public" value="0">
-                        <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
-                        <label style="font-weight: bold">开放数据<i class="icon icon-long-arrow-down"></i></label>
+                    <div class="col-md-12">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
+                            <input type="hidden" name="public" value="0">
+                            <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
+                            <label style="font-weight: bold">开放数据<i class="icon icon-long-arrow-down"></i></label>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
+                                        <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=today">
+                                        <input type="checkbox" name="public_list[]" value="today" id="today" <?php if (in_array('today', $config['public_list']))  echo 'checked'; ?>><label for="today">今日</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=yesterday">
+                                        <input type="checkbox" name="public_list[]" value="yesterday" id="yesterday" <?php if (in_array('yesterday', $config['public_list']))  echo 'checked'; ?>><label for="yesterday">昨日</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=total_space">
+                                        <input type="checkbox" name="public_list[]" value="total_space" id="total_space" <?php if (in_array('total_space', $config['public_list']))  echo 'checked'; ?>><label for="total_space">总空间</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=used_space">
+                                        <input type="checkbox" name="public_list[]" value="used_space" id="used_space" <?php if (in_array('used_space', $config['public_list']))  echo 'checked'; ?>><label for="used_space">已用</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=free_space">
+                                        <input type="checkbox" name="public_list[]" value="free_space" id="free_space" <?php if (in_array('free_space', $config['public_list']))  echo 'checked'; ?>><label for="free_space">剩余</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=image_used">
+                                        <input type="checkbox" name="public_list[]" value="image_used" id="image_used" <?php if (in_array('image_used', $config['public_list']))  echo 'checked'; ?>><label for="image_used">图片占用</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=file">
+                                        <input type="checkbox" name="public_list[]" value="file" id="file" <?php if (in_array('file', $config['public_list']))  echo 'checked'; ?>><label for="file">文件数量</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=dir">
+                                        <input type="checkbox" name="public_list[]" value="dir" id="dir" <?php if (in_array('dir', $config['public_list']))  echo 'checked'; ?>><label for="dir">文件夹数量</label>
+                                    </label>
+                                    <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=month">
+                                        <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日上传</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="panel">
-                        <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
-                                    <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=today">
-                                    <input type="checkbox" name="public_list[]" value="today" id="today" <?php if (in_array('today', $config['public_list']))  echo 'checked'; ?>><label for="today">今日</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=yesterday">
-                                    <input type="checkbox" name="public_list[]" value="yesterday" id="yesterday" <?php if (in_array('yesterday', $config['public_list']))  echo 'checked'; ?>><label for="yesterday">昨日</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=total_space">
-                                    <input type="checkbox" name="public_list[]" value="total_space" id="total_space" <?php if (in_array('total_space', $config['public_list']))  echo 'checked'; ?>><label for="total_space">总空间</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=used_space">
-                                    <input type="checkbox" name="public_list[]" value="used_space" id="used_space" <?php if (in_array('used_space', $config['public_list']))  echo 'checked'; ?>><label for="used_space">已用</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=free_space">
-                                    <input type="checkbox" name="public_list[]" value="free_space" id="free_space" <?php if (in_array('free_space', $config['public_list']))  echo 'checked'; ?>><label for="free_space">剩余</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=image_used">
-                                    <input type="checkbox" name="public_list[]" value="image_used" id="image_used" <?php if (in_array('image_used', $config['public_list']))  echo 'checked'; ?>><label for="image_used">图片占用</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=file">
-                                    <input type="checkbox" name="public_list[]" value="file" id="file" <?php if (in_array('file', $config['public_list']))  echo 'checked'; ?>><label for="file">文件数量</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="public.php?show=dir">
-                                    <input type="checkbox" name="public_list[]" value="dir" id="dir" <?php if (in_array('dir', $config['public_list']))  echo 'checked'; ?>><label for="dir">文件夹数量</label>
-                                </label>
-                                <label class="checkbox-inline" data-toggle="tooltip" title="开启分离后仅统计游客上传<br />public.php?show=month">
-                                    <input type="checkbox" name="public_list[]" value="month" id="month" <?php if (in_array('month', $config['public_list']))  echo 'checked'; ?>><label for="month">最近30日上传</label>
-                                </label>
+                                <label>缓存周期 | 当前: </label>
+                                <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
+                                <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>图片违规判断率 | 当前: </label>
+                                <label id="checkImg_value"><?php echo $config['checkImg_value']; ?></label><label>%</label>
+                                <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>缓存周期 | 当前: </label>
-                            <label id="cache_freq"><?php echo $config['cache_freq']; ?></label><label>小时</label>
-                            <input type="range" class="form-control" name="cache_freq" value="<?php echo $config['cache_freq']; ?>" min="1" step="1" max="24" onchange="document.getElementById('cache_freq').innerHTML=value">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group" data-toggle="tooltip" title="请输入限制数量 | 0 为不限制<br /> 开启监黄,水印等受网络波动和机器性能,执行完毕前限制不生效!">
+                                    <span class="input-group-addon">游客上传限制</span>
+                                    <input class="form-control input-sm" type="number" name="ip_upload_counts" value="<?php echo $config['ip_upload_counts']; ?>">
+                                    <span class="input-group-addon">张</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>图片违规判断率 | 当前: </label>
-                            <label id="checkImg_value"><?php echo $config['checkImg_value']; ?></label><label>%</label>
-                            <input type="range" class="form-control" name="checkImg_value" value="<?php echo $config['checkImg_value']; ?>" min="1" max="100" step="1" onchange="document.getElementById('checkImg_value').innerHTML=value">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="input-group" data-toggle="tooltip" title="请输入限制数量 | 0 为不限制<br /> 开启监黄,水印等受网络波动和机器性能,执行完毕前限制不生效!">
-                                <span class="input-group-addon">游客上传限制</span>
-                                <input class="form-control input-sm" type="number" name="ip_upload_counts" value="<?php echo $config['ip_upload_counts']; ?>">
-                                <span class="input-group-addon">张</span>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group" data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">
+                                    <span class="input-group-addon input-sm">图片鉴黄</span>
+                                    <select class="form-control input-sm" name="checkImg">
+                                        <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
+                                        <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
+                                        <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?> title="">nsfwjs | API 设置中填入nsfwjs url</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="input-group" data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">
-                                <span class="input-group-addon input-sm">图片鉴黄</span>
-                                <select class="form-control input-sm" name="checkImg">
-                                    <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
-                                    <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
-                                    <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?> title="">nsfwjs | API 设置中填入nsfwjs url</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </div>
-                </div>
-                <div class="form-group">
-                    <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                </div>
-                <button type="submit" class="btn btn-primary">保存</button>
-            </form>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </form>
+            </div>
         </div>
         <div class="tab-pane fade" id="Content7">
             <h5 class="header-dividing">可疑图片<small> 鉴黄查到的可疑图片</small></h5>
@@ -797,16 +807,16 @@ if (isset($_POST['del_version_file'])) {
                     <tbody>
                         <?php
                         // 获取被隔离的文件
-                        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                              // cache目录
-                        $cache_file = get_file_by_glob($cache_dir . '*.*');                               // 获取所有文件
-                        $cache_num = count($cache_file);                                                  // 统计目录文件个数
-                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                 // 循环输出文件
-                            $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i];  // 绝对路径
-                            $file_path =  $config['path'] . 'suspic/' . $cache_file[$i];                  // 相对路径
-                            $file_size =  getDistUsed(filesize($file_cache_path));                        // 大小
-                            $filen_name = $cache_file[$i];                                                // 名称
-                            $url = $config['domain'] . $file_path;                                        // 网络连接
-                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;   // 删除连接
+                        $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                             // cache目录
+                        $cache_file = get_file_by_glob($cache_dir . '*.*');                              // 获取所有文件
+                        $cache_num = count($cache_file);                                                 // 统计目录文件个数
+                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                // 循环输出文件
+                            $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i]; // 绝对路径
+                            $file_path = $config['path'] . 'suspic/' . $cache_file[$i];                  // 相对路径
+                            $file_size = getDistUsed(filesize($file_cache_path));                        // 大小
+                            $filen_name = $cache_file[$i];                                               // 名称
+                            $url = $config['domain'] . $file_path;                                       // 网络连接
+                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;  // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
@@ -835,7 +845,7 @@ if (isset($_POST['del_version_file'])) {
                 <hr />
                 <p class="text-ellipsis">服务系统: <?PHP echo php_uname('s') . ' <small class="text-muted">' . php_uname() . '</small>'; ?></p>
                 <p class="text-ellipsis">Web服务: <?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
-                <p class="text-ellipsis">服务器IP: <?PHP echo  $_SERVER["SERVER_ADDR"] ?></p>
+                <p class="text-ellipsis">服务器IP: <?PHP echo $_SERVER["SERVER_ADDR"] ?></p>
                 <p class="text-ellipsis">系统时间: <?PHP echo date("Y-m-d H:i:s"); ?></p>
                 <p class="text-ellipsis">占用内存: <?php echo getDistUsed(memory_get_usage()); ?></p>
                 <p class="text-ellipsis">占用磁盘: <?php echo getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) ?></p>
@@ -860,7 +870,16 @@ if (isset($_POST['del_version_file'])) {
                 <a href="https://github.com/icret/EasyImage-Browser-Extension" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="浏览器插件">Chrome</span></a>
                 <a href="https://www.kancloud.cn/easyimage/easyimage/2625228" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用ShareX上传">ShareX</span></a>
                 <a href="https://www.kancloud.cn/easyimage/easyimage/2625229" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用PicGo上传">PicGo</span></a>
-                <h6>图床依赖</h6>
+                <h6>开发支持</h6>
+                <p>
+                    <a href="https://png.cm/?demo" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="演示地址"><i class="icon icon-external-link"></i> demo</span></a>
+                    <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用手册"><i class="icon icon-book"></i> manual</span></a>
+                    <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="GitHub 社区"><i class="icon icon-comments-alt"></i> discussions</span></a>
+                    <a href="https://t.me/Easy_Image" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="EasyImage Telegram Group"><i class="icon icon-comments-alt"></i> Telegram</span></a>
+                    <a href="../public/images/wechat.jpg" data-toggle="lightbox" style="color:#329d38;"><i data-toggle="tooltip" title="您的赞美是我开发的动力!" class="icon icon-wechat"></i></a>
+                    <a href="../public/images/alipay.jpg" data-toggle="lightbox" class="hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao" data-toggle="tooltip" title="您的赞美是我开发的动力!"> </i></a>
+                </p>
+                <h6>程序依赖</h6>
                 <p>
                     <a href="https://www.openzui.com/" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="前端框架">ZUI</span></a>
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="图像处理类">Verot</span></a>
@@ -879,7 +898,7 @@ if (isset($_POST['del_version_file'])) {
                     <span class="label label-badge label-primary" data-toggle="tooltip" title="当前版本"><?php echo get_current_version(); ?></span>
                     <a href="https://github.com/icret/EasyImages2.0/blob/master/LICENSE" target="_blank"><span class="label label-badge" data-toggle="tooltip" title="开源许可证">GPL-2.0</span></a>
                 </p>
-                <p class="text-muted"><i class="icon icon-certificate"> EasyImage2.0简单图床构建于众多优秀的开源项目之上,非常感谢这些项目!</i></p>
+                <p class="text-muted"><i class="icon icon-certificate"> EasyImage2.0简单图床构建于众多优秀的开源项目之上, 非常感谢这些项目!</i></p>
             </div>
             <div class="collapse" id="Ip2Region">
                 <div class="bg-primary with-padding">
@@ -1246,10 +1265,7 @@ if (isset($_POST['del_version_file'])) {
         <div class="tab-pane fade" id="Content14">
             <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
             <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-            <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <button type="submit" class="btn btn-mini btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
-            </form>
+            <a class="btn btn-mini btn-primary" href="/i/manag.php?path=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">
                 <p id="delimgurl"></p>
