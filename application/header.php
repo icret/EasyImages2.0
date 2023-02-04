@@ -27,21 +27,33 @@
 
 <body class="container">
 	<div class="page-header">
-		<ul class="nav nav-pills">
-			<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
-			<?php if ($config['showSwitch'] || is_who_login('admin')) : /** 非管理或未开启不显示广场 */ ?>
-				<li><a href="<?php echo $config['domain']; ?>/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
-			<?php endif; ?>
-			<?php if ($config['history'] || is_who_login('admin')) : /** 非管理或未开启不显示上传历史 */ ?>
-				<li><a href="<?php $config['domain']; ?>/application/history.php"><i class="icon icon-history"></i> 历史<span class="label label-badge label-primary"></span></a></li>
-			<?php endif; ?>
-			<?php if (is_who_login('admin')) : /** 非管理不显示设置 */ ?>
-				<li><a href="<?php echo $config['domain']; ?>/admin/admin.inc.php"><i class="icon icon-cogs"></i> 设置</a></li>
-			<?php endif; ?>
-			<?php if ($config['chart_on'] && is_who_login('admin')) : /** 非管理或未开启不显示统计 */ ?>
-				<li><a href="<?php echo $config['domain']; ?>/admin/chart.php"><i class="icon icon-pie-chart"></i> 统计</a></li>
-			<?php endif; ?>
-
-		</ul>
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-EasyImage">
+				<span class="icon icon-bars"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse navbar-collapse-EasyImage">
+			<ul class="nav nav-pills">
+				<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
+				<?php /** 非管理或未开启不显示广场 */ if ($config['showSwitch'] || is_who_login('admin')) : ?>
+					<li><a href="<?php echo $config['domain']; ?>/application/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
+				<?php endif; ?>
+				<?php /** 非管理或未开启不显示上传历史 */ if ($config['history'] || is_who_login('admin')) : ?>
+					<li><a href="<?php $config['domain']; ?>/application/history.php"><i class="icon icon-history"></i> 历史<span class="label label-badge label-primary"></span></a></li>
+				<?php endif; ?>
+				<?php /** 非管理不显示设置 */ if (is_who_login('admin')) : ?>
+					<li><a href="<?php echo $config['domain']; ?>/admin/admin.inc.php"><i class="icon icon-cogs"></i> 设置</a></li>
+				<?php endif; ?>
+				<?php /** 非管理或未开启不显示统计 */ if ($config['chart_on'] && is_who_login('admin')) : ?>
+					<li><a href="<?php echo $config['domain']; ?>/admin/chart.php"><i class="icon icon-pie-chart"></i> 统计</a></li>
+				<?php endif; ?>
+				<?php /** 账号登录 */ if (is_who_login('status')) : ?>
+					<!-- 右侧的导航项目 -->
+					<li class="nav navbar-nav navbar-right hidden-xs"><a href="<?php echo $config['domain']; ?>/admin/index.php?login=logout"><i class="icon icon-signout"> 退出登录</i></a></li>
+				<?php else : ?>
+					<li class="nav navbar-nav navbar-right hidden-xs"><a href="<?php echo $config['domain']; ?>/admin/index.php"><i class="icon icon-user"> 登录账号</i></a></li>
+				<?php endif; ?>
+			</ul>
+		</div>
 	</div>
 	<!-- 顶部导航栏END -->

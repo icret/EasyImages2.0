@@ -7,7 +7,7 @@ require __DIR__ . '/class.upload.php';
 
 // 检查登录
 if ($config['mustLogin']) {
-    if (is_who_login(null)) {
+    if (!is_who_login('status')) {
         exit(json_encode(array(
             "result"    =>  "failed",
             "code"      =>  401,
@@ -40,7 +40,7 @@ if ($config['check_ip']) {
 }
 
 // 根据IP限制游客每日上传数量
-if ($config['ip_upload_counts'] > 0 && !is_who_login(null)) {
+if ($config['ip_upload_counts'] > 0 && !is_who_login('status')) {
     $ipList = APP_ROOT . '/admin/logs/ipcounts/' . date('Ymd') . '.php';
     if (is_file($ipList)) {
         $ipList = file_get_contents($ipList);

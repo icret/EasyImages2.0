@@ -533,11 +533,11 @@ if (isset($_POST['del_version_file'])) {
                     <div class="form-group col-md-12">
                         <div class="form-group col-md-6">
                             <label data-toggle="tooltip" title="请选择合适的缩略图生成方式">生成方式</label>
-                            <div class="input-group" data-toggle="tooltip" title="原图 | 直接输出上传链接,会导致流量增加<br/>缓存方式 (推荐) | 利用TimThumb生成 优点: 带缓存周期 | 缺点: cdn无法缓存<br/>上传生成 | 优点: 缩略图直链,缓存不失效 | 低配vps负载较大,影响前端上传速度">
+                            <div class="input-group" data-toggle="tooltip" title="原图 | 直接输出上传链接,会导致流量增加<br/>TimThumb (推荐) | 优点: 带缓存周期 | 缺点: cdn无法缓存<br/>上传生成 | 优点: 缩略图直链,缓存不失效 | 低配vps负载较大,影响前端上传速度">
                                 <span class="input-group-addon input-sm">生成模式</span>
                                 <select class="form-control input-sm" name="thumbnail">
                                     <option value="0" <?php if ($config['thumbnail'] == 0) echo 'selected'; ?>>原图</option>
-                                    <option value="1" <?php if ($config['thumbnail'] == 1) echo 'selected'; ?>>缓存方式 | 推荐</option>
+                                    <option value="1" <?php if ($config['thumbnail'] == 1) echo 'selected'; ?>>TimThumb | 推荐</option>
                                     <option value="2" <?php if ($config['thumbnail'] == 2) echo 'selected'; ?>>上传生成 | 直链</option>
                                 </select>
                             </div>

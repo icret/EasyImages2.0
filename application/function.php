@@ -764,9 +764,8 @@ function getDel($url, $type)
  */
 function is_who_login($user)
 {
-    if (empty($user)) {
+    if ($user == 'status') {
         if (checkLogin() == 205 ||  checkLogin() == 204) return true;
-        return false;
     }
 
     $status = json_decode(_login(), true);
@@ -1506,7 +1505,7 @@ function rand_imgurl($text = null)
 }
 
 /**
- * 获取当前版本号
+ * 获取当前版本号 | 读取字符串
  * @param String $file 文件相对路径
  * @return String 内容信息
  */
@@ -1519,7 +1518,7 @@ function get_current_version($file = '/admin/version.php')
         return file_get_contents($file);
     }
 
-    return 'No Version File';
+    return 'file does not exist';
 }
 
 // 压缩图片与图片鉴黄

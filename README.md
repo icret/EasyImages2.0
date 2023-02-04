@@ -230,10 +230,11 @@ $HTTP["url"] =~ "^/(i|public)/" {
 
 <details><summary>点击查看2.0版更新日志</summary>
 
-* 2023-02-03 v2.7.2 dev
+* 2023-02-04 v2.7.2 dev
 - 增加 [web-indexr](https://github.com/rehiy/web-indexr) 文件管理
 - - web-indexr处于实验中,作为Tinyfilemanager的替代
-- 优化排版
+- 修复开启登录上传后,上传者账号上传失败 [#87](https://github.com/icret/EasyImages2.0/issues/87#issue-1569794639)
+- 优化排版和移动端显示
 
 * 2023-02-01 v2.7.1
 - 更新版本号
