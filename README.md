@@ -229,8 +229,11 @@ $HTTP["url"] =~ "^/(i|public)/" {
 ## 更新日志
 
 <details><summary>点击查看2.0版更新日志</summary>
+* 2023-02-05 v2.7.2
+- 修复设置中手动压缩失败!
+- 优化排版
 
-* 2023-02-04 v2.7.2
+* 2023-02-05 v2.7.2
 - 增加删除单条历史上传记录
 - 增加 [web-indexr](https://github.com/rehiy/web-indexr) 文件管理, 正在实验中
 - - 作为 [Tinyfilemanager](https://github.com/prasathmani/tinyfilemanager) 的替代品 更轻量化 简单化
@@ -241,7 +244,7 @@ $HTTP["url"] =~ "^/(i|public)/" {
 * 2023-02-01 v2.7.1
 - 更新版本号
 
-* 2023-02-01 v2.7.0 dev
+* 2023-02-01 v2.7.0
 - 增加限制游客上传
 - 增加上传历史记录
 - 增加粘贴上传状态

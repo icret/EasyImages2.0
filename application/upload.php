@@ -208,29 +208,31 @@ if ($handle->uploaded) {
 
     /** 后续处理 */
     // 使用fastcgi_finish_request操作
-    if (function_exists('fastcgi_finish_request')) {
+    if (function_exists('fastcgi_finish_request')) { // fastcgi_finish_request 模式
         fastcgi_finish_request();
-        // 普通模式鉴黄
+        // 同IP上传日志
+        @ip_upload_counts();
+        // 日志
+        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        // 鉴黄
         @process_checkImg($processUrl);
         // 日志
         if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
-        // 水印        
-        @water($handle->file_dst_pathname);
-        // 压缩        
-        @compress($handle->file_dst_pathname);
-        // 记录同IP上传次数
-        @ip_upload_counts();
-    } else {
-        // 普通模式鉴黄
-        @process_checkImg($processUrl);
-        // 日志
-        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 水印
         @water($handle->file_dst_pathname);
         // 压缩
-        @compress($handle->file_dst_pathname);
+        @ip_upload_counts();
+    } else { // 普通模式
         // 记录同IP上传次数
         @ip_upload_counts();
+        // 日志
+        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        // 鉴黄
+        @process_checkImg($processUrl);
+        // 水印
+        @water($handle->file_dst_pathname);
+        // 压缩
+        @process_compress($handle->file_dst_pathname);
     }
 
     unset($handle);

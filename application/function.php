@@ -1518,12 +1518,14 @@ function get_current_version($file = '/admin/version.php')
     return 'file does not exist';
 }
 
-// 压缩图片与图片鉴黄
-function compress($absolutePath)
+/**
+ * 压缩图片 process 模式
+ * @param String $absolutePath 图片绝对路径
+ */
+function process_compress($absolutePath)
 {
     global $config;
 
-    // 压缩图片 后压缩模式，不影响前台输出速度
     if ($config['compress']) {
         if (!is_Gif_Webp_Animated($absolutePath)) {
             require_once __DIR__ . '/compress/Imagick/class.Imgcompress.php';
@@ -1537,7 +1539,10 @@ function compress($absolutePath)
     }
 }
 
-// 设置水印
+/**
+ * 设置水印 process 模式
+ * @param String $source 图片路径
+ */
 function water($source)
 {
     global $config;
@@ -1577,11 +1582,14 @@ function water($source)
         }
     }
 }
-
+/**
+ * 图片违规检查 process
+ * @param String $imgurl 图片链接
+ */
 function process_checkImg($imgurl)
 {
     global $config;
-    // 图片违规检查
+
     if ($config['checkImg'] == 1) {
         checkImg($imgurl, 1);
     }
@@ -1666,6 +1674,7 @@ function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "we
 
 /**
  * IP地址查询
+ * @param int $ip IP地址
  */
 function ip2region(String $IP)
 {
@@ -1705,7 +1714,7 @@ function ip2region(String $IP)
 }
 
 /**
- * 记录同IP每日上传次数
+ * 记录同IP每日上传次数 process
  */
 function ip_upload_counts()
 {

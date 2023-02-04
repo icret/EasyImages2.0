@@ -153,7 +153,7 @@ if (isset($_POST['uploader_form'])) {
             type: "danger", // 定义颜色主题 
             icon: "exclamation-sign" // 定义消息图标
         }).show();
-        </script>  
+        </script>
         ';
         exit(header("refresh:1;"));
     }
@@ -300,19 +300,19 @@ if (isset($_POST['del_version_file'])) {
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
                     <label>网站域名 | 末尾不加'/'</label>
-                    <input type="url" class="form-control input-sm" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <label data-toggle="tooltip" title="支持多个域名并随机选择<br/>* 只有一个域名请与上边一致<br />* 多个域名请以英文 , 分割 <br />* 最后一个域名不要加,">图片域名 | 末尾不加'/'</label>
-                    <input type="text" class="form-control input-sm" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同,比如A域名上传,可以返回B域名图片链接,A、B需绑定到同一空间下">
+                    <input type="text" class="form-control" name="imgurl" required="required" value="<?php echo $config['imgurl']; ?>" placeholder="末尾不加/" onkeyup="this.value=this.value.replace(/\s/g,'')" title="网站域名与图片链接域名可以不同,比如A域名上传,可以返回B域名图片链接,A、B需绑定到同一空间下">
                 </div>
                 <div class="form-group">
                     <label>网站标题</label>
-                    <input type="text" class="form-control input-sm" name="title" required="required" value="<?php echo $config['title']; ?>" onkeyup="this.value=this.value.trim()">
+                    <input type="text" class="form-control" name="title" required="required" value="<?php echo $config['title']; ?>" onkeyup="this.value=this.value.trim()">
                 </div>
                 <div class="form-group">
                     <label>网站关键字</label>
-                    <input type="text" class="form-control input-sm" name="keywords" required="required" value="<?php echo $config['keywords']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" name="keywords" required="required" value="<?php echo $config['keywords']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <label>网站描述</label>
@@ -354,11 +354,11 @@ if (isset($_POST['del_version_file'])) {
                 <div class="form-group col-md-12">
                     <div class="form-group col-md-1">
                         <label data-toggle="tooltip" title="前后需加'/' 例: /i/">存储目录</label>
-                        <input type="text" class="form-control input-sm" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
+                        <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="storage_path" data-toggle="tooltip" title="图片的分类目录<br>更改会导致广场无法使用<br>非必要不要修改,末尾需要加'/' <br />PHP date() 函数参考">存储分类路径 <a href="https://www.runoob.com/php/php-date.html" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                        <input type="text" class="form-control input-sm" name="storage_path" required="required" value="<?php echo $config['storage_path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="参考PHP date() 函数">
+                        <input type="text" class="form-control" name="storage_path" required="required" value="<?php echo $config['storage_path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="参考PHP date() 函数">
                     </div>
                     <!-- <div class="form-group">
                     <label data-toggle="tooltip" title="不懂就不要改本图床仅针对图片上传,如果想上传其他类型文件请更改此出,不同mime请以英文,分割">允许的MIME类型</label>
@@ -366,11 +366,11 @@ if (isset($_POST['del_version_file'])) {
                     </div> -->
                     <div class="form-group col-md-4">
                         <label data-toggle="tooltip" title="请以英文 , 分割 最后一个不加 , <br/>想上传图片以外的格式？请关闭图床安全->图床模式">允许的扩展名</label>
-                        <input type="text" class="form-control input-sm" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" name="extensions" required="required" value="<?php echo $config['extensions']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group col-md-3">
                         <label>已上传文件的命名方式</label>
-                        <select class="chosen-select form-control input-sm" name="imgName">
+                        <select class="chosen-select form-control" name="imgName">
                             <option value="default" <?php if ($config['imgName'] == 'default') echo 'selected'; ?>>默认 - 36进制时间+随机数 >> vx77yu</option>
                             <option value="date" <?php if ($config['imgName'] == 'date') echo 'selected'; ?>>时间 >> 192704</option>
                             <option value="unix" <?php if ($config['imgName'] == 'unix') echo 'selected'; ?>>Unix >> 1635074840</option>
@@ -386,7 +386,7 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="form-group col-md-2">
                         <label data-toggle="tooltip" title="支持图片转换格式后压缩,压缩率与 上传压缩->后端压缩率关联<br />不建议同时启用后端压缩,避免重复压缩导致图片变大"> * 将上传图片转换格式</label>
-                        <select class="chosen-select form-control input-sm" name="imgConvert">
+                        <select class="chosen-select form-control" name="imgConvert">
                             <option value="" <?php if (empty($config['imgConvert'])) echo 'selected'; ?>>不转换</option>
                             <option value="webp" <?php if ($config['imgConvert'] == 'webp') echo 'selected'; ?>>WEBP</option>
                             <option value="png" <?php if ($config['imgConvert'] == 'png') echo 'selected'; ?>>PNG</option>
@@ -461,20 +461,26 @@ if (isset($_POST['del_version_file'])) {
         </div>
         <div class="tab-pane fade " id="Content4">
             <form action="../application/compressing.php" method="post" target="_blank">
-                <div class="form-group">
-                    <h5 class="header-dividing">压缩文件夹</h5>
-                    <input type="text" class="form-control form-date input-sm" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
+                <h5 class="header-dividing">压缩文件夹</h5>
+                <div class=" col-md-12">
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control form-date" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
+                    </div>
                 </div>
-                <div class="radio-primary">
-                    <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key,填入API设置的TinyPng Key中"> 使用TinyPng</label>
+                <div class="col-md-12">
+                    <div class="radio-primary col-md-2">
+                        <input type="radio" name="type" value="TinyPng" id="TinyPng"><label for="TinyPng" data-toggle="tooltip" title="需要申请key,填入API设置的TinyPng Key中"> 使用TinyPng</label>
+                    </div>
+                    <div class="radio-primary col-md-2">
+                        <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress" data-toggle="tooltip" title="压缩效率受后端压缩图片压缩率控制"> 使用本地PHP</label>
+                    </div>
                 </div>
-                <div class="radio-primary">
-                    <input type="radio" name="type" value="Imgcompress" id="Imgcompress" checked="checked"><label for="Imgcompress" data-toggle="tooltip" title="压缩效率受后端压缩图片压缩率控制"> 使用本地PHP</label>
+                <div class="col-md-12">
+                    <label>* 已开启上传压缩的不需重复压缩! </label><br />
+                    <label>* 如果页面长时间没有响应,表示正面正在压缩! </label><br />
+                    <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
+                    <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
                 </div>
-                <label>* 已开启上传压缩的不需重复压缩! </label><br />
-                <label>* 如果页面长时间没有响应,表示正面正在压缩! </label><br />
-                <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
-                <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
             </form>
         </div>
         <div class="tab-pane fade " id="Content5">
@@ -482,25 +488,25 @@ if (isset($_POST['del_version_file'])) {
             <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                 <div class="form-group col-md-4">
                     <label for="TinyPng" data-toggle="tooltip" title="TinyPng 申请网址">TinyPng Key <a href="https://tinypng.com/developers" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                    <input type="text" class="form-control input-sm" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="moderatecontent_key" data-toggle="tooltip" title="moderatecontent 申请网址">Moderate Key <a href="https://client.moderatecontent.com" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                    <input type="text" class="form-control input-sm" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响,国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" name="moderatecontent_key" id="moderatecontent_key" value="<?php echo $config['moderatecontent_key']; ?>" placeholder="填入图片鉴黄Key" data-toggle="tooltip" title="开启后会受服务器到https://moderatecontent.com 速度影响,国内不建议开启! " onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="nsfwjs_url" data-toggle="tooltip" title="nsfwjs 开源地址">nsfwjs url <a href="https://github.com/infinitered/nsfwjs" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                    <input type="url" class="form-control input-sm" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://ip:3307/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="url" class="form-control" name="nsfwjs_url" id="nsfwjs_url" value="<?php echo $config['nsfwjs_url']; ?>" placeholder="http://ip:3307/nsfw?url=" data-toggle="tooltip" title="自行搭建nsfwjs服务的网站地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                <button type="submit" class="btn btn-mini btn-primary">保存KEY</button>
+                <button type="submit" class="btn btn-primary">保存KEY</button>
             </form>
             <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
             <div id="myDataGrid" class="datagrid table-bordered">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
-                    <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="搜索Token">
+                    <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="搜索Token">
                     <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
                     <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
                 </div>
@@ -509,33 +515,33 @@ if (isset($_POST['del_version_file'])) {
             <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
                 <div class="form-group">
                     <label for="add_modify_token" data-toggle="tooltip" title="当前的Token是实时生成的,如果需要修改只需要复制已存在的Token并修改有效期即可!">增加/修改Token: </label>
-                    <input type="text" class="form-control input-sm" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
+                    <input type="text" class="form-control" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
                 </div>
                 <div class="form-group">
                     <label for="add_modify_token_time" data-toggle="tooltip" title="正整数或负整数<p>正整数代表有效期</p><p>负整数(-1)代表过期</p>">有效期 (天): </label>
-                    <input type="number" class="form-control input-sm" id="add_modify_token_time" name="add_token_expired" value="30">
+                    <input type="number" class="form-control" id="add_modify_token_time" name="add_token_expired" value="30">
                 </div>
                 <input type="hidden" class="form-control" name="add_token_id" value="<?php echo count($tokenList); ?>" placeholder="隐藏的保存">
-                <button type="submit" class="btn btn-sm btn-primary">添加</button>
+                <button type="submit" class="btn btn-primary">添加</button>
             </form>
         </div>
         <div class="tab-pane fade" id="Content6">
             <div class="col-md-12">
                 <div class="col-md-6">
+                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
+                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                        <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+                    </form>
+                </div>
+                <div class="col-md-6">
                     <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
                     <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
                         <div class="form-group">
                             <label for="logDate" class="text-primary">选择月份: </label>
-                            <input type="text" class="form-control logDate input-sm" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
+                            <input type="text" class="form-control logDate" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
                             <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="日志访问秘钥">
                         </div>
-                        <button type="submit" class="btn btn-sm btn-primary">查看日志</button>
-                    </form>
-                </div>
-                <div class="col-md-6">
-                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
-                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                        <button type="submit" class="btn btn-mini btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+                        <button type="submit" class="btn btn-primary">查看日志</button>
                     </form>
                 </div>
             </div>
@@ -543,32 +549,32 @@ if (isset($_POST['del_version_file'])) {
                 <h5 class="header-dividing">缩略图</h5>
                 <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                     <div class="form-group col-md-12">
-                        <div class="form-group col-md-4 col-xs-12">
+                        <div class="form-group col-md-6 col-xs-12">
                             <label data-toggle="tooltip" title="请选择合适的缩略图生成方式">生成方式</label>
                             <div class="input-group" data-toggle="tooltip" title="原图 | 直接输出上传链接,会导致流量增加<br/>TimThumb (推荐) | 优点: 带缓存周期 | 缺点: cdn无法缓存<br/>上传生成 | 优点: 缩略图直链,缓存不失效 | 低配vps负载较大,影响前端上传速度">
-                                <span class="input-group-addon input-sm">生成模式</span>
-                                <select class="form-control input-sm" name="thumbnail">
+                                <span class="input-group-addon">生成模式</span>
+                                <select class="form-control" name="thumbnail">
                                     <option value="0" <?php if ($config['thumbnail'] == 0) echo 'selected'; ?>>原图</option>
                                     <option value="1" <?php if ($config['thumbnail'] == 1) echo 'selected'; ?>>TimThumb | 推荐</option>
                                     <option value="2" <?php if ($config['thumbnail'] == 2) echo 'selected'; ?>>上传生成 | 直链</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group col-md-4 col-xs-12">
+                        <div class="form-group col-md-6 col-xs-12">
                             <label data-toggle="tooltip" title="已生成的缩略图不会失效 需清理缓存">生成大小</label>
                             <div class="input-group">
-                                <span class="input-group-addon input-sm">宽</span>
-                                <input type="number" name="thumbnail_w" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_w'])) echo $config['thumbnail_w']; ?>">
-                                <span class="input-group-addon input-sm">px</span>
-                                <span class="input-group-addon input-sm">高</span>
-                                <input type="number" name="thumbnail_h" class="form-control input-sm" placeholder="258" value="<?php if (!empty($config['thumbnail_h'])) echo $config['thumbnail_h']; ?>">
-                                <span class="input-group-addon input-sm">px</span>
+                                <span class="input-group-addon">宽</span>
+                                <input type="number" name="thumbnail_w" class="form-control" placeholder="258" value="<?php if (!empty($config['thumbnail_w'])) echo $config['thumbnail_w']; ?>">
+                                <span class="input-group-addon">px</span>
+                                <span class="input-group-addon">高</span>
+                                <input type="number" name="thumbnail_h" class="form-control" placeholder="258" value="<?php if (!empty($config['thumbnail_h'])) echo $config['thumbnail_h']; ?>">
+                                <span class="input-group-addon">px</span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                        <input type="text" class="form-control input-sm" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
@@ -576,7 +582,7 @@ if (isset($_POST['del_version_file'])) {
                             <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">静态文件CDN地址 | 末尾不加'/'</label>
                         </div>
-                        <input type="url" class="form-control input-sm" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
+                        <input type="url" class="form-control" name="static_cdn_url" value="<?php echo $config['static_cdn_url']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" data-toggle="tooltip" title="jsdelivr可在后边添加版本号 例:@2.5.6">
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
@@ -777,7 +783,7 @@ if (isset($_POST['del_version_file'])) {
                             <div class="form-group">
                                 <div class="input-group" data-toggle="tooltip" title="请输入限制数量 | 0 为不限制<br /> 开启监黄,水印等受网络波动和机器性能,执行完毕前限制不生效!">
                                     <span class="input-group-addon">游客上传限制</span>
-                                    <input class="form-control input-sm" type="number" name="ip_upload_counts" value="<?php echo $config['ip_upload_counts']; ?>">
+                                    <input class="form-control" type="number" name="ip_upload_counts" value="<?php echo $config['ip_upload_counts']; ?>">
                                     <span class="input-group-addon">张</span>
                                 </div>
                             </div>
@@ -785,8 +791,8 @@ if (isset($_POST['del_version_file'])) {
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="input-group" data-toggle="tooltip" title="使用nsfwjs方式需要自行搭建或使用开源接口 据说准确率能达到93%">
-                                    <span class="input-group-addon input-sm">图片鉴黄</span>
-                                    <select class="form-control input-sm" name="checkImg">
+                                    <span class="input-group-addon">图片鉴黄</span>
+                                    <select class="form-control" name="checkImg">
                                         <option value="0" <?php if ($config['checkImg'] == 0) echo 'selected'; ?>>关闭</option>
                                         <option value="1" <?php if ($config['checkImg'] == 1) echo 'selected'; ?>>moderatecontent | API 设置中填入Moderate Key</option>
                                         <option value="2" <?php if ($config['checkImg'] == 2) echo 'selected'; ?> title="">nsfwjs | API 设置中填入nsfwjs url</option>
@@ -1000,14 +1006,14 @@ if (isset($_POST['del_version_file'])) {
                 </div>
                 <div class="form-group col-md-3">
                     <label data-toggle="tooltip" title="暂支持中文简繁体转换">界面语言</label>
-                    <select class="chosen-select form-control input-sm" name="language">
+                    <select class="chosen-select form-control" name="language">
                         <option value="0" <?php if ($config['language'] == '0') echo 'selected'; ?>>简体中文</option>
                         <option value="1" <?php if ($config['language'] == '1') echo 'selected'; ?>>繁體中文</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label data-toggle="tooltip" title="配色样式文件夹位置: /public/static/zui/theme/">网站配色</label>
-                    <select class="chosen-select form-control input-sm" name="theme">
+                    <select class="chosen-select form-control" name="theme">
                         <option value="default" style="background: #3280fc;" <?php if ($config['theme'] == 'default') echo 'selected'; ?>>默认配色</option>
                         <option value="red" style="background: #d9534f;" <?php if ($config['theme'] == 'red') echo 'selected'; ?>>红色</option>
                         <option value="green" style="background: #4caf50;" <?php if ($config['theme'] == 'green') echo 'selected'; ?>>绿色</option>
@@ -1023,7 +1029,7 @@ if (isset($_POST['del_version_file'])) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景</label>
-                    <input type="text" class="form-control input-sm" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <div class="col-md-9">
@@ -1033,7 +1039,7 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="col-md-3">
                         <label id="listDate" data-toggle="tooltip" title="广场往日浏览限制<br />有助于防爬虫抓取<br />建议不超10天,否则页面导致排版混乱">广场限制 | 当前: <?php echo $config['listDate']; ?>天</label>
-                        <input type="number" class="form-control input-sm" id="listDate" name="listDate" value="<? if ($config['listDate']) echo $config['listDate']; ?>" min="1" max="100" required="required" placeholder="有助于防爬虫抓取 建议不超10天" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="number" class="form-control" id="listDate" name="listDate" value="<? if ($config['listDate']) echo $config['listDate']; ?>" min="1" max="100" required="required" placeholder="有助于防爬虫抓取 建议不超10天" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                 </div>
                 <div class="form-group col-md-12">
@@ -1049,21 +1055,21 @@ if (isset($_POST['del_version_file'])) {
                 <div class="col-md-12">
                     <div class="form-group col-md-4">
                         <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
-                            <input type="text" name="user" id="account" class="form-control input-sm" value="<?php echo $config['user']; ?>" required="required" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user']; ?>" required="required" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
                             <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                         </div>
                     </div>
                     <div class="form-group col-md-4">
                         <div class="input-control has-icon-left">
-                            <input type="text" name="password" id="password" class="form-control input-sm" value="<?php echo $config['password']; ?>" required="required" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            <input type="text" name="password" id="password" class="form-control" value="<?php echo $config['password']; ?>" required="required" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
 
                             <input type="hidden" name="password" id="md5_password">
-                            <label for="password" class="input-control-icon-left input-sm"><i class="icon icon-key"></i></label>
+                            <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                         </div>
                     </div>
-                    <div class="form-group  col-md-4">
+                    <div class="form-group col-md-4">
                         <input type="hidden" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                        <button type="submit" class="btn btn-sm btn-primary">更改管理员 账号/密码</button>
+                        <button type="submit" class="btn btn-primary">更改管理员 账号/密码</button>
                     </div>
                 </div>
                 <div class="alert alert-primary with-icon col-xs-8">
@@ -1082,27 +1088,27 @@ if (isset($_POST['del_version_file'])) {
                 <div class="col-md-12">
                     <div class="form-group col-md-3">
                         <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
-                            <input type="text" name="uploader_user" id="account" class="form-control input-sm" value="" required="required" autocomplete="off" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                            <label for="account" class="input-control-icon-left input-sm"><i class="icon icon-user "></i></label>
+                            <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" autocomplete="off" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                         </div>
                     </div>
                     <div class="form-group col-md-3">
                         <div class="input-control has-icon-left">
-                            <input type="text" name="uploader_password" id="uploader_password" class="form-control input-sm" value="" required="required" autocomplete="off" placeholder="添加/更改 上传者密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            <input type="text" name="uploader_password" id="uploader_password" class="form-control" value="" required="required" autocomplete="off" placeholder="添加/更改 上传者密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
                             <input type="hidden" name="uploader_password" id="uploader_md5_password">
-                            <label for="password" class="input-control-icon-left input-sm"><i class="icon icon-key"></i></label>
+                            <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                         </div>
                     </div>
                     <div class="form-group col-md-3">
                         <div class="input-group">
-                            <span class="input-group-addon input-sm">有效期</span>
-                            <input type="number" class="form-control input-sm" name="uploader_time" value="30" id="uploader_time" required="required" placeholder="有效期 单位: 天">
-                            <span class="input-group-addon input-sm">天</span>
+                            <span class="input-group-addon">有效期</span>
+                            <input type="number" class="form-control" name="uploader_time" value="30" id="uploader_time" required="required" placeholder="有效期 单位: 天">
+                            <span class="input-group-addon">天</span>
                         </div>
                     </div>
                     <div class="form-group col-md-3">
                         <input type="hidden" name="uploader_form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                        <button type="submit" class="btn btn-sm btn-danger">添加/更改 上传者 账号/密码</button>
+                        <button type="submit" class="btn btn-danger">添加/更改 上传者 账号/密码</button>
                     </div>
                 </div>
                 <div class="alert alert-primary with-icon col-xs-8">
@@ -1118,7 +1124,7 @@ if (isset($_POST['del_version_file'])) {
             <h5>* 开启用户分离后删除上传按钮激活, 删除后不可恢复</h5>
             <div id="guest" class="datagrid table-bordered">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
-                    <input id="inputSearchExample2" type="search" class="form-control search-input input-sm" placeholder="上传用户搜索...">
+                    <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="上传用户搜索...">
                     <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i class="icon icon-search"></i></label>
                     <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
                 </div>
@@ -1129,13 +1135,13 @@ if (isset($_POST['del_version_file'])) {
                 <h5 class="header-dividing">源图保护Key<small> * 设定后请勿更改,否则所有加密链接失效</small></h5>
                 <div class="col-md-3">
                     <div class="input-control has-icon-left" style="margin-top: 5px;">
-                        <input type="text" class="form-control input-sm" name="hide_key" required="required" value="<?php echo $config['hide_key']; ?>" onkeyup="this.value=this.value.trim()">
+                        <input type="text" class="form-control" name="hide_key" required="required" value="<?php echo $config['hide_key']; ?>" onkeyup="this.value=this.value.trim()">
                         <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                     </div>
                 </div>
                 <div class="form-group col-md-9" style="margin-top: 5px;">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                    <button type="submit" class="btn btn-sm btn-danger">保存源图加密Key</button>
+                    <button type="submit" class="btn btn-danger">保存源图加密Key</button>
                 </div>
             </form>
         </div>
@@ -1193,7 +1199,7 @@ if (isset($_POST['del_version_file'])) {
                 <div class="col-md-12">
                     <div class="form-group col-md-6">
                         <label>水印方式</label>
-                        <select class="chosen-select form-control input-sm" name="watermark">
+                        <select class="chosen-select form-control" name="watermark">
                             <option value="0" <?php if (!$config['watermark']) echo 'selected'; ?>>关闭水印</option>
                             <option value="1" <?php if ($config['watermark'] == 1) echo 'selected'; ?>>文字水印</option>
                             <option value="2" <?php if ($config['watermark'] == 2) echo 'selected'; ?>>图片水印</option>
@@ -1201,7 +1207,7 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="form-group col-md-6">
                         <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
-                        <select class="chosen-select form-control input-sm" name="waterPosition">
+                        <select class="chosen-select form-control" name="waterPosition">
                             <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>
                             <option value="1" <?php if ($config['waterPosition'] == 1) echo 'selected'; ?>>顶部居左</option>
                             <option value="2" <?php if ($config['waterPosition'] == 2) echo 'selected'; ?>>顶部居中</option>
@@ -1218,21 +1224,21 @@ if (isset($_POST['del_version_file'])) {
                 <div class="col-md-12">
                     <div class="form-group col-md-6">
                         <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
-                        <input type="text" class="form-control input-sm" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group col-md-6">
                         <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字水印字体路径</label>
-                        <input type="text" class="form-control  input-sm" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="form-group col-md-3">
                         <label>文字水印</label>
-                        <input type="text" class="form-control input-sm" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
+                        <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
                     </div>
                     <div class="form-group col-md-3">
                         <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
-                        <input type="text" name="textColor" class="form-control input-sm" value="" readonly data-jscolor="{preset:'myPreset'}">
+                        <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
                     </div>
                     <div class="form-group col-md-6">
                         <label>文字水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
@@ -1257,11 +1263,11 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>压缩后的宽度 | 当前: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>px (0不生效)</label>
+                    <label>压缩后的宽度 | 当前: </label><label id="image_x"><?php echo $config['image_x']; ?></label><label>px (0为不生效)</label>
                     <input type="range" class="form-control" name="image_x" value="<?php echo $config['image_x']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_x').innerHTML=value">
                 </div>
                 <div class="form-group">
-                    <label>压缩后的高度 | 当前: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>px (0不生效)</label>
+                    <label>压缩后的高度 | 当前: </label><label id="image_y"><?php echo $config['image_y']; ?></label><label>px (0为不生效)</label>
                     <input type="range" class="form-control" name="image_y" value="<?php echo $config['image_y']; ?>" min="0" max="4096" step="100" onchange="document.getElementById('image_y').innerHTML=value">
                 </div>
                 <div class="form-group">
