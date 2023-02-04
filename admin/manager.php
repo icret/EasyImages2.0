@@ -14,7 +14,7 @@ if(!is_who_login('admin')){
 }
 
 // 开启tinyfilemanager图片管理
-if (!$config['tinyfilemanager']) {
+if (!$config['file_manage']) {
     require_once APP_ROOT.'/application/header.php';
     echo '<div class="alert alert-danger">图片管理已关闭~~</div>';
     header("refresh:3;url=" . $_SERVER["HTTP_REFERER"] . '?manager-closed');

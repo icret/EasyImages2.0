@@ -764,18 +764,15 @@ function getDel($url, $type)
  */
 function is_who_login($user)
 {
-    if ($user == 'status') {
-        if (checkLogin() == 205 ||  checkLogin() == 204) return true;
-    }
-
+    // 将状态转码
     $status = json_decode(_login(), true);
-    if ($user == 'admin') {
-        if ($status['level'] == 1) return true;
-    }
+    // 查询是否登录
+    if ($user == 'status') if ($status['level'] > 0) return true;
+    // 是否管理员登录
+    if ($user == 'admin') if ($status['level'] == 1) return true;
+    // 是否上传者登录
+    if ($user == 'guest') if ($status['level'] == 2) return true;
 
-    if ($user == 'guest') {
-        if ($status['level'] == 2) return true;
-    }
     return false;
 }
 

@@ -65,17 +65,17 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                     <li><img src="../public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
                     <div class="bottom-bar">
                       <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a>
-                      <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrl; ?>" data-toggle="tooltip" title="复制" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+                      <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrl; ?>" data-toggle="tooltip" title="复制链接" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
                       <?php if ($config['show_exif_info'] || is_who_login('admin')) : ?>
-                        <a href="/application/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                        <a href="/application/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
                       <?php endif; ?>
-                      <a href="/application/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
+                      <a href="/application/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载文件" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
                       <?php if (!empty($config['report'])) : ?>
-                        <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报" style="margin-left:10px;"></i></a>
+                        <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报文件" style="margin-left:10px;"></i></a>
                       <?php endif; ?>
                       <?php if (is_who_login('admin')) : ?>
-                        <a href="/application/del.php?recycle_url=<?php echo $relative_path; ?>" target="_blank" data-toggle="tooltip" title="回收" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
-                        <a href="/application/del.php?url=<?php echo $relative_path; ?>" target="_blank" data-toggle="tooltip" title="删除" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
+                        <a href="/application/del.php?recycle_url=<?php echo $relative_path; ?>" target="_blank" data-toggle="tooltip" title="回收文件" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
+                        <a href="/application/del.php?url=<?php echo $relative_path; ?>" target="_blank" data-toggle="tooltip" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
                         <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $relative_path; ?>"> 选择</label>
                       <?php endif; ?>
                     </div>
