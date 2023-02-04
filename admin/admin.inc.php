@@ -244,7 +244,7 @@ if (isset($_POST['del_version_file'])) {
         unlink(APP_ROOT . $_POST['del_version_file']);
         echo "
         <script>
-        new $.zui.Messager('删除成功', {
+        new $.zui.Messager('更新版本成功', {
             type: 'success', // 定义颜色主题
             icon: 'ok'
         }).show();
@@ -253,7 +253,7 @@ if (isset($_POST['del_version_file'])) {
     } catch (Exception $e) {
         echo "
         <script>
-        new $.zui.Messager('删除失败: '" . $e->getMessage() . ", {
+        new $.zui.Messager('更新版本失败', {
             type: 'danger', // 定义颜色主题
             icon: 'ok'
         }).show();
@@ -904,25 +904,26 @@ if (isset($_POST['del_version_file'])) {
             </div>
             <div class="collapse" id="Ip2Region">
                 <div class="bg-primary with-padding">
-                    <h4>Ip2region - IP地址数据库 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank" class="label label-badge">下载 / 更新</a></h4>
+                    <h4>Ip2region - IP地址数据库 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank" class="label label-badge">下载 | 更新</a></h4>
                     <hr />
                     <p>
                         Ip2region (2.0 - xdb) 是一个离线 IP 数据管理框架和定位库,支持亿级别的数据段,10微秒级别的查询性能,提供了许多主流编程语言的 xdb 数据管理引擎的实现。
                         每个 ip 数据段的 region 信息都固定了格式：国家|区域|省份|城市|ISP, 只有中国的数据绝大部分精确到了城市, 其他国家部分数据只能定位到国家, 后前的选项全部是0。
                     </p>
-                    <h6>* 下载 ip2region.xdb IP数据库上传到 <small style="color: black;">/application/ip2region/</small> 文件夹, 如遇到下载失败可访问开源地址下载: [ <a href="https://github.com/lionsoul2014/ip2region" target="_blank"><small style="color: black;">Github</small></a> | <a href="https://gitee.com/lionsoul/ip2region" target="_blank"><small style="color: black;">Gitee</small></a> ] 更新方法与此相同。</h6>
+                    <h6>* 下载 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank">ip2region.xdb</a> IP数据库上传到 <small style="color: black;">/application/ip2region/</small> 文件夹, 如遇到下载失败可访问开源地址下载: [ <a href="https://github.com/lionsoul2014/ip2region" target="_blank"><small style="color: black;">Github</small></a> | <a href="https://gitee.com/lionsoul/ip2region" target="_blank"><small style="color: black;">Gitee</small></a> ] 更新方法与此相同。</h6>
                 </div>
             </div>
             <?php if (getVersion() !== get_current_version()) : ?>
                 <div class="bg-warning with-padding hidden-xs">
-                    <h4>最新版本: <?php echo getVersion('name'); ?> <a href="<?php echo getVersion('zipball_url'); ?>" target="_blank" class="label label-badge">下载新版本</a></h4>
-                    <hr />
-                    <p>更新日期: <?php echo getVersion('created_at'); ?></p>
-                    <p>更新内容: <br /><?php echo getVersion('body'); ?></p>
-                    <h6>* 更新后点击更新版本号</h6>
+                    <h5 class="header-dividing"><span class="label label-success">New</span> <?php echo getVersion('name'); ?></h5>
+                    <pre style="background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);">更新内容: <br /><?php echo getVersion('body'); ?></pre>
+                    <h6>* 更新日期: <?php echo getVersion('created_at'); ?> 下载新版本上传更新, 然后点击更新版本号。</h6>
                     <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                        <input class="form-control" type="hidden" name="del_version_file" value="/admin/logs/version/version.json" readonly="">
-                        <button class="btn btn-mini btn-danger">更新版本号</button>
+                        <input class="form-control" type="hidden" name="del_version_file" value="/admin/logs/version/version.json" readonly>
+                        <div class="btn-group">
+                            <button class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank">下载新版本</button>
+                            <button class="btn btn-mini btn-danger">更新版本号</button>
+                        </div>
                     </form>
                 </div>
             <?php endif; ?>

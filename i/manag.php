@@ -10,6 +10,15 @@ session_start();
 require_once __DIR__ . '/../application/function.php';
 require_once APP_ROOT . '/config/config.php';
 
+// 开启tinyfilemanager文件管理
+if (!$config['tinyfilemanager']) {
+    require_once APP_ROOT . '/application/header.php';
+    echo '<h4 class="alert alert-danger">文件管理已关闭~~</h4>';
+    header("refresh:3;url=" . $config['domain'] . '?manag-closed');
+    require_once APP_ROOT . '/application/footer.php';
+    exit;
+}
+
 // 根路径
 RexHelper::$root = APP_ROOT . $config['path'];
 
@@ -17,7 +26,6 @@ RexHelper::$root = APP_ROOT . $config['path'];
 RexHelper::$users = array(
     $config['user'] => array('password' => $config['password']),
 );
-
 
 /**结束 - 自定义修改 */
 ?>
