@@ -21,10 +21,11 @@ mustLogin();
     </div>
     <div class="uploader-files file-list file-list-lg file-rename-by-click" data-drag-placeholder="选择文件/Ctrl+V粘贴/拖拽至此处" style="min-height: 188px; border-style: dashed;"></div>
     <div class="uploader-actions">
-      <div class="uploader-status pull-right text-muted"></div>
       <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
       <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i> 开始上传</button>
       <button type="button" class="btn btn-link uploader-btn-stop"><i class="icon icon-pause"></i> 暂停上传</button>
+      <div class="uploader-status pull-right text-muted hidden-xs"></div>
+      <div class="uploader-status pull-right text-muted col-xs-12 text-ellipsis visible-xs"></div>
     </div>
   </div>
   <div class="col-md-12 clo-xs-12">

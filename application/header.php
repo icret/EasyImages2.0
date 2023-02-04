@@ -49,11 +49,12 @@
 				<?php endif; ?>
 				<?php /** 账号登录 */ if (is_who_login('status')) : ?>
 					<!-- 右侧的导航项目 -->
-					<li class="nav navbar-nav navbar-right hidden-xs"><a href="<?php echo $config['domain']; ?>/admin/index.php?login=logout"><i class="icon icon-signout"> 退出登录</i></a></li>
+					<li class="nav navbar-nav navbar-right hidden-xs"><a href="<?php echo $config['domain']; ?>/admin/index.php?login=logout">您好：<?php echo unserialize($_COOKIE['auth'])[0]; ?> <i class="icon icon-signout"></i></a></li>
 				<?php else : ?>
-					<li class="nav navbar-nav navbar-right hidden-xs"><a href="<?php echo $config['domain']; ?>/admin/index.php"><i class="icon icon-user"> 登录账号</i></a></li>
+					<li class="nav navbar-nav navbar-right hidden-xs"><a href="<?php echo $config['domain']; ?>/admin/index.php"><i class="icon icon-user"> 登录</i></a></li>
 				<?php endif; ?>
 			</ul>
 		</div>
 	</div>
+
 	<!-- 顶部导航栏END -->

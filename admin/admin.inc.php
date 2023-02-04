@@ -586,10 +586,17 @@ if (isset($_POST['del_version_file'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="开启登陆上传">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="开启仅登陆上传">
                                 <input type="hidden" name="mustLogin" value="0">
                                 <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">登录上传</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="登录验证码建议开启,有效防止因撞库导致账户密码被破解!">
+                                <input type="hidden" name="captcha" value="0">
+                                <input type="checkbox" name="captcha" value="1" <?php if ($config['captcha']) echo 'checked'; ?>>
+                                <label style="font-weight: bold">登录验证</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -614,10 +621,24 @@ if (isset($_POST['del_version_file'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="使用加密链接删除的图片移动至图片回收">
-                                <input type="hidden" name="image_recycl" value="0">
-                                <input type="checkbox" name="image_recycl" value="1" <?php if ($config['image_recycl']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">图片回收</label>
+                            <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
+                                <input type="hidden" name="show_user_hash_del" value="0">
+                                <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">显示删除</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
+                                <input type="hidden" name="chart_on" value="0">
+                                <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">显示统计</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
+                                <input type="hidden" name="showSort" value="0">
+                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">广场排序</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -642,46 +663,18 @@ if (isset($_POST['del_version_file'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="使用加密链接删除的文件移动至图片回收">
+                                <input type="hidden" name="image_recycl" value="0">
+                                <input type="checkbox" name="image_recycl" value="1" <?php if ($config['image_recycl']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">文件回收</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <!-- <input type="text" name="admin_path" class="form-control input-sm" value="echo $config['admin_path']" placeholder="请自定义管理的上传目录"> -->
                             <div class="switch switch-inline" data-toggle="tooltip" title="开启文件管理">
                                 <input type="hidden" name="tinyfilemanager" value="0">
                                 <input type="checkbox" name="tinyfilemanager" value="1" <?php if ($config['tinyfilemanager']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">文件管理</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
-                                <input type="hidden" name="show_user_hash_del" value="0">
-                                <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">显示删除</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
-                                <input type="hidden" name="showSort" value="0">
-                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">广场排序</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="图片过多时可能会影响统计时间">
-                                <input type="hidden" name="chart_on" value="0">
-                                <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">显示统计</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="上传日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
-                                <input type="hidden" name="upload_logs" value="0">
-                                <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">上传日志</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="检测图床的 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径">
-                                <input type="hidden" name="checkEnv" value="0">
-                                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">图床自检</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -692,21 +685,30 @@ if (isset($_POST['del_version_file'])) {
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="建议开启,有效防止因撞库导致账户密码被破解!">
-                                <input type="hidden" name="captcha" value="0">
-                                <input type="checkbox" name="captcha" value="1" <?php if ($config['captcha']) echo 'checked'; ?>>
-                                <label style="font-weight: bold">验证码</label>
+                            <div class="switch switch-inline" data-toggle="tooltip" title="检测图床的 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径">
+                                <input type="hidden" name="checkEnv" value="0">
+                                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">环境自检</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="上传日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
+                                <input type="hidden" name="upload_logs" value="0">
+                                <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">上传日志</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
-                            <input type="hidden" name="public" value="0">
-                            <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
-                            <label style="font-weight: bold">开放数据<i class="icon icon-long-arrow-down"></i></label>
-                        </div>
                         <div class="panel">
                             <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="switch switch-inline" data-toggle="tooltip" title="通过指定参数查询图床的开放数据 | 与缓存周期同步 | 使用方法见使用手册->公共查询">
+                                        <input type="hidden" name="public" value="0">
+                                        <input type="checkbox" name="public" value="1" <?php if ($config['public']) echo 'checked'; ?>>
+                                        <label style="font-weight: bold">开放数据 <i class="icon icon-hand-down"></i></label>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="checkbox-inline" data-toggle="tooltip" title="<?php echo $config['domain']; ?>/api/public.php?show=time">
                                         <input type="checkbox" name="public_list[]" value="time" id="time" <?php if (in_array('time', $config['public_list']))  echo 'checked'; ?>><label for="time">统计时间</label>
@@ -912,7 +914,7 @@ if (isset($_POST['del_version_file'])) {
                 </div>
             </div>
             <?php if (getVersion() !== get_current_version()) : ?>
-                <div class="bg-warning with-padding">
+                <div class="bg-warning with-padding hidden-xs">
                     <h4>最新版本: <?php echo getVersion('name'); ?> <a href="<?php echo getVersion('zipball_url'); ?>" target="_blank" class="label label-badge">下载新版本</a></h4>
                     <hr />
                     <p>更新日期: <?php echo getVersion('created_at'); ?></p>

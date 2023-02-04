@@ -60,7 +60,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 $imgUrl = $config['domain'] . $relative_path;     // 图片地址
                 $linkUrl = rand_imgurl() . $config_path . $value; // 图片复制与原图地址
             ?>
-                <div class="col-md-4 col-sm-6 col-lg-3">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                   <div class="card">
                     <li><img src="../public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
                     <div class="bottom-bar">
@@ -93,34 +93,33 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     /** 底部广告 */
     if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <hr />
-      <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
-        <div class="btn-toolbar">
-          <div class="btn-group">
-            <a class="btn btn-danger btn-mini" href="?<?php echo http_build_query($httpUrl); ?>">当前<?php echo $allUploud; ?></a>
-            <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
-            <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
-            <?php
-            // 倒推日期显示上传图片 @param $listDate 配置的倒退日期
-            for ($x = 2; $x <= $listDate; $x++)
-              echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('j号', strtotime("-$x day")) . '</a>';
-            ?>
-          </div>
-          <?php if (is_who_login('admin')) : ?>
-            <div class="btn-group">
-              <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
-              <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
-              <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
-              <a class="btn btn-mini" onclick="recycle_img()">回收</a>
-              <a class="btn btn-mini" onclick="delete_img()">删除</a>
-            </div>
-          <?php endif; ?>
+  <div class="col-md-12" style="margin-bottom: 5em;">
+    <hr />
+    <div class="col-md-8 col-xs-12" style="padding-bottom:5px">
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <a class="btn btn-danger btn-mini" href="?<?php echo http_build_query($httpUrl); ?>">当前<?php echo $allUploud; ?></a>
+          <a class="btn btn-primary btn-mini" href="list.php">今日<?php echo get_file_by_glob(APP_ROOT . config_path() . '*.*', 'number'); ?></a>
+          <a class="btn btn-mini" href="?date=<?php echo date("Y/m/d/", strtotime("-1 day")) ?>">昨日<?php echo get_file_by_glob(APP_ROOT . $config['path'] . date("Y/m/d/", strtotime("-1 day")), 'number'); ?></a>
+          <?php
+          // 倒推日期显示上传图片 @param $listDate 配置的倒退日期
+          for ($x = 2; $x <= $listDate; $x++)
+            echo '<a class="btn btn-mini hidden-xs inline-block" href="?date=' . date('Y/m/d/', strtotime("-$x day"))  .  '">' . date('j号', strtotime("-$x day")) . '</a>';
+          ?>
         </div>
+        <?php if (is_who_login('admin')) : ?>
+          <div class="btn-group">
+            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'checkall')">全选</a>
+            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'reversecheck')">反选</a>
+            <a class="btn btn-mini" onclick="opcheckboxed('checkbox', 'uncheckall')">取消</a>
+            <a class="btn btn-mini" onclick="recycle_img()">回收</a>
+            <a class="btn btn-mini" onclick="delete_img()">删除</a>
+          </div>
+        <?php endif; ?>
       </div>
-      <!-- 按格式 -->
-      <!-- <div class="row">
+    </div>
+    <!-- 按格式 -->
+    <!-- <div class="row">
       <div class="col-md-2 col-xs-6">
         <form action="<php echo '?' . http_build_query($httpUrl) . '&'; ?>" method="get">
           <div class="input-group">
@@ -136,26 +135,25 @@ if ($config['ad_top']) echo $config['ad_top_info'];
           </div>
         </form>
       </div> -->
-      <div class="col-md-2 col-xs-7">
-        <div class="btn-group">
-          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
-          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
-          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
-          <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
+    <div class="col-md-2 col-xs-7">
+      <div class="btn-group">
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=jpg'; ?>">JPG</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=png'; ?>">PNG</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=gif'; ?>">GIF</a>
+        <a class="btn btn-mini" href="<?php echo '?' . http_build_query($httpUrl) . '&search=webp'; ?>">Webp</a>
+      </div>
+    </div>
+    <!-- 按日期-->
+    <div class="col-md-2 col-xs-5">
+      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+        <div class="input-group">
+          <span class="input-group-addon fix-border fix-padding"></span>
+          <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary input-sm">按日期</button>
+          </span>
         </div>
-      </div>
-      <!-- 按日期-->
-      <div class="col-md-2 col-xs-5">
-        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
-          <div class="input-group">
-            <span class="input-group-addon fix-border fix-padding"></span>
-            <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
-            <span class="input-group-btn">
-              <button type="submit" class="btn btn-primary input-sm">按日期</button>
-            </span>
-          </div>
-        </form>
-      </div>
+      </form>
       <!-- 返回顶部-->
       <div class="btn btn-mini btn-primary btn-back-to-top"><i class="icon icon-arrow-up"></i></div>
     </div>
