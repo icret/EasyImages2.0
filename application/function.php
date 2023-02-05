@@ -1623,9 +1623,13 @@ function process_checkImg($imgurl)
  * $fileSize 图片的大小
  * $form 来源如果是网页上传直接显示网页,如果是API上传则显示ID
  */
-function write_log($filePath, $sourceName, $absolutePath, $fileSize, $from = "web")
+function write_upload_logs($filePath, $sourceName, $absolutePath, $fileSize, $from = "web")
 {
     global $config;
+
+    if (!$config['upload_logs']) {
+        return null;
+    }
 
     $checkImg = $config['checkImg'] == true ? "ON" : "OFF";
 
@@ -1718,12 +1722,14 @@ function ip2region(String $IP)
  */
 function ip_upload_counts()
 {
-    $dir = APP_ROOT . '/admin/logs/ipcounts/';
+    global $config;
 
-    if (!is_dir($dir)) {
-        mkdir($dir, 0777);
+    if ($config['ip_upload_counts'] > 0) {
+
+        $dir = APP_ROOT . '/admin/logs/ipcounts/';
+        if (!is_dir($dir)) mkdir($dir, 0777);
+
+        $file =  $dir . date('Ymd') . '.php';
+        file_put_contents($file, real_ip() . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
-
-    $file =  $dir . date('Ymd') . '.php';
-    file_put_contents($file, real_ip() . PHP_EOL, FILE_APPEND | LOCK_EX);
 }

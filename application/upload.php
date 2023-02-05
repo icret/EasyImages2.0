@@ -213,20 +213,18 @@ if ($handle->uploaded) {
         // 同IP上传日志
         @ip_upload_counts();
         // 日志
-        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 鉴黄
         @process_checkImg($processUrl);
-        // 日志
-        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 水印
         @water($handle->file_dst_pathname);
         // 压缩
-        @ip_upload_counts();
+        @process_compress($handle->file_dst_pathname);
     } else { // 普通模式
         // 记录同IP上传次数
         @ip_upload_counts();
         // 日志
-        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
+        @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size);
         // 鉴黄
         @process_checkImg($processUrl);
         // 水印

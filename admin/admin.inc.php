@@ -440,7 +440,7 @@ if (isset($_POST['del_version_file'])) {
                 </div>
                 <div class="form-group">
                     <label>顶部广告内容 | 仅支持html代码</label>
-                    <textarea class="form-control" rows="5" name="ad_top_info"><?php echo $config['ad_top_info']; ?></textarea>
+                    <textarea class="form-control" rows="8" name="ad_top_info"><?php echo $config['ad_top_info']; ?></textarea>
                 </div>
                 <div class="form-group">
                     <div class="switch switch-inline">
@@ -451,7 +451,7 @@ if (isset($_POST['del_version_file'])) {
                 </div>
                 <div class="form-group">
                     <label>底部广告内容 | 仅支持html代码</label>
-                    <textarea class="form-control" rows="5" name="ad_bot_info"><?php echo $config['ad_bot_info']; ?></textarea>
+                    <textarea class="form-control" rows="8" name="ad_bot_info"><?php echo $config['ad_bot_info']; ?></textarea>
                 </div>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
@@ -590,7 +590,7 @@ if (isset($_POST['del_version_file'])) {
                             <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) echo 'checked="checked"'; ?>>
                             <label style="font-weight: bold">黑/白IP名单上传</label>
                         </div>
-                        <textarea class="form-control" rows="5" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
+                        <textarea class="form-control" rows="3" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*"><?php echo $config['check_ip_list']; ?></textarea>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
                         <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
                     </div>
@@ -896,7 +896,7 @@ if (isset($_POST['del_version_file'])) {
                     <a href="https://www.kancloud.cn/easyimage/easyimage/content" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用手册"><i class="icon icon-book"></i> Manual</span></a>
                     <a href="https://t.me/Easy_Image" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="EasyImage Telegram Group"><i class="icon icon-comments-alt"></i> Telegram</span></a>
                     <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="GitHub 社区"><i class="icon icon-comments-alt"></i> Discuss</span></a>
-                    <span class="label label-badge label-primary" data-toggle="tooltip" title="当前版本"><i class="icon icon-github"></i> <?php echo get_current_version(); ?></span>
+                    <span data-toggle="tooltip" title="当前版本信息"><button type="button" class="btn btn-sm btn-primary label label-badge" data-toggle="modal" data-moveable="true" data-scroll-inside="true" data-icon="heart" data-title="当前版本信息" data-custom="<pre style='background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);'><?php echo getVersion('name') . '<br/><br/>' . getVersion('body'); ?></pre>"><i class="icon icon-github"></i> <?php echo get_current_version(); ?></button></span>
                     <a href="../public/images/wechat.jpg" data-toggle="lightbox" style="color:#329d38;"><i data-toggle="tooltip" title="您的赞美是我开发的动力!" class="icon icon-wechat"></i></a>
                     <a href="../public/images/alipay.jpg" data-toggle="lightbox" class="hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao" data-toggle="tooltip" title="您的赞美是我开发的动力!"> </i></a>
                 </p>
@@ -936,12 +936,12 @@ if (isset($_POST['del_version_file'])) {
                 <div class="bg-warning with-padding hidden-xs">
                     <h5 class="header-dividing"><span class="label label-success">New</span> <?php echo getVersion('name'); ?></h5>
                     <pre style="background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);">更新内容: <br /><?php echo getVersion('body'); ?></pre>
-                    <h6>* 更新日期: <?php echo getVersion('created_at'); ?> 下载新版本上传更新, 然后点击更新版本号。</h6>
+                    <h6>* 更新日期: <?php echo getVersion('created_at'); ?> 下载新版本上传至网站升级, 然后点击更新版本号。</h6>
                     <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <input class="form-control" type="hidden" name="del_version_file" value="/admin/logs/version/version.json" readonly>
                         <div class="btn-group">
-                            <button class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank">下载新版本</button>
-                            <button class="btn btn-mini btn-danger">更新版本号</button>
+                            <a class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank" data-toggle="tooltip" title="① 下载后上传至网站更新">下载新版本</a>
+                            <button class="btn btn-mini btn-danger" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</button>
                         </div>
                     </form>
                 </div>
@@ -1251,7 +1251,6 @@ if (isset($_POST['del_version_file'])) {
                 <button type="submit" class="btn btn-primary">保存</button>
             </form>
         </div>
-
         <div class="tab-pane fade" id="Content13">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <h5 class="header-dividing">前端裁剪/压缩 <small>优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</small></h5>

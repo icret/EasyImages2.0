@@ -193,7 +193,7 @@ if ($handle->uploaded) {
         // 记录同IP上传次数
         @ip_upload_counts();
         // 上传日志
-        if ($config['upload_logs']) @write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
+        @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 鉴黄
         @process_checkImg($processUrl);
         // 水印        
@@ -204,7 +204,7 @@ if ($handle->uploaded) {
         // 记录同IP上传次数
         @ip_upload_counts();
         // 上传日志
-        if ($config['upload_logs']) write_log($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
+        @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 鉴黄
         @process_checkImg($processUrl);
         // 水印
