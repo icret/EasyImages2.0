@@ -53,6 +53,7 @@ if (isset($_POST['del_extra_files'])) {
       @unlink(APP_ROOT . '/config/EasyIamge.lock');
       @deldir(APP_ROOT . "/.github");
       @deldir(APP_ROOT . "/.git");
+      @deldir(APP_ROOT . "/docs");
     } catch (Exception $e) {
       echo $e->getMessage();
     }

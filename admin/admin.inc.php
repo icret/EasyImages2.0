@@ -11,19 +11,38 @@ require_once APP_ROOT . '/config/config.guest.php';
 if (!is_who_login('admin')) {
     echo '
   <script> new $.zui.Messager("请使用管理员账户登录! ", {
-	  type: "danger", // 定义颜色主题 
-	  icon: "exclamation-sign" // 定义消息图标
+	type: "danger", // 定义颜色主题 
+	icon: "exclamation-sign" // 定义消息图标
   }).show();</script>';
     header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
     require_once APP_ROOT . '/application/footer.php';
     exit;
 }
 
+// 定义文件位置 
+$config_file = APP_ROOT . '/config/config.php'; // config.php
+$api_key_file = APP_ROOT . '/config/api_key.php'; // api_key.php
+$guest_config_file = APP_ROOT . '/config/config.guest.php'; // config.guest.php
+
+
 // 修改config配置
 if (isset($_POST['update'])) {
     $postArr = $_POST;
+
+    if (isset($postArr['user'])) {
+        if ($postArr['user'] == $guestConfig[$postArr['user']])
+            echo '
+            <script>
+            new $.zui.Messager("管理员账号不能与上传者账号相同!", {
+                type: "danger", // 定义颜色主题 
+                icon: "exclamation-sign" // 定义消息图标
+            }).show();
+            </script>
+            ';
+        exit(header("refresh:1;"));
+    }
+
     $new_config = array_replace($config, $postArr);
-    $config_file = APP_ROOT . '/config/config.php';
     cache_write($config_file, $new_config);
     echo '
   <script>
@@ -49,8 +68,7 @@ if (isset($_POST['add_token_id'])) {
         )
     );
     $new_config = array_replace($tokenList, $postArr);
-    $config_file = APP_ROOT . '/config/api_key.php';
-    cache_write($config_file, $new_config, 'tokenList');
+    cache_write($api_key_file, $new_config, 'tokenList');
     echo '
   <script>
   new $.zui.Messager("API Token 添加成功!", {
@@ -73,8 +91,7 @@ if (isset($_GET['stop_token'])) {
         )
     );
     $new_config = array_replace($tokenList, $postArr);
-    $config_file = APP_ROOT . '/config/api_key.php';
-    cache_write($config_file, $new_config, 'tokenList');
+    cache_write($api_key_file, $new_config, 'tokenList');
     echo '
         <script>
         new $.zui.Messager("禁用 API Token 成功!", {
@@ -89,8 +106,7 @@ if (isset($_GET['stop_token'])) {
 // 删除Token
 if (isset($_GET['delete_token'])) {
     unset($tokenList[$_GET['delete_token']]);
-    $config_file = APP_ROOT . '/config/api_key.php';
-    cache_write($config_file, $tokenList, 'tokenList');
+    cache_write($api_key_file, $tokenList, 'tokenList');
     echo '
   <script>
   new $.zui.Messager("删除 API Token 成功!", {
@@ -113,15 +129,14 @@ if (isset($_GET['stop_guest'])) {
         )
     );
     $new_config = array_replace($guestConfig, $postArr);
-    $config_file = APP_ROOT . '/config/config.guest.php';
-    cache_write($config_file, $new_config, 'guestConfig');
+    cache_write($guest_config_file, $new_config, 'guestConfig');
     echo '
         <script>
         new $.zui.Messager("禁用上传用户成功!", {
             type: "primary", // 定义颜色主题 
             icon: "ok-sign" // 定义消息图标
         }).show();
-        </script>  
+        </script>
   ';
     header("refresh:1;url=/admin/admin.inc.php");
 }
@@ -130,8 +145,7 @@ if (isset($_GET['stop_guest'])) {
 // 删除用户
 if (isset($_GET['delete_guest'])) {
     unset($guestConfig[$_GET['delete_guest']]);
-    $config_file = APP_ROOT . '/config/config.guest.php';
-    cache_write($config_file, $guestConfig, 'guestConfig');
+    cache_write($guest_config_file, $guestConfig, 'guestConfig');
     echo '
   <script>
   new $.zui.Messager("删除上传用户成功!", {
@@ -143,19 +157,48 @@ if (isset($_GET['delete_guest'])) {
     header("refresh:1;url=/admin/admin.inc.php");
 }
 
+//  添加管理员修改config.php
+if (isset($_POST['admin_form'])) {
+    $postArr = $_POST;
+    if (isset($guestConfig[$postArr['user']])) {
+        echo '
+        <script>
+            new $.zui.Messager("管理员账号不能与上传者账号相同!", {
+                type: "danger", // 定义颜色主题 
+                icon: "exclamation-sign" // 定义消息图标
+            }).show();
+        </script>
+        ';
+        exit(header("refresh:3;"));
+    }
+    $postArr = array('user' => $postArr['user'], 'password' => $postArr['password']);
+
+    $new_config = array_replace($config, $postArr);
+    cache_write($config_file, $new_config);
+    echo '
+    <script>
+    new $.zui.Messager("保存成功", {
+        type: "primary", // 定义颜色主题 
+        icon: "ok-sign" // 定义消息图标
+    }).show();
+    </script>
+  ';
+    header("refresh:1;");
+}
+
 // 添加上传账号 修改config.guest.php
 if (isset($_POST['uploader_form'])) {
     // 禁止与管理员登录名相同
     if ($_POST['uploader_user'] == $config['user']) {
         echo '
         <script>
-        new $.zui.Messager("上传用户不能与管理员用户名相同!", {
+        new $.zui.Messager("上传用户账号不能与管理员账号相同!", {
             type: "danger", // 定义颜色主题 
             icon: "exclamation-sign" // 定义消息图标
         }).show();
         </script>
         ';
-        exit(header("refresh:1;"));
+        exit(header("refresh:3;"));
     }
     // 写入上传者用户数据
     $postArr = array(
@@ -166,8 +209,7 @@ if (isset($_POST['uploader_form'])) {
         )
     );
     $new_config = array_replace($guestConfig, $postArr);
-    $config_file = APP_ROOT . '/config/config.guest.php';
-    cache_write($config_file, $new_config, 'guestConfig');
+    cache_write($guest_config_file, $new_config, 'guestConfig');
     echo '
     <script>
     new $.zui.Messager("上传用户添加成功!", {
@@ -428,7 +470,6 @@ if (isset($_POST['del_version_file'])) {
                 </div>
             </form>
         </div>
-
         <div class="tab-pane fade" id="Content3">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group">
@@ -462,7 +503,7 @@ if (isset($_POST['del_version_file'])) {
         <div class="tab-pane fade " id="Content4">
             <form action="../application/compressing.php" method="post" target="_blank">
                 <h5 class="header-dividing">压缩文件夹</h5>
-                <div class=" col-md-12">
+                <div class="col-md-12">
                     <div class="form-group col-md-4">
                         <input type="text" class="form-control form-date" placeholder="" name="folder" value="<?php echo date('Y/m/d/'); ?>" readonly="">
                     </div>
@@ -483,7 +524,7 @@ if (isset($_POST['del_version_file'])) {
                 </div>
             </form>
         </div>
-        <div class="tab-pane fade " id="Content5">
+        <div class="tab-pane fade" id="Content5">
             <h5 class="header-dividing">外部KEY</h5>
             <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
                 <div class="form-group col-md-4">
@@ -502,7 +543,7 @@ if (isset($_POST['del_version_file'])) {
                 <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn-primary">保存KEY</button>
             </form>
-            <h5 class="page-header">Token列表: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
+            <h5 class="page-header">Token API 管理: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
             <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
             <div id="myDataGrid" class="datagrid table-bordered">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
@@ -574,7 +615,7 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="form-group">
                         <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                        <input type="text" class="form-control" id="report" name="report" value="<? if ($config['report']) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" id="report" name="report" value="<? if (isset($config['report'])) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
@@ -1061,24 +1102,26 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="form-group col-md-4">
                         <div class="input-control has-icon-left">
-                            <input type="text" name="password" id="password" class="form-control" value="<?php echo $config['password']; ?>" required="required" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
-
+                            <input type="text" name="password" id="password" class="form-control" value="" required="required" placeholder="更改管理密码" onkeyup="this.value=this.value.replace(/\s/g,'')">
                             <input type="hidden" name="password" id="md5_password">
                             <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                         </div>
                     </div>
                     <div class="form-group col-md-4">
-                        <input type="hidden" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                        <button type="submit" class="btn btn-primary">更改管理员 账号/密码</button>
+                        <input type="hidden" name="admin_form" value="" placeholder="隐藏的保存">
+                        <button type="submit" class="btn btn-primary">更改管理员 账号|密码</button>
                     </div>
                 </div>
                 <div class="alert alert-primary with-icon col-xs-8">
                     <i class="icon-info-sign"></i>
                     <div class="content">
-                        <p>直接输入账号和密码即可完成修改.</p>
-                        <p>更改后会立即生效并重新登录,请务必牢记账号和密码! </p>
-                        <p>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</p>
-                        <p>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
+                        <ul>
+                            <li>管理员账号不能与上传者账号相同</li>
+                            <li>直接输入账号和密码即可完成修改</li>
+                            <li>更改后会立即生效并重新登录,请务必牢记账号和密码! </li>
+                            <li>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</li>
+                            <li>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
+                        </ul>
                     </div>
                 </div>
             </form>
@@ -1107,17 +1150,20 @@ if (isset($_POST['del_version_file'])) {
                         </div>
                     </div>
                     <div class="form-group col-md-3">
-                        <input type="hidden" name="uploader_form" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
-                        <button type="submit" class="btn btn-danger">添加/更改 上传者 账号/密码</button>
+                        <input type="hidden" name="uploader_form" value="" placeholder="隐藏的保存">
+                        <button type="submit" class="btn btn-danger">添加|更改 上传者 账号|密码</button>
                     </div>
                 </div>
                 <div class="alert alert-primary with-icon col-xs-8">
                     <i class="icon-info-sign"></i>
                     <div class="content">
-                        <p>上传用户的配置文件在<code>config.guest.php</code></p>
-                        <p>开启登录上传后,可以添加一些只能上传的账号</p>
-                        <p>更改后会立即生效并重新登录,请将账号和密码发给使用者</p>
-                        <p>如果忘记密码请填入账号并填写新的密码即可更正密码 | <b class="text-success">与更改管理 账号/密码不同!</b></p>
+                        <ul>
+                            <li>上传用户账号不能与管理员账号相同</li>
+                            <li>上传用户的配置文件在<code>config.guest.php</code></li>
+                            <li>开启登录上传后,可以添加一些只能上传的账号</li>
+                            <li>更改后会立即生效并重新登录,请将账号和密码发给使用者</li>
+                            <li>如果忘记密码请填入账号并填写新的密码即可更正密码 | <b class="text-success">与更改管理 账号/密码不同!</b></li>
+                        </ul>
                     </div>
                 </div>
             </form>
@@ -1196,54 +1242,48 @@ if (isset($_POST['del_version_file'])) {
         </div>
         <div class="tab-pane fade" id="Content12">
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                <div class="col-md-12">
-                    <div class="form-group col-md-6">
-                        <label>水印方式</label>
-                        <select class="chosen-select form-control" name="watermark">
-                            <option value="0" <?php if (!$config['watermark']) echo 'selected'; ?>>关闭水印</option>
-                            <option value="1" <?php if ($config['watermark'] == 1) echo 'selected'; ?>>文字水印</option>
-                            <option value="2" <?php if ($config['watermark'] == 2) echo 'selected'; ?>>图片水印</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
-                        <select class="chosen-select form-control" name="waterPosition">
-                            <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>
-                            <option value="1" <?php if ($config['waterPosition'] == 1) echo 'selected'; ?>>顶部居左</option>
-                            <option value="2" <?php if ($config['waterPosition'] == 2) echo 'selected'; ?>>顶部居中</option>
-                            <option value="3" <?php if ($config['waterPosition'] == 3) echo 'selected'; ?>>顶部居右</option>
-                            <option value="4" <?php if ($config['waterPosition'] == 4) echo 'selected'; ?>>左边居中</option>
-                            <option value="5" <?php if ($config['waterPosition'] == 5) echo 'selected'; ?>>图片中心</option>
-                            <option value="6" <?php if ($config['waterPosition'] == 6) echo 'selected'; ?>>右边居中</option>
-                            <option value="7" <?php if ($config['waterPosition'] == 7) echo 'selected'; ?>>底部居左</option>
-                            <option value="8" <?php if ($config['waterPosition'] == 8) echo 'selected'; ?>>底部居中</option>
-                            <option value="9" <?php if ($config['waterPosition'] == 9) echo 'selected'; ?>>底部居右</option>
-                        </select>
-                    </div>
+                <div class="form-group col-md-6">
+                    <label>水印方式</label>
+                    <select class="chosen-select form-control" name="watermark">
+                        <option value="0" <?php if (!$config['watermark']) echo 'selected'; ?>>关闭水印</option>
+                        <option value="1" <?php if ($config['watermark'] == 1) echo 'selected'; ?>>文字水印</option>
+                        <option value="2" <?php if ($config['watermark'] == 2) echo 'selected'; ?>>图片水印</option>
+                    </select>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group col-md-6">
-                        <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
-                        <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字水印字体路径</label>
-                        <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                    </div>
+                <div class="form-group col-md-6">
+                    <label data-toggle="tooltip" title="不开启水印方式不生效">水印位置</label>
+                    <select class="chosen-select form-control" name="waterPosition">
+                        <option value="0" <?php if (!$config['waterPosition']) echo 'selected'; ?>>随机位置</option>
+                        <option value="1" <?php if ($config['waterPosition'] == 1) echo 'selected'; ?>>顶部居左</option>
+                        <option value="2" <?php if ($config['waterPosition'] == 2) echo 'selected'; ?>>顶部居中</option>
+                        <option value="3" <?php if ($config['waterPosition'] == 3) echo 'selected'; ?>>顶部居右</option>
+                        <option value="4" <?php if ($config['waterPosition'] == 4) echo 'selected'; ?>>左边居中</option>
+                        <option value="5" <?php if ($config['waterPosition'] == 5) echo 'selected'; ?>>图片中心</option>
+                        <option value="6" <?php if ($config['waterPosition'] == 6) echo 'selected'; ?>>右边居中</option>
+                        <option value="7" <?php if ($config['waterPosition'] == 7) echo 'selected'; ?>>底部居左</option>
+                        <option value="8" <?php if ($config['waterPosition'] == 8) echo 'selected'; ?>>底部居中</option>
+                        <option value="9" <?php if ($config['waterPosition'] == 9) echo 'selected'; ?>>底部居右</option>
+                    </select>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group col-md-3">
-                        <label>文字水印</label>
-                        <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
-                        <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>文字水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
-                        <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="10" max="300" step="5" onchange="document.getElementById('textSize').innerHTML=value">
-                    </div>
+                <div class="form-group col-md-6">
+                    <label data-toggle="tooltip" title="支持GIF,JPG,BMP,PNG和PNG alpha">图片水印路径</label>
+                    <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div>
+                <div class="form-group col-md-6">
+                    <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字水印字体路径</label>
+                    <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                </div>
+                <div class="form-group col-md-3">
+                    <label>文字水印</label>
+                    <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
+                </div>
+                <div class="form-group col-md-3">
+                    <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
+                    <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>文字水印大小 | 当前: </label><label id="textSize"><?php echo $config['textSize']; ?></label><label>px</label>
+                    <input type="range" class="form-control" name="textSize" value="<?php echo $config['textSize']; ?>" min="10" max="300" step="5" onchange="document.getElementById('textSize').innerHTML=value">
                 </div>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
