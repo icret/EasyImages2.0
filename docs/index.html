@@ -23,6 +23,9 @@
             subMaxLevel: 1,      //侧边栏层级最大层级2
             loadNavbar: true,    //加载导航栏 需要编写_navbar.md
             autoHeader: true,    //配合loadSidebar 自动添加标题
+            alias: {
+                '/.*/_sidebar.md': '/_sidebar.md'
+            },
             copyCode: {
                 buttonText: '复制',
                 errorText: '错误',
@@ -46,6 +49,9 @@
     <script src="//fastly.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
     <!-- 代码拷贝插件 -->
     <script src="//fastly.jsdelivr.net/npm/docsify-copy-code"></script>
+    <!-- 代码高亮 -->
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+
     <!-- emoji -->
     <script src="//fastly.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
     <!-- 外链脚本 -->
