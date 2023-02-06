@@ -520,7 +520,7 @@ if (isset($_POST['del_version_file'])) {
                     <label>* 已开启上传压缩的不需重复压缩! </label><br />
                     <label>* 如果页面长时间没有响应,表示正面正在压缩! </label><br />
                     <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
-                    <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
+                    <button type="submit" class="btn btn-mini btn-primary">开始压缩</button>
                 </div>
             </form>
         </div>
@@ -571,7 +571,7 @@ if (isset($_POST['del_version_file'])) {
                 <div class="col-md-6">
                     <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                        <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+                        <button type="submit" class="btn btn-primary" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
                     </form>
                 </div>
                 <div class="col-md-6">
@@ -937,9 +937,10 @@ if (isset($_POST['del_version_file'])) {
                     <a href="<?php echo is_file(APP_ROOT . '/docs/index.html') ? $config['domain'] . '/docs' : 'https://icret.github.io/EasyImages2.0/#/'; ?>" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用手册"><i class="icon icon-book"></i> Manual</span></a>
                     <a href="https://t.me/Easy_Image" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="EasyImage Telegram Group"><i class="icon icon-comments-alt"></i> Telegram</span></a>
                     <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="GitHub 社区"><i class="icon icon-comments-alt"></i> Discuss</span></a>
-                    <span data-toggle="tooltip" title="当前版本信息"><button type="button" class="btn btn-sm btn-primary label label-badge" data-toggle="modal" data-moveable="true" data-scroll-inside="true" data-icon="heart" data-title="当前版本信息" data-custom="<pre style='background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);'><?php echo getVersion('name') . '<br/><br/>' . getVersion('body'); ?></pre>"><i class="icon icon-github"></i> <?php echo get_current_version(); ?></button></span>
-                    <a href="../public/images/wechat.jpg" data-toggle="lightbox" style="color:#329d38;"><i data-toggle="tooltip" title="您的赞美是我开发的动力!" class="icon icon-wechat"></i></a>
-                    <a href="../public/images/alipay.jpg" data-toggle="lightbox" class="hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao" data-toggle="tooltip" title="您的赞美是我开发的动力!"> </i></a>
+                    <span data-toggle="tooltip" title="当前版本更新日志"><button type="button" class="btn btn-sm btn-primary label label-badge" data-toggle="modal" data-moveable="true" ata-size="sm" data-scroll-inside="true" data-icon="heart" data-title="当前版本更新日志" data-custom="<pre style='background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);'><?php echo getVersion('name') . '<br/><br/>' . getVersion('body'); ?></pre>"><i class="icon icon-github"></i> <?php echo get_current_version(); ?></button></span>
+                    <span data-toggle="tooltip" title="您的赞美是我开发的动力!"><button type="button" class="btn btn-sm btn-danger label label-badge" data-toggle="modal" data-moveable="true" data-size="sm" data-icon="heart" data-title="您的赞美是我开发的动力!" data-custom="<ul class='nav nav-tabs'><li class='active'><a data-tab href='#wechat'><i class='icon icon-wechat' style='color:#329d38;'> 微信</i></a></li><li><a data-tab href='#alipay'><i class='icon icon-zhifubao-square' style='color:#1970fc;'> 支付宝</i></a></li></ul><div class='tab-content'><div class='tab-pane active' id='wechat'><img src='../public/images/wechat.jpg'></div><div class='tab-pane' id='alipay'><img src='../public/images/alipay.jpg'></div></div>"><i class="icon icon-yen"></i><small>打赏作者</small></button></span>
+                    <!-- <a href="../public/images/wechat.jpg" data-toggle="lightbox" style="color:#329d38;"><i data-toggle="tooltip" title="您的赞美是我开发的动力!" class="icon icon-wechat"></i></a> -->
+                    <!-- <a href="../public/images/alipay.jpg" data-toggle="lightbox" class="hidden-xs inline-block" style="color:#1970fc;"><i class="icon icon-zhifubao" data-toggle="tooltip" title="您的赞美是我开发的动力!"> </i></a> -->
                 </p>
                 <h6>程序依赖</h6>
                 <p>
@@ -1109,7 +1110,7 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="form-group col-md-4">
                         <input type="hidden" name="admin_form" value="" placeholder="隐藏的保存">
-                        <button type="submit" class="btn btn-primary">更改管理员 账号|密码</button>
+                        <button type="submit" class="btn btn-danger">更改管理员 账号|密码</button>
                     </div>
                 </div>
                 <div class="alert alert-primary with-icon col-xs-8">
@@ -1127,7 +1128,7 @@ if (isset($_POST['del_version_file'])) {
             </form>
             <!-- 上传用户管理 start-->
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return uploader_md5_post()">
-                <h5 class="header-dividing">上传者账号<small> 账户只能用于上传</small></h5>
+                <h5 class="header-dividing">上传者账号 <small>只能用于上传</small></h5>
                 <div class="col-md-12">
                     <div class="form-group col-md-3">
                         <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
