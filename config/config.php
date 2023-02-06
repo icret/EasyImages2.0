@@ -16,7 +16,7 @@ $config=Array
     <h5>本人仅为程序开源创作,如遇非法网站使用与本人无关,请勿用于商业用途;</h5>
     <h5>作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中源作者信息。</h5>
     <a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示</button></a>
-    <a href="https://icret.gitee.io/easyimages2.0/docs/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-book"></i> 手册</button></a>
+    <a href="https://icret.gitee.io/easyimages2.0/#/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-book"></i> 手册</button></a>
     <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-comments-alt"></i> 社区</button></a>
     <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage Telegram Group"><button type="button" class="btn btn-mini"><i class="icon icon-plane"></i> Telegram</button></a>
     <a href="https://s2.loli.net/2023/01/20/laTuceHD3qjpd82.jpg" title="您的赞美是我开发的动力!" data-toggle="lightbox" class="btn btn-mini" style="color:#329d38;"><i class="icon icon-wechat"></i> 打赏</a>
@@ -115,7 +115,7 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2023-02-06 02:18:26',
+	'update'=>'2023-02-06 11:47:07',
 	'footer'=>'<a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Since 2018 - Github">© Since 2018</a>
 <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床">EasyImage</a>
 <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>

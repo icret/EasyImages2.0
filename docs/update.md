@@ -2,7 +2,7 @@
 
 * 2023-02-05 v2.7.4
 - 此版本将作为优化和修复bugs
-- 使用docsify自建文档 地址 [Gitee](https://icret.gitee.io/easyimages2.0/docs/#/) | [Gihub](https://icret.github.io/EasyImages2.0/docs/#/) 或下载源码后直接访问`/docs/`
+- 使用docsify自建文档 地址 [Gitee](https://icret.gitee.io/easyimages2.0/#/) | [Gihub](https://icret.github.io/EasyImages2.0/docs/#/) 或下载源码后直接访问`/docs/`
 
 * 2023-02-05 v2.7.3
 - 修复设置中手动压缩失败!
