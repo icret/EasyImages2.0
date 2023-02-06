@@ -10,7 +10,7 @@
 
 [演示](https://png.cm/) · [手册](https://www.kancloud.cn/easyimage/easyimage/) · [社区](https://github.com/icret/EasyImages2.0/discussions) · [Telegram](https://t.me/Easy_Image) - 插件: [Chrome](/Chrome插件.md) · [Edge](/Edge插件.md) · [PicGo](/使用PicGo上传.md) · [ShareX](/使用ShareX上传.md)
 
-目录: [安装](/安装图床.md) | [安全](/安全配置.md) | [API](/API.md) | [鉴黄](/鉴黄.md) | [升级](/图床更新升级.md) | [常见问题](/常见问题.md) | [环境/兼容](#环境要求) | [更新日志](/更新日志.md) | [打赏开发者](/打赏开发者.md) | [鸣谢](#鸣谢) | [许可证](#开源许可) 
+目录: [安装](/安装图床.md) | [安全](/安全配置.md) | [API](/API.md) | [鉴黄](/鉴黄.md) | [升级](/图床更新升级.md) | [常见问题](/常见问题.md) | [环境/兼容](#环境要求) | [更新日志](/update.md) | [打赏开发者](/打赏开发者.md) | [鸣谢](#鸣谢) | [许可证](#开源许可) 
 
 > 始于2018年7月，支持多文件上传,简单无数据库,返回图片url,markdown,bbscode,html的一款图床程序
 演示地址：[https://png.cm/](https://png.cm/) 
