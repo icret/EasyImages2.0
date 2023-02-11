@@ -46,7 +46,7 @@
                     var footer = [
                         '<hr/>',
                         '<footer>',
-                        '<span>Copyright © 2018 <a href="https://github.com/icret/EasyImages2.0" target="_blank">EasyImage</a> Developer By <a href="https://github.com/icret" target="_blank">Icret</a>.</span>',
+                        '<span>Copyright ©Since 2018 <a href="https://github.com/icret/EasyImages2.0" target="_blank">EasyImage</a> Develop By <a href="https://github.com/icret" target="_blank">Icret</a>, Docs By <a href="https://docsify.js.org/#/zh-cn/" target="_blank">Docsify</a>.</span>',
                         '</footer>'
                     ].join('');
 
@@ -54,14 +54,23 @@
                         return html + footer;
                     });
                 },
+
+                function (hook, vm) {
+                    hook.beforeEach(function (html) {
+                        var url = 'https://github.com/icret/EasyImages2.0/blob/master/docs/' + vm.route.file;
+                        var editHtml = '<a href="' + url + '" target="_blank">📝 在GitHub上编辑</a>';
+
+                        return (html + '<br/><br/><br/><br/><br/>' + editHtml);
+                    });
+                }
             ]
         }
-        // 离线模式
+        // 离线阅读
         if (typeof navigator.serviceWorker !== 'undefined') {
-            navigator.serviceWorker.register('sw.js')
+            navigator.serviceWorker.register('sw.js');
         }
 
-        console.log(window.Docsify.version)
+        console.log(window.Docsify.version);
     </script>
     <!-- docsify的js依赖 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/docsify.min.js"></script>
@@ -73,8 +82,6 @@
     <script src="//fastly.jsdelivr.net/npm/docsify-copy-code"></script>
     <!-- 代码高亮 -->
     <script src="//fastly.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
-    <!-- emoji -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/emoji.min.js"></script>
     <!-- 外链脚本 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/external-script.min.js"></script>
     <!-- 字数统计 -->

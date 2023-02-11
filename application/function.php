@@ -35,7 +35,6 @@ define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 
 /*---------------基础配置结束-------------------*/
 
-
 require_once APP_ROOT . '/config/config.php';
 require_once APP_ROOT . '/config/config.guest.php';
 require_once __DIR__ . '/WaterMask.php';
@@ -855,29 +854,16 @@ function getVersion($name = 'tag_name')
     if ($config['checkEnv']) {
 
         require_once APP_ROOT . '/application/class.version.php';
-        // 获取版本地址
-        $url = "https://api.github.com/repositories/188228357/releases/latest";
+        $url = "https://api.github.com/repositories/188228357/releases/latest"; // 获取版本地址
         $getVersion = new getVersion($url);
 
-        $now = date('dH'); // 当前日期时间
-        $get_ver_day = array('1006', '2501');   // 检测日期的时间
-
-        foreach ($get_ver_day as $day) {
-            if (empty($getVersion->readJson($name))) { // 不存在就下载
-                $getVersion->downJson();
-            } else if ($day == $now) { // 是否在需要更新的日期
-                $getVersion->downJson();
-                /*
-            } elseif ($config['version'] == $getVersion->readJson()) { // 版本相同不提示
-                return null;
-            */
-            } else { // 返回版本
-                return $getVersion->readJson($name);
-            }
+        if (!empty($getVersion->readJson($name))) {
+            return $getVersion->readJson($name); // 返回版本信息
+        } else {
+            $getVersion->downJson(); // 获取版本信息
+            return '获取版本文件失败,请检查curl或者网络';
         }
     }
-
-    return null;
 }
 
 /**

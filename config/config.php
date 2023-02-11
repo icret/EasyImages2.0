@@ -16,7 +16,7 @@ $config=Array
 <h5>本人仅为程序开源创作,如遇非法网站使用与本人无关,请勿用于商业用途;</h5>
 <h5>作为开发者你可以对相应的后台功能进行扩展(增删改相应代码),但请保留代码中源作者信息。</h5>
 <a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示</button></a>
-<a href="https://icret.github.io/EasyImages2.0/#/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-book"></i> 手册</button></a>
+<a href="https://icret.gitee.io/easyimages2.0/#/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-book"></i> 手册</button></a>
 <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-comments-alt"></i> 社区</button></a>
 <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage Telegram Group"><button type="button" class="btn btn-mini"><i class="icon icon-plane"></i> Telegram</button></a>
 <span data-toggle="tooltip" title="您的赞美是我开发的动力!"><button type="button" class="btn btn-mini btn-primary" data-toggle="modal" data-moveable="true" data-size="sm" data-icon="heart" data-title="您的赞美是我开发的动力!" data-custom="<ul class=\'nav nav-tabs\'><li class=\'active\'><a data-tab href=\'#wechat\'><i class=\'icon icon-wechat\' style=\'color:#329d38;\'> 微信</i></a></li><li><a data-tab href=\'#alipay\'><i class=\'icon icon-zhifubao-square\' style=\'color:#1970fc;\'> 支付宝</i></a></li></ul><div class=\'tab-content\'><div class=\'tab-pane active\' id=\'wechat\'><img src=\'../public/images/wechat.jpg\'></div><div class=\'tab-pane\' id=\'alipay\'><img src=\'../public/images/alipay.jpg\'></div></div>"><i class="icon icon-yen"></i>打赏作者</button></span>
@@ -41,7 +41,7 @@ $config=Array
 	'textSize'=>50,
 	'textFont'=>'/public/static/pang_men_zheng_dao_biao_ti_ti_3.0.ttf',
 	'waterImg'=>'/public/images/watermark.png',
-	'extensions'=>'gif,jpeg,png,tif,bmp,svg,webp,jpg,tga,ico',
+	'extensions'=>'gif,jpeg,png,tif,bmp,svg,webp,jpg,tga,ico,avif',
 	'compress'=>0,
 	'compress_ratio'=>80,
 	'thumbnail'=>1,
@@ -114,7 +114,7 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2023-02-07 01:23:45',
+	'update'=>'2023-02-11 22:41:27',
 	'footer'=>'<a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Since 2018 - Github">© Since 2018</a>
 <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床">EasyImage</a>
 <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>

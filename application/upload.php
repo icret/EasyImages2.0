@@ -199,6 +199,7 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  206,
             "message"   =>  $handle->error,
+            "memory"    => getDistUsed(memory_get_usage()), //内存使用率 2023-02-11
             // 'log' => $handle->log,(仅用作调试用)
         );
         unset($handle);

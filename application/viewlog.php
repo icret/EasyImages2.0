@@ -137,7 +137,7 @@ try {
                         orgin: '<?php echo $k; ?>',
                         source: '<input class="form-control input-sm" type="text" value="<?php echo $v['source']; ?>" readonly>',
                         date: '<?php echo $v['date']; ?>',
-                        ip: '<a href="http://ip.tool.chinaz.com/<?php echo $v['ip']; ?>" target="_blank"><?php echo $v['ip'] . ':' . $v['port']; ?></a>', // 备用IP查询: https://www.ip138.com/iplookup.asp?ip=
+                        ip: '<a href="http://freeapi.ipip.net/<?php echo $v['ip']; ?>" target="_blank"><?php echo $v['ip'] . ':' . $v['port']; ?></a>', // 备用IP查询: https://www.ip138.com/iplookup.asp?ip= http://ip.tool.chinaz.com/$ip
                         ip2region: '<?php echo ip2region($v['ip']); ?>',
                         user_agent: '<input class="form-control input-sm" type="text" value="<?php echo $v['user_agent']; ?>" readonly>',
                         path: '<input class="form-control input-sm" type="text" value="<?php echo $v['path']; ?>" readonly>',

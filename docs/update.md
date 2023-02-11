@@ -1,8 +1,13 @@
 ![项目状态](https://repobeats.axiom.co/api/embed/0922803f14091f0686de26fee5196b9984b106a4.svg  "Repobeats analytics image")
 
+*2023-02-12 v2.7.5 dev
+- 更换检测最新版本方式
+- API上传增加返回Token ID
+- 优化显示
+
 * 2023-02-06 v2.7.4
 - 优化和修复bugs
-- 使用docsify自建文档 地址 [Gitee](https://icret.gitee.io/easyimages2.0/#/) | [Gihub](https://icret.github.io/EasyImages2.0/#/) 或下载源码后直接访问`/docs/`
+- 使用[docsify](https://docsify.js.org/#/zh-cn/)自建文档 地址 [Gitee](https://icret.gitee.io/easyimages2.0/#/) | [Gihub](https://icret.github.io/EasyImages2.0/#/) 或下载源码后直接访问`/docs/`
 
 * 2023-02-05 v2.7.3
 - 修复设置中手动压缩失败!

@@ -520,7 +520,7 @@ if (isset($_POST['del_version_file'])) {
                     <label>* 已开启上传压缩的不需重复压缩! </label><br />
                     <label>* 如果页面长时间没有响应,表示正面正在压缩! </label><br />
                     <label>* 两种压缩均为不可逆,并且非常占用硬件资源. </label><br />
-                    <button type="submit" class="btn btn-mini btn-primary">开始压缩</button>
+                    <button type="submit" class="btn btn-mini btn-success">开始压缩</button>
                 </div>
             </form>
         </div>
@@ -571,7 +571,7 @@ if (isset($_POST['del_version_file'])) {
                 <div class="col-md-6">
                     <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                        <button type="submit" class="btn btn-primary" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
+                        <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
                     </form>
                 </div>
                 <div class="col-md-6">
@@ -908,7 +908,8 @@ if (isset($_POST['del_version_file'])) {
                 <p class="text-ellipsis">Web服务: <?PHP echo $_SERVER['SERVER_SOFTWARE']; ?></p>
                 <p class="text-ellipsis">服务器IP: <?PHP echo $_SERVER["SERVER_ADDR"] ?></p>
                 <p class="text-ellipsis">系统时间: <?PHP echo date("Y-m-d H:i:s"); ?></p>
-                <p class="text-ellipsis">占用内存: <?php echo getDistUsed(memory_get_usage()); ?></p>
+                <p class="text-ellipsis"><span class="label label-dot label-success" data-toggle="tooltip" title="当前页面占用内存"></span> 页面占用: <?php echo getDistUsed(memory_get_usage()); ?></p>
+                <p class="text-ellipsis"><span class="label label-dot label-danger" data-toggle="tooltip" title="本页面占用内存最高峰"></span> 占用峰值: <?php echo getDistUsed(memory_get_peak_usage()); ?></p>
                 <p class="text-ellipsis">占用磁盘: <?php echo getDistUsed(disk_total_space(__DIR__) - disk_free_space(__DIR__)) ?></p>
                 <p class="text-ellipsis">剩余磁盘: <?php echo getDistUsed(disk_free_space(__DIR__)); ?></p>
                 <h5>PHP信息</h5>
@@ -919,7 +920,8 @@ if (isset($_POST['del_version_file'])) {
                 <p class="text-ellipsis">运行时间限制: <?PHP echo get_cfg_var("max_execution_time") . "s"; ?></p>
                 <p class="text-ellipsis">最大占用内存: <?PHP echo get_cfg_var("memory_limit"); ?></p>
                 <p class="text-ellipsis">POST上传限制: <?php echo ini_get('post_max_size'); ?></p>
-                <p class="text-ellipsis">GD版本: <?php echo (gd_info()["GD Version"]); ?></p>
+                <p class="text-ellipsis">GD版本: <?php echo (gd_info()["GD Version"]); ?>
+                </p>
                 <h5>我的信息</h5>
                 <hr />
                 <p class="text-ellipsis">IP: <?php echo real_ip(); ?></p>
@@ -1110,7 +1112,7 @@ if (isset($_POST['del_version_file'])) {
                     </div>
                     <div class="form-group col-md-4">
                         <input type="hidden" name="admin_form" value="" placeholder="隐藏的保存">
-                        <button type="submit" class="btn btn-danger">更改管理员 账号|密码</button>
+                        <button type="submit" class="btn btn-primary">更改管理员 账号|密码</button>
                     </div>
                 </div>
                 <div class="alert alert-primary with-icon col-xs-8">
@@ -1128,7 +1130,7 @@ if (isset($_POST['del_version_file'])) {
             </form>
             <!-- 上传用户管理 start-->
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return uploader_md5_post()">
-                <h5 class="header-dividing">上传者账号 <small>只能用于上传</small></h5>
+                <h5 class="header-dividing">上传者账号<small> 账户只能用于上传</small></h5>
                 <div class="col-md-12">
                     <div class="form-group col-md-3">
                         <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
