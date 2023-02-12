@@ -7,13 +7,15 @@ mustLogin();
 ?>
 <div class="col-md-12">
   <!-- 公告 -->
-  <div class="marquee">
-    <div class="wrap">
-      <div id="marquee2">
-        <?php if (!empty($config['tips'])) echo $config['tips']; ?>
+  <?php if (!empty($config['tips'])) : ?>
+    <div class="marquee">
+      <div class="wrap">
+        <div id="marquee2">
+          <?php echo $config['tips']; ?>
+        </div>
       </div>
     </div>
-  </div>
+  <?php endif; ?>
   <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="/application/upload.php">
     <div class="uploader-message text-center">
       <div class="content"></div>
