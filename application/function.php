@@ -1715,7 +1715,35 @@ function ip_upload_counts()
         $dir = APP_ROOT . '/admin/logs/ipcounts/';
         if (!is_dir($dir)) mkdir($dir, 0777);
 
-        $file =  $dir . date('Ymd') . '.php';
+        $file = $dir . date('Ymd') . '.php';
         file_put_contents($file, real_ip() . PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+}
+
+/**
+ * 自动删除
+ */
+function auto_delete()
+{
+    global $config;
+    if ($config['auto_delete'] && $config['storage_path'] == 'Y/m/d/') {
+        $dir = APP_ROOT . $config['path'] . date('Y/m/d/', strtotime(-$config['auto_delete'] . 'day'));
+        if (is_dir($dir)) {
+            try {
+                if (deldir($dir)) {
+                    $log = date('Y-m-d H:i:s') . $dir . ' delete succees';
+                } else {
+                    throw new Exception(date('Y-m-d H:i:s') . $dir . ' delete failed');
+                }
+            } catch (Exception $e) {
+                $log = $e->getMessage();
+            }
+
+            if (!is_dir(APP_ROOT . '/admin/logs/tasks/')) {
+                mkdir(APP_ROOT . '/admin/logs/tasks/', 0755, true);
+            }
+
+            file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', $log . PHP_EOL, FILE_APPEND | LOCK_EX);
+        }
     }
 }

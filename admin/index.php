@@ -123,10 +123,10 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                     <input type="password" name="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required">
                     <input type="hidden" name="password" id="md5_password">
                     <?php if ($config['captcha']) : ?>
-                        <input class="form-control" type="text" name="code" value="" placeholder="输入下方4位数验证码" autocomplete="off" required="required" />
+                        <input class="form-control" type="text" name="code" value="" placeholder="请输入验证码" autocomplete="off" required="required" />
                         <div class="form-group">
                             <div class="col">
-                                <label><img src="../application/captcha.php" onClick="this.src='../application/captcha.php?nocache='+Math.random()" title="点击换一张" /></label>
+                                <label><img src="../application/captcha.php" width="185px" onClick="this.src='../application/captcha.php?nocache='+Math.random()" title="点击换一张" /></label>
                             </div>
                         </div>
                     <?php endif; ?>

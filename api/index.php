@@ -171,6 +171,7 @@ if ($handle->uploaded) {
             "thumb"     => $handleThumb,
             "del"       => $delUrl,
             "ID"        => $tokenID, // 202-02-11 增加返回Token ID
+            // "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean();
@@ -180,7 +181,7 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  206,
             "message"   =>  $handle->error,
-            "memory"    => getDistUsed(memory_get_usage()), //内存使用率 2023-02-11
+            "memory"    =>  getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
             // 'log' => $handle->log,(仅用作调试用)
         );
         unset($handle);

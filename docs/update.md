@@ -1,6 +1,7 @@
 ![项目状态](https://repobeats.axiom.co/api/embed/0922803f14091f0686de26fee5196b9984b106a4.svg  "Repobeats analytics image")
 
 *2023-02-12 v2.7.5 dev
+- 增加定时删除上传文件
 - 更换检测最新版本方式
 - API上传增加返回Token ID
 - 优化显示

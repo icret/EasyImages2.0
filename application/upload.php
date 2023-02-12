@@ -190,6 +190,7 @@ if ($handle->uploaded) {
             "srcName"   => $handle->file_src_name_body,
             "thumb"     => $handleThumb,
             "del"       => $delUrl,
+            // "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
         echo json_encode($reJson);
         $handle->clean(); // 如果取消上传生成缩略图需要恢复此选项功能
@@ -199,7 +200,7 @@ if ($handle->uploaded) {
             "result"    =>  "failed",
             "code"      =>  206,
             "message"   =>  $handle->error,
-            "memory"    => getDistUsed(memory_get_usage()), //内存使用率 2023-02-11
+            "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
             // 'log' => $handle->log,(仅用作调试用)
         );
         unset($handle);

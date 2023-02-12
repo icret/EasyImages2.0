@@ -316,6 +316,7 @@ if (isset($_POST['del_version_file'])) {
         ";
     }
 }
+auto_delete(); //定时删除
 ?>
 <div class="row">
     <?php echo $config['set_notice']; ?>
@@ -568,13 +569,7 @@ if (isset($_POST['del_version_file'])) {
         </div>
         <div class="tab-pane fade" id="Content6">
             <div class="col-md-12">
-                <div class="col-md-6">
-                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
-                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
-                        <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
-                    </form>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
                     <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
                         <div class="form-group">
@@ -583,6 +578,23 @@ if (isset($_POST['del_version_file'])) {
                             <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="日志访问秘钥">
                         </div>
                         <button type="submit" class="btn btn-primary">查看日志</button>
+                    </form>
+                </div>
+                <div class="form-group col-md-3">
+                    <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才生效<br/>超过定时日期前的不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
+                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                        <div class="input-group">
+                            <span class="input-group-addon">天数</span>
+                            <input type="number" name="auto_delete" class="form-control" placeholder="0" value="<?php echo $config['auto_delete']; ?>">
+                            <span class="input-group-btn"><button class="btn btn-primary">设置</button></span>
+                        </div>
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
+                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                        <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
                     </form>
                 </div>
             </div>
@@ -984,6 +996,7 @@ if (isset($_POST['del_version_file'])) {
                     <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <input class="form-control" type="hidden" name="del_version_file" value="/admin/logs/version/version.json" readonly>
                         <div class="btn-group">
+                            <a class="btn btn-mini btn-primary" href="https://github.com/icret/EasyImages2.0/releases" target="_blank" data-toggle="tooltip" title="Github releases">Github</a>
                             <a class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank" data-toggle="tooltip" title="① 下载后上传至网站更新">下载新版本</a>
                             <button class="btn btn-mini btn-danger" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</button>
                         </div>
