@@ -581,7 +581,7 @@ auto_delete(); //定时删除
                     </form>
                 </div>
                 <div class="form-group col-md-3">
-                    <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才生效<br/>超过定时日期前的不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
+                    <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才生效<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍后再彻底删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <div class="input-group">
                             <span class="input-group-addon">天数</span>
@@ -678,6 +678,27 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="以上传用户的Token ID创建目录">
+                                <input type="hidden" name="token_path_status" value="0">
+                                <input type="checkbox" name="token_path_status" value="1" <?php if ($config['token_path_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">API 分离</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="以登陆账号名称创建上传目录">
+                                <input type="hidden" name="guest_path_status" value="0">
+                                <input type="checkbox" name="guest_path_status" value="1" <?php if ($config['guest_path_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">用户分离</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="管理员独立上传目录<br />* 自定义目录暂未提供接口,如需修改请修改config.php中的admin_path">
+                                <input type="hidden" name="admin_path_status" value="0">
+                                <input type="checkbox" name="admin_path_status" value="1" <?php if ($config['admin_path_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">管理分离</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="* 如果不懂就关闭<br /> * 1. 图片链接会隐藏<?php echo $config['path']; ?>目录<br />* 2. 网站与图片域名不能相同<br />* 3. 图片域名需绑定到<?php echo $config['path']; ?>目录">
                                 <input type="hidden" name="hide_path" value="0">
                                 <input type="checkbox" name="hide_path" value="1" <?php if ($config['hide_path']) echo 'checked="checked"'; ?> <?php if ($config['domain'] == $config['imgurl']) echo 'disabled'; ?>>
@@ -692,6 +713,13 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
+                                <input type="hidden" name="showSort" value="0">
+                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">广场排序</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="上传后显示删除链接<br/>删除链接是经过加密的">
                                 <input type="hidden" name="show_user_hash_del" value="0">
                                 <input type="checkbox" name="show_user_hash_del" value="1" <?php if ($config['show_user_hash_del']) echo 'checked="checked"'; ?>>
@@ -703,34 +731,6 @@ auto_delete(); //定时删除
                                 <input type="hidden" name="chart_on" value="0">
                                 <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">显示统计</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
-                                <input type="hidden" name="showSort" value="0">
-                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">广场排序</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="以登陆账号名称创建上传目录">
-                                <input type="hidden" name="guest_path_status" value="0">
-                                <input type="checkbox" name="guest_path_status" value="1" <?php if ($config['guest_path_status']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">用户分离</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="以Token ID创建目录">
-                                <input type="hidden" name="token_path_status" value="0">
-                                <input type="checkbox" name="token_path_status" value="1" <?php if ($config['token_path_status']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">Token分离</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="管理员独立上传目录<br />* 自定义目录暂未提供接口,如需修改请修改config.php中的admin_path">
-                                <input type="hidden" name="admin_path_status" value="0">
-                                <input type="checkbox" name="admin_path_status" value="1" <?php if ($config['admin_path_status']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">管理分离</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -756,17 +756,17 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="检测图床的 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径">
-                                <input type="hidden" name="checkEnv" value="0">
-                                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">环境自检</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="上传日志每月保存一个文件<br/>经测试二十万条数据并不影响速度!">
                                 <input type="hidden" name="upload_logs" value="0">
                                 <input type="checkbox" name="upload_logs" value="1" <?php if ($config['upload_logs']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">上传日志</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="检测图床的 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径">
+                                <input type="hidden" name="checkEnv" value="0">
+                                <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">环境自检</label>
                             </div>
                         </div>
                     </div>
@@ -1286,7 +1286,7 @@ auto_delete(); //定时删除
                     <input type="text" class="form-control" name="waterImg" required="required" value="<?php echo $config['waterImg']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group col-md-6">
-                    <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字水印字体路径</label>
+                    <label data-toggle="tooltip" title="水印中含有中文的,请选用符合GB/2312的字体">文字水印 | 验证码的字体路径</label>
                     <input type="text" class="form-control" name="textFont" required="required" value="<?php echo $config['textFont']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group col-md-3">
@@ -1294,7 +1294,7 @@ auto_delete(); //定时删除
                     <input type="text" class="form-control" name="waterText" required="required" value="<?php echo $config['waterText']; ?>" onkeyup="this.value=this.value.trim()">
                 </div>
                 <div class="form-group col-md-3">
-                    <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">水印颜色</label>
+                    <label data-toggle="tooltip" title="格式RGBA 末尾为透明度0-127 0为不透明,仅支持文字水印">文字水印颜色</label>
                     <input type="text" name="textColor" class="form-control" value="" readonly data-jscolor="{preset:'myPreset'}">
                 </div>
                 <div class="form-group col-md-6">

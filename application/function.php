@@ -1722,28 +1722,44 @@ function ip_upload_counts()
 
 /**
  * 自动删除
+ * 开启自动删除后会先重命名文件夹作为备份
+ * 自动删除日期超过定时的2倍时间后再彻底删除重命名的文件夹
  */
 function auto_delete()
 {
     global $config;
     if ($config['auto_delete'] && $config['storage_path'] == 'Y/m/d/') {
-        $dir = APP_ROOT . $config['path'] . date('Y/m/d/', strtotime(-$config['auto_delete'] . 'day'));
-        if (is_dir($dir)) {
+
+        /**  重命名要删除的文件夹 */
+        $Odir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] . 'day')); // 重命名文件夹路径
+        $Rdir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] . 'day')) . '_auto_delete'; // 新命名文件夹路径
+        if (is_dir($Odir)) { // 执行重命名
+            rename($Odir, $Rdir);
+            $log = date('Y-m-d H:i:s') . $Rdir . ' rename succees';
+        } else {
+            $log = date('Y-m-d H:i:s') . $Rdir . ' rename failed';
+        }
+
+        /**  定时删除已经重命名的文件夹路径 */
+        $Ddir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] * 2 . 'day')) . '_auto_delete'; // 文件夹路径
+        if (is_dir($Ddir)) { // 执行删除
             try {
-                if (deldir($dir)) {
-                    $log = date('Y-m-d H:i:s') . $dir . ' delete succees';
+                if (deldir($Ddir)) {
+                    $log = date('Y-m-d H:i:s') . $Ddir . ' delete succees';
                 } else {
-                    throw new Exception(date('Y-m-d H:i:s') . $dir . ' delete failed');
+                    throw new Exception(date('Y-m-d H:i:s') . $Ddir . ' delete failed');
                 }
             } catch (Exception $e) {
                 $log = $e->getMessage();
             }
-
             if (!is_dir(APP_ROOT . '/admin/logs/tasks/')) {
                 mkdir(APP_ROOT . '/admin/logs/tasks/', 0755, true);
             }
-
-            file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', $log . PHP_EOL, FILE_APPEND | LOCK_EX);
         }
+
+        // 写入日志
+        file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', $log . PHP_EOL, FILE_APPEND | LOCK_EX);
+        return true;
     }
+    return false;
 }
