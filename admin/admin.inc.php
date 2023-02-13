@@ -581,7 +581,7 @@ auto_delete(); //定时删除
                     </form>
                 </div>
                 <div class="form-group col-md-3">
-                    <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才生效<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍后再彻底删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
+                    <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才执行<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍后再彻底删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <div class="input-group">
                             <span class="input-group-addon">天数</span>
