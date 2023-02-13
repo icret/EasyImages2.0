@@ -1735,29 +1735,35 @@ function auto_delete()
         $Rdir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] . 'day')) . '_auto_delete'; // 新命名文件夹路径
         if (is_dir($Odir)) { // 执行重命名
             rename($Odir, $Rdir);
-            $log = date('Y-m-d H:i:s') . $Rdir . ' rename succees';
+            $log = $Rdir . ' rename succees ' . date('Y-m-d H:i:s');
         } else {
-            $log = date('Y-m-d H:i:s') . $Rdir . ' rename failed';
+            $log = $Rdir . ' rename failed ' . date('Y-m-d H:i:s');
         }
 
-        /**  定时删除已经重命名的文件夹路径 */
+        /**  以定时的2倍倒叙时间删除已经重命名的文件夹路径 */
         $Ddir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] * 2 . 'day')) . '_auto_delete'; // 文件夹路径
         if (is_dir($Ddir)) { // 执行删除
             try {
                 if (deldir($Ddir)) {
-                    $log = date('Y-m-d H:i:s') . $Ddir . ' delete succees';
+                    $log = $Ddir . ' delete succees ' . date('Y-m-d H:i:s');
                 } else {
-                    throw new Exception(date('Y-m-d H:i:s') . $Ddir . ' delete failed');
+                    throw new Exception($Ddir . ' delete failed ' . date('Y-m-d H:i:s'));
                 }
             } catch (Exception $e) {
                 $log = $e->getMessage();
             }
-            if (!is_dir(APP_ROOT . '/admin/logs/tasks/')) {
-                mkdir(APP_ROOT . '/admin/logs/tasks/', 0755, true);
-            }
         }
 
-        // 写入日志
+        /** 创建文件夹及文件 */
+        if (!is_dir(APP_ROOT . '/admin/logs/tasks/')) {
+            mkdir(APP_ROOT . '/admin/logs/tasks/', 0755, true);
+        }
+
+        if (!is_file(APP_ROOT . '/admin/logs/tasks/auto_delete.php')) {
+            file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', '<?php /** 自动删除日志 */ return; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
+        }
+
+        /** 写入日志 */
         file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', $log . PHP_EOL, FILE_APPEND | LOCK_EX);
         return true;
     }
