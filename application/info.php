@@ -171,7 +171,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         </div>
     </div>
 </div>
-<? /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
+<?php /** 底部广告 */ if ($config['ad_bot']) echo $config['ad_bot_info']; ?>
 <!-- 随机图片 -->
 <?php if ($config['info_rand_pic']) : ?>
     <div class="col-md-12" style="padding-bottom: 10px;">

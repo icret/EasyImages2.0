@@ -263,7 +263,6 @@ if (isset($_GET['suspic_reimg'])) {
         </script>
         ";
     }
-
     header("refresh:1;url=/admin/admin.inc.php");
 }
 
@@ -392,7 +391,6 @@ auto_delete(); //定时删除
             </form>
         </div>
         <div class="tab-pane fade" id="Content2">
-
             <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <div class="form-group col-md-12">
                     <div class="form-group col-md-1">
@@ -560,8 +558,8 @@ auto_delete(); //定时删除
                     <input type="text" class="form-control" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
                 </div>
                 <div class="form-group">
-                    <label for="add_modify_token_time" data-toggle="tooltip" title="正整数或负整数<p>正整数代表有效期</p><p>负整数(-1)代表过期</p>">有效期 (天): </label>
-                    <input type="number" class="form-control" id="add_modify_token_time" name="add_token_expired" value="30">
+                    <label for="add_modify_token_time" data-toggle="tooltip" title="正整数或负整数<br/>正整数设置有效期<br/>负整数(-1)设置过期">有效期 (天): </label>
+                    <input type="number" class="form-control" id="add_modify_token_time" name="add_token_expired" min="-1" value="30" required="required">
                 </div>
                 <input type="hidden" class="form-control" name="add_token_id" value="<?php echo count($tokenList); ?>" placeholder="隐藏的保存">
                 <button type="submit" class="btn btn-primary">添加</button>
@@ -585,7 +583,7 @@ auto_delete(); //定时删除
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <div class="input-group">
                             <span class="input-group-addon">天数</span>
-                            <input type="number" name="auto_delete" class="form-control" placeholder="0" value="<?php echo $config['auto_delete']; ?>">
+                            <input type="number" name="auto_delete" class="form-control" min="1" placeholder="0" value="<?php echo $config['auto_delete']; ?>" required="required">
                             <span class="input-group-btn"><button class="btn btn-primary">设置</button></span>
                         </div>
                         <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
@@ -617,17 +615,17 @@ auto_delete(); //定时删除
                             <label data-toggle="tooltip" title="已生成的缩略图不会失效 需清理缓存">生成大小</label>
                             <div class="input-group">
                                 <span class="input-group-addon">宽</span>
-                                <input type="number" name="thumbnail_w" class="form-control" placeholder="258" value="<?php if (!empty($config['thumbnail_w'])) echo $config['thumbnail_w']; ?>">
+                                <input type="number" name="thumbnail_w" class="form-control" min="5" placeholder="258" value="<?php echo $config['thumbnail_w']; ?>" required="required">
                                 <span class="input-group-addon">px</span>
                                 <span class="input-group-addon">高</span>
-                                <input type="number" name="thumbnail_h" class="form-control" placeholder="258" value="<?php if (!empty($config['thumbnail_h'])) echo $config['thumbnail_h']; ?>">
+                                <input type="number" name="thumbnail_h" class="form-control" min="5" placeholder="258" value="<?php echo $config['thumbnail_h']; ?>" required="required">
                                 <span class="input-group-addon">px</span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                        <input type="text" class="form-control" id="report" name="report" value="<? if (isset($config['report'])) echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" id="report" name="report" value="<?php echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">
@@ -836,7 +834,7 @@ auto_delete(); //定时删除
                             <div class="form-group">
                                 <div class="input-group" data-toggle="tooltip" title="请输入限制数量 | 0 为不限制<br /> 开启监黄,水印等受网络波动和机器性能,执行完毕前限制不生效!">
                                     <span class="input-group-addon">游客上传限制</span>
-                                    <input class="form-control" type="number" name="ip_upload_counts" value="<?php echo $config['ip_upload_counts']; ?>">
+                                    <input class="form-control" type="number" name="ip_upload_counts" min="0" value="<?php echo $config['ip_upload_counts']; ?>" required="required">
                                     <span class="input-group-addon">张</span>
                                 </div>
                             </div>
@@ -1086,7 +1084,7 @@ auto_delete(); //定时删除
                 </div>
                 <div class="form-group col-md-6">
                     <label for="login_bg" data-toggle="tooltip" title="图片地址可以是相对路径或网址">登录背景</label>
-                    <input type="text" class="form-control" id="login_bg" name="login_bg" value="<? if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                    <input type="text" class="form-control" id="login_bg" name="login_bg" value="<?php if ($config['login_bg']) echo $config['login_bg']; ?>" required="required" placeholder="图片地址可以是相对路径或网址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                 </div>
                 <div class="form-group">
                     <div class="col-md-9">
@@ -1096,7 +1094,7 @@ auto_delete(); //定时删除
                     </div>
                     <div class="col-md-3">
                         <label id="listDate" data-toggle="tooltip" title="广场往日浏览限制<br />有助于防爬虫抓取<br />建议不超10天,否则页面导致排版混乱">广场限制 | 当前: <?php echo $config['listDate']; ?>天</label>
-                        <input type="number" class="form-control" id="listDate" name="listDate" value="<? if ($config['listDate']) echo $config['listDate']; ?>" min="1" max="100" required="required" placeholder="有助于防爬虫抓取 建议不超10天" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="number" class="form-control" id="listDate" name="listDate" value="<?php if ($config['listDate']) echo $config['listDate']; ?>" min="1" max="100" required="required" placeholder="有助于防爬虫抓取 建议不超10天" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                 </div>
                 <div class="form-group col-md-12">
@@ -1161,7 +1159,7 @@ auto_delete(); //定时删除
                     <div class="form-group col-md-3">
                         <div class="input-group">
                             <span class="input-group-addon">有效期</span>
-                            <input type="number" class="form-control" name="uploader_time" value="30" id="uploader_time" required="required" placeholder="有效期 单位: 天">
+                            <input type="number" class="form-control" name="uploader_time" value="30" id="uploader_time" placeholder="有效期 单位: 天" required="required">
                             <span class="input-group-addon">天</span>
                         </div>
                     </div>

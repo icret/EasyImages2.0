@@ -41,7 +41,7 @@ $config=Array
 	'textSize'=>50,
 	'textFont'=>'/public/static/pang_men_zheng_dao_biao_ti_ti_3.0.ttf',
 	'waterImg'=>'/public/images/watermark.png',
-	'extensions'=>'gif,jpeg,png,tif,bmp,svg,webp,jpg,tga,ico,avif',
+	'extensions'=>'jpg,jpeg,png,gif,bmp,webp,svg,ico,jfif,tif,svg,tga',
 	'compress'=>0,
 	'compress_ratio'=>80,
 	'thumbnail'=>1,
@@ -115,7 +115,7 @@ $config=Array
 	'guest_path_status'=>0,
 	'token_path_status'=>0,
 	'admin_path'=>'u',
-	'update'=>'2023-02-13 12:54:50',
+	'update'=>'2023-02-14 21:17:45',
 	'footer'=>'<a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Since 2018 - Github">© Since 2018</a>
 <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage 简单图床">EasyImage</a>
 <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
