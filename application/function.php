@@ -18,6 +18,7 @@
  * 如果因安装问题或其他问题可以给我发邮件。
  */
 
+use function PHPSTORM_META\type;
 
 /*---------------基础配置开始-------------------*/
 
@@ -1684,40 +1685,55 @@ function ip2region(String $IP)
     } catch (Exception $e) {
         return '查询失败: ' . $e->getMessage();
     }
-
-    /* 官方查询示例
-    require 'Ip2Region.php';
-
-    $ip2region = new Ip2Region();
-
-    $ip = '107.148.129.110';
-    echo PHP_EOL;
-    echo "查询IP:{$ip}" . PHP_EOL;
-    $info = $ip2region->btreeSearch($ip);
-    var_export($info);
-
-    echo PHP_EOL;
-    $info = $ip2region->memorySearch($ip);
-    var_export($info);
-    echo PHP_EOL;
-    */
 }
 
 /**
  * 记录同IP每日上传次数 process
  */
-function ip_upload_counts()
+function write_ip_upload_count_logs()
 {
     global $config;
 
     if ($config['ip_upload_counts'] > 0) {
-
+        // 上传IP地址        
+        $ip = real_ip();
+        // 日志目录
         $dir = APP_ROOT . '/admin/logs/ipcounts/';
+        // 日志文件
+        $file = $dir . date('Y-m-d') . '.php';
+        // 创建日志目录
         if (!is_dir($dir)) mkdir($dir, 0777);
-
-        $file = $dir . date('Ymd') . '.php';
-        file_put_contents($file, real_ip() . PHP_EOL, FILE_APPEND | LOCK_EX);
+        // 创建日志文件
+        if (!is_file($file)) file_put_contents($file, '<?php $ipcounts=array(); ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
+        // 引入日志
+        require $file;
+        // 获取存在的IP
+        if (isset($ipcounts[$ip])) {
+            $info[$ip] = $ipcounts[$ip] + 1;
+        } else {
+            $info[$ip] = 1;
+        }
+        // 写入日志
+        $info = array_replace($ipcounts, $info);
+        cache_write($file, $info, 'ipcounts');
     }
+}
+/**
+ * 限制IP每日上传次数
+ * @param Sting $ip IP地址
+ */
+function get_ip_upload_log_counts($ip)
+{
+    global $config;
+    $file = APP_ROOT . '/admin/logs/ipcounts/' . date('Y-m-d') . '.php';
+
+    if (!is_file($file)) return true;
+    require_once $file;
+
+    if (!isset($ipcounts[$ip])) return true;
+    if ($ipcounts[$ip] >= $config['ip_upload_counts']) return false;
+
+    return true;
 }
 
 /**
@@ -1754,7 +1770,7 @@ function auto_delete()
             }
         }
 
-        /** 创建文件夹及文件 */
+        /** 创建日志文件夹及文件 */
         if (!is_dir(APP_ROOT . '/admin/logs/tasks/')) {
             mkdir(APP_ROOT . '/admin/logs/tasks/', 0755, true);
         }
@@ -1763,7 +1779,7 @@ function auto_delete()
             file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', '<?php /** 自动删除日志 */ return; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
         }
 
-        /** 写入日志 */
+        // 写入日志
         file_put_contents(APP_ROOT . '/admin/logs/tasks/auto_delete.php', $log . PHP_EOL, FILE_APPEND | LOCK_EX);
         return true;
     }

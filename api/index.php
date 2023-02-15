@@ -33,20 +33,14 @@ if ($config['check_ip']) {
 
 // 根据IP限制游客每日上传数量
 if ($config['ip_upload_counts'] > 0 && !is_who_login('status')) {
-    $ipList = APP_ROOT . '/admin/logs/ipcounts/' . date('Ymd') . '.php';
-    if (is_file($ipList)) {
-        $ipList = file_get_contents($ipList);
-        $ipList = explode(PHP_EOL, $ipList);
-        if (array_count_values($ipList)[real_ip()] >= $config['ip_upload_counts']) {
-            exit(json_encode(
-                array(
-                    "result"    =>  "failed",
-                    "code"      =>  403,
-                    "message"   =>  "游客限制每日上传 " . $config['ip_upload_counts'] . ' 张',
-                )
-            ));
-        }
-        clearstatcache();
+    if (false == get_ip_upload_log_counts(real_ip())) {
+        exit(json_encode(
+            array(
+                "result"  => "failed",
+                "code"    => 403,
+                "message" => sprintf("游客限制每日上传 %d 张", $config['ip_upload_counts']),
+            )
+        ));
     }
 }
 
@@ -194,7 +188,7 @@ if ($handle->uploaded) {
     if (function_exists('fastcgi_finish_request')) { // fastcgi_finish_request 模式
         fastcgi_finish_request();
         // 记录同IP上传次数
-        @ip_upload_counts();
+        @write_ip_upload_count_logs();
         // 上传日志
         @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 鉴黄
@@ -205,7 +199,7 @@ if ($handle->uploaded) {
         @process_compress($handle->file_dst_pathname);
     } else { // 普通模式
         // 记录同IP上传次数
-        @ip_upload_counts();
+        @write_ip_upload_count_logs();
         // 上传日志
         @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 鉴黄

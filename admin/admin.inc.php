@@ -990,11 +990,11 @@ auto_delete(); //定时删除
                 <div class="bg-warning with-padding hidden-xs">
                     <h5 class="header-dividing"><span class="label label-success">New</span> <?php echo getVersion('name'); ?></h5>
                     <pre style="background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);">更新内容: <br /><?php echo getVersion('body'); ?></pre>
-                    <h6>* 更新日期: <?php echo getVersion('created_at'); ?> 下载新版本上传至网站升级, 然后点击更新版本号。</h6>
+                    <h6>* 更新日期: <?php echo getVersion('created_at'); ?> 下载新版本上传至网站升级 <a href="https://icret.gitee.io/easyimages2.0/#/./图床更新升级" target="_blank" data-toggle="tooltip" title="升级方法"><i class="icon icon-question"></i></a> 然后点击更新版本号。</h6>
                     <form action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <input class="form-control" type="hidden" name="del_version_file" value="/admin/logs/version/version.json" readonly>
                         <div class="btn-group">
-                            <a class="btn btn-mini btn-primary" href="https://github.com/icret/EasyImages2.0/releases" target="_blank" data-toggle="tooltip" title="Github releases">Github</a>
+                            <a class="btn btn-mini btn-primary" href="https://github.com/icret/EasyImages2.0/releases" target="_blank" data-toggle="tooltip" title="Releases Info">Github</a>
                             <a class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank" data-toggle="tooltip" title="① 下载后上传至网站更新">下载新版本</a>
                             <button class="btn btn-mini btn-danger" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</button>
                         </div>
