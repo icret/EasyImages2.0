@@ -853,17 +853,21 @@ function getVersion($name = 'tag_name')
     global $config;
 
     if ($config['checkEnv']) {
-
         require_once APP_ROOT . '/application/class.version.php';
         $url = "https://api.github.com/repositories/188228357/releases/latest"; // 获取版本地址
         $getVersion = new getVersion($url);
-
-        if (!empty($getVersion->readJson($name))) {
-            return $getVersion->readJson($name); // 返回版本信息
-        } else {
+        try {
+            if (!empty($getVersion->readJson($name))) {
+                return $getVersion->readJson($name); // 返回版本信息
+            } else {
+                return '存在版本文件, 但是内容为空,请等待1小时候后再次更新版本号!';
+            }
+        } catch (Throwable $e) {
             $getVersion->downJson(); // 获取版本信息
-            return '获取版本文件失败,请检查curl或者网络';
+            return '获取版本文件失败,请检查curl或者网络 错误信息: ' . $e->getMessage();
         }
+    } else {
+        return '已关闭环境自检, 当前版本:' . get_current_version();
     }
 }
 

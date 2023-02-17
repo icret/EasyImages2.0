@@ -21,7 +21,7 @@
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/html5shiv.js"></script>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/respond.js"></script>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/excanvas.js"></script>
-  <![endif]-->
+  	<![endif]-->
 	<?php /** 自定义代码 */ if ($config['customize']) echo $config['customize']; ?>
 </head>
 
@@ -56,5 +56,4 @@
 			</ul>
 		</div>
 	</div>
-
 	<!-- 顶部导航栏END -->
