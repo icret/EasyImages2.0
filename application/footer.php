@@ -3,7 +3,7 @@
 /** 禁止直接访问 */
 defined('APP_ROOT') ?: exit;
 /** 弹窗公告 */
-if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
+if ($config['notice_status'] > 0) : ?>
   <div class="modal fade" id="notice">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -40,9 +40,12 @@ if ($config['notice_status'] == 1 && !empty($config['notice'])) : ?>
 <div class="col-md-12 clo-xs-12" style="margin-bottom: 108px;position:relative;"></div>
 <footer class="container text-muted small navbar-fixed-bottom" style="text-align: center;background-color:rgba(255,255,255,0.7);z-index: 0;">
   <hr>
+  <?php /** 页脚自定义代码 */ echo $config['footer']; ?>
   <p>
     <!-- 页脚信息 -->
-    <?php if (!empty($config['footer'])) echo $config['footer']; ?>
+    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Github">© Since 2018</a>
+    <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage2.0 简单图床">EasyImage</a>
+    <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
     <!-- 二维码按钮 -->
     <a data-toggle="modal" href="#qr"><i class="icon icon-qrcode hidden-xs inline-block" data-toggle="tooltip" title="二维码"></i></a>
     <?php /** 暗黑模式 */ if ($config['dark-mode']) : ?>

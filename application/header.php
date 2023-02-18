@@ -9,9 +9,9 @@
 	<meta name="force-rendering" content="webkit" />
 	<meta name="author" content="Icret EasyImage2.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><?php echo  $config['title']; ?></title>
-	<meta name="keywords" content="<?php echo  $config['keywords']; ?>" />
-	<meta name="description" content="<?php echo  $config['description']; ?>" />
+	<title><?php echo $config['title']; ?></title>
+	<meta name="keywords" content="<?php echo $config['keywords']; ?>" />
+	<meta name="description" content="<?php echo $config['description']; ?>" />
 	<link rel="shortcut icon" href="<?php static_cdn(); ?>/favicon.ico" type="image/x-icon" />
 	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css" rel="stylesheet">
 	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme']; ?>.css" rel="stylesheet">
@@ -22,7 +22,7 @@
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/respond.js"></script>
     <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/excanvas.js"></script>
   	<![endif]-->
-	<?php /** 自定义代码 */ if ($config['customize']) echo $config['customize']; ?>
+	<?php /** 页头自定义代码 */ echo $config['customize']; ?>
 </head>
 
 <body class="container">

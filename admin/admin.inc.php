@@ -24,7 +24,6 @@ $config_file = APP_ROOT . '/config/config.php'; // config.php
 $api_key_file = APP_ROOT . '/config/api_key.php'; // api_key.php
 $guest_config_file = APP_ROOT . '/config/config.guest.php'; // config.guest.php
 
-
 // 修改config配置
 if (isset($_POST['update'])) {
     $postArr = $_POST;
@@ -648,13 +647,6 @@ auto_delete(); //定时删除
                     <div class="col-md-12">
                         <h5 class="header-dividing">高级设置 <?php if ($config['domain'] == $config['imgurl']) echo '<small> 网站域名与图片域名相同,锁定隐藏' . $config['path'] . '目录开关</small>'; ?></h5>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="网址设置->弹窗公告修改内容<br />重开浏览器访问网站会再次展示公告弹窗">
-                                <input type="hidden" name="notice_status" value="0">
-                                <input type="checkbox" name="notice_status" value="1" <?php if ($config['notice_status']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">弹窗公告</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="开启仅登陆上传">
                                 <input type="hidden" name="mustLogin" value="0">
                                 <input type="checkbox" name="mustLogin" value="1" <?php if ($config['mustLogin']) echo 'checked="checked"'; ?>>
@@ -711,10 +703,10 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
-                                <input type="hidden" name="showSort" value="0">
-                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">广场排序</label>
+                            <div class="switch switch-inline" data-toggle="tooltip" title="网址设置->弹窗公告修改内容<br />重开浏览器访问网站会再次展示公告弹窗">
+                                <input type="hidden" name="notice_status" value="0">
+                                <input type="checkbox" name="notice_status" value="1" <?php if ($config['notice_status']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">显示公告</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -729,6 +721,13 @@ auto_delete(); //定时删除
                                 <input type="hidden" name="chart_on" value="0">
                                 <input type="checkbox" name="chart_on" value="1" <?php if ($config['chart_on']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">显示统计</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
+                                <input type="hidden" name="showSort" value="0">
+                                <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">广场排序</label>
                             </div>
                         </div>
                         <div class="col-md-2">
