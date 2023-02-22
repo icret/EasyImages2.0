@@ -3,11 +3,10 @@
  * 简单图床-复制链接
  * 2023-01-30
  */
-
 document.getElementsByClassName('copyBtn1')[0].onclick = function () {
     var copyVal = document.getElementById("links");
     copyVal.select();
-    try {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
             //success info
             new $.zui.Messager("复制成功", {
@@ -19,15 +18,26 @@ document.getElementsByClassName('copyBtn1')[0].onclick = function () {
             //fail info
             alert("复制失败");
         });
-    } catch (err) {
-        alert(err);
+
+    } else {
+        if (document.execCommand('copy', false, null)) {
+            //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+            console.log("复制成功");
+        } else {
+            //fail info
+            alert("复制失败");
+        }
     }
 }
 
 document.getElementsByClassName('copyBtn2')[0].onclick = function () {
     var copyVal = document.getElementById("bbscode");
     copyVal.select();
-    try {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
             //success info
             new $.zui.Messager("复制成功", {
@@ -39,15 +49,26 @@ document.getElementsByClassName('copyBtn2')[0].onclick = function () {
             //fail info
             alert("复制失败");
         });
-    } catch (err) {
-        alert(err);
+
+    } else {
+        if (document.execCommand('copy', false, null)) {
+            //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+            console.log("复制成功");
+        } else {
+            //fail info
+            alert("复制失败");
+        }
     }
 }
 
 document.getElementsByClassName('copyBtn3')[0].onclick = function () {
     var copyVal = document.getElementById("markdown");
     copyVal.select();
-    try {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
             //success info
             new $.zui.Messager("复制成功", {
@@ -59,15 +80,26 @@ document.getElementsByClassName('copyBtn3')[0].onclick = function () {
             //fail info
             alert("复制失败");
         });
-    } catch (err) {
-        alert(err);
+
+    } else {
+        if (document.execCommand('copy', false, null)) {
+            //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+            console.log("复制成功");
+        } else {
+            //fail info
+            alert("复制失败");
+        }
     }
 }
 
 document.getElementsByClassName('copyBtn4')[0].onclick = function () {
     var copyVal = document.getElementById("html");
     copyVal.select();
-    try {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
             //success info
             new $.zui.Messager("复制成功", {
@@ -79,15 +111,26 @@ document.getElementsByClassName('copyBtn4')[0].onclick = function () {
             //fail info
             alert("复制失败");
         });
-    } catch (err) {
-        alert(err);
+
+    } else {
+        if (document.execCommand('copy', false, null)) {
+            //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+            console.log("复制成功");
+        } else {
+            //fail info
+            alert("复制失败");
+        }
     }
 }
 
 document.getElementsByClassName('copyBtn5')[0].onclick = function () {
     var copyVal = document.getElementById("thumb");
     copyVal.select();
-    try {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
             //success info
             new $.zui.Messager("复制成功", {
@@ -99,15 +142,26 @@ document.getElementsByClassName('copyBtn5')[0].onclick = function () {
             //fail info
             alert("复制失败");
         });
-    } catch (err) {
-        alert(err);
+
+    } else {
+        if (document.execCommand('copy', false, null)) {
+            //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+            console.log("复制成功");
+        } else {
+            //fail info
+            alert("复制失败");
+        }
     }
 }
 
 document.getElementsByClassName('copyBtn6')[0].onclick = function () {
     var copyVal = document.getElementById("del");
     copyVal.select();
-    try {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
             //success info
             new $.zui.Messager("复制成功", {
@@ -119,8 +173,19 @@ document.getElementsByClassName('copyBtn6')[0].onclick = function () {
             //fail info
             alert("复制失败");
         });
-    } catch (err) {
-        alert(err);
+
+    } else {
+        if (document.execCommand('copy', false, null)) {
+            //success info
+            new $.zui.Messager("复制成功", {
+                type: "primary", // 定义颜色主题 
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+            console.log("复制成功");
+        } else {
+            //fail info
+            alert("复制失败");
+        }
     }
 }
 
@@ -159,7 +224,6 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
         var formData = new FormData();
         formData.append('file', file);
         var xhr = new XMLHttpRequest();
-
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 1) {
                 $.zui.messager.show('粘贴上传中...', {
@@ -191,7 +255,6 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 document.getElementById("html").innerHTML += '<img src="' + result.url + '" alt="' + result.srcName + '" />\r\n';
                 document.getElementById("thumb").innerHTML += result.thumb + "\r\n";
                 document.getElementById("del").innerHTML += result.del + "\r\n";
-
                 $.zui.messager.show(result.srcName + '上传成功', {
                     icon: 'bell',
                     time: 4000,
@@ -205,7 +268,6 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 } catch (err) {
                     console.log('localStorage failed:' + err);
                 }
-
             } else {
                 $.zui.messager.show('上传失败...' + result.message, {
                     icon: 'bell',
@@ -229,8 +291,21 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
     });
 })();
 
-/** javascript parseUrl函数解析url获取网址url参数 
+/** 
+ * javascript parseUrl函数解析url获取网址url参数 
  * https://www.cnblogs.com/lazb/p/10144471.html
+ * 使用示例：
+ * var myURL = parseURL('http://abc.com:8080/dir/index.html?id=255&m=hello#top');
+ * myURL.file; // = 'index.html'
+ * myURL.hash; // = 'top'
+ * myURL.host; // = 'abc.com'
+ * myURL.query; // = '?id=255&m=hello'
+ * myURL.params; // = Object = { id: 255, m: hello }
+ * myURL.path; // = '/dir/index.html'
+ * myURL.segments; // = Array = ['dir', 'index.html']
+ * myURL.port; // = '8080'
+ * myURL.protocol; // = 'http'
+ * myURL.source; // = 'http://abc.com:8080/dir/index.html?id=255&m=hello#top'
 */
 
 function parseURL(url) {
@@ -261,24 +336,8 @@ function parseURL(url) {
     };
 }
 
-/**
-使用实例：
-var myURL = parseURL('http://abc.com:8080/dir/index.html?id=255&m=hello#top');
-myURL.file; // = 'index.html'
-myURL.hash; // = 'top'
-myURL.host; // = 'abc.com'
-myURL.query; // = '?id=255&m=hello'
-myURL.params; // = Object = { id: 255, m: hello }
-myURL.path; // = '/dir/index.html'
-myURL.segments; // = Array = ['dir', 'index.html']
-myURL.port; // = '8080'
-myURL.protocol; // = 'http'
-myURL.source; // = 'http://abc.com:8080/dir/index.html?id=255&m=hello#top'
-*/
-
-
 /** jQuery 读取文件 readTxt('../admin/version.php'); */
-function readTxt(filePath) {
+function readTxt(filePath = '../admin/version.php') {
     $.get(filePath, function (data) {
         var lines = data.split("\n"); //按行读取
         $.each(lines, function (i, v) {
@@ -286,3 +345,40 @@ function readTxt(filePath) {
         });
     });
 }
+
+// cookie 操作封装 https://www.jb51.net/article/94456.htm
+var cookieUtil = {
+    // 设置cookie
+    setItem: function (name, value, days) {
+        var date = new Date();
+        date.setDate(date.getDate() + days);
+        document.cookie = name + '=' + value + ';expires=' + date + ';path=' + '/';
+    },
+    // 获取cookie
+    getItem: function (name) {
+        var arr = document.cookie.replace(/\s/g, "").split(';');
+        for (var i = 0; i < arr.length; i++) {
+            var tempArr = arr[i].split('=');
+            if (tempArr[0] == name) {
+                return decodeURIComponent(tempArr[1]);
+            }
+        }
+        return '';
+    },
+    // 删除cookie
+    removeItem: function (name) {
+        this.setItem(name, '1', -1);
+    },
+    // 检查是否含有某cookie
+    hasItem: function (name) {
+        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+    },
+    // 获取全部的cookie列表
+    getAllItems: function () {
+        var cookieArr = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+        for (var nIdx = 0; nIdx < cookieArr.length; nIdx++) {
+            cookieArr[nIdx] = decodeURIComponent(cookieArr[nIdx]);
+        }
+        return cookieArr;
+    }
+};

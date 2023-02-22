@@ -297,7 +297,7 @@ if (isset($_POST['del_version_file'])) {
         unlink(APP_ROOT . $_POST['del_version_file']);
         echo "
         <script>
-        new $.zui.Messager('更新版本成功', {
+        new $.zui.Messager('更新版本号成功', {
             type: 'success', // 定义颜色主题
             icon: 'ok'
         }).show();
@@ -306,7 +306,7 @@ if (isset($_POST['del_version_file'])) {
     } catch (Exception $e) {
         echo "
         <script>
-        new $.zui.Messager('更新版本失败', {
+        new $.zui.Messager('更新版本号失败', {
             type: 'danger', // 定义颜色主题
             icon: 'ok'
         }).show();

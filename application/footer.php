@@ -17,6 +17,9 @@ if ($config['notice_status'] > 0) : ?>
           <?php echo $config['notice']; ?>
         </div>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-mini btn-primary" data-dismiss="modal">了解</button>
+      </div>
     </div>
   </div>
 <?php endif; ?>
@@ -65,7 +68,6 @@ if ($config['notice_status'] > 0) : ?>
   // NProgress
   NProgress.start();
   NProgress.done();
-
   // 导航状态
   $('.nav-pills').find('a').each(function() {
     // console.log(document.location);
@@ -114,9 +116,8 @@ if ($config['notice_status'] > 0) : ?>
       $('*').s2t();
     });
   <?php endif; ?>
-
   <?php /** 暗黑模式 */ if ($config['dark-mode']) : ?>
-    // cookie 操作封装 https://www.jb51.net/article/94456.htm
+    // cookie 操作封装 https://www.jb51.net/article/94456.htm   
     var cookieUtil = {
       // 设置cookie
       setItem: function(name, value, days) {
@@ -152,7 +153,6 @@ if ($config['notice_status'] > 0) : ?>
         return cookieArr;
       }
     };
-
     // 暗黑操作
     let styleLabel = document.createElement('style');
     document.getElementById('dark').onclick = function() {

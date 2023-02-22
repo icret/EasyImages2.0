@@ -95,7 +95,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <td><?php echo $logs[$logsName]['size']; ?></td>
                     </tr>
                     <tr class="text-primary">
-                        <td>上传用户</td>
+                        <td>上传者IP</td>
                         <td><?php echo $logs[$logsName]['ip'] . ':' . $logs[$logsName]['port']; ?></td>
                     </tr>
                     <tr class="text-primary">
