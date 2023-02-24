@@ -398,6 +398,9 @@ function imgName($source = null)
 
     switch ($config['imgName']) {
 
+        case "default":
+            return base_convert(date('His') . mt_rand(1001, 9999), 10, 36); // 将上传时间+随机数转换为36进制 例：vx77yu
+            break;
         case "source":
             // 以上传文件名称 例：微信图片_20211228214754
             // 过滤非法名称 $source = preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/","",$source);
@@ -439,8 +442,7 @@ function imgName($source = null)
             return uuid(); // uuid
             break;
         default:
-            // 将上传时间+随机数转换为36进制 例：vx77yu
-            return base_convert(date('His') . mt_rand(1001, 9999), 10, 36);
+            return base_convert(date('His') . mt_rand(1001, 9999), 10, 36); // 将上传时间+随机数转换为36进制 例：vx77yu
     }
 }
 

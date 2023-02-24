@@ -1,10 +1,10 @@
-*2023-02-18 v2.7.5 dev
+*2023-02-24 v2.7.5 dev
 - 增加定时删除文件
+- 增加API上传返回Token ID
 - 修复一处bug
-- 修复非安全域名下无法复制[#92](https://github.com/icret/EasyImages2.0/issues/92)
 - 修复局域网无法获取新版本时导致的页面混乱[#91](https://github.com/icret/EasyImages2.0/issues/91#issue-1585360193)
+- 兼容非安全域名下的复制[#92](https://github.com/icret/EasyImages2.0/issues/92)
 - 更换检测新版本方式
-- API上传增加返回Token ID
 - 优化显示
 
 * 2023-02-06 v2.7.4
