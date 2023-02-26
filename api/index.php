@@ -112,14 +112,6 @@ if ($handle->uploaded) {
         // 后续处理地址
         $processUrl = $config['domain'] . $pathIMG;
 
-        // 原图保护 key值是由crc32加密的hide_key
-        // $hide_original = $config['hide'] == 1 ? $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key'])) : $imageUrl;
-
-        /** 
-         * 以下为控制开启源图保护或者返回值隐藏config文件中的path目录所更改 
-         * 2022年5月1日
-         */
-
         // 隐藏config文件中的path目录,需要搭配网站设置
         if ($config['hide_path'] == 1) {
             $imageUrl = str_replace($config['path'], '/', $imageUrl);
@@ -130,14 +122,9 @@ if ($handle->uploaded) {
             $imageUrl = $config['domain'] . '/application/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key']));
         }
 
-        // 关闭上传后显示加密删除链接
+        // 删除文件链接
         if ($config['show_user_hash_del']) {
-            // 判断PHP版本启用删除
-            if (PHP_VERSION >= '7') {
-                $delUrl = $config['domain']  . '/application/del.php?hash=' . urlHash($pathIMG, 0);
-            } else {
-                $delUrl = "Sever PHP version lower 7.0";
-            }
+            $delUrl = $config['domain'] . '/application/del.php?hash=' . urlHash($pathIMG, 0);
         } else {
             $delUrl = "Admin closed user delete";
         }

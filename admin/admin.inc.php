@@ -1636,11 +1636,12 @@ auto_delete(); //定时删除
     // 按照 `name` 列降序排序
     guestMyDataGrid.sortBy('add_time', 'desc');
 
+    /** 引入设置页面检测文件 */
+    <?php if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
+    
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
 </script>
 <?php
-/** 引入设置页面检测文件 */
-if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php';
 /** 引入底部 */
 require_once APP_ROOT . '/application/footer.php';

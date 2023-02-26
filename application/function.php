@@ -1,13 +1,12 @@
 <?php
 
 /**
- * EasyImage2.0 - 简单图床基础配置
-
  * @author  icret
  * @email   lemonim@qq.com
+ * @project EasyImage2.0 - 简单图床
  * @Github  https://github.com/icret/easyImages2.0
- * QQ Group 623688684
- * @Last    2022-1-22 17:38:57
+ * QQ Group 954441002
+ * @Last    2023-02-26 17:38:57
 
  * 上传服务器后第一次打开会检查运行环境，请根据提示操作；
  * 检查环境仅会在第一开始开始出现，并在config目录下生成EasyImage.lock文件，如需再次查看请删除此文件。
@@ -17,8 +16,6 @@
  * 请为本人博客（blog.png.cm）加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）
  * 如果因安装问题或其他问题可以给我发邮件。
  */
-
-use function PHPSTORM_META\type;
 
 /*---------------基础配置开始-------------------*/
 
@@ -39,6 +36,7 @@ define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 require_once APP_ROOT . '/config/config.php';
 require_once APP_ROOT . '/config/config.guest.php';
 require_once __DIR__ . '/WaterMask.php';
+
 /**
  * 判断GIF图片是否为动态
  * @param $filename string 文件
@@ -254,87 +252,6 @@ function mustLogin()
             }).show();
             </script>';
             header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
-        }
-    }
-}
-
-/**
- * 仅允许登录后上传 2023-01-05弃用
- */
-function mustLogin_a()
-{
-    global $config;
-    if ($config['mustLogin']) {
-
-        switch (checkLogin()) {
-            case 201:
-                echo '
-                <script>
-                new $.zui.Messager("请登录 !", {
-                    type: "danger", // 定义颜色主题 
-                    icon: "bullhorn" // 定义消息图标
-                }).show();
-                </script>';
-                header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
-                break;
-            case 202:
-                echo '
-                <script> 
-                new $.zui.Messager("登陆超时，请重新登录", {
-					type: "special", // 定义颜色主题 
-					icon: "exclamation-sign" // 定义消息图标
-                }).show();
-                </script>';
-                header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
-                break;
-            case 203:
-                echo '
-                    <script> 
-                    new $.zui.Messager("密码已更改，请重新登录", {
-                        type: "special", // 定义颜色主题 
-                        icon: "exclamation-sign" // 定义消息图标
-                    }).show();
-                    </script>';
-                exit(header("refresh:2;url=" . $config['domain'] . "/admin/index.php"));
-                break;
-            case 204:
-                echo '
-                    <script> 
-                    new $.zui.Messager("管理员已登陆", {
-                        type: "success", // 定义颜色主题 
-                        icon: "check", // 定义消息图标
-                        placement:"bottom-right" // 消息位置
-                    }).show();
-                    </script>';
-                break;
-            case 205:
-                echo '
-                    <script> 
-                    new $.zui.Messager("上传者账户已登陆", {
-                        type: "success", // 定义颜色主题 
-                        icon: "check", // 定义消息图标
-                        placement:"bottom-right" // 消息位置
-                    }).show();
-                    </script>';
-                break;
-            case 206:
-                echo '
-                    <script> 
-                        new $.zui.Messager("上传者账户已过期", {
-                            type: "special", // 定义颜色主题 
-                            icon: "exclamation-sign" // 定义消息图标
-                    }).show();
-                    </script>';
-                break;
-            case 206:
-                echo '
-                <script> 
-                    new $.zui.Messager("登录失败！", {
-                    type: "special", // 定义颜色主题 
-                    icon: "exclamation-sign" // 定义消息图标
-                    }).show();
-                </script>';
-                break;
         }
     }
 }
@@ -668,19 +585,6 @@ function getDistUsed($number)
 }
 
 /**
- * 根据url填写active
- * @param $url string 要过滤的链接
- * @return string
- */
-function getActive($url)
-{
-    $arr = $_SERVER['SCRIPT_NAME'];
-    if (strpos($arr, $url)) {
-        return ' class="active"';
-    }
-}
-
-/**
  * 加密/解密图片路径
  * @param string $data 要加密的内容
  * @param int $mode =1或0  1解密 0加密
@@ -691,14 +595,14 @@ function urlHash($data, $mode, $key = null)
     global $config;
 
     if (!$key) {
-        $key = $config['password'];
+        $key = crc32($config['password']);
     }
 
     $iv = 'sciCuBC7orQtDhTO';
     if ($mode) {
-        return openssl_decrypt(base64_decode($data), "AES-128-CBC", $key, 0, $iv);
+        return openssl_decrypt(base64_decode($data), "AES-128-XTS", $key, 0, $iv);
     } else {
-        return base64_encode(openssl_encrypt($data, "AES-128-CBC", $key, 0, $iv));
+        return base64_encode(openssl_encrypt($data, "AES-128-XTS", $key, 0, $iv));
     }
 }
 
