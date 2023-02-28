@@ -163,7 +163,7 @@ if ($handle->uploaded) {
             "code"      =>  206,
             "message"   =>  $handle->error,
             "memory"    =>  getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
-            // 'log' => $handle->log,(仅用作调试用)
+            // 'log' => $handle->log, // 仅用作调试用
         );
         unset($handle);
         header('Content-Type:application/json; charset=utf-8');

@@ -149,6 +149,6 @@ if (!function_exists('fastcgi_finish_request')) {
         new $.zui.Messager("开启 fastcgi_finish_request 处理数据会更快喔!",{
             type: "primary", // 定义颜色主题 
             time:7000
-            }).show();
+        }).show();
     ';
 }

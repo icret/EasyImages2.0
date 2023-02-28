@@ -117,6 +117,7 @@ if ($config['notice_status'] > 0) : ?>
       $('*').s2t();
     });
   <?php endif; ?>
+  
   <?php /** 暗黑模式 */ if ($config['dark-mode']) : ?>
     // cookie 操作封装 https://www.jb51.net/article/94456.htm   
     var cookieUtil = {
