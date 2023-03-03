@@ -8,7 +8,6 @@ require_once APP_ROOT . '/config/config.guest.php';
 // 验证登录
 header("Content-Type: text/html;charset=utf-8");
 
-
 // 退出
 if (isset($_GET['login'])) {
     if ($_GET['login'] = 'logout') {

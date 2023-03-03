@@ -119,7 +119,7 @@ function _login($user = null, $password = null)
     global $guestConfig;
 
     // cookie验证
-    if ($user == null and $password == null) {
+    if ($user === null and $password === null) {
         // 无cookie
         if (empty($_COOKIE['auth'])) {
             return json_encode(array('code' => 400, 'level' => 0, 'messege' => '请登录'));
@@ -132,9 +132,9 @@ function _login($user = null, $password = null)
             // 判断账号是否存在
             if ($browser_cookie[0] !== $config['user'] && !array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
             // 判断是否管理员
-            if ($browser_cookie[0] == $config['user'] && $browser_cookie[1] == $config['password']) return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
+            if ($browser_cookie[0] === $config['user'] && $browser_cookie[1] === $config['password']) return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
             // 判断是否上传者
-            if (array_key_exists($browser_cookie[0], $guestConfig) && $browser_cookie[1] == $guestConfig[$browser_cookie[0]]['password']) {
+            if (array_key_exists($browser_cookie[0], $guestConfig) && $browser_cookie[1] === $guestConfig[$browser_cookie[0]]['password']) {
                 // 判断上车者是否过期
                 if ($guestConfig[$browser_cookie[0]]['expired'] < time()) {
                     // 上传者账户密码正确,但是账户过期
@@ -143,7 +143,7 @@ function _login($user = null, $password = null)
                 return json_encode(array('code' => 200, 'level' => 2, 'messege' => $browser_cookie[0] . '用户已登录'));
             }
             // 账号存在,密码错误
-            if ($browser_cookie[0] == $config['user'] || array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
+            if ($browser_cookie[0] === $config['user'] || array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
         }
     }
 
@@ -151,25 +151,25 @@ function _login($user = null, $password = null)
     $user = strip_tags($user);
     $password = strip_tags($password);
     // 是否管理员
-    if ($user == $config['user'] && $password == $config['password']) {
+    if ($user === $config['user'] && $password === $config['password']) {
         // 将账号密码序列化后存储
         $browser_cookie = serialize(array($user, $password));
         setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
         return json_encode(array('code' => 200, 'level' => 1, 'messege' => '管理员登录成功'));
     }
     // 是否上传者
-    if (array_key_exists($user, $guestConfig) && $password == $guestConfig[$user]['password']) {
+    if (array_key_exists($user, $guestConfig) && $password === $guestConfig[$user]['password']) {
         // 上传者账号过期
         if ($guestConfig[$user]['expired'] < time()) return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
         // 未过期设置cookie
-        $browser_cookie = serialize(array($user, $password));
+        $browser_cookie === serialize(array($user, $password));
         setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
         return json_encode(array('code' => 200, 'level' => 2, 'messege' => $user . '用户登录成功'));
     }
     // 检查账号是否存在
-    if (array_key_exists($user, $guestConfig) || $user == $config['user']) {
+    if (array_key_exists($user, $guestConfig) || $user === $config['user']) {
         // 账号存在,密码错误
-        if ($user == $config['user'] || array_key_exists($user, $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
+        if ($user === $config['user'] || array_key_exists($user, $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
     } else {
         return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
     }
@@ -207,12 +207,12 @@ function checkLogin()
         }
 
         // 管理员登陆
-        if ($getCOK[0] == $config['user'] && $getCOK[1] == $config['password']) {
+        if ($getCOK[0] === $config['user'] && $getCOK[1] === $config['password']) {
             return 204;
         }
 
         // 上传者账号登陆
-        if ($getCOK[1] == $guestConfig[$getCOK[0]]['password']) {
+        if ($getCOK[1] === $guestConfig[$getCOK[0]]['password']) {
             if ($guestConfig[$getCOK[0]]['expired'] < time()) {
                 // 上传者账号过期
                 return 206;
@@ -232,7 +232,7 @@ function mustLogin()
         $status = _login();
         $status = json_decode($status, true);
 
-        if ($status['code'] == 200) {
+        if ($status['code'] === 200) {
             echo '
             <script> 
                 new $.zui.Messager("' . $status["messege"] . '", {
@@ -243,7 +243,7 @@ function mustLogin()
             </script>';
         }
 
-        if ($status['code'] == 400) {
+        if ($status['code'] === 400) {
             echo '
             <script>
                 new $.zui.Messager("' . $status["messege"] . '", {
@@ -625,8 +625,8 @@ function getDel($url, $type)
         $url = APP_ROOT . $url;
     }
 
-    // 文件是否存在
-    if (is_file($url)) {
+    // 文件是否存在 限制删除目录
+    if (is_file($url) && strrpos($url, $config['path'])) {
         // 执行删除
         if (@unlink($url)) {
             echo '
@@ -673,11 +673,11 @@ function is_who_login($user)
     // 将状态转码
     $status = json_decode(_login(), true);
     // 查询是否登录
-    if ($user == 'status') if ($status['level'] > 0) return true;
+    if ($user === 'status') if ($status['level'] > 0) return true;
     // 是否管理员登录
-    if ($user == 'admin') if ($status['level'] == 1) return true;
+    if ($user === 'admin') if ($status['level'] == 1) return true;
     // 是否上传者登录
-    if ($user == 'guest') if ($status['level'] == 2) return true;
+    if ($user === 'guest') if ($status['level'] == 2) return true;
 
     return false;
 }

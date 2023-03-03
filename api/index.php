@@ -54,7 +54,23 @@ $handle = new Upload($_FILES['image'], 'zh_CN');
 
 if ($handle->uploaded) {
     // 允许上传的mime类型
-    $handle->allowed = array('image/*');
+    if ($config['allowed'] === 1) {
+        $handle->allowed = array('image/*');
+    }
+    // svg格式过滤
+    if ($handle->file_src_name_ext === 'svg') {
+        $svg = file_get_contents($handle->file_src_pathname);
+        if (preg_match('/<script[\s\S]*?<\/script>/', $svg)) {
+            exit(json_encode(
+                array(
+                    "result"  => "failed",
+                    "code"    => 205,
+                    "message" => "请勿上传非法文件",
+                )
+            ));
+        }
+    }
+    
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
     // 添加Token ID
