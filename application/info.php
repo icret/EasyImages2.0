@@ -10,7 +10,12 @@ if (isset($_GET['img'])) {
     $del_url = $config['domain'] . $getIMG;
 } elseif (isset($_GET['history'])) {
     // 过滤特殊符号
-    $getIMG = $config['path'] . ltrim(strip_tags($_GET['history']), '/');
+
+    if ($config['hide_path']) {
+        $getIMG = $config['path'] . ltrim(strip_tags($_GET['history']), '/');
+    } else {
+        $getIMG = strip_tags($_GET['history']);
+    }
     $del_url = $config['domain'] . $getIMG;
 } else {
     // 未获取到图片地址
@@ -27,7 +32,7 @@ if ($config['hide_path']) {
     $logs = str_replace('/', '-', substr(parse_url($img_url, PHP_URL_PATH), 1, 7));
 } else {
     // 关闭隐藏上传目录
-    $img_url =   rand_imgurl() . $getIMG;
+    $img_url = rand_imgurl() . $getIMG;
 
     // 获取当前图片日志文件
     $logs = str_replace('/', '-', substr(str_replace($config['path'], '', parse_url($img_url, PHP_URL_PATH)), 0, 7));
@@ -125,7 +130,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
                         <a class="btn btn-mini btn-primary" href="" onclick="window.location.replace;"><i class="icon icon-spin icon-refresh"></i> 刷新</a>
                         <a class="btn btn-mini btn-primary" href="/application/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
-                        <?php if (isset($config['report']) && !is_who_login('admin')) : ?>
+                        <?php if (!empty($config['report']) && !is_who_login('admin')) : ?>
                             <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
                         <?php endif; ?>
                         <?php if (is_who_login('admin')) : ?>

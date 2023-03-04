@@ -624,7 +624,7 @@ auto_delete(); //定时删除
                     </div>
                     <div class="form-group">
                         <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                        <input type="text" class="form-control" id="report" name="report" value="<?php echo $config['report']; ?>" placeholder="可以是网址或邮箱" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                        <input type="text" class="form-control" id="report" name="report" value="<?php echo $config['report']; ?>" placeholder="可以是网址或邮箱地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
                     </div>
                     <div class="form-group">
                         <div class="switch switch-inline">

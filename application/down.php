@@ -7,15 +7,30 @@
 //获取要下载的文件名
 require_once __DIR__ . '/function.php';
 
+// 空GET
+if (empty($_GET)) {
+    exit('No file path');
+}
+
 // 获取下载路径
-if (empty($_GET['dw'])) {
-    exit('No File Path');
-} else {
+if (isset($_GET['dw'])) {
     $dw = '../' . $_GET['dw'];
     // 检查文件是否存在
     if (!is_file($dw)) {
         exit('No File');
     }
+}
+
+// 历史上传记录的路径
+if (isset(($_GET['history']))) {
+    $dw = '../' . $_GET['history'];
+    if ($config['hide_path']) {
+        $dw = '../' . $config['path'] . $_GET['history'];
+    }
+}
+// 检查文件是否存在
+if (!is_file($dw)) {
+    exit('No File');
 }
 
 // 过滤下载非指定上传文件格式
