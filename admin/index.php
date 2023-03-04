@@ -5,8 +5,6 @@
 require_once __DIR__ . '/../application/function.php';
 require_once APP_ROOT . '/application/header.php';
 require_once APP_ROOT . '/config/config.guest.php';
-// 验证登录
-header("Content-Type: text/html;charset=utf-8");
 
 // 退出
 if (isset($_GET['login'])) {
@@ -41,26 +39,34 @@ if (isset($_GET['login'])) {
     exit(require_once APP_ROOT . '/application/footer.php');
 }
 
-// 验证码
-if ($config['captcha']) {
-    if (isset($_REQUEST['code'])) {
-        session_start();
-        if (strtolower($_REQUEST['code']) !== $_SESSION['code']) {
-            echo '
-            <script>
-                new $.zui.Messager("验证码错误!", {type: "danger" // 定义颜色主题 
-                }).show();
-                // 延时2s跳转
-				window.setTimeout("window.location=\'./index.php\'",2000);
-            </script>';
-
-            exit(require_once APP_ROOT . '/application/footer.php');
-        }
-    }
-}
-
 // 提交登录
 if (isset($_POST['password']) and isset($_POST['user'])) {
+
+    // 验证码
+    if ($config['captcha']) {
+        if (empty($_REQUEST['code'])) {
+            echo '
+            <script>
+                new $.zui.Messager("请填写验证码!", {type: "danger" // 定义颜色主题 
+                }).show();
+                // 延时2s跳转
+                window.setTimeout("window.location=\'./index.php\'",2000);
+            </script>';
+            exit(require_once APP_ROOT . '/application/footer.php');
+        } else {
+            session_start();
+            if (strtolower($_REQUEST['code']) !== $_SESSION['code']) {
+                echo '
+                <script>
+                    new $.zui.Messager("验证码错误!", {type: "danger" // 定义颜色主题 
+                    }).show();
+                    // 延时2s跳转
+				    window.setTimeout("window.location=\'./index.php\'",2000);
+                </script>';
+                exit(require_once APP_ROOT . '/application/footer.php');
+            }
+        }
+    }
 
     $login = _login($_POST['user'], $_POST['password']);
     $login = json_decode($login, true);
