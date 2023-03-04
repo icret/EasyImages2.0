@@ -99,7 +99,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             </div>
             <div class="modal-body">
                 <p class="text-primary">忘记账号可以打开<code>/config/config.php</code>文件找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</p>
-                <p class="text-success">忘记密码请将密码转换成MD5小写(<a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>)->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
+                <p class="text-success">忘记密码请将密码转换成SHA256(<a href="<?php echo $config['domain'] . '/application/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>)->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
                 <h4 class="text-danger">更改后会立即生效并重新登录,请务必牢记账号和密码! </h4>
             </div>
             <div class="modal-footer">
@@ -152,12 +152,14 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
     </div>
 </section>
 </form>
-<script src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
+<script src="<?php static_cdn(); ?>/public/static/crypto/SHA256.js"></script>
 <script>
+    console.log(SHA256('admin@123'));
+
     function md5_post() {
         var password = document.getElementById('password');
         var md5pwd = document.getElementById('md5_password');
-        md5pwd.value = md5(password.value);
+        md5pwd.value = SHA256(password.value);
         //可以校验判断表单内容，true就是通过提交，false，阻止提交
         return true;
     }

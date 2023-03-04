@@ -8,7 +8,7 @@ if (file_exists(APP_ROOT . '/config/install.lock')) {
 if (isset($_POST['password'])) {
   if ($_POST['password'] == $_POST['repassword']) {
 
-    $config['password'] = md5($_POST['password']);
+    $config['password'] = hash('sha256', $_POST['password']);
     $config['user'] = $_POST['user'];
   } else {
 

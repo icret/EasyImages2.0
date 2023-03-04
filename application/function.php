@@ -162,7 +162,7 @@ function _login($user = null, $password = null)
         // 上传者账号过期
         if ($guestConfig[$user]['expired'] < time()) return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
         // 未过期设置cookie
-        $browser_cookie === serialize(array($user, $password));
+        $browser_cookie = serialize(array($user, $password));
         setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
         return json_encode(array('code' => 200, 'level' => 2, 'messege' => $user . '用户登录成功'));
     }

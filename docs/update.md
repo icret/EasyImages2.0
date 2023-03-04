@@ -1,8 +1,10 @@
 * 2023-03-04 v2.7.6 dev
 - 增加删除文件时限定目录
-- 增强对SVG格式过滤以避免产生xss 致谢：[xulei1112](https://github.com/xulei1112)
+- 增加对SVG文件格式过滤 致谢：[xulei1112](https://github.com/xulei1112)
 - 修复弱类型验证导致的异常登录 致谢：[xulei1112](https://github.com/xulei1112)
 - 更换加密删除链接算法 - 链接更短
+- 更换存储密码算法为SHA256
+- 默认不支持SVG文件上传
 - 完全兼容 PHP5.6-8.0
 
 * 2023-02-24 v2.7.5

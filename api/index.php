@@ -57,10 +57,11 @@ if ($handle->uploaded) {
     if ($config['allowed'] === 1) {
         $handle->allowed = array('image/*');
     }
-    // svg格式过滤
+
+    // 检查svg是否存在script和a标签代码
     if ($handle->file_src_name_ext === 'svg') {
         $svg = file_get_contents($handle->file_src_pathname);
-        if (preg_match('/<script[\s\S]*?<\/script>/', $svg)) {
+        if (preg_match('/<script[\s\S]*?<\/script>/', $svg) || stripos($svg, 'href=')) {
             exit(json_encode(
                 array(
                     "result"  => "failed",
@@ -70,7 +71,7 @@ if ($handle->uploaded) {
             ));
         }
     }
-    
+
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
     // 添加Token ID

@@ -1131,7 +1131,7 @@ auto_delete(); //定时删除
                             <li>直接输入账号和密码即可完成修改</li>
                             <li>更改后会立即生效并重新登录,请务必牢记账号和密码! </li>
                             <li>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</li>
-                            <li>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/md5.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
+                            <li>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
                         </ul>
                     </div>
                 </div>
@@ -1381,7 +1381,7 @@ auto_delete(); //定时删除
 </div>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css">
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
-<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/md5/md5.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/crypto/SHA256.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/jscolor/jscolor.min.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
@@ -1431,7 +1431,7 @@ auto_delete(); //定时删除
     function uploader_md5_post() {
         var password = document.getElementById('uploader_password');
         var md5pwd = document.getElementById('uploader_md5_password');
-        md5pwd.value = md5(password.value);
+        md5pwd.value = SHA256(password.value);
         //可以校验判断表单内容,true就是通过提交,false,阻止提交
         return true;
     }
@@ -1439,7 +1439,7 @@ auto_delete(); //定时删除
     function md5_post() {
         var password = document.getElementById('password');
         var md5pwd = document.getElementById('md5_password');
-        md5pwd.value = md5(password.value);
+        md5pwd.value = SHA256(password.value);
         //可以校验判断表单内容,true就是通过提交,false,阻止提交
         return true;
     }
