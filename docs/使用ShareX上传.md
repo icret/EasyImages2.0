@@ -7,7 +7,7 @@
 
 ```ShareX
 {
-  "Version": "13.5.0",
+  "Version": "15.0.0",
   "Name": "简单图床API图片上传",
   "DestinationType": "ImageUploader",
   "RequestMethod": "POST",
@@ -17,10 +17,10 @@
     "token": "8337effca0ddfcd9c5899f3509b23657"
   },
   "FileFormName": "image",
-  "URL": "$json:url$",
-  "ThumbnailURL": "$json:thumb$",
-  "DeletionURL": "$json:del$",
-  "ErrorMessage": "$json:message$"
+  "URL": "{json:url}",
+  "ThumbnailURL": "{json:thumb}",
+  "DeletionURL": "{json:del}",
+  "ErrorMessage": "{json:message}"
 }
 ```
 ![](images/ShareX_UwVwPnC3MJ.png)

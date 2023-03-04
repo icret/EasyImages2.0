@@ -6,7 +6,12 @@ require_once __DIR__ . '/../application/function.php';
 require_once APP_ROOT . '/application/class.upload.php';
 require_once APP_ROOT . '/config/api_key.php';
 
-header('Access-Control-Allow-Origin:*');
+// 允许跨域 https://stackoverflow.com/questions/8719276/cross-origin-request-headerscors-with-php-headers
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
+header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding");
 
 // 无文件
 if (empty($_FILES['image'])) {

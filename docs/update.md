@@ -8,6 +8,7 @@
 - 更换存储密码算法为SHA256
 - 默认不支持SVG文件上传
 - 完全兼容 PHP5.6-8.0
+- 对picgo/ShareX/盘络等第三方API增强兼容性
 - 本次漏洞修复和代码增强感谢 [xulei1112](https://github.com/xulei1112)
 
 * 2023-02-24 v2.7.5
