@@ -287,7 +287,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 placement: 'top'
             });
         };
-        xhr.open('POST', './application/upload.php', true);
+        xhr.open('POST', './application/upload.php?sign=' + new Date().format("YYYYMMddhh"), true);
         xhr.send(formData);
     });
 })();
