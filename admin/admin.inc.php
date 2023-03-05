@@ -566,18 +566,22 @@ auto_delete(); //定时删除
         </div>
         <div class="tab-pane fade" id="Content6">
             <div class="col-md-12">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
                     <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
                         <div class="form-group">
-                            <label for="logDate" class="text-primary">选择月份: </label>
+                            <label for="logDate" class="text-primary">月份: </label>
                             <input type="text" class="form-control logDate" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
-                            <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('YMDH')); ?>" placeholder="日志访问秘钥">
+                            <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('ymdh')); ?>" placeholder="日志访问秘钥">
                         </div>
-                        <button type="submit" class="btn btn-primary">查看日志</button>
+                        <button type="submit" class="btn btn-primary">查看</button>
                     </form>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="col-md-2">
+                    <h5 class="header-dividing">登录日志 <small>仅显示当月</small></h5>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-title="登录日志 - 仅显示当月" data-icon="book" data-moveable="true" data-width="60%" data-type="ajax" data-url="../application/viewlog.php?login_log&pass=<?php echo md5($config['password'] . date('ymdh')); ?>">查看</button>
+                </div>
+                <div class="col-md-3">
                     <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才执行<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍后再彻底删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <div class="input-group">
@@ -588,8 +592,8 @@ auto_delete(); //定时删除
                         <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
                     </form>
                 </div>
-                <div class="col-md-4">
-                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '文件 | 占用' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
+                <div class="col-md-3">
+                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '个 | 占用 ' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
                     </form>
@@ -1131,7 +1135,7 @@ auto_delete(); //定时删除
                             <li>直接输入账号和密码即可完成修改</li>
                             <li>更改后会立即生效并重新登录,请务必牢记账号和密码! </li>
                             <li>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</li>
-                            <li>如果忘记密码请将密码->转换成MD5小写-><a href="<?php echo $config['domain'] . '/application/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
+                            <li>如果忘记密码请将密码->转换成SHA256-><a href="<?php echo $config['domain'] . '/application/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
                         </ul>
                     </div>
                 </div>
@@ -1569,7 +1573,7 @@ auto_delete(); //定时删除
                     width: 0.1
                 },
                 {
-                    label: '密码(md5)',
+                    label: '密码 (SHA256)',
                     name: 'password',
                     html: true,
                     width: 0.2
@@ -1638,7 +1642,7 @@ auto_delete(); //定时删除
 
     /** 引入设置页面检测文件 */
     <?php if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
-    
+
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
 </script>

@@ -1695,3 +1695,17 @@ function auto_delete()
     }
     return false;
 }
+
+function write_login_log($user, $password, $messege)
+{
+    $log_path = APP_ROOT . '/admin/logs/login/';
+    $log_file = $log_path . date('/Y-m-') . 'logs.php';
+
+    /** 创建日志文件夹及文件 */
+    if (!is_dir($log_path)) mkdir($log_path, 0755, true);
+    if (!is_file($log_file)) file_put_contents($log_file, '<?php /** 登录日志 */ exit; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    /** 写入日志 */
+    $log = '时间: ' . date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $password . ' 消息: ' . $messege;
+    file_put_contents($log_file, $log . PHP_EOL, FILE_APPEND | LOCK_EX);
+}

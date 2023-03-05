@@ -641,7 +641,7 @@ class RexAction
         if (empty(RexHelper::$users[$uname])) {
             RExplorer::url_redirect('?r=fail', 2, '用户不存在！');
         }
-        if (RexHelper::$users[$uname]['password'] != md5(G('password'))) {
+        if (RexHelper::$users[$uname]['password'] != hash('sha256', (G('password')))) {
             RExplorer::url_redirect('?r=fail', 2, '密码错误！');
         }
         $_SESSION[RexHelper::$ssid] = array(

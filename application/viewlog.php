@@ -7,13 +7,23 @@
 require_once __DIR__ . '/function.php';
 
 // 非管理员不可访问!
-if (!is_who_login('admin')) {
-    exit;
+if (!is_who_login('admin')) exit('Permission denied');
+// 禁止直接访问
+if (empty($_REQUEST['pass']) || $_REQUEST['pass'] !== md5($config['password'] . date('ymdh'))) exit('Authentication error!');
+
+// 登录日志
+if (isset($_GET['login_log'])) {
+    $file = APP_ROOT . '/admin/logs/login/' . date('/Y-m-') . 'logs.php';
+    echo '<pre class="pre-scrollable" style="background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);">';
+    if (is_file($file)) {
+        echo file_get_contents($file);
+    } else {
+        echo '并未生成登录日志,请检查文件权限!';
+    }
+    exit('</pre>');
 }
 
-// 禁止直接访问
-if (empty($_POST['pass']) || $_POST['pass'] !== md5($config['password'] . date('YMDH'))) exit('Permission denied!');
-
+// 上传日志
 require_once APP_ROOT . '/application/header.php';
 
 if (isset($_POST['logDate'])) {

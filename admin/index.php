@@ -90,6 +90,9 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
         </script>';
         header("refresh:2;");
     }
+
+    // 登录日志
+    write_login_log($_POST['user'], $_POST['password'], $login["messege"]);
 }
 ?>
 <link href="<?php static_cdn(); ?>/public/static/login.css" rel="stylesheet">
@@ -160,8 +163,6 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
 </form>
 <script src="<?php static_cdn(); ?>/public/static/crypto/SHA256.js"></script>
 <script>
-    console.log(SHA256('admin@123'));
-
     function md5_post() {
         var password = document.getElementById('password');
         var md5pwd = document.getElementById('md5_password');
