@@ -9,7 +9,7 @@ require_once __DIR__ . '/function.php';
 // 非管理员不可访问!
 if (!is_who_login('admin')) exit('Permission denied');
 // 禁止直接访问
-if (empty($_REQUEST['pass']) || $_REQUEST['pass'] !== md5($config['password'] . date('ymdh'))) exit('Authentication error!');
+if (empty($_REQUEST['sign']) || $_REQUEST['sign'] !== md5($config['password'] . date('ymdh'))) exit('Authentication error!');
 
 // 登录日志
 if (isset($_GET['login_log'])) {

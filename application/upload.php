@@ -9,9 +9,9 @@ require __DIR__ . '/class.upload.php';
 if ($config['mustLogin']) {
     if (!is_who_login('status')) {
         exit(json_encode(array(
-            "result"    =>  "failed",
-            "code"      =>  401,
-            "message"   =>  "本站已开启登陆上传,您尚未登陆",
+            "result"  => "failed",
+            "code"    => 401,
+            "message" => "本站已开启登陆上传,您尚未登陆",
         )));
     }
 }
@@ -20,11 +20,20 @@ if ($config['mustLogin']) {
 if (empty($_FILES['file'])) {
     exit(json_encode(
         array(
-            "result"    =>  "failed",
-            "code"      =>  204,
-            "message"   =>  "没有选择上传的文件",
+            "result"  => "failed",
+            "code"    => 204,
+            "message" => "没有选择上传的文件",
         )
     ));
+}
+
+// sign
+if (empty($_POST['sign']) || $_POST['sign'] !== md5($config['password'] . date('YmdH'))) {
+    exit(json_encode(array(
+        "result"  => "failed",
+        "code"    => 403,
+        "message" => "签名错误,请刷新重试",
+    )));
 }
 
 // 黑/白IP名单上传
@@ -32,9 +41,9 @@ if ($config['check_ip']) {
     if (checkIP(null, $config['check_ip_list'], $config['check_ip_model'])) {
         // 上传错误 code:403 未授权IP
         exit(json_encode(array(
-            "result"    =>  "failed",
-            "code"      =>  403,
-            "message"   =>  "黑名单内或白名单外用户不允许上传",
+            "result"  => "failed",
+            "code"    => 403,
+            "message" => "黑名单内或白名单外用户不允许上传",
         )));
     }
 }
@@ -182,12 +191,12 @@ if ($handle->uploaded) {
 
         // 上传成功后返回json数据
         $reJson = array(
-            "result"    => "success",
-            "code"      => 200,
-            "url"       => $imageUrl,
-            "srcName"   => $handle->file_src_name_body,
-            "thumb"     => $handleThumb,
-            "del"       => $delUrl,
+            "result"  => "success",
+            "code"    => 200,
+            "url"     => $imageUrl,
+            "srcName" => $handle->file_src_name_body,
+            "thumb"   => $handleThumb,
+            "del"     => $delUrl,
             // "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
         echo json_encode($reJson);
@@ -195,10 +204,10 @@ if ($handle->uploaded) {
     } else {
         // 上传错误 code:206 客户端文件有问题
         $reJson = array(
-            "result"    =>  "failed",
-            "code"      =>  206,
-            "message"   =>  $handle->error,
-            "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
+            "result"  =>  "failed",
+            "code"    =>  206,
+            "message" =>  $handle->error,
+            "memory"  => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
             // 'log' => $handle->log, // 仅用作调试用
         );
         unset($handle);

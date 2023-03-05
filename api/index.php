@@ -167,24 +167,24 @@ if ($handle->uploaded) {
 
         // 上传成功后返回json数据
         $reJson = array(
-            "result"    => "success",
-            "code"      => 200,
-            "url"       => $imageUrl,
-            "srcName"   => $handle->file_src_name_body,
-            "thumb"     => $handleThumb,
-            "del"       => $delUrl,
-            "ID"        => $tokenID, // 202-02-11 增加返回Token ID
-            // "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
+            "result"  => "success",
+            "code"    => 200,
+            "url"     => $imageUrl,
+            "srcName" => $handle->file_src_name_body,
+            "thumb"   => $handleThumb,
+            "del"     => $delUrl,
+            "ID"      => $tokenID, // 202-02-11 增加返回Token ID
+            // "memory" => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean();
     } else {
         // 上传错误 code:206 客户端文件有问题
         $reJson = array(
-            "result"    =>  "failed",
-            "code"      =>  206,
-            "message"   =>  $handle->error,
-            "memory"    =>  getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
+            "result"  => "failed",
+            "code"    => 206,
+            "message" => $handle->error,
+            "memory"  => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
             // 'log' => $handle->log, // 仅用作调试用
         );
         unset($handle);
@@ -202,9 +202,9 @@ if ($handle->uploaded) {
         @write_upload_logs($pathIMG, $handle->file_src_name, $handle->file_dst_pathname, $handle->file_src_size, $tokenID);
         // 鉴黄
         @process_checkImg($processUrl);
-        // 水印        
+        // 水印
         @water($handle->file_dst_pathname);
-        // 压缩        
+        // 压缩
         @process_compress($handle->file_dst_pathname);
     } else { // 普通模式
         // 记录同IP上传次数

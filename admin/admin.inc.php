@@ -572,14 +572,14 @@ auto_delete(); //定时删除
                         <div class="form-group">
                             <label for="logDate" class="text-primary">月份: </label>
                             <input type="text" class="form-control logDate" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
-                            <input type="hidden" class="form-control" name="pass" value="<?php echo md5($config['password'] . date('ymdh')); ?>" placeholder="日志访问秘钥">
+                            <input type="hidden" class="form-control" name="sign" value="<?php echo md5($config['password'] . date('ymdh')); ?>" placeholder="日志访问秘钥">
                         </div>
                         <button type="submit" class="btn btn-primary">查看</button>
                     </form>
                 </div>
                 <div class="col-md-2">
                     <h5 class="header-dividing">登录日志 <small>仅显示当月</small></h5>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-title="登录日志 - 仅显示当月" data-icon="book" data-moveable="true" data-width="60%" data-type="ajax" data-url="../application/viewlog.php?login_log&pass=<?php echo md5($config['password'] . date('ymdh')); ?>">查看</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-title="登录日志 - 仅显示当月" data-icon="book" data-moveable="true" data-width="60%" data-type="ajax" data-url="../application/viewlog.php?login_log&sign=<?php echo md5($config['password'] . date('ymdh')); ?>">查看</button>
                 </div>
                 <div class="col-md-3">
                     <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才执行<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍后再彻底删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
