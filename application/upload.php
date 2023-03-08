@@ -138,7 +138,7 @@ if ($handle->uploaded) {
     // 开启上传者单独目录
     if ($config['guest_path_status']) {
         if (checkLogin() == 205) {
-            $getCok = unserialize($_COOKIE['auth']);
+            $getCok = json_decode($_COOKIE['auth']);
             $Img_path = config_path($getCok[0] . date('/Y/m/d/'));
         }
     }
