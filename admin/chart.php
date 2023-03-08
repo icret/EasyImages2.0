@@ -2,8 +2,8 @@
 /*
  * 统计中心
  */
-require_once '../application/header.php';
-require_once APP_ROOT . '/application/chart.php';
+require_once '../app/header.php';
+require_once APP_ROOT . '/app/chart.php';
 
 // 检测登录和是否开启统计
 if (!$config['chart_on'] && !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?hart#closed'));
@@ -320,4 +320,4 @@ if (is_array($char_data)) {
     document.title = "图床统计信息 - <?php echo $config['title']; ?>"
 </script>
 
-<?php require_once APP_ROOT . '/application/footer.php';
+<?php require_once APP_ROOT . '/app/footer.php';

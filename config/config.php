@@ -99,7 +99,7 @@ $config=Array
 		9=>'month'
 		),
 	'language'=>0,
-	'login_bg'=>'../application/bing.php',
+	'login_bg'=>'../app/bing.php',
 	'report'=>'',
 	'image_recycl'=>1,
 	'tinyfilemanager'=>1,

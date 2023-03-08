@@ -1,5 +1,5 @@
 <?php
-require_once 'application/header.php';
+require_once __DIR__ . '/app/header.php';
 /** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
 /** 检查登陆 */
@@ -16,7 +16,7 @@ mustLogin();
       </div>
     </div>
   <?php endif; ?>
-  <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="/application/upload.php">
+  <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="/app/upload.php">
     <div class="uploader-message text-center">
       <div class="content"></div>
       <button type="button" class="close">x</button>
@@ -117,7 +117,7 @@ mustLogin();
     // 自动上传
     autoUpload: false,
     // 文件上传提交地址
-    url: './application/upload.php',
+    url: './app/upload.php',
     // 最大支持的上传文件
     max_file_size: <?php echo $config['maxSize']; ?>,
     // 分片上传 0为不分片 分片容易使图片上传失败
@@ -187,8 +187,8 @@ mustLogin();
 </script>
 <?php
 /** 环境检测 */
-if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php';
+if ($config['checkEnv']) require_once APP_ROOT . '/app/check.php';
 /** 底部广告 */
 if ($config['ad_bot']) echo $config['ad_bot_info'];
 /** 引入底部 */
-require_once APP_ROOT . '/application/footer.php';
+require_once __DIR__ . '/app/footer.php';

@@ -2,23 +2,23 @@
 //Default Configuration
 $CONFIG = '{"lang":"zh-CN","error_reporting":false,"show_hidden":true,"hide_Cols":false,"calc_folder":true,"theme":"light"}';
 
-require_once __DIR__ . '/../application/function.php';
+require_once __DIR__ . '/../app/function.php';
 
 // 是否管理员登录
 if(!is_who_login('admin')){
-    require_once APP_ROOT.'/application/header.php';
+    require_once APP_ROOT.'/app/header.php';
     echo '<div class="alert alert-danger">还没有登陆哦~~</div>';
     header("refresh:3;url=" . $config['domain'] . "/admin/index.php");
-    require_once APP_ROOT.'/application/footer.php';
+    require_once APP_ROOT.'/app/footer.php';
     exit;
 }
 
 // 开启tinyfilemanager图片管理
 if (!$config['file_manage']) {
-    require_once APP_ROOT.'/application/header.php';
+    require_once APP_ROOT.'/app/header.php';
     echo '<div class="alert alert-danger">图片管理已关闭~~</div>';
     header("refresh:3;url=" . $_SERVER["HTTP_REFERER"] . '?manager-closed');
-    require_once APP_ROOT.'/application/footer.php';
+    require_once APP_ROOT.'/app/footer.php';
     exit;
 }
 
@@ -2108,7 +2108,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                            if (in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), array('gif', 'jpg', 'jpeg', 'png', 'bmp', 'ico', 'svg', 'webp', 'avif'))): ?>
                                 <?php $imagePreview = fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f); ?>
                                 <!-- 分组图片浏览 -->                             
-                                <a href="<?php echo $imagePreview;?>" data-toggle="lightbox" data-group="manager-group"><img src="/application/thumb.php?img=<?php echo parse_url($imagePreview)['path'];?>" class="img-rounded" width="100px" height="100px" alt="<?php echo fm_enc($f);?>"></a>
+                                <a href="<?php echo $imagePreview;?>" data-toggle="lightbox" data-group="manager-group"><img src="/app/thumb.php?img=<?php echo parse_url($imagePreview)['path'];?>" class="img-rounded" width="100px" height="100px" alt="<?php echo fm_enc($f);?>"></a>
                            <?php else: ?>
                                 <a href="<?php echo $filelink ?>" title="<?php echo $f ?>">
                             <?php endif; ?>

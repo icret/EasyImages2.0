@@ -7,15 +7,15 @@
 session_start();
 
 /**开始 - 自定义修改 */
-require_once __DIR__ . '/../application/function.php';
+require_once __DIR__ . '/../app/function.php';
 require_once APP_ROOT . '/config/config.php';
 
 // 开启tinyfilemanager文件管理
 if (!$config['file_manage']) {
-    require_once APP_ROOT . '/application/header.php';
+    require_once APP_ROOT . '/app/header.php';
     echo '<h4 class="alert alert-danger">文件管理已关闭~~</h4>';
     header("refresh:3;url=" . $config['domain'] . '?manag-closed');
-    require_once APP_ROOT . '/application/footer.php';
+    require_once APP_ROOT . '/app/footer.php';
     exit;
 }
 
@@ -215,7 +215,7 @@ class RExplorer
             if (RexHelper::file_catetory($srpath) == 'image') {
                 echo '
                 <td>
-                    <img data-toggle="lightbox" src="/../application/thumb.php?img=', $srpath, '" data-image="' . $srpath . '" data-caption="查看原图" class="img-thumbnail" alt="查看原图" width="80">
+                    <img data-toggle="lightbox" src="/../app/thumb.php?img=', $srpath, '" data-image="' . $srpath . '" data-caption="查看原图" class="img-thumbnail" alt="查看原图" width="80">
                 </td>';
             } else {
                 echo '
@@ -328,7 +328,7 @@ class RExplorer
                 return;
             case 'image':
                 echo '
-                    <img data-toggle="lightbox" src="/../application/thumb.php?img=', $path, '" data-image="' . $path . '" data-caption="小图看大图" class="img-thumbnail" alt="" width="200">
+                    <img data-toggle="lightbox" src="/../app/thumb.php?img=', $path, '" data-image="' . $path . '" data-caption="小图看大图" class="img-thumbnail" alt="" width="200">
                         <div class="card-body">
                             <a href="', $path, '" target="_blank">查看原图</a>
                         </div>
@@ -1080,8 +1080,8 @@ class ZipHelper
 }
 
 /** 环境检测 */
-if ($config['checkEnv']) require_once APP_ROOT . '/application/check.php';
+if ($config['checkEnv']) require_once APP_ROOT . '/app/check.php';
 /** 底部广告 */
 if ($config['ad_bot']) echo $config['ad_bot_info'];
 /** 引入底部 */
-require_once APP_ROOT . '/application/footer.php';
+require_once APP_ROOT . '/app/footer.php';

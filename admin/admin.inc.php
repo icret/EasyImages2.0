@@ -3,7 +3,7 @@
  * 简单图床设置页面
  * 2022-1-24 05:57:35
  */
-require_once __DIR__ . '/../application/header.php';
+require_once __DIR__ . '/../app/header.php';
 require_once APP_ROOT . '/config/api_key.php';
 require_once APP_ROOT . '/config/config.guest.php';
 
@@ -15,7 +15,7 @@ if (!is_who_login('admin')) {
 	icon: "exclamation-sign" // 定义消息图标
   }).show();</script>';
     header("refresh:2;url=" . $config['domain'] . "/admin/index.php");
-    require_once APP_ROOT . '/application/footer.php';
+    require_once APP_ROOT . '/app/footer.php';
     exit;
 }
 
@@ -499,7 +499,7 @@ auto_delete(); //定时删除
             </form>
         </div>
         <div class="tab-pane fade " id="Content4">
-            <form action="../application/compressing.php" method="post" target="_blank">
+            <form action="../app/compressing.php" method="post" target="_blank">
                 <h5 class="header-dividing">压缩文件夹</h5>
                 <div class="col-md-12">
                     <div class="form-group col-md-4">
@@ -568,7 +568,7 @@ auto_delete(); //定时删除
             <div class="col-md-12">
                 <div class="col-md-4">
                     <h5 class="header-dividing">上传日志 <small>需要开启上传日志</small></h5>
-                    <form class="form-inline" action="../application/viewlog.php" method="post" target="_blank">
+                    <form class="form-inline" action="../app/viewlog.php" method="post" target="_blank">
                         <div class="form-group">
                             <label for="logDate" class="text-primary">月份: </label>
                             <input type="text" class="form-control logDate" id="logDate" name="logDate" value="<?php echo date('Y-m'); ?>" required="required" readonly>
@@ -579,7 +579,7 @@ auto_delete(); //定时删除
                 </div>
                 <div class="col-md-2">
                     <h5 class="header-dividing">登录日志 <small>仅显示当月</small></h5>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-title="登录日志 - 仅显示当月" data-icon="book" data-moveable="true" data-width="60%" data-type="ajax" data-url="../application/viewlog.php?login_log&sign=<?php echo md5($config['password'] . date('ymdh')); ?>">查看</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-title="登录日志 - 仅显示当月" data-icon="book" data-moveable="true" data-width="60%" data-type="ajax" data-url="../app/viewlog.php?login_log&sign=<?php echo md5($config['password'] . date('ymdh')); ?>">查看</button>
                 </div>
                 <div class="col-md-3">
                     <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才执行<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍后再彻底删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>数值为<code>0</code>时关闭</small></h5>
@@ -890,7 +890,7 @@ auto_delete(); //定时删除
                             $file_size = getDistUsed(filesize($file_cache_path));                        // 大小
                             $filen_name = $cache_file[$i];                                               // 名称
                             $url = $config['domain'] . $file_path;                                       // 网络连接
-                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;  // 删除连接
+                            $unlink_img = $config['domain'] . '/app/del.php?url=' . $file_path;  // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
@@ -899,7 +899,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/application/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="?suspic_reimg=<?php echo $filen_name; ?>">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
                                 </td>
@@ -984,7 +984,7 @@ auto_delete(); //定时删除
                         Ip2region (2.0 - xdb) 是一个离线 IP 数据管理框架和定位库,支持亿级别的数据段,10微秒级别的查询性能,提供了许多主流编程语言的 xdb 数据管理引擎的实现。
                         每个 ip 数据段的 region 信息都固定了格式：国家|区域|省份|城市|ISP, 只有中国的数据绝大部分精确到了城市, 其他国家部分数据只能定位到国家, 后前的选项全部是0。
                     </p>
-                    <h6>* 下载 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank">ip2region.xdb</a> IP数据库上传到 <small style="color: black;">/application/ip2region/</small> 文件夹, 如遇到下载失败可访问开源地址下载: [ <a href="https://github.com/lionsoul2014/ip2region" target="_blank"><small style="color: black;">Github</small></a> | <a href="https://gitee.com/lionsoul/ip2region" target="_blank"><small style="color: black;">Gitee</small></a> ] 更新方法与此相同。</h6>
+                    <h6>* 下载 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank">ip2region.xdb</a> IP数据库上传到 <small style="color: black;">/app/ip2region/</small> 文件夹, 如遇到下载失败可访问开源地址下载: [ <a href="https://github.com/lionsoul2014/ip2region" target="_blank"><small style="color: black;">Github</small></a> | <a href="https://gitee.com/lionsoul/ip2region" target="_blank"><small style="color: black;">Gitee</small></a> ] 更新方法与此相同。</h6>
                 </div>
             </div>
             <?php if (getVersion() !== get_current_version()) : ?>
@@ -1135,7 +1135,7 @@ auto_delete(); //定时删除
                             <li>直接输入账号和密码即可完成修改</li>
                             <li>更改后会立即生效并重新登录,请务必牢记账号和密码! </li>
                             <li>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</li>
-                            <li>如果忘记密码请将密码->转换成SHA256-><a href="<?php echo $config['domain'] . '/application/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
+                            <li>如果忘记密码请将密码->转换成SHA256-><a href="<?php echo $config['domain'] . '/app/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
                         </ul>
                     </div>
                 </div>
@@ -1232,7 +1232,7 @@ auto_delete(); //定时删除
                             $file_size = getDistUsed(filesize($file_cache_path));                         // 大小
                             $filen_name = $cache_file[$i];                                                // 名称
                             $url = $config['domain'] . $file_path;                                        // 网络连接
-                            $unlink_img = $config['domain'] . '/application/del.php?url=' . $file_path;   // 删除连接
+                            $unlink_img = $config['domain'] . '/app/del.php?url=' . $file_path;   // 删除连接
                         ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
@@ -1241,7 +1241,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/application/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="?recycle_reimg=<?php echo $filen_name; ?>">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="<?php echo $unlink_img; ?>" target="_blank">删除</a>
                                 </td>
@@ -1365,7 +1365,7 @@ auto_delete(); //定时删除
             <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
             <a class="btn btn-mini btn-primary" href="/i/manag.php?path=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
-            <form class="form-inline" method="get" action="../application/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">
+            <form class="form-inline" method="get" action="../app/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">
                 <p id="delimgurl"></p>
                 <div class="form-group">
                     <label for="del" class="text-warning">删除单张图片文件: </label>
@@ -1641,11 +1641,11 @@ auto_delete(); //定时删除
     guestMyDataGrid.sortBy('add_time', 'desc');
 
     /** 引入设置页面检测文件 */
-    <?php if ($config['checkEnv']) require_once APP_ROOT . '/application/check_admin.inc.php'; ?>
+    <?php if ($config['checkEnv']) require_once APP_ROOT . '/app/check_admin.inc.php'; ?>
 
     // 更改网页标题
     document.title = "图床设置 - <?php echo $config['title']; ?>"
 </script>
 <?php
 /** 引入底部 */
-require_once APP_ROOT . '/application/footer.php';
+require_once APP_ROOT . '/app/footer.php';

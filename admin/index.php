@@ -2,8 +2,8 @@
 /*
  * 登录页面
  */
-require_once __DIR__ . '/../application/function.php';
-require_once APP_ROOT . '/application/header.php';
+require_once __DIR__ . '/../app/function.php';
+require_once APP_ROOT . '/app/header.php';
 require_once APP_ROOT . '/config/config.guest.php';
 
 // 退出
@@ -36,7 +36,7 @@ if (isset($_GET['login'])) {
         ';
         }
     }
-    exit(require_once APP_ROOT . '/application/footer.php');
+    exit(require_once APP_ROOT . '/app/footer.php');
 }
 
 // 提交登录
@@ -52,7 +52,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                 // 延时2s跳转
                 window.setTimeout("window.location=\'./index.php\'",2000);
             </script>';
-            exit(require_once APP_ROOT . '/application/footer.php');
+            exit(require_once APP_ROOT . '/app/footer.php');
         } else {
             session_start();
             if (strtolower($_REQUEST['code']) !== $_SESSION['code']) {
@@ -63,7 +63,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                     // 延时2s跳转
 				    window.setTimeout("window.location=\'./index.php\'",2000);
                 </script>';
-                exit(require_once APP_ROOT . '/application/footer.php');
+                exit(require_once APP_ROOT . '/app/footer.php');
             }
         }
     }
@@ -108,7 +108,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             </div>
             <div class="modal-body">
                 <p class="text-primary">忘记账号可以打开<code>/config/config.php</code>文件找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</p>
-                <p class="text-success">忘记密码请将密码转换成SHA256(<a href="<?php echo $config['domain'] . '/application/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>)->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
+                <p class="text-success">忘记密码请将密码转换成SHA256(<a href="<?php echo $config['domain'] . '/app/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>)->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
                 <h4 class="text-danger">更改后会立即生效并重新登录,请务必牢记账号和密码! </h4>
             </div>
             <div class="modal-footer">
@@ -134,7 +134,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                         <input class="form-control" type="text" name="code" value="" placeholder="请输入验证码" autocomplete="off" required="required" />
                         <div class="form-group">
                             <div class="col">
-                                <label><img src="../application/captcha.php" width="185px" onClick="this.src='../application/captcha.php?nocache='+Math.random()" title="点击换一张" /></label>
+                                <label><img src="../app/captcha.php" width="185px" onClick="this.src='../app/captcha.php?nocache='+Math.random()" title="点击换一张" /></label>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -176,4 +176,4 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
         container.classList.toggle('active');
     }
 </script>
-<?php require_once APP_ROOT . '/application/footer.php';
+<?php require_once APP_ROOT . '/app/footer.php';

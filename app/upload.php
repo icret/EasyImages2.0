@@ -2,36 +2,48 @@
 
 namespace Verot\Upload;
 
-require_once __DIR__ . '/../app/function.php';
-require_once APP_ROOT . '/app/class.upload.php';
-require_once APP_ROOT . '/config/api_key.php';
+require __DIR__ . '/function.php';
+require __DIR__ . '/class.upload.php';
 
-// 允许跨域 https://stackoverflow.com/questions/8719276/cross-origin-request-headerscors-with-php-headers
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
-header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding");
+// 检查登录
+if ($config['mustLogin']) {
+    if (!is_who_login('status')) {
+        exit(json_encode(array(
+            "result"  => "failed",
+            "code"    => 401,
+            "message" => "本站已开启登陆上传,您尚未登陆",
+        )));
+    }
+}
 
 // 无文件
-if (empty($_FILES['image'])) {
+if (empty($_FILES['file'])) {
     exit(json_encode(
         array(
-            "result"    =>  "failed",
-            "code"      =>  204,
-            "message"   =>  "没有选择上传的文件",
+            "result"  => "failed",
+            "code"    => 204,
+            "message" => "没有选择上传的文件",
         )
     ));
+}
+
+// sign
+if (empty($_REQUEST['sign']) || $_REQUEST['sign'] !== date('YmdH')) {
+    exit(json_encode(array(
+        "result"  => "failed",
+        "code"    => 403,
+        "message" => "签名错误,请刷新重试",
+    )));
 }
 
 // 黑/白IP名单上传
 if ($config['check_ip']) {
     if (checkIP(null, $config['check_ip_list'], $config['check_ip_model'])) {
-        // 上传错误 code:205 未授权IP
+        // 上传错误 code:403 未授权IP
         exit(json_encode(array(
-            "result"    =>  "failed",
-            "code"      =>  205,
-            "message"   =>  "黑名单内或白名单外用户不允许上传",
+            "result"  => "failed",
+            "code"    => 403,
+            "message" => "黑名单内或白名单外用户不允许上传",
         )));
     }
 }
@@ -49,13 +61,7 @@ if ($config['ip_upload_counts'] > 0 && !is_who_login('status')) {
     }
 }
 
-$token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
-
-// 检查api合法性
-check_api($token);
-$tokenID = $tokenList[$token]['id'];
-
-$handle = new Upload($_FILES['image'], 'zh_CN');
+$handle = new Upload($_FILES['file'], 'zh_CN');
 
 if ($handle->uploaded) {
     // 允许上传的mime类型
@@ -79,8 +85,7 @@ if ($handle->uploaded) {
 
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
-    // 添加Token ID
-    $handle->file_name_body_add = '-' . $tokenID;
+
     // 最大上传限制
     $handle->file_max_size = $config['maxSize'];
     // 最大宽度
@@ -113,14 +118,32 @@ if ($handle->uploaded) {
     }
     */
 
+    /**
+     * 为管理员和登陆用户创建自定义上传目录
+     * 管理员上传目录为自定义目录
+     * 上传者目录为其用户名
+     * 2022年5月1日
+     */
+
     // 默认目录
     $Img_path = config_path();
 
-    if ($config['token_path_status'] == 1) {
-        $Img_path = config_path($tokenID . date('/Y/m/d/'));
+    // 开启管理员自定义目录
+    if ($config['admin_path_status']) {
+        if (checkLogin() == 204) {
+            $Img_path = config_path($config['admin_path'] . date('/Y/m/d/'));
+        }
     }
 
-    // 存储图片路径:images/201807/
+    // 开启上传者单独目录
+    if ($config['guest_path_status']) {
+        if (checkLogin() == 205) {
+            $getCok = json_decode($_COOKIE['auth']);
+            $Img_path = config_path($getCok[0] . date('/Y/m/d/'));
+        }
+    }
+
+    // 存储图片路径:i/201807/
     $handle->process(APP_ROOT . $Img_path);
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
@@ -140,6 +163,7 @@ if ($handle->uploaded) {
         }
 
         // 源图保护 key值是由crc32加密的hide_key
+        // $hide_original = $config['hide'] == 1 ? $config['domain'] . '/app/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key'])) : $imageUrl;
         if ($config['hide'] == 1) {
             $imageUrl = $config['domain'] . '/app/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key']));
         }
@@ -173,17 +197,16 @@ if ($handle->uploaded) {
             "srcName" => $handle->file_src_name_body,
             "thumb"   => $handleThumb,
             "del"     => $delUrl,
-            "ID"      => $tokenID, // 202-02-11 增加返回Token ID
-            // "memory" => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
+            // "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
-        echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
-        $handle->clean();
+        echo json_encode($reJson);
+        $handle->clean(); // 如果取消上传生成缩略图需要恢复此选项功能
     } else {
         // 上传错误 code:206 客户端文件有问题
         $reJson = array(
-            "result"  => "failed",
-            "code"    => 206,
-            "message" => $handle->error,
+            "result"  =>  "failed",
+            "code"    =>  206,
+            "message" =>  $handle->error,
             "memory"  => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
             // 'log' => $handle->log, // 仅用作调试用
         );

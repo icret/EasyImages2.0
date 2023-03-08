@@ -5,8 +5,8 @@
  * 2022年2月22日11:41:38
  * @author Icret
  */
-require_once '../application/function.php';
-require_once '../application/chart.php';
+require_once '../app/function.php';
+require_once '../app/chart.php';
 
 // 检查是否开启查询
 if ($config['public'] == 0) die('开放数据接口已关闭!');

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../application/function.php';
+require_once __DIR__ . '/../app/function.php';
 clearstatcache();
 // 存在程序锁则跳转主页
 if (file_exists(APP_ROOT . '/config/install.lock')) {
@@ -10,7 +10,7 @@ $fileinfo = extension_loaded('fileinfo') ? true : false;
 $gd = extension_loaded('gd') ? true :  false;
 $openssl = extension_loaded('openssl') ? true :  false;
 
-$file = substr(base_convert(fileperms(APP_ROOT . "/application/upload.php"), 10, 8), 3);
+$file = substr(base_convert(fileperms(APP_ROOT . "/app/upload.php"), 10, 8), 3);
 if (IS_WIN) {
     $file_php = true;
     $i_wjj =  true;

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../application/function.php';
+require_once __DIR__ . '/../app/function.php';
 
 if (file_exists(APP_ROOT . '/config/install.lock')) {
   exit(header("Location:/../index.php"));

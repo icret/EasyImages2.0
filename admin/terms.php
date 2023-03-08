@@ -2,7 +2,7 @@
 /*
  * 使用条款页面
  */
-require_once __DIR__ . '/../application/header.php';
+require_once __DIR__ . '/../app/header.php';
 
 /** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
@@ -25,4 +25,4 @@ if ($config['ad_bot']) echo $config['ad_bot_info'];
 </script>
 
 <?php
-require_once __DIR__ . '/../application/footer.php';
+require_once __DIR__ . '/../app/footer.php';
