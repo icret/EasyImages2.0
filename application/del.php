@@ -18,12 +18,12 @@ if (empty($_REQUEST)) {
 
 $img = rand_imgurl() . '/public/images/404.png';
 if (isset($_GET['url'])) {
-    $img = $_GET['url'];
+    $img = strip_tags($_GET['url']);
 }
 
 // 解密删除
 if (isset($_GET['hash'])) {
-    $delHash = $_GET['hash'];
+    $delHash = strip_tags($_GET['hash']);
     $delHash = urlHash($delHash, 1);
 
     if ($config['image_recycl']) {
@@ -51,6 +51,8 @@ if (isset($_GET['hash'])) {
         // 否则直接删除
         getDel($delHash, 'url');
     }
+    // FTP
+    // any_upload($delHash, null, 'delete');
 }
 
 // 检查登录后再处理url删除请求
@@ -58,20 +60,24 @@ if (is_who_login('admin')) {
 
     // 广场页面删除
     if (isset($_GET['url'])) {
-        getDel($_GET['url'], 'url');
+        getDel(strip_tags($_GET['url']), 'url');
+        // FTP
+        // any_upload(parse_url($_GET['url'])['path'], null, 'delete');
     }
 
     // 从管理页面删除
     if (isset($_GET['url_admin_inc'])) {
-        $del_url = $_GET['url_admin_inc'];
+        $del_url = strip_tags($_GET['url_admin_inc']);
         if ($config['hide_path']) {
             $del_url = $config['domain'] . $config['path'] . parse_url($del_url)['path'];
         }
         getDel($del_url, 'url');
+        // FTP
+        // any_upload(parse_url($del_url)['path'], null, 'delete');
     }
     // 回收
     if (isset($_GET['recycle_url'])) {
-        $recycle_url = $_GET['recycle_url'];
+        $recycle_url = strip_tags($_GET['recycle_url']);
         $recycle_url = parse_url($recycle_url)['path'];
         if (file_exists(APP_ROOT . $recycle_url)) {
             checkImg($recycle_url, 3);
@@ -95,18 +101,16 @@ if (is_who_login('admin')) {
         }
     }
 } else {
-    if (isset($_GET['url'])) {
-        echo '
-			<script>
-            new $.zui.Messager("请使用管理员账号登录再删除!", {
-				type: "danger", // 定义颜色主题
-				icon: "exclamation-sign" // 定义消息图标
-            }).show();
-            // 延时2s跳转			
-            window.setTimeout("window.location=\'/../admin/index.php \'",3000);
-            </script>
-			';
-    }
+    echo '
+    <script>
+        new $.zui.Messager("请使用管理员账号登录再删除!", {
+		type: "danger", // 定义颜色主题
+		icon: "exclamation-sign" // 定义消息图标
+        }).show();
+        // 延时2s跳转			
+        window.setTimeout("window.location=\'/../admin/index.php \'",3000);
+    </script>
+    ';
 }
 ?>
 <div class="col-md-4 col-md-offset-4">

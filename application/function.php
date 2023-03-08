@@ -1696,7 +1696,14 @@ function auto_delete()
     return false;
 }
 
-function write_login_log($user, $password, $messege)
+/**
+ * 记录登录日志
+ * @param String $user 登录用户
+ * @param String $pass 登录密码
+ * @param String $msg  登录提示
+ */
+
+function write_login_log($user, $pass, $msg)
 {
     $log_path = APP_ROOT . '/admin/logs/login/';
     $log_file = $log_path . date('/Y-m-') . 'logs.php';
@@ -1706,6 +1713,48 @@ function write_login_log($user, $password, $messege)
     if (!is_file($log_file)) file_put_contents($log_file, '<?php /** 登录日志 */ exit; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
 
     /** 写入日志 */
-    $log = '时间: ' . date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $password . ' 消息: ' . $messege;
+    $log = '时间: ' . date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $pass . ' 消息: ' . $msg;
     file_put_contents($log_file, $log . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
+/**
+ * 其他上传
+ * 支持: FTP
+ * @param String $remoteFile 远程地址
+ * @param String $localFile 本地地址 
+ * @param String $way 使用方式 upload 上传 | delete 删除 
+ * 
+ */
+
+function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
+{
+    global $config;
+
+    if (!$config['ftp_status']) exit;
+
+    require_once __DIR__ . '/FtpClient/FtpClient.php';
+    require_once __DIR__ . '/FtpClient/FtpException.php';
+    require_once __DIR__ . '/FtpClient/FtpWrapper.php';
+
+    $ftp = new FtpClient();
+    // FTP 基本信息
+    $ftp->connect($config['ftp_host'], $config['ftp_ssl'], $config['ftp_port'], $config['ftp_time']);
+    // FTP账号密码
+    $ftp->login($config['ftp_user'], $config['ftp_pass']);
+    // FTP主动|被动
+    $ftp->pasv($config['ftp_pasv']);
+
+    switch ($way) {
+        case 'upload':
+            // 创建文件夹
+            $ftp->mkdir(pathinfo($remoteFile, PATHINFO_DIRNAME), 0755, true);
+            // 上传文件 远端->本地
+            $ftp->put($remoteFile, $localFile);
+            break;
+        case 'delete':
+            $ftp->delete($remoteFile);
+            return true;
+            break;
+    }
+    $ftp->close();
 }

@@ -130,7 +130,6 @@ mustLogin();
     flash_swf_url: '<?php static_cdn(); ?>/public/static/zui/lib/uploader/Moxie.xap',
     // sign
     multipart_params: {
-      // 'sign': new Date().format("YYYYMMddhh"),
       'sign': new Date().format("YYYYMMddhh"),
     },
     // 预览图尺寸

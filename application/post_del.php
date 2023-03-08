@@ -17,6 +17,8 @@ if (isset($_POST['del_url_array'])) {
   $del_num = count($del_url_array);
   for ($i = 0; $i < $del_num; $i++) {
     getDel($del_url_array[$i], 'url');
+    // FTP
+    // any_upload($del_url_array[$i], null, 'delete');
   }
 }
 
