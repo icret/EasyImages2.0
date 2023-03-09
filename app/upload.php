@@ -32,7 +32,7 @@ if (empty($_REQUEST['sign']) || $_REQUEST['sign'] !== date('YmdH')) {
     exit(json_encode(array(
         "result"  => "failed",
         "code"    => 403,
-        "message" => "签名错误,请刷新重试",
+        "message" => "上传签名错误,请刷新重试",
     )));
 }
 

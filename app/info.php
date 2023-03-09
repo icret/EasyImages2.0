@@ -93,7 +93,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 <?php if (is_who_login('admin')) : ?>
                     <tr class="text-primary">
                         <td>原始名称</td>
-                        <td><?php echo $logs[$logsName]['source']; ?></td>
+                        <td><?php echo htmlspecialchars($logs[$logsName]['source']); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>原始大小</td>

@@ -1533,7 +1533,7 @@ function write_upload_logs($filePath, $sourceName, $absolutePath, $fileSize, $fr
 
     // $name = trim(basename($filePath), " \t\n\r\0\x0B"); // 当前图片名称
     $log = array(basename($filePath) => array(             // 以上传图片名称为Array
-        'source'     => $sourceName,                       // 原始文件名称
+        'source'     => htmlspecialchars($sourceName),                       // 原始文件名称
         'date'       => date('Y-m-d H:i:s'),               // 上传日期
         'ip'         => real_ip(),                         // 上传IP
         'port'       => $_SERVER['REMOTE_PORT'],           // IP端口
