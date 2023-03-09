@@ -120,7 +120,7 @@ if (is_array($char_data)) {
         <div class="col-xs-3 alert alert-primary autoshadow">
             当前版本
             <hr />
-            <?php echo get_current_version(); ?>
+            <?php echo APP_VERSION; ?>
         </div>
     </div>
     <div class="col-md-12  col-xs-12">

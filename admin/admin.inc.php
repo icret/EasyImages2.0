@@ -770,6 +770,13 @@ auto_delete(); //定时删除
                                 <label style="font-weight: bold">环境自检</label>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="开发者模式 - Debug">
+                                <input type="hidden" name="Debug" value="0">
+                                <input type="checkbox" name="Debug" value="1" <?php if ($config['Debug']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">开发模式</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <div class="panel">
@@ -952,7 +959,7 @@ auto_delete(); //定时删除
                     <a href="<?php echo is_file(APP_ROOT . '/docs/index.html') ?  '../docs' : 'https://icret.github.io/EasyImages2.0/#/'; ?>" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用手册"><i class="icon icon-book"></i> Manual</span></a>
                     <a href="https://t.me/Easy_Image" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="EasyImage Telegram Group"><i class="icon icon-comments-alt"></i> Telegram</span></a>
                     <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="GitHub 社区"><i class="icon icon-comments-alt"></i> Discuss</span></a>
-                    <span data-toggle="tooltip" title="当前版本"><button type="button" class="btn btn-sm btn-primary label label-badge label-primary" data-toggle="modal" data-moveable="true" ata-size="sm" data-scroll-inside="true" data-icon="heart" data-title="当前版本更新日志" data-custom="<pre style='background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);'><?php echo getVersion('name') . '<br/><br/>' . getVersion('body'); ?></pre>"><i class="icon icon-github"></i> <?php echo get_current_version(); ?></button></span>
+                    <span data-toggle="tooltip" title="当前版本"><button type="button" class="btn btn-sm btn-primary label label-badge label-primary" data-toggle="modal" data-moveable="true" ata-size="sm" data-scroll-inside="true" data-icon="heart" data-title="当前版本更新日志" data-custom="<pre style='background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);'><?php echo getVersion('name') . '<br/><br/>' . getVersion('body'); ?></pre>"><i class="icon icon-github"></i> <?php echo APP_VERSION; ?></button></span>
                     <span data-toggle="tooltip" title="您的赞美是我开发的动力!"><button type="button" class="btn btn-sm btn-danger label label-badge label-danger" data-toggle="modal" data-moveable="true" data-size="sm" data-icon="heart" data-title="您的赞美是我开发的动力!" data-custom="<ul class='nav nav-tabs'><li class='active'><a data-tab href='#wechat'><i class='icon icon-wechat' style='color:#329d38;'> 微信</i></a></li><li><a data-tab href='#alipay'><i class='icon icon-zhifubao-square' style='color:#1970fc;'> 支付宝</i></a></li></ul><div class='tab-content'><div class='tab-pane active' id='wechat'><img src='../public/images/wechat.jpg'></div><div class='tab-pane' id='alipay'><img src='../public/images/alipay.jpg'></div></div>"><i class="icon icon-yen"></i><small>打赏开发者</small></button></span>
                 </p>
                 <h6>程序依赖</h6>
@@ -987,7 +994,7 @@ auto_delete(); //定时删除
                     <h6>* 下载 <a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank">ip2region.xdb</a> IP数据库上传到 <small style="color: black;">/app/ip2region/</small> 文件夹, 如遇到下载失败可访问开源地址下载: [ <a href="https://github.com/lionsoul2014/ip2region" target="_blank"><small style="color: black;">Github</small></a> | <a href="https://gitee.com/lionsoul/ip2region" target="_blank"><small style="color: black;">Gitee</small></a> ] 更新方法与此相同。</h6>
                 </div>
             </div>
-            <?php if (getVersion() !== get_current_version()) : ?>
+            <?php if (getVersion() !== APP_VERSION) : ?>
                 <div class="bg-warning with-padding hidden-xs">
                     <h5 class="header-dividing"><span class="label label-success">New</span> <?php echo getVersion('name'); ?></h5>
                     <pre style="background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);">更新内容: <br /><?php echo getVersion('body'); ?></pre>

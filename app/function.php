@@ -2,18 +2,19 @@
 
 /**
  * @author  icret
+ * @link    https://png.cm
  * @email   lemonim@qq.com
  * @project EasyImage2.0 - 简单图床
  * @Github  https://github.com/icret/easyImages2.0
  * QQ Group 954441002
- * @Last    2023-02-26 17:38:57
+ * @Last    2023-03-09 17:38:57
 
  * 上传服务器后第一次打开会检查运行环境，请根据提示操作；
  * 检查环境仅会在第一开始开始出现，并在config目录下生成EasyImage.lock文件，如需再次查看请删除此文件。
 
  * 敬请注意：本程序为开源程序，你可以使用本程序在任何非商业项目或者网站中。但请你务必保留代码中相关信息（页面logo和页面上必要的链接可以更改）
  * 本人仅为程序开源创作，如非法网站与本人无关，请勿用于非法用途
- * 请为本人博客（blog.png.cm）加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）
+ * 请为本人网站 (https://png.cm) 加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）
  * 如果因安装问题或其他问题可以给我发邮件。
  */
 
@@ -30,6 +31,8 @@ ini_set('memory_limit', '512M');
 define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
 // 判断当前的系统类型是否为windows
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
+// 定义当前版本
+define('APP_VERSION', '2.7.8');
 
 /*---------------基础配置结束-------------------*/
 
@@ -37,6 +40,21 @@ require_once APP_ROOT . '/config/config.php';
 require_once APP_ROOT . '/config/config.guest.php';
 require_once __DIR__ . '/WaterMask.php';
 
+/**
+ * 开启DEBUG
+ * 2023-03-09
+ */
+function easyimage_debug()
+{
+    global $config;
+    if ($config['Debug']) {
+
+        if (!ini_get('display_errors')) {
+            ini_set('display_errors', 'On');
+        }
+        error_reporting(E_ALL);
+    }
+}
 /**
  * 判断GIF图片是否为动态
  * @param $filename string 文件
@@ -66,7 +84,7 @@ function isWebpAnimated($src)
     // not animated
     return false;
 
-    /* 2023-01-24 判断webp是否为动画    
+    /* 2023-01-24 判断webp是否为动画
     $result = false;
     $fh = fopen($src, "rb");
     fseek($fh, 12);
@@ -299,7 +317,7 @@ function imgName($source = null)
 {
     global $config;
 
-    function create_guid()    // guid生成函数
+    function create_guid() // guid生成函数
     {
         if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');
@@ -486,9 +504,9 @@ function getFile($dir)
  * @param string $dir_fileName_suffix 获取文件列表：目录+文件名*:全匹配+文件后缀 *: 全匹配 {jpg,png,gif}:匹配指定格式
  *                                    递归文件数量：目录
  * @example get_file_by_glob(__DIR__ . '/i/cache/*.*', $type = 'list'); // 获取目录文件列表
- * @example get_file_by_glob(__DIR__ . '/i/',  $type = 'number');            // 递归获取文件夹数量
+ * @example get_file_by_glob(__DIR__ . '/i/', $type = 'number');        // 递归获取文件夹数量
  * @param string $type list|number 返回列表还是数量
- * @return array|int  返回数组|数量
+ * @return array|int 返回数组|数量
  */
 function get_file_by_glob($dir_fileName_suffix, $type = 'list')
 {
@@ -500,7 +518,7 @@ function get_file_by_glob($dir_fileName_suffix, $type = 'list')
 
         if ($glob) {
             foreach ($glob as $v) {
-                if (is_file($v)) $res[] =  basename($v);
+                if (is_file($v)) $res[] = basename($v);
             }
             // 排序
             if ($res) {
@@ -562,7 +580,7 @@ function getdirnum($file)
 
 /**
  * 把文件或目录的大小转化为容易读的方式
- * disk_free_space  - 磁盘可用空间(比如填写D盘某文件夹，则会现在D盘剩余空间）
+ * disk_free_space - 磁盘可用空间(比如填写D盘某文件夹，则会现在D盘剩余空间）
  * disk_total_space — 磁盘总空间(比如填写D盘某文件夹，则会现在D盘总空间）
  * @param $number
  * @return string
@@ -588,7 +606,7 @@ function getDistUsed($number)
 /**
  * 加密/解密图片路径
  * @param string $data 要加密的内容
- * @param int $mode =1或0  1解密 0加密
+ * @param int $mode =1或0 1解密 0加密
  * @param String $key 盐
  */
 function urlHash($data, $mode, $key = null)
@@ -616,7 +634,7 @@ function getDel($url, $type)
 {
     global $config;
     // url本地化
-    $url = htmlspecialchars(str_replace($config['domain'], '', $url));   // 过滤html 获取url path
+    $url = htmlspecialchars(str_replace($config['domain'], '', $url)); // 过滤html 获取url path
     $url = urldecode(trim($url));
 
     if ($type == 'url') {
@@ -666,7 +684,7 @@ function getDel($url, $type)
 
 /**
  * 判断是否此用户登录
- * @param string $user  判断登录者权限 当$user=null 时检查是否登录, 不区分身份
+ * @param string $user 判断登录者权限 当$user=null 时检查是否登录, 不区分身份
  * @return bool 是|否
  */
 function is_who_login($user)
@@ -774,7 +792,7 @@ function getVersion($name = 'tag_name')
             return '获取版本文件失败,请检查curl或者网络 错误信息: ' . $e->getMessage();
         }
     } else {
-        return '已关闭环境自检, 当前版本:' . get_current_version();
+        return '已关闭环境自检, 当前版本:' . APP_VERSION;
     }
 }
 
@@ -882,7 +900,7 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
     /** # 使用moderatecontent */
     if ($type == 1) {
         $response = moderatecontent_json($imageUrl);
-        if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { //  (1 = everyone, 2 = teen, 3 = adult)
+        if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { // (1 = everyone, 2 = teen, 3 = adult)
             $bad_pic = true;
         }
     }
@@ -932,7 +950,7 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
         //     }
         // }
 
-        if ($res['Sexy']  * 100 > $config['checkImg_value'] or $res['Porn']  * 100 > $config['checkImg_value']) {
+        if ($res['Sexy']  * 100 > $config['checkImg_value'] or $res['Porn'] * 100 > $config['checkImg_value']) {
             $bad_pic = true;
         }
     }
@@ -945,14 +963,14 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
 
     /** # 如果违规则移动图片到违规文件夹 */
     if ($bad_pic == true) {
-        $old_path = APP_ROOT . parse_url($imageUrl)['path'];       // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
-        $name = parse_url($imageUrl)['path'];                      // 获得图片的相对地址
-        $name = str_replace($config['path'], '', $name);           // 去除 path目录
-        $name = str_replace('/', '_', $name);                      // 文件名 2021_10_30_p8vypd.png
-        $new_path = APP_ROOT . $config['path'] . $dir . $name;     // 新路径含文件名
-        $suspic_dir = APP_ROOT . $config['path'] . $dir;           // suspic路径
+        $old_path = APP_ROOT . parse_url($imageUrl)['path'];   // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        $name = parse_url($imageUrl)['path'];                  // 获得图片的相对地址
+        $name = str_replace($config['path'], '', $name);       // 去除 path目录
+        $name = str_replace('/', '_', $name);                  // 文件名 2021_10_30_p8vypd.png
+        $new_path = APP_ROOT . $config['path'] . $dir . $name; // 新路径含文件名
+        $suspic_dir = APP_ROOT . $config['path'] . $dir;       // suspic路径
 
-        if (!is_dir($suspic_dir)) {                                // 创建suspic目录并移动
+        if (!is_dir($suspic_dir)) {                            // 创建suspic目录并移动
             mkdir($suspic_dir, 0777, true);
         }
         if (is_file($old_path)) {
@@ -972,11 +990,11 @@ function re_checkImg($name, $dir = 'suspic/')
 {
     global $config;
 
-    $fileToPath = str_replace('_', '/', $name);                     // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
-    $now_path_file = APP_ROOT . $config['path'] . $dir . $name;     // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
+    $fileToPath = str_replace('_', '/', $name);                 // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
+    $now_path_file = APP_ROOT . $config['path'] . $dir . $name; // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
     if (is_file($now_path_file)) {
-        $to_file = APP_ROOT . $config['path'] . $fileToPath;        // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
-        rename($now_path_file, $to_file);                           // 移动文件
+        $to_file = APP_ROOT . $config['path'] . $fileToPath;    // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
+        rename($now_path_file, $to_file);                       // 移动文件
         return true;
     }
 }
@@ -990,15 +1008,15 @@ function creat_thumbnail_images($imgName)
     require_once __DIR__ . '/class.thumb.php';
     global $config;
 
-    $old_img_path = APP_ROOT . config_path() . $imgName;                                               // 获取要创建缩略图文件的绝对路径
+    $old_img_path = APP_ROOT . config_path() . $imgName;                                          // 获取要创建缩略图文件的绝对路径
     $cache_path = APP_ROOT . $config['path'] . 'cache/';                                          // cache目录的绝对路径
 
-    if (!is_dir($cache_path)) {                                                                        // 创建cache目录
+    if (!is_dir($cache_path)) {                                                                   // 创建cache目录
         mkdir($cache_path, 0777, true);
     }
-    if (!isGifAnimated($old_img_path)) {                                                               // 仅针对非gif创建图片缩略图
+    if (!isGifAnimated($old_img_path)) {                                                          // 仅针对非gif创建图片缩略图
         $new_imgName = APP_ROOT . $config['path'] . 'cache/' . date('Y_m_d') . '_' . $imgName;    // 缩略图缓存的绝对路径
-        Thumb::out($old_img_path, $new_imgName, $config['thumbnail_w'], $config['thumbnail_h']);                           // 保存缩略图
+        Thumb::out($old_img_path, $new_imgName, $config['thumbnail_w'], $config['thumbnail_h']);  // 保存缩略图
     }
 }
 
@@ -1012,13 +1030,13 @@ function return_thumbnail_images($url)
     global $config;
     $cache_image_file = str_replace($config['imgurl'], '', $url);
 
-    if (isGifAnimated(APP_ROOT . $cache_image_file)) {                                      // 仅读取非gif的缩略图
-        return $url;                                                                        // 如果是gif则直接返回url
+    if (isGifAnimated(APP_ROOT . $cache_image_file)) {                                 // 仅读取非gif的缩略图
+        return $url;                                                                   // 如果是gif则直接返回url
     } else {
-        $cache_image_file = str_replace($config['path'], '', $cache_image_file);            // 将网址中的/i/去除
-        $cache_image_file = str_replace('/', '_', $cache_image_file);                       // 将文件的/转换为_
+        $cache_image_file = str_replace($config['path'], '', $cache_image_file);       // 将网址中的/i/去除
+        $cache_image_file = str_replace('/', '_', $cache_image_file);                  // 将文件的/转换为_
         $isFile = APP_ROOT . $config['path'] . 'cache/' . $cache_image_file;           // 缓存文件的绝对路径
-        if (file_exists($isFile)) {                                                         // 缓存文件是否存在
+        if (file_exists($isFile)) {                                                    // 缓存文件是否存在
             return $config['imgurl'] . $config['path'] . 'cache/' . $cache_image_file; // 存在则返回缓存文件
         } else {
             return $url;                                                                    // 不存在直接返回url
@@ -1051,7 +1069,7 @@ function creat_thumbnail_by_list($imgUrl)
 {
 
     global $config;
-    ini_set('max_execution_time', '300');  // 脚本运行的时间（以秒为单位）0不限制
+    ini_set('max_execution_time', '300'); // 脚本运行的时间（以秒为单位）0不限制
 
     // 过滤非指定格式
     if (!in_array(pathinfo($imgUrl, PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
@@ -1091,7 +1109,7 @@ function creat_thumbnail_by_list($imgUrl)
         if (isGifAnimated($abPathName)) {
             return $imgUrl;
         }
-        // 如果是webp动图则直接返回网址    
+        // 如果是webp动图则直接返回网址
         if (isWebpAnimated($abPathName)) {
             return $imgUrl;
         }
@@ -1219,7 +1237,7 @@ function writefile($filename, $writetext, $openmod = 'w')
 /**
  * 获得用户的真实IP地址
  * 来源：ecshop
- * @return  mixed|string string
+ * @return mixed|string string
  */
 function real_ip()
 {
@@ -1267,7 +1285,7 @@ function real_ip()
 /**
  * IP黑白名单检测，支持IP段检测
  * @param string $ipNow 要检测的IP
- * @param string|array $ipList  白名单IP或者黑名单IP
+ * @param string|array $ipList 白名单IP或者黑名单IP
  * @return boolean false|true true:白名单模式，false:黑名单模式
  * @return bool
  */
@@ -1324,7 +1342,7 @@ function privateToken($length = 32)
 {
     $output = '';
     for ($a = 0; $a < $length; $a++) {
-        $output .= chr(mt_rand(65, 122));    //生成php随机数
+        $output .= chr(mt_rand(65, 122)); //生成php随机数
     }
     return md5($output);
 }
@@ -1395,7 +1413,7 @@ function rand_imgurl($text = null)
 {
     global $config;
     $url = isset($text) ? $text : $config['imgurl'];
-    $url = explode(',',  $url);
+    $url = explode(',', $url);
     return $url[array_rand($url, 1)];
 }
 
@@ -1450,11 +1468,11 @@ function water($source)
         // 过滤gif
         if (!is_Gif_Webp_Animated($source)) {
             $arr = [
-                #  水印图片路径（如果不存在将会被当成是字符串水印）
+                # 水印图片路径（如果不存在将会被当成是字符串水印）
                 'res' => $config['waterText'],
-                #  水印显示位置
+                # 水印显示位置
                 'pos' => $config['waterPosition'],
-                #  不指定name(会覆盖原图，也就是保存成thumb.jpeg)
+                # 不指定name(会覆盖原图，也就是保存成thumb.jpeg)
                 'name' => $source,
                 'font' => APP_ROOT . $config['textFont'],
                 'fontSize' => $config['textSize'],
@@ -1726,7 +1744,7 @@ function write_login_log($user, $pass, $msg)
  * @param String $way 使用方式 upload 上传 | delete 删除 
  */
 
-function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
+function FTP_upload($remoteFile = null, $localFile = null, $way = 'upload')
 {
     global $config;
 
@@ -1757,4 +1775,62 @@ function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
             break;
     }
     $ftp->close();
+    // 上传完毕是否删除本地文件
+    if ($config['ftped_del_local']) {
+        @unlink($localFile);
+    }
+}
+
+/**
+ * 其他上传
+ * 支持: FTP上传
+ * @link https://github.com/dg/ftp-php
+ * @param String $remoteFile 远程地址
+ * @param String $localFile 本地地址
+ * @param String $way 使用方式 upload 上传 | delete 删除 
+ */
+
+function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
+{
+    global $config;
+
+    if (!$config['ftp_status']) exit;
+    require_once __DIR__ . '/Ftp.php';
+
+    // 登录FTP
+    try {
+        $ftp = new Ftp;
+        $ftp->connect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
+        $ftp->login($config['ftp_user'], $config['ftp_pass']);
+        $ftp->pasv($config['ftp_pasv']);
+    } catch (FtpException $e) {
+        echo 'Error: ', $e->getMessage();
+    }
+
+    switch ($way) {
+        case 'upload':
+            try {
+                // 创建文件夹
+                $dir = pathinfo($remoteFile, PATHINFO_DIRNAME);
+                if (!$ftp->isDir($dir)) {
+                    $ftp->mkDir($dir);
+                }
+
+                // 上传文件 远端->本地
+                $ftp->put($remoteFile, $localFile);
+            } catch (FtpException $e) {
+                echo 'Error: ', $e->getMessage();
+            }
+            break;
+        case 'delete':
+            $ftp->tryDelete($remoteFile);
+            break;
+    }
+    // 关闭FTP
+    $ftp->close();
+
+    // 上传完毕是否删除本地文件
+    if ($config['ftped_del_local']) {
+        @unlink($localFile);
+    }
 }
