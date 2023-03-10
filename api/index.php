@@ -193,6 +193,8 @@ if ($handle->uploaded) {
     }
 
     /** 后续处理 */
+    // 上传至其他位置
+    // @any_upload($pathIMG, APP_ROOT . $pathIMG, 'upload');
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
     // 同IP上传日志
@@ -205,8 +207,6 @@ if ($handle->uploaded) {
     @water($handle->file_dst_pathname);
     // 压缩
     @process_compress($handle->file_dst_pathname);
-    // 上传至其他位置
-    // @any_upload($pathIMG, APP_ROOT . $pathIMG, 'upload');
 
     unset($handle);
 }
