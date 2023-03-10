@@ -1829,7 +1829,7 @@ function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
     // 关闭FTP
     $ftp->close();
 
-    // 上传完毕是否删除本地文件
+    // 是否删除本地文件
     if ($config['ftped_del_local']) {
         @unlink($localFile);
     }

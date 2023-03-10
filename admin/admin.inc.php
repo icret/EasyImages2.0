@@ -7,6 +7,12 @@ require_once __DIR__ . '/../app/header.php';
 require_once APP_ROOT . '/config/api_key.php';
 require_once APP_ROOT . '/config/config.guest.php';
 
+// 是否关闭图床设置
+if ($config['show_admin_inc'] === 0) {
+    echo '<h2 class="alert alert-danger">已关闭图床设置~~ <br><small>再次开启请修改config.php文件: <code>\'show_admin_inc\' => 0</code></small></h2>';
+    exit(require_once APP_ROOT  . '/app/footer.php');
+}
+
 // 检查登录
 if (!is_who_login('admin')) {
     echo '
@@ -593,7 +599,7 @@ auto_delete(); //定时删除
                     </form>
                 </div>
                 <div class="col-md-3">
-                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '个 | 占用 ' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
+                    <h5 class="header-dividing">清理缓存 <small>已缓存: <?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '个 | 占 ' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <button type="submit" class="btn btn-success" name="delDir" value="cache/" onClick="return confirm('确认要清理缓存？\n* 删除文件夹后将无法恢复! ');"><i class="icon icon-trash"> 清理缓存</i></button>
                     </form>
@@ -771,10 +777,10 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="开发者模式 - Debug">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="Debug - 调试模式 <br/>页面可能会出现一些乱码">
                                 <input type="hidden" name="Debug" value="0">
                                 <input type="checkbox" name="Debug" value="1" <?php if ($config['Debug']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">开发模式</label>
+                                <label style="font-weight: bold">DEBUG</label>
                             </div>
                         </div>
                     </div>
@@ -873,7 +879,7 @@ auto_delete(); //定时删除
             <h5 class="header-dividing">可疑图片<small> 鉴黄查到的可疑图片</small></h5>
             <p>key申请地址: <a href="https://client.moderatecontent.com/" target="_blank">https://client.moderatecontent.com/</a></p>
             <p>获得key后打开->API 设置->Moderate Key->填入key</p>
-            <p>为了访问速度,仅显示最近20张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
+            <p>为了访问速度,仅显示最近10张图片;鉴黄需要在图床安全->图片鉴黄中开启</p>
             <div class="table-responsive table-condensed">
                 <table class="table table-hover table-striped table-bordered">
                     <thead>
@@ -891,7 +897,7 @@ auto_delete(); //定时删除
                         $cache_dir = APP_ROOT . $config['path'] . 'suspic/';                             // cache目录
                         $cache_file = get_file_by_glob($cache_dir . '*.*');                              // 获取所有文件
                         $cache_num = count($cache_file);                                                 // 统计目录文件个数
-                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                // 循环输出文件
+                        for ($i = 0; $i < $cache_num and $i < 11; $i++) :                                // 循环输出文件
                             $file_cache_path = APP_ROOT . $config['path'] . 'suspic/' . $cache_file[$i]; // 绝对路径
                             $file_path = $config['path'] . 'suspic/' . $cache_file[$i];                  // 相对路径
                             $file_size = getDistUsed(filesize($file_cache_path));                        // 大小
@@ -917,6 +923,7 @@ auto_delete(); //定时删除
             </div>
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <input class="form-control" type="hidden" name="delDir" value="/suspic/" readonly="">
+                <a class="btn btn-mini btn-primary" href="../i/manag.php?path=suspic" target="_blank">管理可疑</a>
                 <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
             </form>
         </div>
@@ -1040,7 +1047,7 @@ auto_delete(); //定时删除
                     </label>
                 </div>
                 <div class="form-group">
-                    <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">对外功能展示</label><br />
+                    <label data-toggle="tooltip" title="选择网站对外展示的一些功能和页面">对外功能页面展示</label><br />
                     <div class="switch switch-inline" data-toggle="tooltip" title="暗黑模式切换">
                         <input type="hidden" name="dark-mode" value="0">
                         <input type="checkbox" name="dark-mode" value="1" <?php if ($config['dark-mode']) echo 'checked="checked"'; ?>>
@@ -1065,6 +1072,11 @@ auto_delete(); //定时删除
                         <input type="hidden" name="info_rand_pic" value="0">
                         <input type="checkbox" name="info_rand_pic" value="1" <?php if ($config['info_rand_pic']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">随机图片</label>
+                    </div>
+                    <div class="switch switch-inline" data-toggle="tooltip" title="关闭后将不能进入后台设置<br/>再次开启需修改config.php: <code>'show_admin_inc'=>0</code>">
+                        <input type="hidden" name="show_admin_inc" value="0">
+                        <input type="checkbox" name="show_admin_inc" value="1" <?php if ($config['show_admin_inc']) echo 'checked="checked"'; ?>>
+                        <label style="font-weight: bold">图床设置</label>
                     </div>
                 </div>
                 <div class="form-group col-md-3">
@@ -1214,8 +1226,8 @@ auto_delete(); //定时删除
             </form>
         </div>
         <div class="tab-pane fade" id="Content11">
-            <h5 class="header-dividing">图片回收<small> 用户自行删除的会显示在这个页面</small></h5>
-            <p>为了访问速度,仅显示最近20张图片; 图片回收需要在图床安全->图片回收中开启</p>
+            <h5 class="header-dividing">图片回收<small> 显示通过加密删除文件</small></h5>
+            <p>为了访问速度,仅显示最近10张图片; 图片回收需要在图床安全->开启图片回收</p>
             <div class="table-responsive table-condensed">
                 <table class="table table-hover table-striped table-bordered">
                     <thead>
@@ -1233,7 +1245,7 @@ auto_delete(); //定时删除
                         $cache_dir = APP_ROOT . $config['path'] . 'recycle/';                             // cache目录
                         $cache_file = get_file_by_glob($cache_dir . '*.*');                               // 获取所有文件
                         $cache_num = count($cache_file);                                                  // 统计目录文件个数
-                        for ($i = 0; $i < $cache_num and $i < 21; $i++) :                                 // 循环输出文件
+                        for ($i = 0; $i < $cache_num and $i < 11; $i++) :                                 // 循环输出文件
                             $file_cache_path = APP_ROOT . $config['path'] . 'recycle/' . $cache_file[$i]; // 绝对路径
                             $file_path = $config['path'] . 'recycle/' . $cache_file[$i];                  // 相对路径
                             $file_size = getDistUsed(filesize($file_cache_path));                         // 大小
@@ -1259,6 +1271,7 @@ auto_delete(); //定时删除
             </div>
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <input class="form-control" type="hidden" name="delDir" value="/recycle/" readonly="">
+                <a class="btn btn-mini btn-primary" href="../i/manag.php?path=recycle" target="_blank">管理回收</a>
                 <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
             </form>
         </div>
