@@ -3,6 +3,7 @@
  * 简单图床设置页面
  * 2022-1-24 05:57:35
  */
+
 require_once __DIR__ . '/../app/header.php';
 require_once APP_ROOT . '/config/api_key.php';
 require_once APP_ROOT . '/config/config.guest.php';
@@ -734,6 +735,13 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="关闭后将不能进入后台设置<br/>再次开启需修改config.php: <code>'show_admin_inc'=>0</code>">
+                                <input type="hidden" name="show_admin_inc" value="0">
+                                <input type="checkbox" name="show_admin_inc" value="1" <?php if ($config['show_admin_inc']) echo 'checked="checked"'; ?>>
+                                <label style="font-weight: bold">显示设置</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="switch switch-inline" data-toggle="tooltip" title="广场图片以上传时间倒序 | 正序">
                                 <input type="hidden" name="showSort" value="0">
                                 <input type="checkbox" name="showSort" value="1" <?php if ($config['showSort']) echo 'checked="checked"'; ?>>
@@ -770,17 +778,10 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="检测图床的 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="检测 PHP扩展 | 安全设置 | 鉴黄 | 版本 | 文件路径 | DEBUG">
                                 <input type="hidden" name="checkEnv" value="0">
                                 <input type="checkbox" name="checkEnv" value="1" <?php if ($config['checkEnv']) echo 'checked="checked"'; ?>>
                                 <label style="font-weight: bold">环境自检</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="Debug - 调试模式 <br/>页面可能会出现一些乱码">
-                                <input type="hidden" name="Debug" value="0">
-                                <input type="checkbox" name="Debug" value="1" <?php if ($config['Debug']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">DEBUG</label>
                             </div>
                         </div>
                     </div>
@@ -1072,11 +1073,6 @@ auto_delete(); //定时删除
                         <input type="hidden" name="info_rand_pic" value="0">
                         <input type="checkbox" name="info_rand_pic" value="1" <?php if ($config['info_rand_pic']) echo 'checked="checked"'; ?>>
                         <label style="font-weight: bold">随机图片</label>
-                    </div>
-                    <div class="switch switch-inline" data-toggle="tooltip" title="关闭后将不能进入后台设置<br/>再次开启需修改config.php: <code>'show_admin_inc'=>0</code>">
-                        <input type="hidden" name="show_admin_inc" value="0">
-                        <input type="checkbox" name="show_admin_inc" value="1" <?php if ($config['show_admin_inc']) echo 'checked="checked"'; ?>>
-                        <label style="font-weight: bold">图床设置</label>
                     </div>
                 </div>
                 <div class="form-group col-md-3">

@@ -47,7 +47,7 @@ require_once __DIR__ . '/WaterMask.php';
 function easyimage_debug()
 {
     global $config;
-    if ($config['Debug']) {
+    if ($config['checkEnv']) {
 
         if (!ini_get('display_errors')) {
             ini_set('display_errors', 'On');
