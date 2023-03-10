@@ -4,36 +4,44 @@
  * Powered by https://github.com/rehiy/web-indexr
  */
 
-session_start();
-
 /**开始 - 自定义修改 */
 require_once __DIR__ . '/../app/function.php';
-require_once APP_ROOT . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 
 // 开启tinyfilemanager文件管理
 if (!$config['file_manage']) {
     require_once APP_ROOT . '/app/header.php';
     echo '<h4 class="alert alert-danger">文件管理已关闭~~</h4>';
     header("refresh:3;url=" . $config['domain'] . '?manag-closed');
-    require_once APP_ROOT . '/app/footer.php';
-    exit;
+    exit(require_once APP_ROOT . '/app/footer.php');
 }
+/**结束 - 自定义修改 */
 
-// 根路径
-RexHelper::$root = APP_ROOT . $config['path'];
+// 目录绝对路径，结尾不加 `/`
+// RexHelper::$root = $_SERVER['DOCUMENT_ROOT'];
+RexHelper::$root = $_SERVER['DOCUMENT_ROOT'];
 
-// 用户列表
-RexHelper::$users = array(
-    $config['user'] => array('password' => $config['password']),
+
+// 系统用户列表，密码类型 MD5
+RexHelper::$users[$config['user']] = array(
+    'password' => $config['password']
 );
 
-/**结束 - 自定义修改 */
+// 可编辑文件后缀，开头不加 `.`
+// RexHelper::$text_suff[] = "jsx";
+// RexHelper::$text_suff[] = "php5";
+
+// 文件排除规则，仅正则表达式
+RexHelper::$ignore_list = array(
+    '/^\.git|.php|.htaccess|robots.txt|favicon.ico|README.md/', '/^admin|api|app|config|docs|install|public/'
+);
+
+session_start();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hans-CN">
 
 <head>
-
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit" />
@@ -158,7 +166,7 @@ class RExplorer
     static function view_login($path)
     {
         echo '
-        <div class="login">
+        <div class="login"">
             <form class="form-horizontal"  method="post" action="?action=login">
             <h5 class="card-title text-center mb-5">文件管理 <small>v' . RexHelper::$version . '</small></h5>
                 <div class="form-group">
@@ -168,7 +176,7 @@ class RExplorer
                 <div class="form-group">
                     <label for="exampleInputInviteCode3">密码</label>
                     <input type="password" class="form-control" name="password" id="exampleInputInviteCode3" placeholder="登录密码">
-                </div>
+                </div>                
                 <button type="submit" class="btn btn-primary">登录</button>
             </form>
         </div>';
@@ -210,12 +218,15 @@ class RExplorer
         foreach ($fslist as $item) {
             $suffix = $item->isDir() ? '/' : '';
             $srpath = RexHelper::path_ator($item->getRealPath());
+            if (RexHelper::is_ignore($item->getFileName())) {
+                continue;
+            }
 
             echo '<tr>';
             if (RexHelper::file_catetory($srpath) == 'image') {
                 echo '
                 <td>
-                    <img data-toggle="lightbox" src="/../app/thumb.php?img=', $srpath, '" data-image="' . $srpath . '" data-caption="查看原图" class="img-thumbnail" alt="查看原图" width="80">
+                    <img data-toggle="lightbox" src="../app/thumb.php?img=', $srpath, '" data-image="' . $srpath . '" data-caption="查看原图" class="img-thumbnail" alt="查看原图" width="80">
                 </td>';
             } else {
                 echo '
@@ -234,7 +245,6 @@ class RExplorer
         echo '
                 </tbody>
             </table>
-        </div>
         ';
     }
 
@@ -328,10 +338,12 @@ class RExplorer
                 return;
             case 'image':
                 echo '
-                    <img data-toggle="lightbox" src="/../app/thumb.php?img=', $path, '" data-image="' . $path . '" data-caption="小图看大图" class="img-thumbnail" alt="" width="200">
+                    <div class="card view-image">
+                        <img src="', $path, '" class="card-img-top">
                         <div class="card-body">
-                            <a href="', $path, '" target="_blank">查看原图</a>
+                            <a href="', $path, '" class="card-link">查看原图</a>
                         </div>
+                    </div>
                 ';
                 return;
             default:
@@ -447,7 +459,7 @@ class RExplorer
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">压缩文件名</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="filename" value="/EasyImage2.0.zip">
+                            <input type="text" class="form-control" name="filename" value="/test.zip">
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -488,7 +500,7 @@ class RExplorer
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">压缩包路径</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="filename" value="/EasyImage2.0.zip">
+                            <input type="text" class="form-control" name="filename" value="/test.zip">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -892,13 +904,23 @@ class RexHelper
 {
     static $root = __DIR__;
 
-    static $version = '1.3';
+    static $version = '1.4';
 
     static $ssid = 'rexplorer_sid';
 
-    static $users = array(
-        'admin' => array('password' => 'e6e061838856bf47e1de730719fb2609'),
+    static $users = array();
+
+    static $text_suff = array(
+        'sql', 'tpl', 'php', 'htm', 'html', 'ts', 'js', 'css',
+        'bat', 'sh', 'md', 'log', 'txt', 'json', 'env', 'ini',
     );
+
+    static $img_suff = array(
+        'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico', 'jfif',
+        'tif', 'tga', 'svg'
+    );
+
+    static $ignore_list = array();
 
     /**
      * 优化容量显示
@@ -947,18 +969,32 @@ class RexHelper
     static function file_catetory($path)
     {
         if ($ext = pathinfo($path, PATHINFO_EXTENSION)) {
-            $text_types = array(
-                'sql', 'tpl', 'php', 'htm', 'html', 'js', 'css',
-                'sh', 'md', 'log', 'txt', 'json', 'env', 'ini',
-            );
-            if (in_array($ext, $text_types)) {
+            if (in_array($ext, self::$text_suff)) {
                 return 'text';
             }
-        }
-        if (@getimagesize($path)) {
-            return 'image';
+
+            if (in_array($ext, self::$img_suff)) {
+                return 'image';
+            }
         }
         return '';
+    }
+
+    /**
+     * 检测是否需要排除
+     * @param string $name 文件名称
+     * @return string
+     */
+    static function is_ignore($name)
+    {
+        if (!empty(self::$ignore_list)) {
+            foreach (self::$ignore_list as $expr) {
+                if (preg_match($expr, $name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 

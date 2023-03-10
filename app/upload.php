@@ -28,7 +28,7 @@ if (empty($_FILES['file'])) {
 }
 
 // sign
-if (empty($_REQUEST['sign']) || $_REQUEST['sign'] !== date('YmdH')) {
+if (empty($_POST['sign']) || $_POST['sign'] !== date('YmdH')) {
     exit(json_encode(array(
         "result"  => "failed",
         "code"    => 403,

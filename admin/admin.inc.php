@@ -923,7 +923,7 @@ auto_delete(); //定时删除
             </div>
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <input class="form-control" type="hidden" name="delDir" value="/suspic/" readonly="">
-                <a class="btn btn-mini btn-primary" href="../i/manag.php?path=suspic" target="_blank">管理可疑</a>
+                <a class="btn btn-mini btn-primary" href="filer.php?path=<?php echo $config['path']; ?>suspic" target="_blank">管理可疑</a>
                 <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
             </form>
         </div>
@@ -1271,7 +1271,7 @@ auto_delete(); //定时删除
             </div>
             <form class="form-inline" action="<?php $_SERVER['SCRIPT_NAME']; ?>" method="post">
                 <input class="form-control" type="hidden" name="delDir" value="/recycle/" readonly="">
-                <a class="btn btn-mini btn-primary" href="../i/manag.php?path=recycle" target="_blank">管理回收</a>
+                <a class="btn btn-mini btn-primary" href="filer.php?path=<?php echo $config['path']; ?>recycle" target="_blank">管理回收</a>
                 <button class="btn btn-mini btn-danger"><?php echo $cache_num; ?>张 | 删除全部</button>
             </form>
         </div>
@@ -1383,7 +1383,7 @@ auto_delete(); //定时删除
         <div class="tab-pane fade" id="Content14">
             <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
             <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
-            <a class="btn btn-mini btn-primary" href="/i/manag.php?path=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
+            <a class="btn btn-mini btn-primary" href="filer.php?path=<?php echo $config['path'] . date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="get" action="../app/del.php" id="form" name="delForm" target="_blank" style="margin-bottom: 5px;">
                 <p id="delimgurl"></p>
