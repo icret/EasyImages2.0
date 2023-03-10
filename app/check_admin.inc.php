@@ -26,7 +26,7 @@ foreach ($expand as $val) {
 }
 
 // 检测是否修改默认密码
-if ($config['password'] === 'e6e061838856bf47e1de730719fb2609') {
+if ($config['password'] === '7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358') {
     echo '
     new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
         type: "warning", // 定义颜色主题 

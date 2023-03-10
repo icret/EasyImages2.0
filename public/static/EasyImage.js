@@ -223,6 +223,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
 
         var formData = new FormData();
         formData.append('file', file);
+        formData.append('sign', new Date().format("YYYYMMddhh"));
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 1) {
@@ -256,7 +257,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 document.getElementById("thumb").innerHTML += result.thumb + "\r\n";
                 document.getElementById("del").innerHTML += result.del + "\r\n";
 
-                $.zui.messager.show(result.srcName + '上传成功', {
+                $.zui.messager.show(/** result.srcName + */'粘贴上传成功', {
                     icon: 'bell',
                     time: 4000,
                     type: 'success',
@@ -273,7 +274,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 $.zui.messager.show('上传失败...' + result.message, {
                     icon: 'bell',
                     time: 4000,
-                    type: 'primary',
+                    type: 'danger',
                     placement: 'top'
                 });
             }
@@ -287,7 +288,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
                 placement: 'top'
             });
         };
-        xhr.open('POST', './application/upload.php?sign=' + new Date().format("YYYYMMddhh"), true);
+        xhr.open('POST', 'app/upload.php', true);
         xhr.send(formData);
     });
 })();

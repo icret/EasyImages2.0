@@ -1116,7 +1116,7 @@ class ZipHelper
 }
 
 /** 环境检测 */
-if ($config['checkEnv']) require_once APP_ROOT . '/app/check.php';
+require_once APP_ROOT . '/app/check.php';
 /** 底部广告 */
 if ($config['ad_bot']) echo $config['ad_bot_info'];
 /** 引入底部 */

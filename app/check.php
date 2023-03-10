@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/function.php';
 // 跳转安装
 if (!is_file(APP_ROOT . '/config/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
     exit('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');
@@ -82,11 +81,13 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
     </div>
 </div>
 <script>
-    $("#myModal-1").modal({
-        keyboard: true,
-        moveable: true,
-        backdrop: "static", //点击空白处不关闭对话框
-        show: true
-    })
-    alert("初次打开会检测环境配置,请仔细看!!");
+    if (confirm("初次打开会检测环境配置,是否需要查看?")) {
+        $("#myModal-1").modal({
+            keyboard: true,
+            moveable: true,
+            backdrop: "static", //点击空白处不关闭对话框
+            show: true
+        })
+    }
+    console.log('EasyIamge.lock 生成完毕!')
 </script>
