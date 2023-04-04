@@ -189,11 +189,17 @@ document.getElementsByClassName('copyBtn6')[0].onclick = function () {
     }
 }
 
-// 按钮状态
+// 复制按钮状态
 $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('click', function () {
-    $(this).button('loading').delay(2000).queue(function () {
-        $(this).button('reset');
-    })
+    var $btn = $(this);
+    $btn.addClass('btn-success load-indicator loading');
+    $btn.remove('data-toggle data-original-title');
+    $btn.button('loading');
+    // 此处使用 setTimeout 来模拟复杂功能逻辑
+    setTimeout(function () {
+        $btn.removeClass('btn-success load-indicator loading');
+        $btn.button('reset');
+    }, 666);
 });
 
 /** 粘贴上传 2023-01-30 */

@@ -4,10 +4,15 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta name="author" content="Icret EasyImage2.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta charset="UTF-8" />
-    <link href="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/themes/vue.min.css" rel="stylesheet">
+    <title>EasyImage2.0 简单图床</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
+    <link href="//cdn.bootcdn.net/ajax/libs/docsify/4.13.0/themes/vue.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -22,6 +27,8 @@
             subMaxLevel: 1,      //侧边栏层级最大层级2
             loadNavbar: true,    //加载导航栏 需要编写_navbar.md
             autoHeader: true,    //配合loadSidebar 自动添加标题
+            coverpage: true,
+
             alias: {
                 '/.*/_sidebar.md': '/_sidebar.md'
             },
@@ -46,7 +53,7 @@
                     var footer = [
                         '<hr/>',
                         '<footer>',
-                        '<span>Copyright ©Since 2018 <a href="https://github.com/icret/EasyImages2.0" target="_blank">EasyImage</a> Develop By <a href="https://github.com/icret" target="_blank">Icret</a>, Docs By <a href="https://docsify.js.org/#/zh-cn/" target="_blank">Docsify</a>.</span>',
+                        '<span>Copyright ©Since 2018 <a href="//github.com/icret/EasyImages2.0" target="_blank">EasyImage</a> Develop By <a href="//github.com/icret" target="_blank">Icret</a>, Docs By <a href="//docsify.js.org/#/zh-cn/" target="_blank">Docsify</a>.</span>',
                         '</footer>'
                     ].join('');
 
@@ -57,7 +64,7 @@
 
                 function (hook, vm) {
                     hook.beforeEach(function (html) {
-                        var url = 'https://github.com/icret/EasyImages2.0/blob/master/docs/' + vm.route.file;
+                        var url = '//github.com/icret/EasyImages2.0/blob/master/docs/' + vm.route.file;
                         var editHtml = '<a href="' + url + '" target="_blank">📝 在GitHub上编辑</a>';
 
                         return (html + '<br/><br/><br/><br/><br/>' + editHtml);
@@ -65,27 +72,29 @@
                 }
             ]
         }
+
         // 离线阅读
         if (typeof navigator.serviceWorker !== 'undefined') {
             navigator.serviceWorker.register('sw.js');
         }
-
-        console.log(window.Docsify.version);
     </script>
+
     <!-- docsify的js依赖 -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/docsify.min.js"></script>
+    <script src="//cdn.bootcdn.net/ajax/libs/docsify/4.13.0/docsify.min.js"></script>
     <!-- 全文搜索插件 -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/search.min.js"></script>
+    <script src="//cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/search.min.js"></script>
     <!-- 图片缩放插件 -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/zoom-image.min.js"></script>
+    <script src="//cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/zoom-image.min.js"></script>
     <!-- 代码拷贝插件 -->
     <script src="//fastly.jsdelivr.net/npm/docsify-copy-code"></script>
     <!-- 代码高亮 -->
     <script src="//fastly.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
     <!-- 外链脚本 -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/external-script.min.js"></script>
+    <script src="//cdn.bootcdn.net/ajax/libs/docsify/4.13.0/plugins/external-script.min.js"></script>
     <!-- 字数统计 -->
     <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+    <!-- https://github.com/Sumsung524/docsify-backTop -->
+    <script src="//fastly.jsdelivr.net/gh/Sumsung524/docsify-backTop/dist/docsify-backTop.min.js"></script>
 </body>
 
 </html>

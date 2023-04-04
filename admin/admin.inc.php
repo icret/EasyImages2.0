@@ -593,7 +593,7 @@ auto_delete(); //定时删除
                     <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
                         <div class="input-group">
                             <span class="input-group-addon">天数</span>
-                            <input type="number" name="auto_delete" class="form-control" min="1" placeholder="0" value="<?php echo $config['auto_delete']; ?>" required="required">
+                            <input type="number" name="auto_delete" class="form-control" min="0" placeholder="0" value="<?php echo $config['auto_delete']; ?>" required="required">
                             <span class="input-group-btn"><button class="btn btn-primary">设置</button></span>
                         </div>
                         <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">

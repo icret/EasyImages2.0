@@ -14,7 +14,7 @@
   "RequestURL": "https://png.cm/api/index.php",
   "Body": "MultipartFormData",
   "Arguments": {
-    "token": "8337effca0ddfcd9c5899f3509b23657"
+    "token": "1c17b11693cb5ec63859b091c5b9c1b2"
   },
   "FileFormName": "image",
   "URL": "{json:url}",

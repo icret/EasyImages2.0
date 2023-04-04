@@ -1596,7 +1596,7 @@ function write_upload_logs($filePath, $sourceName, $absolutePath, $fileSize, $fr
  * IP地址查询
  * @param int $ip IP地址
  */
-function ip2region(String $IP)
+function ip2region($IP)
 {
     $db = __DIR__ . '/ip2region/ip2region.xdb';
 

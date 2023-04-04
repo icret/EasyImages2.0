@@ -22,7 +22,7 @@ if (isset($_GET['dw'])) {
 }
 
 // 历史上传记录的路径
-if (isset(($_GET['history']))) {
+if (isset($_GET['history'])) {
     $dw = '../' . $_GET['history'];
     if ($config['hide_path']) {
         $dw = '../' . $config['path'] . $_GET['history'];
