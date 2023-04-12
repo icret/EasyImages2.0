@@ -27,11 +27,12 @@ if (empty($_FILES['file'])) {
     ));
 }
 
-// sign
-if (empty($_POST['sign']) || $_POST['sign'] !== date('YmdH')) {
+// sign : 前端生成的时间戳 time() - $_POST['sign'] = 从选择文件到上传完毕的耗费时间
+if (empty($_POST['sign']) || time() - $_POST['sign'] > 12306) {
     exit(json_encode(array(
         "result"  => "failed",
-        "code"    => 403,
+		"code"    => 403,
+        "systime" => time(),
         "message" => "上传签名错误,请刷新重试",
     )));
 }

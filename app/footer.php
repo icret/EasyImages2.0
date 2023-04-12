@@ -2,6 +2,7 @@
 
 /** 禁止直接访问 */
 defined('APP_ROOT') ?: exit;
+
 /** 弹窗公告 */
 if ($config['notice_status'] > 0) : ?>
   <div class="modal fade" id="notice">

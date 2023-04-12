@@ -1,4 +1,8 @@
 <?php
+
+/** 禁止直接访问 */
+defined('APP_ROOT') ?: exit;
+
 // 跳转安装
 if (!is_file(APP_ROOT . '/config/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
     exit('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');

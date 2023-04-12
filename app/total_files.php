@@ -1,5 +1,8 @@
 <?php
 
+/** 禁止直接访问 */
+defined('APP_ROOT') ?: exit;
+
 /**
  * 统计文件
  *

@@ -1,4 +1,8 @@
 <?php
+
+/** 禁止直接访问 */
+defined('APP_ROOT') ?: exit;
+
 /*
 // 检查当前PHP版本是否大于7.0
 if (PHP_VERSION < 7) {

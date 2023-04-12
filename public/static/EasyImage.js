@@ -229,7 +229,7 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
 
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('sign', new Date().format("YYYYMMddhh"));
+        formData.append('sign', Date.now());
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 1) {
@@ -298,6 +298,30 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
         xhr.send(formData);
     });
 })();
+
+// 检测浏览器是否支持cookie
+if (navigator.cookieEnabled === false) {
+    new $.zui.Messager('浏览器不支持cookie, 无法保存登录信息', {
+        type: 'black',
+        icon: 'bell',
+        time: 4500,
+        placement: 'top'
+    }).show();
+
+    console.log('浏览器不支持cookie');
+}
+
+// 检测浏览器是否支持本地存储
+if ($.zui.store.enable === false) {
+    new $.zui.Messager('浏览器不支持本地存储, 无法保存上传历史记录', {
+        icon: 'bell',
+        time: 4000,
+        type: 'primary',
+        placement: 'top'
+    }).show();
+
+    console.log('浏览器不支持本地存储');
+}
 
 /** 
  * javascript parseUrl函数解析url获取网址url参数 

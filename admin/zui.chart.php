@@ -6,7 +6,7 @@ require_once '../app/header.php';
 require_once APP_ROOT . '/app/chart.php';
 
 // 检测是否开启统计
-if (!$config['chart_on']) exit(header('Location: ' . $config['domain'] . '?chart#closed'));
+if (!$config['chart_on'] || !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?hart#closed'));
 
 // 检测登录
 if (!is_who_login('admin')) {
