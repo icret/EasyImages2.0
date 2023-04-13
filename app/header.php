@@ -34,7 +34,7 @@
 		</div>
 		<div class="collapse navbar-collapse navbar-collapse-EasyImage">
 			<ul class="nav nav-pills">
-				<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
+				<li><a href="<?php echo $config['domain']; ?>/index.php"><i class="icon icon-home"></i> 首页</a></li>
 				<?php /** 非管理或未开启不显示广场 */ if ($config['showSwitch'] || is_who_login('admin')) : ?>
 					<li><a href="<?php echo $config['domain']; ?>/app/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
 				<?php endif; ?>
