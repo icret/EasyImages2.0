@@ -14,6 +14,7 @@
 * [其他格式](./其他格式.md)
 * [Edge插件](./Edge插件.md)
 * [Chrome插件](./Chrome插件.md)
+* [使用uPic上传](./使用uPic上传.md)
 * [使用PicGo上传](./使用PicGo上传.md)
 * [使用ShareX上传](./使用ShareX上传.md)
 * [苹果快捷指令上传](./苹果快捷指令上传.md)

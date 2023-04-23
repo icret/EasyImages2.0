@@ -12,6 +12,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding");
+// 定义返回头信息为Json
+header("Content-type: application/json; charset=utf-8");
 
 // 无文件
 if (empty($_FILES['image'])) {
@@ -125,8 +127,6 @@ if ($handle->uploaded) {
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
-        header('Content-type:text/json');
-
         // 图片相对路径
         $pathIMG = $Img_path . $handle->file_dst_name;
         // 图片访问网址
@@ -174,6 +174,7 @@ if ($handle->uploaded) {
             "thumb"   => $handleThumb,
             "del"     => $delUrl,
             "ID"      => $tokenID, // 202-02-11 增加返回Token ID
+			"messge"  => "success",
             // "memory" => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
@@ -188,7 +189,6 @@ if ($handle->uploaded) {
             // 'log' => $handle->log, // 仅用作调试用
         );
         unset($handle);
-        header('Content-Type:application/json; charset=utf-8');
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
