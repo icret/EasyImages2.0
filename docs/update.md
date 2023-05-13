@@ -1,9 +1,7 @@
-* 2023-05-14 v2.8.3
+* 2023-05-14 v2.8.2
+- 增加uPic教程
 - Fix [#115](https://github.com/icret/EasyImages2.0/issues/115)
 - Fix [#114](https://github.com/icret/EasyImages2.0/issues/114)
-
-* 2023-04-23 v2.8.2
-- 增加uPic教程
 
 * 2023-04-12 v2.8.1
 - 修改上传签名生成方式

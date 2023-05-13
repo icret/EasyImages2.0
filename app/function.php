@@ -32,7 +32,7 @@ define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')))
 // 判断当前的系统类型是否为windows
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 // 定义当前版本
-define('APP_VERSION', '2.8.3');
+define('APP_VERSION', '2.8.2');
 
 /*---------------基础配置结束-------------------*/
 
