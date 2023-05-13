@@ -32,7 +32,7 @@ define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')))
 // 判断当前的系统类型是否为windows
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 // 定义当前版本
-define('APP_VERSION', '2.8.1');
+define('APP_VERSION', '2.8.3');
 
 /*---------------基础配置结束-------------------*/
 
@@ -1732,7 +1732,7 @@ function write_login_log($user, $pass, $msg)
     if (!is_file($log_file)) file_put_contents($log_file, '<?php /** 登录日志 */ exit; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
 
     /** 写入日志 */
-    $log = '时间: ' . date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $pass . ' 消息: ' . $msg;
+    $log = htmlentities('时间: ' . date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $pass . ' 消息: ' . $msg);
     file_put_contents($log_file, $log . PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 

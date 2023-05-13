@@ -39,7 +39,7 @@
 					<li><a href="<?php echo $config['domain']; ?>/app/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
 				<?php endif; ?>
 				<?php /** 非管理或未开启不显示上传历史 */ if ($config['history'] || is_who_login('admin')) : ?>
-					<li><a href="<?php $config['domain']; ?>/app/history.php"><i class="icon icon-history"></i> 历史<span class="label label-badge label-primary"></span></a></li>
+					<li><a href="<?php echo $config['domain']; ?>/app/history.php"><i class="icon icon-history"></i> 历史<span class="label label-badge label-primary"></span></a></li>
 				<?php endif; ?>
 				<?php /** 非管理不显示设置 */ if (is_who_login('admin')) : ?>
 					<li><a href="<?php echo $config['domain']; ?>/admin/admin.inc.php"><i class="icon icon-cogs"></i> 设置</a></li>
