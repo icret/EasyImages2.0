@@ -38,19 +38,6 @@ if ($config['check_ip']) {
     }
 }
 
-// 根据IP限制游客每日上传数量
-if ($config['ip_upload_counts'] > 0 && !is_who_login('status')) {
-    if (false == get_ip_upload_log_counts(real_ip())) {
-        exit(json_encode(
-            array(
-                "result"  => "failed",
-                "code"    => 403,
-                "message" => sprintf("游客限制每日上传 %d 张", $config['ip_upload_counts']),
-            )
-        ));
-    }
-}
-
 $token = preg_replace('/[\W]/', '', $_POST['token']); // 获取Token并过滤非字母数字，删除空格;
 
 // 检查api合法性
