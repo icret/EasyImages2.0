@@ -31,7 +31,7 @@ if (empty($_FILES['file'])) {
 if (empty($_POST['sign']) || time() - $_POST['sign'] > 12306) {
     exit(json_encode(array(
         "result"  => "failed",
-		"code"    => 403,
+        "code"    => 403,
         "systime" => time(),
         "message" => "上传签名错误,请刷新重试",
     )));

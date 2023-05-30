@@ -161,7 +161,7 @@ if ($handle->uploaded) {
             "thumb"   => $handleThumb,
             "del"     => $delUrl,
             "ID"      => $tokenID, // 202-02-11 增加返回Token ID
-			"messge"  => "success",
+            "messge"  => "success",
             // "memory" => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
