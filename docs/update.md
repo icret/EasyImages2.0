@@ -1,5 +1,5 @@
 * 2023-05-30 v2.8.3
-FIX [#118](https://github.com/icret/EasyImages2.0/issues/118)
+- FIX [#118](https://github.com/icret/EasyImages2.0/issues/118)
 
 * 2023-05-14 v2.8.2
 - 增加uPic教程
