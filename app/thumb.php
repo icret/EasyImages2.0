@@ -55,7 +55,7 @@ define('MEMORY_LIMIT', '256M');
 define('DEFAULT_WIDTH', $config['thumbnail_w']);
 define('DEFAULT_HEIGHT', $config['thumbnail_h']);
 define('FILE_CACHE_PREFIX', 'EasyImage');
-define('DEFAULT_ZC', 0);
+define('DEFAULT_ZC', 1);
 
 define('MAX_WIDTH', 10240);
 define('MAX_HEIGHT', 10240);
