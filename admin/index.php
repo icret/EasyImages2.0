@@ -88,7 +88,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             icon: "times" // 定义消息图标
             }).show();
         </script>';
-        header("refresh:2;");
+        //header("refresh:2;");
     }
 
     // 登录日志
@@ -127,8 +127,8 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                 <form class="form-horizontal" action="/admin/index.php" method="post" onsubmit="return md5_post()">
                     <h2>登录</h2>
                     <label for="account" class="col-sm-2"></label>
-                    <input type="text" name="user" id="account" class="form-control" value="" placeholder="输入登录账号" autocomplete="off" required="required">
-                    <input type="password" name="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required">
+                    <input type="text" name="user" id="account" class="form-control" value="<?echo $_POST['user']?>" placeholder="输入登录账号" autocomplete="off" required="required">
+                    <input type="password" name="password" id="password" class="form-control" value="<?echo $_POST['password']?>" placeholder="输入登录密码" autocomplete="off" required="required">
                     <input type="hidden" name="password" id="md5_password">
                     <?php if ($config['captcha']) : ?>
                         <input class="form-control" type="text" name="code" value="" placeholder="请输入验证码" autocomplete="off" required="required" />
