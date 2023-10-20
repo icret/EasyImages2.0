@@ -2,6 +2,7 @@
 /*
  * 登录页面
  */
+ob_start();
 require_once __DIR__ . '/../app/function.php';
 require_once APP_ROOT . '/app/header.php';
 require_once APP_ROOT . '/config/config.guest.php';
@@ -124,11 +125,11 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                 <img src="<?php echo $config['login_bg']; ?>" alt="简单图床登陆界面背景图" />
             </div>
             <div class="formBx">
-                <form class="form-horizontal" action="/admin/index.php" method="post" onsubmit="return md5_post()">
+                <form class="form-horizontal" action="index.php" method="post" onsubmit="return md5_post()">
                     <h2>登录</h2>
                     <label for="account" class="col-sm-2"></label>
                     <input type="text" name="user" id="account" class="form-control" value="" placeholder="输入登录账号" autocomplete="off" required="required">
-                    <input type="password" name="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required">
+                    <input type="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required">
                     <input type="hidden" name="password" id="md5_password">
                     <?php if ($config['captcha']) : ?>
                         <input class="form-control" type="text" name="code" value="" placeholder="请输入验证码" autocomplete="off" required="required" />
