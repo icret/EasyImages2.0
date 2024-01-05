@@ -154,7 +154,7 @@ function _login($user = null, $password = null)
             if ($browser_cookie[0] === $config['user'] && $browser_cookie[1] === $config['password']) return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
             // 判断是否上传者
             if (array_key_exists($browser_cookie[0], $guestConfig) && $browser_cookie[1] === $guestConfig[$browser_cookie[0]]['password']) {
-                // 判断上车者是否过期
+                // 判断上传者是否过期
                 if ($guestConfig[$browser_cookie[0]]['expired'] < time()) {
                     // 上传者账户密码正确,但是账户过期
                     return json_encode(array('code' => 400, 'level' => 0, 'messege' => $browser_cookie[0] . '账号已过期'));
