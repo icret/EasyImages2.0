@@ -167,6 +167,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
         var password = document.getElementById('password');
         var md5pwd = document.getElementById('md5_password');
         md5pwd.value = SHA256(password.value);
+	password.value = "Null";
         //可以校验判断表单内容，true就是通过提交，false，阻止提交
         return true;
     }
