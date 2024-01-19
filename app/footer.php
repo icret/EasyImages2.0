@@ -2,7 +2,6 @@
 
 /** 禁止直接访问 */
 defined('APP_ROOT') ?: exit;
-
 /** 弹窗公告 */
 if ($config['notice_status'] > 0) : ?>
   <div class="modal fade" id="notice">
@@ -19,7 +18,7 @@ if ($config['notice_status'] > 0) : ?>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-mini btn-primary" data-dismiss="modal">了解</button>
+        <button type="button" class="btn btn-mini btn-primary" data-dismiss="modal">知道了</button>
       </div>
     </div>
   </div>
@@ -47,9 +46,9 @@ if ($config['notice_status'] > 0) : ?>
   <?php /** 页脚自定义代码 */ echo $config['footer']; ?>
   <p>
     <!-- 页脚信息 -->
-    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Github">© Since 2018</a>
-    <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="EasyImage2.0 简单图床">EasyImage</a>
-    <a href="/admin/terms.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
+    <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Github Releases">© Since 2018</a>
+    <a href="https://png.cm/" target="_blank" data-toggle="tooltip" title="简单图床官网">EasyImage</a>
+    <a href="/app/DMCA.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
     <!-- 二维码按钮 -->
     <a data-toggle="modal" href="#qr"><i class="icon icon-qrcode hidden-xs inline-block" data-toggle="tooltip" title="二维码"></i></a>
     <?php /** 暗黑模式 */ if ($config['dark-mode']) : ?>
@@ -62,18 +61,20 @@ if ($config['notice_status'] > 0) : ?>
     <?php endif; ?>
   </p>
 </footer>
-<link href="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/qrcode/qrcode.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/qrcode/qrcode.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.js"></script>
 <script>
   // NProgress
+  NProgress.configure({
+    barColor: '<?php echo $config['NProgress_default']; ?>'
+  });
   NProgress.start();
   NProgress.done();
 
   // 导航状态
   $('.nav-pills').find('a').each(function() {
     // console.log(document.location);
-    if (this.pathname == document.location.pathname) {
+    if (this.pathname === location.pathname) {
       $(this).parent().addClass('active');
     }
   });

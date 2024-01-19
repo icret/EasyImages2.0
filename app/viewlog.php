@@ -58,13 +58,33 @@ try {
     </div>
     <p class="text-muted" style="font-size:10px;"><i class="modal-icon icon-info"></i> 建议使用分辨率 ≥ 1366*768px; 当前日志文件: <?php echo $logFile; ?></p>
 </div>
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css">
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
 <script>
     // 更改页面布局
     $(document).ready(function() {
         $("body").removeClass("container").addClass("container-fixed-lg");
     });
+
+    // POST 删除提交
+    function ajax_post(url, mode = 'delete') {
+        $.post("del.php", {
+                url: url,
+                mode: mode
+            },
+            function(data, status) {
+                console.log(data)
+                let res = JSON.parse(data);
+                new $.zui.Messager(res.msg, {
+                    type: res.type,
+                    icon: res.icon
+                }).show();
+                // 延时2秒刷新
+                window.setTimeout(function() {
+                    window.location.reload();
+                }, 2000)
+            });
+    }
 
     // logs 数据表格
     $('#logs').datagrid({
@@ -155,7 +175,7 @@ try {
                         size: '<?php echo $v['size']; ?>',
                         checkImg: '<?php echo strstr('OFF', $v['checkImg']) ? '否' : '是'; ?>',
                         from: '<?php echo is_string($v['from']) ? "网页" : 'API: ' . $v['from']; ?>',
-                        manage: "<div class='btn-group'><a href='<?php echo $config['domain'] . $v['path']; ?>' target='_blank' class='btn btn-mini btn-success'>查看</a> <a href='/app/info.php?img=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini'>信息</a> <a href='/app/del.php?recycle_url=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini btn-info'>回收</a> <a href='/app/del.php?url=<?php echo $v['path']; ?>' target='_blank' class='btn btn-mini btn-danger'>删除</a></div>",
+                        manage: '<div class="btn-group"><a href="<?php echo rand_imgurl() . $v['path']; ?>" target="_blank" class="btn btn-mini btn-success">查看</a> <a href="/app/info.php?img=<?php echo $v['path']; ?>" target="_blank" class="btn btn-mini">信息</a><a href="#" onclick="ajax_post(\'<?php echo $v['path']; ?>\',\'recycle\')" class="btn btn-mini btn-info">回收</a> <a href="#" onclick="ajax_post(\'<?php echo $v['path']; ?>\',\'delete\')" class="btn btn-mini btn-danger">删除</a></div>',
                     },
                 <?php endforeach; ?>
             ]

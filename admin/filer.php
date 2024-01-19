@@ -52,9 +52,9 @@ session_start();
     <meta name="keywords" content="<?php echo  $config['keywords']; ?>" />
     <meta name="description" content="<?php echo  $config['description']; ?>" />
     <link rel="shortcut icon" href="<?php static_cdn(); ?>/favicon.ico" type="image/x-icon" />
-    <link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css" rel="stylesheet">
-    <script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
-    <script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
+    <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css">
+    <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
+    <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
     <style type="text/css">
         body {
             font-size: 14px;

@@ -74,8 +74,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报文件" style="margin-left:10px;"></i></a>
                       <?php endif; ?>
                       <?php if (is_who_login('admin')) : ?>
-                        <a href="/app/del.php?recycle_url=<?php echo $relative_path; ?>" target="_blank" data-toggle="tooltip" title="回收文件" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
-                        <a href="/app/del.php?url=<?php echo $relative_path; ?>" target="_blank" data-toggle="tooltip" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
+                        <a href="#" onclick="ajax_post('<?php echo $relative_path; ?>','recycle')" data-toggle="tooltip" title="回收文件" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
+                        <a href="#" onclick="ajax_post('<?php echo $relative_path; ?>')" data-toggle="tooltip" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
                         <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $relative_path; ?>"> 选择</label>
                       <?php endif; ?>
                     </div>
@@ -160,30 +160,11 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   </div>
   <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/EasyImage.css">
   <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.css">
-  <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
   <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.css">
-  <style>
-    /* 返回顶部 */
-    .btn-back-to-top {
-      padding: 0.5rem 1rem;
-      position: fixed;
-      right: 2rem;
-      bottom: 1rem;
-      z-index: 2;
-      -webkit-transition: -webkit-transform 0.2s ease;
-      transition: transform 0.2s ease;
-      -webkit-transform: translateY(200%);
-      transform: translateY(200%);
-    }
-
-    .btn-back-to-top.scrolled {
-      -webkit-transform: translateY(0);
-      transform: translateY(0);
-    }
-  </style>
-  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
-  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.min.js"></script>
+  <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.css">
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.min.js"></script>
+  <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/bootbox/bootbox.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
   <script>
@@ -191,6 +172,49 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     new Viewer(document.getElementById('viewjs'), {
       url: 'data-original',
     });
+
+    // POST 删除提交
+    function ajax_post(url, mode = 'delete') {
+
+      bootbox.confirm({
+        message: "确认执行 " + mode + " 操作?",
+        buttons: {
+          confirm: {
+            label: '确定',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '取消',
+            className: 'btn-danger'
+          }
+        },
+        callback: function(result) {
+          if (result == true) {
+            $.post("del.php", {
+                url: url,
+                mode: mode
+              },
+              function(data, status) {
+                console.log(data)
+                let res = JSON.parse(data);
+                new $.zui.Messager(res.msg, {
+                  type: res.type,
+                  icon: res.icon
+                }).show();
+                // 延时2秒刷新
+                window.setTimeout(function() {
+                  window.location.reload();
+                }, 2000)
+              });
+          } else {
+            new $.zui.Messager("取消 " + mode, {
+              type: "primary", // 定义颜色主题 
+              icon: "info-sign" // 定义消息图标
+            }).show();
+          }
+        }
+      });
+    }
 
     // 复制url
     var clipboard = new Clipboard('.copy');
@@ -251,7 +275,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 check_val.push(obj[k].value);
               console.log(check_val);
             }
-            $.post("./post_del.php", {
+            $.post("del.php", {
               'recycle_url_array': check_val
             }, );
             new $.zui.Messager("放入回收站成功", {
@@ -298,7 +322,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 check_val.push(obj[k].value);
               console.log(check_val);
             }
-            $.post("./post_del.php", {
+            $.post("del.php", {
                 'del_url_array': check_val
               },
               function(data) {
@@ -331,6 +355,14 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       });
     }
 
+    //懒加载
+    var lazy = new Lazy({
+      onload: function(elem) {
+        console.log(elem)
+      },
+      delay: 300,
+    })
+
     // 返回顶部
     var back_to_top_button = jQuery('.btn-back-to-top');
     jQuery(window).scroll(function() {
@@ -349,14 +381,6 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       }, 800);
       return false;
     });
-
-    //懒加载
-    var lazy = new Lazy({
-      onload: function(elem) {
-        console.log(elem)
-      },
-      delay: 300,
-    })
 
     // 按日期浏览
     $(".form-date").datetimepicker({

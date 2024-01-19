@@ -25,7 +25,7 @@
 // | This script is free to use, don't abuse.                               |
 // +------------------------------------------------------------------------+
 
-namespace Verot\Upload;
+ namespace Verot\Upload;
 
 if (!defined('IMG_WEBP')) define('IMG_WEBP', 32);
 
@@ -1892,6 +1892,8 @@ class Upload {
             'bat',
             'phar',
             'wsdl',
+            'html',
+            'htm',
         );
         
         $this->forbidden = array_merge($this->dangerous, array(
@@ -2118,7 +2120,7 @@ class Upload {
      */
     function upload($file, $lang = 'en_GB') {
 
-        $this->version            = '09/12/2022';
+        $this->version            = '07/12/2023';
 
         $this->file_src_name      = '';
         $this->file_src_name_body = '';
@@ -5239,5 +5241,3 @@ class Upload {
         return true;
     }
 }
-
-?>

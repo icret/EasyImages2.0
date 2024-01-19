@@ -15,6 +15,7 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">关闭</span></button>
                 <h4 class="modal-title">
                     <i class="icon icon-heart"> </i><a href="https://github.com/icret/EasyImages2.0" target="_blank">简单图床-EasyImage2.0</a> 安装环境检测
                 </h4>
@@ -92,6 +93,12 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
             backdrop: "static", //点击空白处不关闭对话框
             show: true
         })
+    } else {
+        new $.zui.Messager("取消查看 - 如需再次展示请删除config/EasyIamge.lock文件", {
+            type: "info", // 定义颜色主题 
+            time: 6000,
+            icon: "info-sign" // 定义消息图标
+        }).show();
     }
     console.log('EasyIamge.lock 生成完毕!')
 </script>

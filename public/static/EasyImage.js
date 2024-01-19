@@ -1,213 +1,56 @@
 /**
  * 来自于copy_btn.js paste.js合并
  * 简单图床-复制链接
- * 2023-01-30
+ * 2023-04-20
+ * @param {*} copyID  传入的ID
+ * @param {*} loadClass 传入的class
  */
-document.getElementsByClassName('copyBtn1')[0].onclick = function () {
-    var copyVal = document.getElementById("links");
+function uploadCopy(copyID, loadClass) {
+    var copyVal = document.getElementById(copyID);
     copyVal.select();
+
+    // 复制内容为空时的提示
+    if (copyVal.value.length === 0) { new $.zui.Messager("复制内容为空", { type: "danger", icon: "bell" }).show(); return; }
+
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(copyVal.value).then(function () {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
+            //success
+            new $.zui.Messager("复制成功", { type: "primary", icon: "ok-sign" }).show();
         }, function () {
-            //fail info
-            alert("复制失败");
+            //fail
+            new $.zui.Messager("复制失败, 请手动复制", { type: "danger", icon: "bell" }).show();
         });
-
     } else {
         if (document.execCommand('copy', false, null)) {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
+            //success
+            new $.zui.Messager("复制成功", { type: "primary", icon: "ok-sign" }).show();
         } else {
-            //fail info
-            alert("复制失败");
+            //fail
+            new $.zui.Messager("复制失败, 请手动复制", { type: "danger", icon: "bell" }).show();
         }
     }
-}
 
-document.getElementsByClassName('copyBtn2')[0].onclick = function () {
-    var copyVal = document.getElementById("bbscode");
-    copyVal.select();
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(copyVal.value).then(function () {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        }, function () {
-            //fail info
-            alert("复制失败");
-        });
-
-    } else {
-        if (document.execCommand('copy', false, null)) {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        } else {
-            //fail info
-            alert("复制失败");
-        }
-    }
-}
-
-document.getElementsByClassName('copyBtn3')[0].onclick = function () {
-    var copyVal = document.getElementById("markdown");
-    copyVal.select();
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(copyVal.value).then(function () {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        }, function () {
-            //fail info
-            alert("复制失败");
-        });
-
-    } else {
-        if (document.execCommand('copy', false, null)) {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        } else {
-            //fail info
-            alert("复制失败");
-        }
-    }
-}
-
-document.getElementsByClassName('copyBtn4')[0].onclick = function () {
-    var copyVal = document.getElementById("html");
-    copyVal.select();
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(copyVal.value).then(function () {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        }, function () {
-            //fail info
-            alert("复制失败");
-        });
-
-    } else {
-        if (document.execCommand('copy', false, null)) {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        } else {
-            //fail info
-            alert("复制失败");
-        }
-    }
-}
-
-document.getElementsByClassName('copyBtn5')[0].onclick = function () {
-    var copyVal = document.getElementById("thumb");
-    copyVal.select();
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(copyVal.value).then(function () {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        }, function () {
-            //fail info
-            alert("复制失败");
-        });
-
-    } else {
-        if (document.execCommand('copy', false, null)) {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        } else {
-            //fail info
-            alert("复制失败");
-        }
-    }
-}
-
-document.getElementsByClassName('copyBtn6')[0].onclick = function () {
-    var copyVal = document.getElementById("del");
-    copyVal.select();
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(copyVal.value).then(function () {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        }, function () {
-            //fail info
-            alert("复制失败");
-        });
-
-    } else {
-        if (document.execCommand('copy', false, null)) {
-            //success info
-            new $.zui.Messager("复制成功", {
-                type: "primary", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-            console.log("复制成功");
-        } else {
-            //fail info
-            alert("复制失败");
-        }
-    }
-}
-
-// 复制按钮状态
-$('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('click', function () {
-    var $btn = $(this);
-    $btn.addClass('btn-success load-indicator loading');
+    // 复制按钮状态
+    var $btn = $(loadClass);
+    $btn.addClass('btn-success');
+    // $btn.addClass('btn-success load-indicator loading');
     $btn.remove('data-toggle data-original-title');
     $btn.button('loading');
     // 此处使用 setTimeout 来模拟复杂功能逻辑
     setTimeout(function () {
-        $btn.removeClass('btn-success load-indicator loading');
+        $btn.removeClass('btn-success');
+        // $btn.removeClass('btn-success load-indicator loading');
         $btn.button('reset');
     }, 666);
-});
+}
 
 /** 粘贴上传 2023-01-30 */
 (function () {
     document.addEventListener('paste', function (e) {
         var items = ((e.clipboardData || window.clipboardData).items) || [];
+        console.log(e)
         var file = null;
-
+        $("#upShowID").addClass("load-indicator loading"); // 增加正在上传状态 2-1
         if (items && items.length) {
             for (var i = 0; i < items.length; i++) {
                 if (items[i].type.indexOf('image') !== -1) {
@@ -217,109 +60,69 @@ $('#btnLinks, #btnBbscode, #btnMarkDown, #btnHtml, #btnThumb, #btnDel').on('clic
             }
         }
 
+        // 未找到图片
         if (!file) {
-            $.zui.messager.show('粘贴内容非图片!', {
-                icon: 'bell',
-                time: 3000,
-                type: 'danger',
-                placement: 'top'
-            });
-            return;
+            $("#upShowID").removeClass("load-indicator loading"); // 移除正在上传状态 2-2
+            $.zui.messager.show('粘贴内容非图片!', { icon: 'bell', time: 3000, type: 'danger', placement: 'top' }); return;
         }
 
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('sign', Date.now());
+        formData.append('sign', new Date().getTime() / 1000 | 0);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
-            if (xhr.readyState == 1) {
-                $.zui.messager.show('粘贴上传中...', {
-                    icon: 'bell',
-                    time: 3000,
-                    type: 'primary',
-                    placement: 'top'
-                });
-                $(".uploader").addClass("load-indicator loading"); // 增加正在上传状态
-            }
-
-            if (xhr.readyState >= 4) {
-                $.zui.messager.show('粘贴上传中...', {
-                    icon: 'bell',
-                    time: 3000,
-                    type: 'primary',
-                    placement: 'top'
-                });
-                $(".uploader").removeClass("load-indicator loading"); // 移除正在上传状态
+            if (xhr.readyState === 1) {
+                $.zui.messager.show('粘贴上传中...', { icon: 'bell', time: 3000, type: 'primary', placement: 'top' });
             }
         }
 
         xhr.onload = function () {
-            var result = JSON.parse(this.responseText);
-            if (result.result === 'success') {
-                document.getElementById("links").innerHTML += result.url + "\r\n";
-                document.getElementById("bbscode").innerHTML += "[img]" + result.url + "[/img]\r\n";
-                document.getElementById("markdown").innerHTML += "![" + result.srcName + "](" + result.url + ")\r\n";
-                document.getElementById("html").innerHTML += '<img src="' + result.url + '" alt="' + result.srcName + '" />\r\n';
-                document.getElementById("thumb").innerHTML += result.thumb + "\r\n";
-                document.getElementById("del").innerHTML += result.del + "\r\n";
-
-                $.zui.messager.show(/** result.srcName + */'粘贴上传成功', {
-                    icon: 'bell',
-                    time: 4000,
-                    type: 'success',
-                    placement: 'top'
-                });
+            var obj = JSON.parse(this.responseText);
+            if (obj.code === 200) {
+                $("#links").append(obj.url + "\r\n");
+                $("#bbscode").append("[img]" + obj.url + "[/img]\r\n");
+                $("#markdown").append("![" + obj.srcName + "](" + obj.url + ")\r\n");
+                $("#html").append('&lt;img src="' + obj.url + '" alt="' + obj.srcName + '" /&gt;\r\n');
+                $("#thumb").append(obj.thumb + "\r\n");
+                $("#del").append(obj.del + "\r\n");
+                // 上传成功提示 原始文件名称obj.srcName + 提示
+                $.zui.messager.show('粘贴上传成功', { icon: 'bell', time: 4000, type: 'success', placement: 'top' });
+                // 移除正在上传状态 2-3
+                $("#upShowID").removeClass("load-indicator loading");
 
                 try { // 储存上传记录
-                    console.log('localStorage ok!');
-                    $.zui.store.set(result.srcName, result)
+                    console.log('history localStorage success');
+                    $.zui.store.set(obj.srcName, obj)
                 } catch (err) {
-                    console.log('localStorage failed:' + err);
+                    // 存储上传记录失败提示
+                    $.zui.messager.show('存储上传记录失败' + err, { icon: 'bell', time: 4000, type: 'danger', placement: 'top' });
+                    console.log('history localStorage failed:' + err);
                 }
             } else {
-                $.zui.messager.show('上传失败...' + result.message, {
-                    icon: 'bell',
-                    time: 4000,
-                    type: 'danger',
-                    placement: 'top'
-                });
+                $("#upShowID").removeClass("load-indicator loading"); // 移除正在上传状态 2-4
+                $.zui.messager.show(obj.message, { icon: 'bell', time: 4000, type: 'danger', placement: 'top' });
             }
         };
 
         xhr.onerror = function () {
-            $.zui.messager.show('因网络问题导致的上传失败...', {
-                icon: 'bell',
-                time: 4000,
-                type: 'primary',
-                placement: 'top'
-            });
+            $("#upShowID").removeClass("load-indicator loading"); // 移除正在上传状态 2-5
+            $.zui.messager.show('因网络问题导致的上传失败...', { icon: 'bell', time: 4000, type: 'primary', placement: 'top' });
         };
         xhr.open('POST', 'app/upload.php', true);
         xhr.send(formData);
     });
 })();
 
-// 检测浏览器是否支持cookie
-if (navigator.cookieEnabled === false) {
-    new $.zui.Messager('浏览器不支持cookie, 无法保存登录信息', {
-        type: 'black',
-        icon: 'bell',
-        time: 4500,
-        placement: 'top'
-    }).show();
 
+/** 检测浏览器是否支持cookie */
+if (navigator.cookieEnabled === false) {
+    new $.zui.Messager('浏览器不支持cookie, 无法保存登录信息', { type: 'black', icon: 'bell', time: 4500, placement: 'top' }).show();
     console.log('浏览器不支持cookie');
 }
 
-// 检测浏览器是否支持本地存储
+/** 检测浏览器是否支持本地存储 */
 if ($.zui.store.enable === false) {
-    new $.zui.Messager('浏览器不支持本地存储, 无法保存上传历史记录', {
-        icon: 'bell',
-        time: 4000,
-        type: 'primary',
-        placement: 'top'
-    }).show();
-
+    new $.zui.Messager('浏览器不支持本地存储, 无法保存上传历史记录', { icon: 'bell', time: 4000, type: 'primary', placement: 'top' }).show();
     console.log('浏览器不支持本地存储');
 }
 
@@ -339,7 +142,6 @@ if ($.zui.store.enable === false) {
  * myURL.protocol; // = 'http'
  * myURL.source; // = 'http://abc.com:8080/dir/index.html?id=255&m=hello#top'
 */
-
 function parseURL(url) {
     var a = document.createElement('a');
     a.href = url;
@@ -368,7 +170,10 @@ function parseURL(url) {
     };
 }
 
-/** jQuery 读取文件 readTxt('../admin/version.php'); */
+/**
+ * jQuery 读取文件 readTxt('../admin/version.php');
+ * @param {*} filePath 
+ */
 function readTxt(filePath = '../admin/version.php') {
     $.get(filePath, function (data) {
         var lines = data.split("\n"); //按行读取
@@ -376,4 +181,16 @@ function readTxt(filePath = '../admin/version.php') {
             console.log(v);
         });
     });
+}
+
+/**
+ * JS验证是否为URL 这是提取自：npm包 async-validator的源码。
+ * 参考: https://www.cnblogs.com/lanleiming/p/14250497.html
+ * @param {*} str
+ * @returns
+ * @example isUrl('http://www.baidu.com') // true
+ */
+function isUrl(str) {
+    var v = new RegExp('^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$', 'i');
+    return v.test(str);
 }

@@ -12,15 +12,16 @@
 	<title><?php echo $config['title']; ?></title>
 	<meta name="keywords" content="<?php echo $config['keywords']; ?>" />
 	<meta name="description" content="<?php echo $config['description']; ?>" />
-	<link rel="shortcut icon" href="<?php static_cdn(); ?>/favicon.ico" type="image/x-icon" />
-	<link href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css" rel="stylesheet">
-	<link href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme']; ?>.css" rel="stylesheet">
-	<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
-	<script src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
+	<link rel="shortcut icon" type="image/x-icon" href="<?php static_cdn(); ?>/favicon.ico" />
+	<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/css/zui.min.css">
+	<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/nprogress/nprogress.min.css">
+	<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/theme/zui-theme-<?php echo $config['theme']; ?>.css">
+	<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.4.min.js"></script>
+	<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/js/zui.min.js"></script>
 	<!--[if lt IE 9]>
-    <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/html5shiv.js"></script>
-    <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/respond.js"></script>
-    <script src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/excanvas.js"></script>
+    <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/html5shiv.js"></script>
+    <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/respond.js"></script>
+    <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/ieonly/excanvas.js"></script>
   	<![endif]-->
 	<?php /** 页头自定义代码 */ echo $config['customize']; ?>
 </head>
@@ -34,7 +35,7 @@
 		</div>
 		<div class="collapse navbar-collapse navbar-collapse-EasyImage">
 			<ul class="nav nav-pills">
-				<li><a href="<?php echo $config['domain']; ?>/index.php"><i class="icon icon-home"></i> 首页</a></li>
+				<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
 				<?php /** 非管理或未开启不显示广场 */ if ($config['showSwitch'] || is_who_login('admin')) : ?>
 					<li><a href="<?php echo $config['domain']; ?>/app/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
 				<?php endif; ?>

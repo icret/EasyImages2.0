@@ -1258,7 +1258,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
         return '';
     }
     ?>
-    <link href="<?php static_cdn(); ?>/public/static/tinyfilemanager/dropzone.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/tinyfilemanager/dropzone.min.css">
     <div class="path">
 
         <div class="card mb-2 fm-upload-wrapper <?php echo fm_get_theme(); ?>">
@@ -3838,10 +3838,10 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     {
     ?>
 </div>
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/tinyfilemanager/bootstrap.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/tinyfilemanager/jquery.dataTables.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/tinyfilemanager/ekko-lightbox.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/jquery/jquery-3.6.0.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/tinyfilemanager/bootstrap.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/tinyfilemanager/jquery.dataTables.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/tinyfilemanager/ekko-lightbox.min.js"></script>
 <?php if (FM_USE_HIGHLIGHTJS): ?>
     <script src="<?php static_cdn(); ?>/public/static/tinyfilemanager/highlight.min.js"></script>
     <script>hljs.highlightAll(); var isHighlightingEnabled = true;</script>

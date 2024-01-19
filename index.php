@@ -55,42 +55,42 @@ mustLogin();
     <div class="tab-content" style="text-align:right;">
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 1) echo 'active in';  ?>" id="tab2Content1">
         <textarea class="form-control" rows="5" id="links" readonly></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btnLinks" class="btn btn-primary copyBtn1" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button class="btn btn-primary" data-toggle="tooltip" data-original-title="刷新" style="margin-top:5px;" onclick="location.reload()"><i class="icon icon-refresh"></i></button>
+        <button class="btn btn-primary btnLinks" onclick="uploadCopy('links','.btnLinks')" data-toggle="tooltip" data-original-title="复制" data-loading-text="已复制" style="margin-top:5px;"><i class="icon icon-copy"></i></button>
       </div>
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 2) echo 'active in'; ?>" id="tab2Content2">
         <textarea class="form-control" rows="5" id="bbscode" readonly></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btnBbscode" class="btn btn-primary copyBtn2" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button class="btn btn-primary" data-toggle="tooltip" data-original-title="刷新" style="margin-top:5px;" onclick="location.reload()"><i class="icon icon-refresh"></i></button>
+        <button class="btn btn-primary btnBbscode" onclick="uploadCopy('bbscode','.btnBbscode')" data-toggle="tooltip" data-original-title="复制" data-loading-text="已复制" style="margin-top:5px;"><i class="icon icon-copy"></i></button>
       </div>
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 3) echo 'active in'; ?>" id="tab2Content3">
         <textarea class="form-control" rows="5" id="markdown" readonly></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btnMarkDown" class="btn btn-primary copyBtn3" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button class="btn btn-primary" data-toggle="tooltip" data-original-title="刷新" style="margin-top:5px;" onclick="location.reload()"><i class="icon icon-refresh"></i></button>
+        <button class="btn btn-primary btnMarkDown" onclick="uploadCopy('markdown','.btnMarkDown')" data-toggle="tooltip" data-original-title="复制" data-loading-text="已复制" style="margin-top:5px;"><i class="icon icon-copy"></i></button>
       </div>
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 4) echo 'active in';  ?>" id="tab2Content4">
         <textarea class="form-control" rows="5" id="html" readonly></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btnHtml" class="btn btn-primary copyBtn4" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button class="btn btn-primary" data-toggle="tooltip" data-original-title="刷新" style="margin-top:5px;" onclick="location.reload()"><i class="icon icon-refresh"></i></button>
+        <button class="btn btn-primary btnHtml" onclick="uploadCopy('html','.btnHtml')" data-toggle="tooltip" data-original-title="复制" data-loading-text="已复制" style="margin-top:5px;"><i class="icon icon-copy"></i></button>
       </div>
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 5) echo 'active in';  ?>" id="tab2Content5">
         <textarea class="form-control" rows="5" id="thumb" readonly></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btnThumb" class="btn btn-primary copyBtn5" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button class="btn btn-primary" data-toggle="tooltip" data-original-title="刷新" style="margin-top:5px;" onclick="location.reload()"><i class="icon icon-refresh"></i></button>
+        <button class="btn btn-primary btnThumb" onclick="uploadCopy('thumb','.btnThumb')" data-toggle="tooltip" data-original-title="复制" data-loading-text="已复制" style="margin-top:5px;"><i class="icon icon-copy"></i></button>
       </div>
       <div class="tab-pane fade <?php if ($config['upload_first_show'] == 6) echo 'active in';  ?>" id="tab2Content6">
         <textarea class="form-control" rows="5" id="del" readonly></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;" onclick="location.reload()"><i class="icon icon-undo"></i> 刷新</button>
-        <button id="btnDel" class="btn btn-primary copyBtn6" data-loading-text="已经复制链接..." style="margin-top:10px;"><i class="icon icon-copy"></i> 复制</button>
+        <button class="btn btn-primary" data-toggle="tooltip" data-original-title="刷新" style="margin-top:5px;" onclick="location.reload()"><i class="icon icon-refresh"></i></button>
+        <button class="btn btn-primary btnDel" onclick="uploadCopy('del','.btnDel')" data-toggle="tooltip" data-original-title="复制" data-loading-text="已复制" style="margin-top:5px;"><i class="icon icon-copy"></i></button>
       </div>
     </div>
   </div>
 </div>
-<link href="<?php static_cdn(); ?>/public/static/marquee/marquee.css" rel="stylesheet">
-<link href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css" rel="stylesheet">
-<script src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/marquee/marquee.min.js"></script>
-<script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/marquee/marquee.css">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.css">
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/uploader/zui.uploader.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/marquee/marquee.min.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script>
   // 公告
   (function() {
@@ -121,7 +121,7 @@ mustLogin();
     // 最大支持的上传文件
     max_file_size: <?php echo $config['maxSize']; ?>,
     // 分片上传 0为不分片 分片容易使图片上传失败
-    chunk_size: 0,
+    chunk_size: <?php echo $config['chunks']; ?>,
     // 点击文件列表上传文件
     browseByClickList: true,
     // flash 上传组件地址
@@ -130,7 +130,7 @@ mustLogin();
     flash_swf_url: '<?php static_cdn(); ?>/public/static/zui/lib/uploader/Moxie.xap',
     // sign
     multipart_params: {
-      'sign': Date.now() / 1000,
+      'sign': new Date().getTime() / 1000 | 0,
     },
     // 预览图尺寸
     previewImageSize: {
@@ -152,37 +152,67 @@ mustLogin();
     },
     // 限制文件上传数目
     limitFilesCount: <?php echo $config['maxUploadFiles']; ?>,
+    // 移除文件进行确认
+    deleteConfirm: true,
     // 重置上传失败的文件
     autoResetFails: true,
+    // 当文件上传进度发送变化时触发，此回调函数会在上传文件的过程中反复触发
+    onUploadProgress: function(file) {
+      NProgress.configure({
+        barColor: '<?php echo $config['NProgress_Progress']; ?>'
+      });
+      NProgress.set(0)
+      NProgress.set(file.percent / 100)
+    },
+    // 显示上传成功消息
+    uploadedMessage: '已上传 {uploaded} 个文件，{failed} 个文件上传失败',
+    // 当启用分片上传选项后，每个文件片段上传完成时触发
+    onChunkUploaded: function(file, responseObject) {
+      NProgress.set(responseObject.offset / responseObject.total);
+    },
     <?php echo imgRatio(); ?>,
     responseHandler: function(responseObject, file) {
       var obj = JSON.parse(responseObject.response); //由JSON字符串转换为JSON对象
       console.log(file); // 输出上传log
       console.log(obj); // 输出回传log
-      if (obj.result === 'success') {
-        document.getElementById("links").innerHTML += obj.url + "\r\n";
-        document.getElementById("bbscode").innerHTML += "[img]" + obj.url + "[/img]\r\n";
-        document.getElementById("markdown").innerHTML += "![" + obj.srcName + "](" + obj.url + ")\r\n";
-        document.getElementById("html").innerHTML += '<img src="' + obj.url + '" alt="' + obj.srcName + '" />\r\n';
-        document.getElementById("thumb").innerHTML += obj.thumb + "\r\n";
-        document.getElementById("del").innerHTML += obj.del + "\r\n";
+      if (obj.code === 200) {
+        $("#links").append(obj.url + "\r\n");
+        $("#bbscode").append("[img]" + obj.url + "[/img]\r\n");
+        $("#markdown").append("![" + obj.srcName + "](" + obj.url + ")\r\n");
+        $("#html").append('&lt;img src="' + obj.url + '" alt="' + obj.srcName + '" /&gt;\r\n');
+        $("#thumb").append(obj.thumb + "\r\n");
+        $("#del").append(obj.del + "\r\n");
 
-        new $.zui.Messager(obj.srcName + "上传成功", {
-          type: "primary", // 定义颜色主题
+        // 上传成功提示
+        new $.zui.Messager(obj.srcName + " 上传成功", {
+          type: "primary",
           placement: 'bottom-right',
-          icon: "check" // 定义消息图标
+          icon: "check"
         }).show();
-      } else {
-        return '上传失败,错误信息:' + obj.message;
-      }
 
-      try { // 储存上传历史
-        console.log('localStorage ok!');
-        $.zui.store.set(obj.srcName, obj)
-      } catch (err) {
-        console.log('localStorage failed:' + err);
+        try { // 储存上传历史
+          console.log('history localStorage success');
+          $.zui.store.set(obj.srcName, obj)
+        } catch (err) {
+          // 失败提示
+          $.zui.messager.show('存储上传记录失败' + err, {
+            icon: 'bell',
+            time: 4000,
+            type: 'danger',
+            placement: 'top'
+          });
+          console.log('localStorage failed:' + err);
+        }
+      } else {
+        // 上传失败提示
+        new $.zui.Messager(obj.message, {
+          type: "danger",
+          placement: 'bottom-right',
+          icon: "times"
+        }).show();
+        return;
       }
-    }
+    },
   });
 </script>
 <?php

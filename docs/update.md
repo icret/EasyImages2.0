@@ -1,3 +1,16 @@
+* 2024-01-20 v2.8.4
+- Fix [#163](https://github.com/icret/EasyImages2.0/pull/163)
+- 增加检测FTP
+- 增加自定义时区
+- 增加大文件分片上传
+- 增加重置OPcache缓存
+- 增加自定义NProgress颜色
+- 优化-IP数据基于内存的查询
+- 优化-删除类操作统一
+- 优化-修改配置统一
+- 优化-页面
+- 更新组件
+
 * 2023-05-30 v2.8.3
 - FIX [#118](https://github.com/icret/EasyImages2.0/issues/118)
 

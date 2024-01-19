@@ -20,7 +20,7 @@ class Ip2Region
      */
     public function __construct()
     {
-        class_exists('XdbSearcher') || include(__DIR__ . '/XdbSearcher.php');
+        class_exists('XdbSearcher') or include __DIR__ . '/XdbSearcher.php';
         $this->searcher = XdbSearcher::newWithFileOnly(__DIR__ . '/ip2region.xdb');
     }
 
@@ -55,6 +55,20 @@ class Ip2Region
     public function btreeSearch($ip)
     {
         return $this->memorySearch($ip);
+    }
+
+    /**
+     * 直接查询并返回名称
+     * @param string $ip
+     * @return string
+     * @throws \Exception
+     */
+    public function simple($ip)
+    {
+        $geo = $this->memorySearch($ip);
+        $arr = explode('|', str_replace(['0|'], '|', isset($geo['region']) ? $geo['region'] : ''));
+        if (($last = array_pop($arr)) === '内网IP') $last = '';
+        return join('', $arr) . (empty($last) ? '' : "[{$last}]");
     }
 
     /**

@@ -4,15 +4,20 @@ namespace Verot\Upload;
 
 require __DIR__ . '/function.php';
 require __DIR__ . '/class.upload.php';
+// 定义返回头信息为Json
+header("Content-type: application/json; charset=utf-8");
 
 // 检查登录
 if ($config['mustLogin']) {
     if (!is_who_login('status')) {
-        exit(json_encode(array(
-            "result"  => "failed",
-            "code"    => 401,
-            "message" => "本站已开启登陆上传,您尚未登陆",
-        )));
+        exit(json_encode(
+            array(
+                "result"  => "failed",
+                "code"    => 401,
+                "message" => "本站已开启登陆上传,您尚未登陆",
+            ),
+            JSON_UNESCAPED_UNICODE
+        ));
     }
 }
 
@@ -23,50 +28,65 @@ if (empty($_FILES['file'])) {
             "result"  => "failed",
             "code"    => 204,
             "message" => "没有选择上传的文件",
-        )
+        ),
+        JSON_UNESCAPED_UNICODE
     ));
 }
 
 // sign : 前端生成的时间戳 time() - $_POST['sign'] = 从选择文件到上传完毕的耗费时间
 if (empty($_POST['sign']) || time() - $_POST['sign'] > 12306) {
-    exit(json_encode(array(
-        "result"  => "failed",
-        "code"    => 403,
-        "systime" => time(),
-        "message" => "上传签名错误,请刷新重试",
-    )));
+    exit(json_encode(
+        array(
+            "result"  => "failed",
+            "code"    => 403,
+            "systime" => time(),
+            "message" => "上传签名错误,请刷新重试",
+        ),
+        JSON_UNESCAPED_UNICODE
+    ));
 }
 
 // 黑/白IP名单上传
 if ($config['check_ip']) {
     if (checkIP(null, $config['check_ip_list'], $config['check_ip_model'])) {
         // 上传错误 code:403 未授权IP
-        exit(json_encode(array(
-            "result"  => "failed",
-            "code"    => 403,
-            "message" => "黑名单内或白名单外用户不允许上传",
-        )));
+        exit(json_encode(
+            array(
+                "result"  => "failed",
+                "code"    => 403,
+                "message" => "你不能上传任何文件",
+            ),
+            JSON_UNESCAPED_UNICODE
+        ));
     }
 }
 
 // 根据IP限制游客每日上传数量
 if ($config['ip_upload_counts'] > 0 && !is_who_login('status')) {
-    if (false == get_ip_upload_log_counts(real_ip())) {
+    if (false === get_ip_upload_log_counts(real_ip())) {
         exit(json_encode(
             array(
                 "result"  => "failed",
                 "code"    => 403,
                 "message" => sprintf("游客限制每日上传 %d 张", $config['ip_upload_counts']),
-            )
+            ),
+            JSON_UNESCAPED_UNICODE
         ));
     }
 }
 
-$handle = new Upload($_FILES['file'], 'zh_CN');
+// 分片上传
+if ($config['chunks']) {
+    $chunk = chunk($_POST['name']);
+    // exit($chunk);
+    $handle = new Upload($chunk, 'zh_CN');
+} else {
+    $handle = new Upload($_FILES['file'], 'zh_CN');
+}
 
 if ($handle->uploaded) {
     // 允许上传的mime类型
-    if ($config['allowed'] === 1) {
+    if ($config['allowed']) {
         $handle->allowed = array('image/*');
     }
 
@@ -79,14 +99,14 @@ if ($handle->uploaded) {
                     "result"  => "failed",
                     "code"    => 205,
                     "message" => "请勿上传非法文件",
-                )
+                ),
+                JSON_UNESCAPED_UNICODE
             ));
         }
     }
 
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
-
     // 最大上传限制
     $handle->file_max_size = $config['maxSize'];
     // 最大宽度
@@ -108,8 +128,7 @@ if ($handle->uploaded) {
     // JPEG 图像的压缩质量 1-100
     $handle->jpeg_quality = $config['compress_ratio'];
 
-    /* 等比例缩减图片 放到前端了*/
-    /*
+    /* 等比例缩减图片 放到前端了
     if ($config['imgRatio']) {
         $handle->image_resize = true;
         $handle->image_x = $config['image_x'];
@@ -128,17 +147,15 @@ if ($handle->uploaded) {
 
     // 默认目录
     $Img_path = config_path();
-
     // 开启管理员自定义目录
     if ($config['admin_path_status']) {
-        if (checkLogin() == 204) {
+        if (checkLogin() === 204) {
             $Img_path = config_path($config['admin_path'] . date('/Y/m/d/'));
         }
     }
-
     // 开启上传者单独目录
     if ($config['guest_path_status']) {
-        if (checkLogin() == 205) {
+        if (checkLogin() === 205) {
             $getCok = json_decode($_COOKIE['auth']);
             $Img_path = config_path($getCok[0] . date('/Y/m/d/'));
         }
@@ -149,8 +166,6 @@ if ($handle->uploaded) {
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
-        header('Content-type:text/json');
-
         // 图片相对路径
         $pathIMG = $Img_path . $handle->file_dst_name;
         // 图片访问网址
@@ -159,13 +174,13 @@ if ($handle->uploaded) {
         $processUrl = $config['domain'] . $pathIMG;
 
         // 隐藏config文件中的path目录,需要搭配网站设置
-        if ($config['hide_path'] == 1) {
+        if ($config['hide_path'] === 1) {
             $imageUrl = str_replace($config['path'], '/', $imageUrl);
         }
 
         // 源图保护 key值是由crc32加密的hide_key
         // $hide_original = $config['hide'] == 1 ? $config['domain'] . '/app/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key'])) : $imageUrl;
-        if ($config['hide'] == 1) {
+        if ($config['hide'] === 1) {
             $imageUrl = $config['domain'] . '/app/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key']));
         }
 
@@ -178,7 +193,7 @@ if ($handle->uploaded) {
 
         // 当设置访问生成缩略图时自动生成 2022-12-30 修正 2023-01-30
         $handleThumb = $config['domain'] . '/app/thumb.php?img=' . $pathIMG;
-        if ($config['thumbnail'] == 2) {
+        if ($config['thumbnail'] === 2) {
             // 自定义缩略图长宽
             $handle->image_resize = true;
             $handle->image_x = $config['thumbnail_w'];
@@ -200,10 +215,9 @@ if ($handle->uploaded) {
             "del"     => $delUrl,
             // "memory"    => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
         );
-        echo json_encode($reJson);
+        echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean(); // 如果取消上传生成缩略图需要恢复此选项功能
-    } else {
-        // 上传错误 code:206 客户端文件有问题
+    } else { // 上传错误 code:206 客户端文件有问题
         $reJson = array(
             "result"  =>  "failed",
             "code"    =>  206,
@@ -212,13 +226,10 @@ if ($handle->uploaded) {
             // 'log' => $handle->log, // 仅用作调试用
         );
         unset($handle);
-        header('Content-Type:application/json; charset=utf-8');
         exit(json_encode($reJson, JSON_UNESCAPED_UNICODE));
     }
 
     /** 后续处理 */
-    // 上传至其他位置
-    // @any_upload($pathIMG, APP_ROOT . $pathIMG, 'upload');
     // 使用fastcgi_finish_request操作
     if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
     // 同IP上传日志
@@ -231,6 +242,8 @@ if ($handle->uploaded) {
     @water($handle->file_dst_pathname);
     // 压缩
     @process_compress($handle->file_dst_pathname);
+    // 上传至其他位置
+    @any_upload($pathIMG, APP_ROOT . $pathIMG, 'upload');
 
     unset($handle);
 }

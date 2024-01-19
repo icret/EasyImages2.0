@@ -14,7 +14,7 @@ include_once __DIR__ . "/header.php";
 </div>
 <div class="col-md-12 history_clear">
 </div>
-<script src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/EasyImage.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/lazyload/lazyload.min.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>

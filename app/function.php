@@ -1,60 +1,8 @@
 <?php
-
-/**
- * @author  icret
- * @link    https://png.cm
- * @email   lemonim@qq.com
- * @project EasyImage2.0 - 简单图床
- * @Github  https://github.com/icret/easyImages2.0
- * QQ Group 954441002
- * @Last    2023-03-09 17:38:57
-
- * 上传服务器后第一次打开会检查运行环境，请根据提示操作；
- * 检查环境仅会在第一开始开始出现，并在config目录下生成EasyImage.lock文件，如需再次查看请删除此文件。
-
- * 敬请注意：本程序为开源程序，你可以使用本程序在任何非商业项目或者网站中。但请你务必保留代码中相关信息（页面logo和页面上必要的链接可以更改）
- * 本人仅为程序开源创作，如非法网站与本人无关，请勿用于非法用途
- * 请为本人网站 (https://png.cm) 加上网址链接，谢谢支持。作为开发者你可以对相应的后台功能进行扩展（增删改相应代码）,但请保留代码中相关来源信息（例如：本人博客，邮箱等）
- * 如果因安装问题或其他问题可以给我发邮件。
- */
-
-/*---------------基础配置开始-------------------*/
-
-// 设置html为utf8
-header('Content-Type:text/html;charset=utf-8');
-//将时区设置为中国·上海
-ini_set('date.timezone', 'Asia/Shanghai');
-date_default_timezone_set('Asia/Shanghai');
-// 修改内存限制 根据服务器配置选择，低于128M容易出现上传失败，你懂得图片挺占用内存的
-ini_set('memory_limit', '512M');
-// 定义根目录
-define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
-// 判断当前的系统类型是否为windows
-define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
-// 定义当前版本
-define('APP_VERSION', '2.8.3');
-
-/*---------------基础配置结束-------------------*/
-
-require_once APP_ROOT . '/config/config.php';
-require_once APP_ROOT . '/config/config.guest.php';
+require_once __DIR__ . '/base.php';
 require_once __DIR__ . '/WaterMask.php';
+require_once APP_ROOT . '/config/config.guest.php';
 
-/**
- * 开启DEBUG
- * 2023-03-09
- */
-function easyimage_debug()
-{
-    global $config;
-    if ($config['checkEnv']) {
-
-        if (!ini_get('display_errors')) {
-            ini_set('display_errors', 'On');
-        }
-        error_reporting(E_ALL);
-    }
-}
 /**
  * 判断GIF图片是否为动态
  * @param $filename string 文件
@@ -154,7 +102,7 @@ function _login($user = null, $password = null)
             if ($browser_cookie[0] === $config['user'] && $browser_cookie[1] === $config['password']) return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
             // 判断是否上传者
             if (array_key_exists($browser_cookie[0], $guestConfig) && $browser_cookie[1] === $guestConfig[$browser_cookie[0]]['password']) {
-                // 判断上车者是否过期
+                // 判断上传者是否过期
                 if ($guestConfig[$browser_cookie[0]]['expired'] < time()) {
                     // 上传者账户密码正确,但是账户过期
                     return json_encode(array('code' => 400, 'level' => 0, 'messege' => $browser_cookie[0] . '账号已过期'));
@@ -683,6 +631,39 @@ function getDel($url, $type)
 }
 
 /**
+ * 删除指定文件
+ * @param $url string 文件
+ * @param $type string 模式
+ */
+function easyimage_delete($url, $type)
+{
+    global $config;
+    // url本地化
+    $url = htmlspecialchars(str_replace($config['domain'], '', $url)); // 过滤html 获取url path
+    $url = urldecode(trim($url));
+
+    if ($type == 'url') {
+        $url = $_SERVER['DOCUMENT_ROOT'] . $url;
+    }
+    if ($type == 'hash') {
+        $url = APP_ROOT . $url;
+    }
+
+    // 文件是否存在 限制删除目录
+    if (is_file($url) && strrpos($url, $config['path'])) {
+        // 执行删除
+        if (@unlink($url)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    return FALSE;
+    // 清除查询
+    clearstatcache();
+}
+
+/**
  * 判断是否此用户登录
  * @param string $user 判断登录者权限 当$user=null 时检查是否登录, 不区分身份
  * @return bool 是|否
@@ -778,7 +759,7 @@ function getVersion($name = 'tag_name')
     global $config;
 
     if ($config['checkEnv']) {
-        require_once APP_ROOT . '/app/class.version.php';
+        require_once __DIR__ . '/class.version.php';
         $url = "https://api.github.com/repositories/188228357/releases/latest"; // 获取版本地址
         $getVersion = new getVersion($url);
         try {
@@ -898,7 +879,7 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
     global $config;
 
     /** # 使用moderatecontent */
-    if ($type == 1) {
+    if ($type === 1) {
         $response = moderatecontent_json($imageUrl);
         if ($response['rating_index'] == 3 or $response['predictions']['adult'] > $config['checkImg_value']) { // (1 = everyone, 2 = teen, 3 = adult)
             $bad_pic = true;
@@ -906,7 +887,7 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
     }
 
     /** # 使用nsfwjs */
-    if ($type == 2) {
+    if ($type === 2) {
         /**
          * probability，概率
          * className，类型
@@ -956,13 +937,13 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
     }
 
     // 移入回收站
-    if ($type == 3) {
+    if ($type === 3) {
         $bad_pic = true;
         $dir = 'recycle/';
     }
 
     /** # 如果违规则移动图片到违规文件夹 */
-    if ($bad_pic == true) {
+    if ($bad_pic === true) {
         $old_path = APP_ROOT . parse_url($imageUrl)['path'];   // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
         $name = parse_url($imageUrl)['path'];                  // 获得图片的相对地址
         $name = str_replace($config['path'], '', $name);       // 去除 path目录
@@ -975,6 +956,12 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
         }
         if (is_file($old_path)) {
             rename($old_path, $new_path);
+
+            // FTP
+            if ($config['ftp_status'] === 1) {
+                any_upload(parse_url($imageUrl)['path'], $config['path'] . $dir . $name, 'rename');
+            }
+
             return true;
         } else {
             return false;
@@ -995,6 +982,10 @@ function re_checkImg($name, $dir = 'suspic/')
     if (is_file($now_path_file)) {
         $to_file = APP_ROOT . $config['path'] . $fileToPath;    // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png
         rename($now_path_file, $to_file);                       // 移动文件
+        // FTP
+        if ($config['ftp_status'] === 1) {
+            any_upload($config['path'] . $dir . $name, $config['path'] . $fileToPath, 'rename');
+        }
         return true;
     }
 }
@@ -1389,7 +1380,6 @@ function check_api($token)
     }
 }
 
-
 /**
  * 根据URL判断是否本地局域网访问(PHP代码函数)
  * https://blog.csdn.net/monxinmonxin0/article/details/44854383
@@ -1398,9 +1388,8 @@ function check_api($token)
  */
 function is_local($url)
 {
-    if (stristr($url, 'localhost') || stristr($url, '127.') || stristr($url, '192.')) {
-        return true;
-    }
+    if (stristr($url, '://localhost') || stristr($url, '://127.') || stristr($url, '://192.') || stristr($url, '://10.')) return true;
+
     return false;
 }
 
@@ -1422,7 +1411,6 @@ function rand_imgurl($text = null)
  * @param String $file 文件相对路径
  * @return String 内容信息
  */
-
 function get_current_version($file = '/admin/version.php')
 {
     $file = APP_ROOT . $file;
@@ -1463,8 +1451,13 @@ function water($source)
 {
     global $config;
 
+    // 判断是否图片格式
+
+
+
+
     // 文字水印
-    if ($config['watermark'] == 1) {
+    if ($config['watermark'] === 1) {
         // 过滤gif
         if (!is_Gif_Webp_Animated($source)) {
             $arr = [
@@ -1483,7 +1476,7 @@ function water($source)
     }
 
     // 图片水印
-    if ($config['watermark'] == 2) {
+    if ($config['watermark'] === 2) {
         // 过滤gif
         if (!is_Gif_Webp_Animated($source)) {
             $arr = [
@@ -1598,21 +1591,19 @@ function write_upload_logs($filePath, $sourceName, $absolutePath, $fileSize, $fr
  */
 function ip2region($IP)
 {
-    $db = __DIR__ . '/ip2region/ip2region.xdb';
-
-    if (!is_file($db)) {
-        return '<a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank"><span class="label label-primary" data-toggle="tooltip" title="点击下载 IP数据库 并上传到<br/><code>/app/ip2region/</code>">IP数据库不存在</span></a>';
-    }
+    if (!is_file(__DIR__ . '/ip2region/ip2region.xdb')) return '<a href="https://raw.githubusercontent.com/lionsoul2014/ip2region/master/data/ip2region.xdb" target="_blank"><span class="label label-primary" data-toggle="tooltip" title="点击下载 IP数据库 并上传到<br/><code>/app/ip2region/</code>">IP数据库不存在</span></a>';
 
     try {
         require_once __DIR__ . '/ip2region/Ip2Region.php';
         $ip2region = new Ip2Region();
-        $location = $ip2region->memorySearch($IP);
-        $location = $location['region'];
+        /* 显示完整信息 
+        $location = $ip2region->memorySearch($IP); 
+        $location = $location['region'];        
         $location =  str_replace(array('0', '||'), '', $location);
-        return $location;
+        */
+        return $ip2region->simple($IP); // 显示简易信息
     } catch (Exception $e) {
-        return '查询失败: ' . $e->getMessage();
+        return $e->getMessage();
     }
 }
 
@@ -1675,7 +1666,7 @@ function auto_delete()
     global $config;
     if ($config['auto_delete'] && $config['storage_path'] == 'Y/m/d/') {
 
-        /**  重命名要删除的文件夹 */
+        /** 重命名要删除的文件夹 */
         $Odir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] . 'day')); // 重命名文件夹路径
         $Rdir = APP_ROOT . $config['path'] . date('Y/m/d', strtotime(-$config['auto_delete'] . 'day')) . '_auto_delete'; // 新命名文件夹路径
         if (is_dir($Odir)) { // 执行重命名
@@ -1716,12 +1707,11 @@ function auto_delete()
 }
 
 /**
- * 记录登录日志
- * @param String $user 登录用户
- * @param String $pass 登录密码
- * @param String $msg  登录提示
+ * 登录日志
+ * @param String $user 用户
+ * @param String $pass 密码
+ * @param String $msg  提示
  */
-
 function write_login_log($user, $pass, $msg)
 {
     $log_path = APP_ROOT . '/admin/logs/login/';
@@ -1732,53 +1722,32 @@ function write_login_log($user, $pass, $msg)
     if (!is_file($log_file)) file_put_contents($log_file, '<?php /** 登录日志 */ exit; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
 
     /** 写入日志 */
-    $log = htmlentities('时间: ' . date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $pass . ' 消息: ' . $msg);
+    $log = htmlentities(date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $pass . ' 提示: ' . $msg);
     file_put_contents($log_file, $log . PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
 /**
- * 其他上传
- * 支持: FTP
- * @param String $remoteFile 远程地址
- * @param String $localFile 本地地址 
- * @param String $way 使用方式 upload 上传 | delete 删除 
+ * curl检查远程链接是否有效
+ * @param String $url 
+ * @param return boll 
  */
-
-function FTP_upload($remoteFile = null, $localFile = null, $way = 'upload')
+function validUrl($url)
 {
-    global $config;
+    $ch = curl_init();
+    $timeout = 10;
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 1); //将文件的信息作为数据流输出
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //将获取的信息以字符串返回
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout); //设置等待时间
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //禁止验证对等证书
+    $contents = curl_exec($ch);
 
-    if (!$config['ftp_status']) exit;
-
-    require_once __DIR__ . '/FtpClient/FtpClient.php';
-    require_once __DIR__ . '/FtpClient/FtpException.php';
-    require_once __DIR__ . '/FtpClient/FtpWrapper.php';
-
-    $ftp = new FtpClient();
-    // FTP 基本信息
-    $ftp->connect($config['ftp_host'], $config['ftp_ssl'], $config['ftp_port'], $config['ftp_time']);
-    // FTP账号密码
-    $ftp->login($config['ftp_user'], $config['ftp_pass']);
-    // FTP主动|被动
-    $ftp->pasv($config['ftp_pasv']);
-
-    switch ($way) {
-        case 'upload':
-            // 创建文件夹
-            $ftp->mkdir(pathinfo($remoteFile, PATHINFO_DIRNAME), 0755, true);
-            // 上传文件 远端->本地
-            $ftp->put($remoteFile, $localFile);
-            break;
-        case 'delete':
-            $ftp->delete($remoteFile);
-            return true;
-            break;
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); //获取请求状态码
+    curl_close($ch);
+    if ($http_code != '200') {
+        return false;
     }
-    $ftp->close();
-    // 上传完毕是否删除本地文件
-    if ($config['ftped_del_local']) {
-        @unlink($localFile);
-    }
+    return true;
 }
 
 /**
@@ -1789,48 +1758,111 @@ function FTP_upload($remoteFile = null, $localFile = null, $way = 'upload')
  * @param String $localFile 本地地址
  * @param String $way 使用方式 upload 上传 | delete 删除 
  */
-
 function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
 {
     global $config;
 
-    if (!$config['ftp_status']) exit;
+    if (!$config['ftp_status']) return null;
     require_once __DIR__ . '/Ftp.php';
 
     // 登录FTP
     try {
         $ftp = new Ftp;
-        $ftp->connect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
+
+        if ($config['ftp_ssl'] === 1) {
+            $ftp->sslConnect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
+        } else {
+            $ftp->connect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
+        }
+
         $ftp->login($config['ftp_user'], $config['ftp_pass']);
         $ftp->pasv($config['ftp_pasv']);
     } catch (FtpException $e) {
         echo 'Error: ', $e->getMessage();
     }
 
+    // 获取文件相对目录
+    $dir = pathinfo($remoteFile, PATHINFO_DIRNAME);
+    // 隐藏上传目录
+    if ($config['hide_path']) {
+        $dir = str_replace($config['path'], '', $dir);
+        $remoteFile = str_replace($config['path'], '', $remoteFile);
+    }
+
     switch ($way) {
         case 'upload':
             try {
-                // 创建文件夹
-                $dir = pathinfo($remoteFile, PATHINFO_DIRNAME);
+                // 递归创建目录
                 if (!$ftp->isDir($dir)) {
-                    $ftp->mkDir($dir);
+                    $ftp->mkDirRecursive($dir);
                 }
-
-                // 上传文件 远端->本地
-                $ftp->put($remoteFile, $localFile);
+                // 上传文件 远端->本地 模式: $config['ftp_mode']
+                $ftp->put($remoteFile, $localFile, 2);
             } catch (FtpException $e) {
                 echo 'Error: ', $e->getMessage();
             }
             break;
         case 'delete':
+            if ($config['ftp_delloc_sync'] === 0) return true;
             $ftp->tryDelete($remoteFile);
+            break;
+        case 'list':
+            return $ftp->nList($remoteFile);
+            break;
+        case 'rename':
+            try {
+                // 获取文件相对目录
+                $dir = pathinfo($localFile, PATHINFO_DIRNAME);
+                // 隐藏上传目录
+                if ($config['hide_path']) {
+                    $dir = str_replace($config['path'], '', $dir);
+                    $localFile = str_replace($config['path'], '', $localFile);
+                }
+                // 递归创建目录
+                if (!$ftp->isDir($dir)) {
+                    $ftp->mkDirRecursive($dir);
+                }
+                // 此处 $remoteFile为源文件名及路径 $localFile为新文件名及路径
+                $ftp->rename($remoteFile, $localFile);
+            } catch (FtpException $e) {
+                echo 'Error: ', $e->getMessage();
+            }
             break;
     }
     // 关闭FTP
     $ftp->close();
 
     // FTP上传后是否删除本地文件
-    if ($config['ftp_del_local']) {
+    if ($config['ftp_complete_del_local']) {
         @unlink($localFile);
     }
+}
+
+/**
+ * 分片上传
+ * @param $target_name 名称
+ * @return Sting $target_name
+ */
+function chunk($target_name)
+{
+    global $config;
+    // 分片缓存目录
+    $temp_dir = APP_ROOT . $config['path'] . 'cache/' . $target_name . '/';
+    // 分片合并后的文件
+    $target_file = APP_ROOT . $config['path'] . 'cache/' . $target_name;
+    // 储存分片
+    if (!is_dir($temp_dir)) mkdir($temp_dir, 0755, true);
+    // 移动缓存分片
+    move_uploaded_file($_FILES['file']['tmp_name'], $temp_dir . $_REQUEST['chunk']);
+    // 合并分片
+    if ($_REQUEST['chunk'] == $_REQUEST['chunks'] - 1) { // 最后一个分片
+        if (!is_dir($target_file)) mkdir($target_file, 0755, true);
+        $handle = fopen($target_name, 'x+');
+        for ($i = 0; $i < $_REQUEST['chunks']; $i++) {
+            fwrite($handle, file_get_contents($temp_dir . $i));
+        }
+        fclose($handle);
+        deldir($temp_dir); // 删除临时目录
+    }
+    return $target_name;
 }

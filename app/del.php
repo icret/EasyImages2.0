@@ -1,25 +1,24 @@
 <?php
 
 /**
- * 删除文件页面
+ * 删除/回收文件页面
+ * @author Icret
+ * 2023-3-15 11:01:52
  */
-require_once __DIR__ . '/header.php';
+
+require __DIR__ . '/function.php';
 
 if (empty($_REQUEST)) {
-    echo '
-    <script>
-        new $.zui.Messager("没有要删除的图片!", {
-            type: "danger", // 定义颜色主题 
-            icon: "exclamation-sign" // 定义消息图标
-        }).show();
-    </script>
-    ';
+    exit(json_encode(array(
+        'code' => 200,
+        'msg'  => '无效请求',
+        'type' => 'success',
+        'icon' => 'exclamation-sign',
+        'mode' => 'get',
+        'url'  => null
+    ), JSON_UNESCAPED_UNICODE));
 }
 
-$img = rand_imgurl() . '/public/images/404.png';
-if (isset($_GET['url'])) {
-    $img = strip_tags($_GET['url']);
-}
 
 // 解密删除
 if (isset($_GET['hash'])) {
@@ -28,111 +27,331 @@ if (isset($_GET['hash'])) {
 
     if ($config['image_recycl']) {
         // 如果开启回收站则进入回收站
-        if (checkImg($delHash, 3, 'recycle/') == true) {
-            echo '
-        <script>
-            new $.zui.Messager("删除成功", {
-                type: "success", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-        </script>
-        ';
+        if (checkImg($delHash, 3, 'recycle/') === true) {
+
+            any_upload($delHash, $delHash, 'delete'); // FTP删除
+
+            exit(json_encode(array(
+                'code' => 200,
+                'msg'  => '删除成功',
+                'type' => 'success',
+                'icon' => 'ok-sign',
+                'mode' => 'delete',
+                'url'  => $delHash
+            ), JSON_UNESCAPED_UNICODE));
         } else {
-            echo '
-			<script>
-                new $.zui.Messager("文件不存在!", {
-                    type: "danger", // 定义颜色主题
-                    icon: "exclamation-sign" // 定义消息图标
-                }).show();
-            </script>
-			';
+            exit(json_encode(array(
+                'code' => 200,
+                'msg'  => '文件不存在',
+                'type' => 'danger',
+                'icon' => 'exclamation-sign',
+                'mode' => 'delete',
+                'url'  => $delHash
+            ), JSON_UNESCAPED_UNICODE));
         }
     } else {
-        // 否则直接删除
-        getDel($delHash, 'url');
+        getDel($delHash, 'url'); // 直接删除
+
+        any_upload($delHash, $delHash, 'delete'); // FTP删除
+
+        exit(json_encode(array(
+            'code' => 200,
+            'msg'  => '删除成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'delete',
+            'url'  => $delHash
+        ), JSON_UNESCAPED_UNICODE));
+    }
+    exit(json_encode(array(
+        'code' => 200,
+        'msg'  => '删除失败',
+        'type' => 'danger',
+        'icon' => 'exclamation-sign',
+        'mode' => 'delete',
+        'url'  => $delHash
+    ), JSON_UNESCAPED_UNICODE));
+}
+
+// 非管理员不可访问
+if (!is_who_login('admin')) exit('Permission denied');
+
+// 广场 - 批量删除文件
+if (isset($_POST['del_url_array'])) {
+    $del_url_array = $_POST['del_url_array'];
+    $del_num = count($del_url_array);
+    for ($i = 0; $i < $del_num; $i++) {
+        getDel($del_url_array[$i], 'url');
+        // FTP删除
+        any_upload($del_url_array[$i], $del_url_array[$i], 'delete');
     }
 }
 
-// 检查登录后再处理url删除请求
-if (is_who_login('admin')) {
-
-    // 广场页面删除
-    if (isset($_GET['url'])) {
-        getDel($img, 'url');
-    }
-
-    // 从管理页面删除
-    if (isset($_GET['url_admin_inc'])) {
-        $del_url = $_GET['url_admin_inc'];
-        if ($config['hide_path']) {
-            $del_url = $config['domain'] . $config['path'] . parse_url($del_url)['path'];
-        }
-        getDel($del_url, 'url');
-    }
-    // 回收
-    if (isset($_GET['recycle_url'])) {
-        $recycle_url = $_GET['recycle_url'];
-        $recycle_url = parse_url($recycle_url)['path'];
-        if (file_exists(APP_ROOT . $recycle_url)) {
-            checkImg($recycle_url, 3);
-            echo '
-			<script>
-                new $.zui.Messager("已放入回收站!", {
-                    type: "success", // 定义颜色主题
-                    icon: "ok" // 定义消息图标
-                }).show();
-            </script>
-			';
-        } else {
-            echo '
-			<script>
-                new $.zui.Messager("文件不存在!", {
-                    type: "danger", // 定义颜色主题
-                    icon: "exclamation-sign" // 定义消息图标
-                }).show();
-            </script>
-			';
-        }
-    }
-} else {
-    if (isset($_GET['url'])) {
-        echo '
-        <script>
-            new $.zui.Messager("请使用管理员账号登录再删除!", {
-			type: "danger", // 定义颜色主题
-			icon: "exclamation-sign" // 定义消息图标
-            }).show();
-            // 延时2s跳转			
-            window.setTimeout("window.location=\'/../admin/index.php \'",3000);
-        </script>
-		';
+// 广场 - 批量回收文件
+if (isset($_POST['recycle_url_array'])) {
+    $recycle_url_array = $_POST['recycle_url_array'];
+    $del_num = count($recycle_url_array);
+    for ($i = 0; $i < $del_num; $i++) {
+        checkImg($recycle_url_array[$i], 3);
     }
 }
-?>
-<div class="col-md-4 col-md-offset-4">
-    <a href="<?php echo $img; ?>" target="_blank"><img src="<?php echo $img; ?>" alt="简单图床-EasyImage" class="img-thumbnail"></a>
-    <form class="form-inline" method="get" action="<?php $_SERVER['SCRIPT_NAME']; ?>" id="form" name="delForm" onSubmit="getStr();">
-        <div class="form-group">
-            <label for="exampleInputInviteCode3">删除图片-格式:</label>
-            <input type="text" class="form-control" id="exampleInputInviteCode3" name="url" placeholder="https://i1.100024.xyz/i/2021/05/04/10fn9ei.jpg">
-        </div>
-        <button type="submit" class="btn btn-danger">删除</button>
-    </form>
-</div>
-<script>
-    // 修改网页标题
-    document.title = "删除图片 - <?php echo $config['title']; ?>";
 
-    var oBtn = document.getElementById('del');
-    var oTi = document.getElementById('title');
-    if ('oninput' in oBtn) {
-        oBtn.addEventListener("input", getWord, false);
+if (isset($_POST['url'])) $postURL = strip_tags($_POST['url']);
+
+// 广场|日志 - 单文件删除
+if (isset($_POST['mode']) && $_POST['mode'] === 'delete') {
+    $reslut = easyimage_delete($postURL, 'url');
+    // FTP删除
+    any_upload($postURL, $postURL, 'delete');
+
+    if ($reslut) {
+        exit(json_encode(array(
+            'code' => 200,
+            'msg'  => '删除成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE));
     } else {
-        oBtn.onpropertychange = getWord;
+        exit(json_encode(array(
+            'code' => 200,
+            'msg'  => '删除失败',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+// 广场|日志 - 回收文件
+if (isset($_POST['mode']) && $_POST['mode'] === 'recycle') {
+    if (is_file(APP_ROOT . $postURL)) {
+        checkImg($postURL, 3);
+        exit(json_encode(array(
+            'code' => 200,
+            'msg' => '回收成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'recycle',
+            'url' => $postURL
+        ), JSON_UNESCAPED_UNICODE));
+    } else {
+        exit(json_encode(array(
+            'code' => 200,
+            'msg'  => '回收失败',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+// 管理页面 - 删除版本信息文件
+if (isset($_POST['mode']) && $_POST['mode'] === 'del_version_file') {
+    try {
+        @unlink(APP_ROOT . $postURL);
+        $re = json_encode(array(
+            'code' => 200,
+            'msg'  => '删除成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE);
+        throw new Exception('更新版本号失败');
+    } catch (Exception $e) {
+        $re = json_encode(array(
+            'code' => 404,
+            'msg'  => $e->getMessage(),
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE);
+    } finally {
+        exit($re);
+    }
+}
+
+// 管理页面 - 回收站恢复文件
+if (isset($_POST['mode']) && $_POST['mode'] === 'recycle_reimg') {
+    try {
+        if (re_checkImg($postURL, 'recycle/') === true) {
+            $re = json_encode(array(
+                'code' => 200,
+                'msg'  => '恢复成功',
+                'type' => 'success',
+                'icon' => 'ok-sign',
+                'mode' => 'delete',
+                'url'  => $postURL
+            ), JSON_UNESCAPED_UNICODE);
+        } else {
+            throw new Exception('恢复失败');
+        }
+    } catch (Exception $e) {
+        $re = json_encode(array(
+            'code' => 404,
+            'msg'  => $e->getMessage(),
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE);
+    } finally {
+        exit($re);
+    }
+}
+
+// 管理页面 - 监黄恢复文件
+if (isset($_POST['mode']) && $_POST['mode'] === 'suspic_reimg') {
+    try {
+        if (re_checkImg($postURL, 'suspic/') === true) {
+            $re = json_encode(array(
+                'code' => 200,
+                'msg'  => '恢复成功',
+                'type' => 'success',
+                'icon' => 'ok-sign',
+                'mode' => 'delete',
+                'url'  => $postURL
+            ), JSON_UNESCAPED_UNICODE);
+        } else {
+            throw new Exception('恢复失败');
+        }
+    } catch (Exception $e) {
+        $re = json_encode(array(
+            'code' => 404,
+            'msg'  => $e->getMessage(),
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE);
+    } finally {
+        exit($re);
+    }
+}
+
+// 管理页面 - 删除非空目录
+if (isset($_POST['mode']) && $_POST['mode'] === 'delDir') {
+    try {
+        $delDir = APP_ROOT . $config['path'] . $postURL; // 限制删除目录
+        if (deldir($delDir)) {
+            $re = json_encode(array(
+                'code' => 200,
+                'msg'  => '删除文件夹成功',
+                'type' => 'success',
+                'icon' => 'ok-sign',
+                'mode' => 'delete',
+                'url'  => $postURL
+            ), JSON_UNESCAPED_UNICODE);
+        } else {
+            throw new Exception('删除文件夹失败');
+        }
+    } catch (Exception $e) {
+        $re = json_encode(array(
+            'code' => 404,
+            'msg'  => $e->getMessage(),
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $postURL
+        ), JSON_UNESCAPED_UNICODE);
+    } finally {
+        exit($re);
+    }
+}
+
+// 管理页面 - 删除指定日期文件夹
+if (isset($_POST['dateDir'])) {
+    $delDir = APP_ROOT . $config['path'] . $_POST['dateDir'];
+    if (deldir($delDir)) {
+        echo json_encode(array(
+            'code' => 200,
+            'msg'  => '删除成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'delDir',
+            'url'  => $delDir
+        ), JSON_UNESCAPED_UNICODE);
+        exit;
+    } else {
+        exit(json_encode(array(
+            'code' => 404,
+            'msg'  => '删除失败',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delDir',
+            'url'  => $delDir
+        ), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+// 管理页面 - 删除指定文件
+if (isset($_POST['url_admin_inc'])) {
+
+    $del_url = $_POST['url_admin_inc'];
+    if ($config['hide_path']) {
+        $del_url = $config['domain'] . $config['path'] . parse_url($del_url)['path'];
     }
 
-    function getWord() {
-        oTi.innerHTML = '<img src="' + oBtn.value + '" width="200" class="img-rounded" /><br />';
+    if (easyimage_delete($del_url, 'url') === TRUE) {
+        exit(json_encode(array(
+            'code' => 200,
+            'msg'  => '删除成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'delete',
+            'url'  => $del_url
+        ), JSON_UNESCAPED_UNICODE));
     }
-</script>
-<?php require_once __DIR__ . '/footer.php';
+
+    exit(json_encode(array(
+        'code' => 404,
+        'msg'  => '删除失败',
+        'type' => 'danger',
+        'icon' => 'exclamation-sign',
+        'mode' => 'delete',
+        'url'  => $del_url
+    ), JSON_UNESCAPED_UNICODE));
+}
+
+// 管理页面 - 重置OPcache缓存
+if (isset($_POST['mode']) && $_POST['mode'] === 'OPcache') {
+
+    if (!function_exists('opcache_reset')) {
+        exit(json_encode(array(
+            'code' => 404,
+            'msg'  => '未开启OPcache',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+        ), JSON_UNESCAPED_UNICODE));
+    }
+
+    try {
+        if (opcache_reset() === true) {
+            $re = json_encode(array(
+                'code' => 200,
+                'msg'  => '重置缓存成功',
+                'type' => 'success',
+                'icon' => 'ok-sign',
+                'mode' => 'delete',
+            ), JSON_UNESCAPED_UNICODE);
+        } else {
+            throw new Exception('重置缓存失败');
+        }
+    } catch (Exception $e) {
+        $re = json_encode(array(
+            'code' => 404,
+            'msg'  => $e->getMessage(),
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+        ), JSON_UNESCAPED_UNICODE);
+    } finally {
+        exit($re);
+    }
+}

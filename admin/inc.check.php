@@ -1,5 +1,8 @@
 <?php
 
+/** 禁止直接访问 */
+defined('APP_ROOT') ?: exit;
+
 // 开启 DEBUG 2023-04-03
 if (!ini_get('display_errors')) {
     ini_set('display_errors', 'On');
@@ -61,7 +64,7 @@ if (file_exists(APP_ROOT . '/.user.ini')) {
 }
 
 // 检测是否存在 IP数据库文件 ip2region.xdb
-if (!file_exists(__DIR__ . '/ip2region/ip2region.xdb')) {
+if (!file_exists(APP_ROOT . '/app/ip2region/ip2region.xdb')) {
     echo '
         new $.zui.Messager("IP 数据库不存在, 请在系统信息中查看 Ip2region",{
             type: "danger", // 定义颜色主题 
@@ -110,7 +113,7 @@ if (!is_file(APP_ROOT . $config['textFont'])) {
 // 检测监黄接口是否可以访问
 if ($config['checkImg'] !== 0) {
 
-    if ($config['checkImg'] == 1) {
+    if ($config['checkImg'] === 1) {
 
         if (!@IP_URL_Ping('api.moderatecontent.com', 80, 1)) {
             echo '
@@ -122,7 +125,7 @@ if ($config['checkImg'] !== 0) {
         }
     }
 
-    if ($config['checkImg'] == 2) {
+    if ($config['checkImg'] === 2) {
 
         $ip = parse_url($config['nsfwjs_url'])['host'];
         $port = parse_url($config['nsfwjs_url'])['port'];
@@ -160,25 +163,35 @@ if (!function_exists('fastcgi_finish_request')) {
 
 // FTP检测
 if ($config['ftp_status']) {
-    require_once __DIR__ . '/Ftp.php';
-    // 登录FTP
-    try {
-        $ftp = new Ftp;
 
-        if ($config['ftp_ssl'] === 1) {
-            $ftp->sslConnect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
-        } else {
-            $ftp->connect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
-        }
-
-        $ftp->login($config['ftp_user'], $config['ftp_pass']);
-        $ftp->pasv($config['ftp_pasv']);
-    } catch (FtpException $e) {
+    if (!extension_loaded('ftp')) { // 检测FTP扩展是否开启
         echo '
-        new $.zui.Messager("FTP 错误:' . $e->getMessage() . '",{
-            type: "primary", // 定义颜色主题 
+        new $.zui.Messager("FTP 错误: FTP 扩展未开启, 无法使用远程附件",{
+            type: "info", // 定义颜色主题 
             time:4000
         }).show();
-    ';
+        ';
+    } else {
+        // 登录FTP
+        require_once APP_ROOT . '/app/Ftp.php';
+        try {
+            $ftp = new Ftp;
+
+            if ($config['ftp_ssl'] === 1) {
+                $ftp->sslConnect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
+            } else {
+                $ftp->connect($config['ftp_host'], $config['ftp_port'], $config['ftp_time']);
+            }
+
+            $ftp->login($config['ftp_user'], $config['ftp_pass']);
+            $ftp->pasv($config['ftp_pasv']);
+        } catch (FtpException $e) {
+            echo '
+                new $.zui.Messager("FTP 错误:' . $e->getMessage() . '",{
+                    type: "info", // 定义颜色主题 
+                    time:4300
+                }).show();
+            ';
+        }
     }
 }

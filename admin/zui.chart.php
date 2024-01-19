@@ -5,7 +5,7 @@
 require_once '../app/header.php';
 require_once APP_ROOT . '/app/chart.php';
 
-// 检测是否开启统计
+// 检测登录和是否开启统计
 if (!$config['chart_on'] || !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?hart#closed'));
 
 // 检测登录
@@ -140,10 +140,7 @@ if (is_array($char_data)) {
         <canvas id="myChart" width="1080" height="200"></canvas>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.4.0/public/static/zui/lib/chart/zui.chart.min.js"></script>
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/gh/icret/EasyImages2.0@2.4.0/public/static/zui/lib/chart/excanvas.js"></script>
-<![endif]-->
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/chart/zui.chart.min.js"></script>
 <script>
     // 文件统计-柱状图
     var data = {

@@ -95,7 +95,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
     write_login_log($_POST['user'], $_POST['password'], $login["messege"]);
 }
 ?>
-<link href="<?php static_cdn(); ?>/public/static/login.css" rel="stylesheet">
+<link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/login.css">
 <!-- 忘记密码 -->
 <div class="modal fade" id="fogot">
     <div class="modal-dialog ">
@@ -128,8 +128,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
                     <h2>登录</h2>
                     <label for="account" class="col-sm-2"></label>
                     <input type="text" name="user" id="account" class="form-control" value="" placeholder="输入登录账号" autocomplete="off" required="required">
-                    <input type="password" name="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required">
-                    <input type="hidden" name="password" id="md5_password">
+                    <input type="password" name="password" id="password" class="form-control" value="" placeholder="输入登录密码" autocomplete="off" required="required"><input type="hidden" name="password" id="md5_password">
                     <?php if ($config['captcha']) : ?>
                         <input class="form-control" type="text" name="code" value="" placeholder="请输入验证码" autocomplete="off" required="required" />
                         <div class="form-group">
@@ -161,13 +160,15 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
     </div>
 </section>
 </form>
-<script src="<?php static_cdn(); ?>/public/static/crypto/SHA256.js"></script>
+<script type="application/javascript" src="<?php static_cdn(); ?>/public/static/crypto/SHA256.js"></script>
 <script>
     function md5_post() {
         var password = document.getElementById('password');
         var md5pwd = document.getElementById('md5_password');
         md5pwd.value = SHA256(password.value);
-        //可以校验判断表单内容，true就是通过提交，false，阻止提交
+        // fix https://github.com/icret/EasyImages2.0/pull/163
+        password.value = "Null";
+        // 可以校验判断表单内容，true就是通过提交，false，阻止提交
         return true;
     }
 
