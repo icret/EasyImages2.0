@@ -30,14 +30,15 @@ $font_size = 24;
 
 /*字体文件位置*/
 $fontfile = APP_ROOT . $config['textFont'];
+/* floor() 修复php>8.0精度丢失 v2.8.4 */
 for ($i = 0; $i < $count; $i++) {
     $font_color = imagecolorallocate($img, mt_rand(0, 100), mt_rand(0, 50), mt_rand(0, 255));
     imagettftext(
         $img,
         $font_size,
-        mt_rand(0, 20) - mt_rand(0, 25),
-        ($img_w * $i / 4) + mt_rand(0, 15),
-        mt_rand($img_h / 2, $img_h),
+        floor(mt_rand(0, 20) - mt_rand(0, 25)),
+        floor($img_w * $i / 4) + floor(mt_rand(0, 15)),
+        floor(mt_rand($img_h / 2, $img_h)),
         $font_color,
         realpath($fontfile),
         $code[$i]

@@ -1,6 +1,7 @@
 * 2024-01-20 v2.8.4
 - Fix [#163](https://github.com/icret/EasyImages2.0/pull/163)
-- 增加检测FTP
+- Fix [#159](https://github.com/icret/EasyImages2.0/pull/159)
+- 增加上传至FTP
 - 增加自定义时区
 - 增加大文件分片上传
 - 增加重置OPcache缓存
