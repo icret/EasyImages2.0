@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/badge/license-GPL_V2.0-yellowgreen.svg)](https://github.com/icret/EasyImages2.0/blob/master/LICENSE)
 [![QQ group](https://pub.idqqimg.com/wpa/images/group.png)](https://jq.qq.com/?_wv=1027&k=jfXRHU8Y)
 
-[演示](https://png.cm/) · [手册](https://icret.github.io/EasyImages2.0/#/) · [社区](https://github.com/icret/EasyImages2.0/discussions) · [Telegram](https://t.me/Easy_Image) - 插件: [Chrome](/docs/Chrome插件.md) · [Edge](/docs/Edge插件.md) · [PicGo](/docs/使用PicGo上传.md) · [ShareX](/docs/使用ShareX上传.md)
+[演示](https://png.cm/) · [手册](https://icret.github.io/EasyImages2.0/#/) · [社区](https://github.com/icret/EasyImages2.0/discussions) · [Telegram](https://t.me/Easy_Image) - 插件: [Chrome](/docs/Chrome插件.md) · [Edge](/docs/Edge插件.md) · [PicGo](/docs/使用PicGo上传.md) · [ShareX](/docs/使用ShareX上传.md) · [Docker](/docs/三方安装指南.md)
 
 目录: [安装](/docs/安装图床.md) | [安全](/docs/安全配置.md) | [API](/docs/API.md) | [鉴黄](/docs/鉴黄.md) | [升级](/docs/图床更新升级.md) | [常见问题](/docs/常见问题.md) | [环境/兼容](#环境要求) | [更新日志](/docs/update.md) | [打赏开发者](/docs/打赏开发者.md) | [鸣谢](#鸣谢) | [许可证](#开源许可) 
 
