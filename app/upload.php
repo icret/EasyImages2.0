@@ -53,7 +53,7 @@ if ($config['check_ip']) {
         exit(json_encode(
             array(
                 "result"  => "failed",
-                "code"    => 403,
+                "code"    => 205,
                 "message" => "你不能上传任何文件",
             ),
             JSON_UNESCAPED_UNICODE
@@ -67,7 +67,7 @@ if ($config['ip_upload_counts'] > 0 && !is_who_login('status')) {
         exit(json_encode(
             array(
                 "result"  => "failed",
-                "code"    => 403,
+                "code"    => 202,
                 "message" => sprintf("游客限制每日上传 %d 张", $config['ip_upload_counts']),
             ),
             JSON_UNESCAPED_UNICODE
@@ -97,7 +97,7 @@ if ($handle->uploaded) {
             exit(json_encode(
                 array(
                     "result"  => "failed",
-                    "code"    => 205,
+                    "code"    => 406,
                     "message" => "请勿上传非法文件",
                 ),
                 JSON_UNESCAPED_UNICODE
@@ -166,6 +166,22 @@ if ($handle->uploaded) {
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
+        // 黑名单文件 - 通过MD5检测
+        if ($config['md5_black']) {
+            $befor_upload_file_md5 = md5_file($handle->file_src_pathname);
+            $after_upload_file_md5 = md5_file($handle->file_dst_pathname);
+            if (stristr($config['md5_blacklist'], $befor_upload_file_md5) || stristr($config['md5_blacklist'], $after_upload_file_md5)) {
+                if (file_exists($handle->file_dst_pathname)) unlink($handle->file_dst_pathname);
+                exit(json_encode(
+                    array(
+                        "result"  => "failed",
+                        "code"    => 205,
+                        "message" => "当前文件禁止上传",
+                    ),
+                    JSON_UNESCAPED_UNICODE
+                ));
+            }
+        }
         // 图片相对路径
         $pathIMG = $Img_path . $handle->file_dst_name;
         // 图片访问网址
@@ -217,10 +233,10 @@ if ($handle->uploaded) {
         );
         echo json_encode($reJson, JSON_UNESCAPED_UNICODE);
         $handle->clean(); // 如果取消上传生成缩略图需要恢复此选项功能
-    } else { // 上传错误 code:206 客户端文件有问题
+    } else { // 上传错误 code:400 客户端文件有问题
         $reJson = array(
             "result"  =>  "failed",
-            "code"    =>  206,
+            "code"    =>  400,
             "message" =>  $handle->error,
             "memory"  => getDistUsed(memory_get_peak_usage()), // 占用内存 2023-02-12
             // 'log' => $handle->log, // 仅用作调试用

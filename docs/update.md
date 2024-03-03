@@ -1,3 +1,8 @@
+* 2024-03-04 v2.8.5
+- 返回状态统一
+- 增加返回状态文档解释
+- 增加通过文件md5禁止上传
+
 * 2024-01-20 v2.8.4
 - Fix [#163](https://github.com/icret/EasyImages2.0/pull/163)
 - Fix [#159](https://github.com/icret/EasyImages2.0/pull/159)

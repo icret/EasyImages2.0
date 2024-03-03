@@ -33,6 +33,6 @@ ini_set('memory_limit', '512M');
 // 判断当前系统是否为windows
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 // 定义程序版本
-define('APP_VERSION', '2.8.4');
+define('APP_VERSION', '2.8.5');
 
 /*---------------基础配置结束-------------------*/

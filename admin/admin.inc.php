@@ -250,7 +250,7 @@ if (isset($_REQUEST['delDir'])) {
 auto_delete(); //定时删除
 ?>
 <div class="row">
-    <?php echo $config['set_notice']; ?>
+    <?php if (!empty($config['set_notice'])) echo $config['set_notice']; ?>
     <div class="col-md-2 col-xs-4">
         <ul class="nav nav-tabs nav-stacked">
             <li><a data-tab href="#Content1">网站设置</a></li>
@@ -530,8 +530,8 @@ auto_delete(); //定时删除
                     </form>
                 </div>
                 <div class="col-md-3">
-                    <h5 class="header-dividing">缩略图缓存 <small><?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . '个 | 占 ' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></h5>
-                    <button type="button" class="btn btn-primary" onclick="ajax_post('cache/','delDir')"><i class="icon icon-trash"> 清理缓存</i></button>
+                    <h5 class="header-dividing">缩略图缓存</h5>
+                    <button type="button" class="btn btn-primary" onclick="ajax_post('cache/','delDir')"><i class="icon icon-trash"> <small><?php echo getFileNumber(APP_ROOT . $config['path'] . 'cache/') . ' | ' . getDistUsed(getDirectorySize(APP_ROOT . $config['path'] . 'cache/')); ?></small></i></button>
                 </div>
                 <div class="col-md-1">
                     <h5 class="header-dividing" data-toggle="tooltip" title="如果开启OPcache 点击重置缓存">OPcache</h5>
@@ -572,10 +572,6 @@ auto_delete(); //定时删除
                     <div class="col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
-                                <input type="text" class="form-control" id="report" name="report" value="<?php echo $config['report']; ?>" placeholder="可以是网址或邮箱地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
-                            </div>
-                            <div class="form-group">
                                 <div class="switch switch-inline">
                                     <input type="hidden" name="static_cdn" value="0">
                                     <input type="checkbox" name="static_cdn" value="1" <?php if ($config['static_cdn']) echo 'checked="checked"'; ?>>
@@ -586,14 +582,32 @@ auto_delete(); //定时删除
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label for="report" data-toggle="tooltip" title="举报地址支持Zoho表单、金数据、表单大师等<br/>(推荐ZOHO)留空则不显示">举报地址 <a href="https://store.zoho.com.cn/referral.do?servicename=ZohoForms&category=ZohoForms&ref=52f8a4e98a7a7d4c2475713784605af0dc842f6cc9732dd77f37b87f2959149e212e550f50a869f70360f15b80a4abc6" target="_blank"><i class="icon icon-external-link"></i></a></label>
+                                <input type="text" class="form-control" id="report" name="report" value="<?php echo $config['report']; ?>" placeholder="可以是网址或邮箱地址" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <div class="switch switch-inline">
                                     <input type="hidden" name="check_ip" value="0">
                                     <input type="checkbox" name="check_ip" value="1" <?php if ($config['check_ip']) echo 'checked="checked"'; ?>>
                                     <label style="font-weight: bold">黑/白IP名单上传</label>
                                 </div>
-                                <textarea class="form-control" rows="4" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder=" 每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['check_ip_list']; ?></textarea>
+                                <textarea class="form-control" rows="4" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder="每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['check_ip_list']; ?></textarea>
                                 <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
                                 <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="switch switch-inline">
+                                    <input type="hidden" name="md5_black" value="0">
+                                    <input type="checkbox" name="md5_black" value="1" <?php if ($config['md5_black']) echo 'checked="checked"'; ?>>
+                                    <label style="font-weight: bold">通过文件MD5禁止上传</label>
+                                </div>
+                                <textarea class="form-control" rows="4" name="md5_blacklist" data-toggle="tooltip" title="上传前后文件md5均可匹配<br/>不区分大小写, 直接输入即可匹配" placeholder="上传前后文件md5均可匹配, 不区分大小写, 直接输入即可匹配" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['md5_blacklist']; ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -680,7 +694,7 @@ auto_delete(); //定时删除
                             <div class="switch switch-inline" data-toggle="tooltip" title="关闭后将不能进入后台设置<br/>再次开启需修改config.php: <code>'show_admin_inc'=>1,</code>">
                                 <input type="hidden" name="show_admin_inc" value="0">
                                 <input type="checkbox" name="show_admin_inc" value="1" <?php if ($config['show_admin_inc']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">后台设置</label>
+                                <label style="font-weight: bold">关闭设置</label>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -900,6 +914,8 @@ auto_delete(); //定时删除
                 <h5>我的信息</h5>
                 <hr />
                 <p class="text-ellipsis">IP: <?php echo real_ip() . ip2region(real_ip()); ?></p>
+
+                <p class="text-ellipsis">配置文件更新日期：<?php echo date('Y-m-d H:i:s', filemtime($config_file)); ?></p>
                 <p class="text-ellipsis">Browser: <?php echo $_SERVER['HTTP_USER_AGENT']; ?></p>
                 <h5>图床信息</h5>
                 <hr />
@@ -922,7 +938,7 @@ auto_delete(); //定时删除
                     <a href="https://www.openzui.com/" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="前端框架">ZUI</span></a>
                     <a href="https://github.com/verot/class.upload.php" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="图像处理类">Verot</span></a>
                     <a href="https://tinyfilemanager.github.io/" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="文件管理">Tinyfilemanager</span></a>
-                    <a href="https://github.com/rehiy/web-indexr" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="文件管理">Web-indexr</span></a>
+                    <a href="#"><span class="label label-badge label-primary" data-toggle="tooltip" title="文件管理">Web-indexr</span></a>
                     <a href="#Ip2Region" data-toggle="collapse" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="IP地址数据库">Ip2Region<i class="icon icon-angle-down"></i></span></a>
                     <?php if (empty($config['TinyPng_key'])) : ?>
                         <span class="label label-badge label-warning" data-toggle="tooltip" title="压缩图片 TinyPng<br/>未填写">TinyPng</span>

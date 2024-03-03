@@ -163,7 +163,7 @@ if ($handle->uploaded) {
         // 上传错误 code:206 客户端文件有问题
         $reJson = array(
             "result"  => "failed",
-            "code"    => 206,
+            "code"    => 400,
             "srcName" => $handle->file_src_name_body, // 2023-04-03 原始上传文件名称
             "id"      => $tokenID, // 2023-04-03 增加 Token ID
             "message" => $handle->error,

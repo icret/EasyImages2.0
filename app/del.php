@@ -41,7 +41,7 @@ if (isset($_GET['hash'])) {
             ), JSON_UNESCAPED_UNICODE));
         } else {
             exit(json_encode(array(
-                'code' => 200,
+                'code' => 404,
                 'msg'  => '文件不存在',
                 'type' => 'danger',
                 'icon' => 'exclamation-sign',
@@ -64,7 +64,7 @@ if (isset($_GET['hash'])) {
         ), JSON_UNESCAPED_UNICODE));
     }
     exit(json_encode(array(
-        'code' => 200,
+        'code' => 404,
         'msg'  => '删除失败',
         'type' => 'danger',
         'icon' => 'exclamation-sign',
@@ -115,7 +115,7 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'delete') {
         ), JSON_UNESCAPED_UNICODE));
     } else {
         exit(json_encode(array(
-            'code' => 200,
+            'code' => 404,
             'msg'  => '删除失败',
             'type' => 'danger',
             'icon' => 'exclamation-sign',
@@ -139,7 +139,7 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'recycle') {
         ), JSON_UNESCAPED_UNICODE));
     } else {
         exit(json_encode(array(
-            'code' => 200,
+            'code' => 404,
             'msg'  => '回收失败',
             'type' => 'danger',
             'icon' => 'exclamation-sign',
