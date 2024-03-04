@@ -111,6 +111,22 @@ if ($handle->uploaded) {
 
     // 图片完整相对路径:/i/2021/05/03/k88e7p.jpg
     if ($handle->processed) {
+        // 黑名单文件 - 通过MD5检测
+        if ($config['md5_black']) {
+            $befor_upload_file_md5 = md5_file($handle->file_src_pathname);
+            $after_upload_file_md5 = md5_file($handle->file_dst_pathname);
+            if (stristr($config['md5_blacklist'], $befor_upload_file_md5) || stristr($config['md5_blacklist'], $after_upload_file_md5)) {
+                if (file_exists($handle->file_dst_pathname)) unlink($handle->file_dst_pathname);
+                exit(json_encode(
+                    array(
+                        "result"  => "failed",
+                        "code"    => 205,
+                        "message" => "当前文件禁止上传",
+                    ),
+                    JSON_UNESCAPED_UNICODE
+                ));
+            }
+        }
         // 图片相对路径
         $pathIMG = $Img_path . $handle->file_dst_name;
         // 图片访问网址
