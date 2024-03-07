@@ -6,7 +6,7 @@ if (file_exists(APP_ROOT . '/config/install.lock')) {
 }
 
 if (isset($_POST['password'])) {
-  if ($_POST['password'] == $_POST['repassword']) {
+  if ($_POST['password'] === $_POST['repassword']) {
 
     $config['password'] = hash('sha256', $_POST['password']);
     $config['user'] = $_POST['user'];
@@ -27,11 +27,12 @@ if (isset($_POST['imgurl'])) {
 $config_file = APP_ROOT . '/config/config.php';
 cache_write($config_file, $config);
 
-file_put_contents(APP_ROOT . '/config/install.lock', '安装程序锁定文件。'); // 创建安装程序锁
+// 创建安装程序锁
+file_put_contents(APP_ROOT . '/config/install.lock', '安装程序锁定文件。');
 
 // 删除安装目录
 if (isset($_POST['del_install'])) {
-  if ($_POST['del_install'] == "del") {
+  if ($_POST['del_install'] === "del") {
     try {
       @deldir(APP_ROOT . "/install");
     } catch (Exception $e) {
@@ -42,7 +43,7 @@ if (isset($_POST['del_install'])) {
 
 // 删除多余文件.whitesource
 if (isset($_POST['del_extra_files'])) {
-  if ($_POST['del_extra_files'] == "del") {
+  if ($_POST['del_extra_files'] === "del") {
     try {
       @unlink(APP_ROOT . '/LICENSE');
       @unlink(APP_ROOT . '/README.md');
@@ -59,11 +60,10 @@ if (isset($_POST['del_extra_files'])) {
     }
   }
 }
+?>
+<!-- 跳转主页 -->
 
-// 跳转主页
-echo '
-<script>  
-window.alert("安装成功,即将为您跳转到登陆界面!");
-location.href="../admin/index.php";  
-</script>  
-';
+<script>
+  window.alert("安装成功,即将为您跳转到登陆界面!");
+  location.href = "../admin/index.php";
+</script>

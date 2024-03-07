@@ -25,7 +25,7 @@ if ($state !== 'checked') {
     <link rel="shortcut icon" href="./../favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="./../public/static/zui/css/zui.min.css?v1.10.0">
     <link rel="stylesheet" href="./../public/static/nprogress/nprogress.min.css?v1.10.0">
-    <script type="application/javascript" src="./../public/static/zui/lib/jquery/jquery-3.6.0.min.js?v3.4.1"></script>
+    <script type="application/javascript" src="./../public/static/zui/lib/jquery/jquery-3.6.4.min.js?v3.6.4"></script>
     <script type="application/javascript" src="./../public/static/zui/js/zui.min.js?v1.10.0"></script>
     <script type="application/javascript" src="./../public/static/qrcode/qrcode.min.js?v2.0"></script>
     <script type="application/javascript" src="./../public/static/nprogress/nprogress.min.js"></script>
@@ -176,12 +176,9 @@ if ($state !== 'checked') {
         <hr>
         <div>
             <!-- 对话框触发按钮 -->
-            <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal">
-                <i class="icon icon-qrcode"></i>二维码 </a>
+            <a href="#" data-position="center" data-moveable="inside" data-moveable="true" data-toggle="modal" data-target="#myModal"><i class="icon icon-qrcode"></i>二维码 </a>
         </div>
-        <?php echo 'Copyright © 2018-' . date('Y'); ?>
-        <a href="https://png.cm/" target="_blank">EasyImage</a> By
-        <a href="https://blog.png.cm/902.html" target="_blank">Icret</a> Version:<a href="https://github.com/icret/EasyImages2.0" target="_blank"><?php echo APP_VERSION; ?></a>
+        <?php echo 'Copyright © 2018' . date('-Y'); ?> <a href="https://png.cm" target="_blank">EasyImage</a> By Icret Version:<a href="https://github.com/icret/EasyImages2.0" target="_blank"> <?php echo APP_VERSION; ?></a>
     </footer>
 </body>
 
