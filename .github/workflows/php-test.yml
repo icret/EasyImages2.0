@@ -1,0 +1,43 @@
+
+name: PHP Unit Tests across Multiple Versions
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        php-version: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2] # 指定要测试的PHP版本
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        tools: composer:v2
+        coverage: none # 如果不需要覆盖率报告可以设置为none
+
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-interaction --no-progress --no-suggest
+
+    - name: Run PHPUnit Tests
+      run: vendor/bin/phpunit
+      env:
+        CI: true
+
+    - name: Upload Test Results (if failure)
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.php-version }}
+        path: build/logs # 假设你的测试结果存储在build/logs目录下
