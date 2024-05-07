@@ -24,7 +24,7 @@
 // 设置html为utf8
 header('Content-Type:text/html;charset=utf-8');
 // 定义根目录
-define('APP_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')));
+define('APP_ROOT', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__) . '/../')));
 // 时区设置 https://www.php.net/manual/zh/timezones.php
 require_once APP_ROOT . '/config/config.php';
 empty($config['timezone']) ? date_default_timezone_set('Asia/Shanghai') : date_default_timezone_set($config['timezone']);

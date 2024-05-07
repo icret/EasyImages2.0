@@ -68,7 +68,7 @@ class Ip2Region
         $geo = $this->memorySearch($ip);
         $arr = explode('|', str_replace(['0|'], '|', isset($geo['region']) ? $geo['region'] : ''));
         if (($last = array_pop($arr)) === '内网IP') $last = '';
-        return join('', $arr) . (empty($last) ? '' : "[{$last}]");
+        return join('', $arr) . (empty($last) ? '' : "【{$last}】");
     }
 
     /**

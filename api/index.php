@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Verot\Upload;
 
 require_once __DIR__ . '/../app/function.php';
