@@ -64,7 +64,7 @@
 ## 鸣谢
  
 - [verot](https://github.com/verot/class.upload.php "verot" )
-- [ZUI](https://github.com/easysoft/zui "ZUI" )
+- [ZUI](https://github.com/easysoft/zui/tree/zui1 "ZUI" )
   
 ## 开源许可
 

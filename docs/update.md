@@ -1,10 +1,11 @@
-* 2024-05-07 v2.8.5
+* 2024-06-14 v2.8.5
 - 优化API示例
 - 优化二级目录使用
 - 修复对PHP8.2支持
 - 上传返回状态统一
 - 增加返回状态文档解释
 - 增加通过文件md5禁止上传
+- Fix [#114](https://github.com/icret/EasyImages2.0/issues/184)
 
 * 2024-01-20 v2.8.4
 - Fix [#163](https://github.com/icret/EasyImages2.0/pull/163)

@@ -331,18 +331,16 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                     type: "success", // 定义颜色主题 
                     icon: "ok-sign" // 定义消息图标
                   }).show();
-                  // 延时2秒刷新
-                  window.setTimeout(function() {
-                    window.location.reload();
-                  }, 1500)
                 } else {
                   new $.zui.Messager("删除失败 请登录后再删除!", {
                     type: "danger", // 定义颜色主题 
                     icon: "exclamation-sign" // 定义消息图标
                   }).show();
-                  // 延时2s跳转			
-                  window.setTimeout("window.location=\'/../admin/index.php \'", 2000);
                 }
+                // 延时2秒刷新
+                window.setTimeout(function() {
+                  window.location.reload();
+                }, 1500)
               });
           } else {
             new $.zui.Messager("取消删除", {

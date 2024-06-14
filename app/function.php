@@ -596,39 +596,13 @@ function getDel($url, $type)
     if (is_file($url) && strrpos($url, $config['path'])) {
         // 执行删除
         if (@unlink($url)) {
-            echo '
-			<script>
-            new $.zui.Messager("删除成功", {
-                type: "success", // 定义颜色主题 
-                icon: "ok-sign" // 定义消息图标
-            }).show();
-			// 延时5s跳转			
-            // window.setTimeout("window.location=\'/../ \'",5000);
-            </script>
-			';
+            return TRUE;
         } else {
-            echo '
-			<script>
-            new $.zui.Messager("删除失败", {
-                type: "black", // 定义颜色主题 
-                icon: "exclamation-sign" // 定义消息图标
-            }).show();
-            </script>
-			';
+            return FALSE;
         }
-    } else {
-        echo '
-		<script>
-		new $.zui.Messager("文件不存在", {
-            type: "danger", // 定义颜色主题 
-            icon: "question-sign" // 定义消息图标
-		}).show();
-		</script>
-		';
     }
-    // 清除查询
-    clearstatcache();
 }
+
 
 /**
  * 删除指定文件

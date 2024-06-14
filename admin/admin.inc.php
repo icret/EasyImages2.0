@@ -10,7 +10,7 @@ require_once APP_ROOT . '/config/config.guest.php';
 
 // 是否关闭图床设置
 if ($config['show_admin_inc'] === 0) {
-    echo '<h2 class="alert alert-danger">已关闭图床设置~~ <br><small>再次开启请修改config.php文件: <code>\'show_admin_inc\' => 1,</code></small></h2>';
+    echo '<h2 class="alert alert-danger">已关闭图床设置~~ <br><small>再次开启请修改<code>/config/config.php</code>文件的代码: <code>\'show_admin_inc\' => 1,</code></small></h2>';
     exit(require_once APP_ROOT  . '/app/footer.php');
 }
 
@@ -691,10 +691,10 @@ auto_delete(); //定时删除
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="switch switch-inline" data-toggle="tooltip" title="关闭后将不能进入后台设置<br/>再次开启需修改config.php: <code>'show_admin_inc'=>1,</code>">
+                            <div class="switch switch-inline" data-toggle="tooltip" title="关闭后将不能进入当前设置<br/>再次开启需修改config.php: <code>'show_admin_inc'=>1,</code>">
                                 <input type="hidden" name="show_admin_inc" value="0">
                                 <input type="checkbox" name="show_admin_inc" value="1" <?php if ($config['show_admin_inc']) echo 'checked="checked"'; ?>>
-                                <label style="font-weight: bold">关闭设置</label>
+                                <label style="font-weight: bold">开启设置</label>
                             </div>
                         </div>
                         <div class="col-md-2">

@@ -85,6 +85,14 @@ if (isset($_POST['del_url_array'])) {
         // FTP删除
         any_upload($del_url_array[$i], $del_url_array[$i], 'delete');
     }
+    echo json_encode(array(
+        'code' => 200,
+        'msg'  => '删除成功',
+        'type' => 'success',
+        'icon' => 'ok-sign',
+        'mode' => 'delete',
+        'url'  => $del_url_array
+    ), JSON_UNESCAPED_UNICODE);
 }
 
 // 广场 - 批量回收文件
