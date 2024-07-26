@@ -878,7 +878,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="#" onclick="ajax_post('<?php echo $filen_name; ?>','suspic_reimg')">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="#" onclick="ajax_post('<?php echo $file_path; ?>','delete')">删除</a>
                                 </td>
@@ -1224,7 +1224,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="#" onclick="ajax_post('<?php echo $filen_name; ?>','recycle_reimg')">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="#" onclick="ajax_post('<?php echo $file_path; ?>','delete')">删除</a>
                                 </td>
