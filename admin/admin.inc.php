@@ -106,7 +106,7 @@ if (isset($_GET['stop_token'])) {
         }).show();
         </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 // 删除Token
@@ -121,7 +121,7 @@ if (isset($_GET['delete_token'])) {
   }).show();
   </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 // 禁用用户
@@ -144,7 +144,7 @@ if (isset($_GET['stop_guest'])) {
         }).show();
         </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 
@@ -160,7 +160,7 @@ if (isset($_GET['delete_guest'])) {
   }).show();
   </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 //  添加管理员修改config.php
@@ -244,7 +244,7 @@ if (isset($_REQUEST['delDir'])) {
 		}).show();</script>';
     }
     // header("refresh:1;"); // 1s后刷新当前页面
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 auto_delete(); //定时删除
@@ -973,7 +973,7 @@ auto_delete(); //定时删除
                     <div class="btn-group">
                         <a class="btn btn-mini btn-primary" href="https://github.com/icret/EasyImages2.0/releases" target="_blank" data-toggle="tooltip" title="Releases Info">Github</a>
                         <a class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank" data-toggle="tooltip" title="① 下载后上传至网站更新">下载新版本</a>
-                        <a class="btn btn-mini btn-danger" href="#" id="post" onclick="ajax_post('/admin/logs/version/version.json','del_version_file')" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</a>
+                        <a class="btn btn-mini btn-danger" href="#" id="post" onclick="ajax_post('<?php echo $config['domain']; ?>/admin/logs/version/version.json','del_version_file')" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</a>
                     </div>
                 </div>
             <?php endif; ?>
@@ -1349,7 +1349,7 @@ auto_delete(); //定时删除
         </div>
         <div class="tab-pane fade" id="Content14">
             <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
-            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
+            <a class="btn btn-mini btn-primary" href="manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
             <a class="btn btn-mini btn-primary" href="filer.php?path=<?php echo $config['path'] . date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="POST" style="margin-bottom: 5px;">
@@ -1657,7 +1657,7 @@ auto_delete(); //定时删除
                         add_time: '<?php echo date('Y-m-d H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='#' onclick=\"ajax_post('<?php echo $value['id']; ?>','delDir')\" class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
+                        manage: "<a href='manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='#' onclick=\"ajax_post('<?php echo $value['id']; ?>','delDir')\" class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
                     },
                 <?php endforeach; ?>
             ]
@@ -1735,7 +1735,7 @@ auto_delete(); //定时删除
                         add_time: '<?php echo date('Y-m-d H:i:s', $v['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         files: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $k, $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo $k; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo $k; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $k; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='#' onclick=\"ajax_post('<?php echo $k; ?>','delDir')\">删除上传</a>",
+                        manage: "<a href='manager.php?p=<?php echo $k; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo $k; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $k; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='#' onclick=\"ajax_post('<?php echo $k; ?>','delDir')\">删除上传</a>",
                     },
                 <?php endforeach; ?>
             ]

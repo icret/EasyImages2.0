@@ -130,7 +130,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
                         <!-- <a class="btn btn-mini btn-primary" data-toggle="collapse" data-target="#collapseExample"><i class="icon icon-caret-down"> Exif</i></a> -->
                         <a class="btn btn-mini btn-primary" href="" onclick="window.location.replace;"><i class="icon icon-spin icon-refresh"></i> 刷新</a>
-                        <a class="btn btn-mini btn-primary" href="/app/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
+                        <a class="btn btn-mini btn-primary" href="down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
                         <?php if (!empty($config['report']) && !is_who_login('admin')) : ?>
                             <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
                         <?php endif; ?>
@@ -145,7 +145,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         <div class="collapse" id="collapseExample">
             <pre style="background-color: rgba(0, 0, 0, 0);" id="allMetaDataSpan"></pre>
         </div>
-        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请举报或联系管理员!</i></h4>
+        <h4 class="with-padding hl-gray"><i class="icon icon-info-sign"> 此图片来自网友上传, 不代表<a href="<?php echo $config['domain']; ?>/admin/terms.php" target="_blank">本站立场</a>, 若有侵权, 请举报或联系管理员!</i></h4>
     </div>
 </div>
 <div class="col-md-12" style="padding-bottom: 10px;">
