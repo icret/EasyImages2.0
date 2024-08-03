@@ -145,7 +145,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     </div>
     <!-- 按日期-->
     <div class="col-md-2 col-xs-5">
-      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+      <form action="" method="get">
         <div class="input-group">
           <span class="input-group-addon fix-border fix-padding"></span>
           <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
@@ -169,9 +169,12 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
   <script>
     // viewjs
-    new Viewer(document.getElementById('viewjs'), {
-      url: 'data-original',
-    });
+    const viewjsElement = document.getElementById('viewjs');
+    if (viewjsElement) {
+      new Viewer(viewjsElement, {
+        url: 'data-original',
+      });
+    }
 
     // POST 删除提交
     function ajax_post(url, mode = 'delete') {
