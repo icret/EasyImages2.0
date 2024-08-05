@@ -38,7 +38,7 @@ include_once __DIR__ . "/header.php";
     $('.Remove').on('click', function() {
 
         let Remove = $('.Remove').attr("id");
-        $.zui.store.remove(Remove); // 删除指定存储条目
+        $.zui.store.get("easy-image-history").remove(Remove); // 删除指定存储条目
 
         new $.zui.Messager('已删除 ' + Remove + ' 上传记录', {
             type: "success", // 定义颜色主题 
