@@ -1036,10 +1036,11 @@ function creat_thumbnail_by_list($imgUrl)
     global $config;
     ini_set('max_execution_time', '300'); // 脚本运行的时间（以秒为单位）0不限制
 
+    $extension = pathinfo($imgUrl, PATHINFO_EXTENSION);
     // 过滤非指定格式
-    if (!in_array(pathinfo($imgUrl, PATHINFO_EXTENSION), array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
-        // ico格式直接返回直链
-        if (pathinfo($imgUrl, PATHINFO_EXTENSION) === 'ico') return $imgUrl;
+    if (!in_array($extension, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
+        // ico和svg格式直接返回直链
+        if ($extension === 'ico' || $extension === 'svg') return $imgUrl;
         // 其他格式直接返回指定图标
         return '../public/images/file.svg';
     }
