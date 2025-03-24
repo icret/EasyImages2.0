@@ -59,4 +59,4 @@ for ($i = 0; $i < 5; $i++) {
 // 因为有些浏览器，访问的content-type会是文本型，所以我们需要设置成图片的格式类型
 header("content-type:image/png");
 imagepng($img); //建立png函数
-imagedestroy($image);
+imagedestroy($img);
