@@ -106,7 +106,7 @@ if (isset($_GET['stop_token'])) {
         }).show();
         </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 // 删除Token
@@ -121,7 +121,7 @@ if (isset($_GET['delete_token'])) {
   }).show();
   </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 // 禁用用户
@@ -144,7 +144,7 @@ if (isset($_GET['stop_guest'])) {
         }).show();
         </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 
@@ -160,7 +160,7 @@ if (isset($_GET['delete_guest'])) {
   }).show();
   </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 //  添加管理员修改config.php
@@ -244,7 +244,7 @@ if (isset($_REQUEST['delDir'])) {
 		}).show();</script>';
     }
     // header("refresh:1;"); // 1s后刷新当前页面
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 auto_delete(); //定时删除
@@ -272,7 +272,7 @@ auto_delete(); //定时删除
     </div>
     <div class="tab-content col-md-10 col-xs-8">
         <div class="tab-pane fade" id="Content1">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <div class="form-group">
                     <label>网站域名 | 末尾不加'/'</label>
                     <input type="url" class="form-control" name="domain" required="required" value="<?php echo $config['domain']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -324,7 +324,7 @@ auto_delete(); //定时删除
             </form>
         </div>
         <div class="tab-pane fade" id="Content2">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <div class="form-group col-md-12">
                     <div class="form-group col-md-1">
                         <label data-toggle="tooltip" title="前后需加'/'">存储目录</label>
@@ -391,8 +391,8 @@ auto_delete(); //定时删除
                         <input type="range" class="form-control" name="maxHeight" value="<?php echo $config['maxHeight']; ?>" min="1024" max="51200" step="1024" onchange="document.getElementById('maxHeight').innerHTML=value">
                     </div>
                     <div class="form-group col-md-6">
-                        <label>单文件最大上传(1-100MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
-                        <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="104857600" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
+                        <label>单文件最大上传(1-1024MB) | 当前: </label><label id="maxSize"><?php echo $config['maxSize'] / 1024 / 1024; ?></label><label>MB</label>
+                        <input type="range" class="form-control" name="maxSize" value="<?php echo $config['maxSize']; ?>" min="1048576" max="1073741824" step="1048576" onchange="document.getElementById('maxSize').innerHTML=value/1024/1024">
                     </div>
                     <div class="form-group col-md-6">
                         <label>最小上传宽度 | 当前: </label><label id="minWidth"><?php echo $config['minWidth']; ?></label><label>px</label>
@@ -410,7 +410,7 @@ auto_delete(); //定时删除
             </form>
         </div>
         <div class="tab-pane fade" id="Content3">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <div class="form-group">
                     <div class="switch switch-inline">
                         <input type="hidden" name="ad_top" value="0">
@@ -465,7 +465,7 @@ auto_delete(); //定时删除
         </div>
         <div class="tab-pane fade" id="Content5">
             <h5 class="header-dividing">外部KEY</h5>
-            <form class="form-condensed" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-bottom: 10px;">
+            <form class="form-condensed" action="" method="post" style="margin-bottom: 10px;">
                 <div class="form-group col-md-4">
                     <label for="TinyPng" data-toggle="tooltip" title="TinyPng 申请网址">TinyPng Key <a href="https://tinypng.com/developers" target="_blank"><i class="icon icon-external-link"></i></a></label>
                     <input type="text" class="form-control" id="TinyPng" name="TinyPng_key" value="<?php echo $config['TinyPng_key']; ?>" placeholder="填入压缩图片Key" data-toggle="tooltip" title="开启后会受服务器到https://tinypng.com 速度影响,国内不建议开启!" onkeyup="this.value=this.value.replace(/\s/g,'')">
@@ -492,7 +492,7 @@ auto_delete(); //定时删除
                 </div>
                 <div class="datagrid-container"></div>
             </div>
-            <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
+            <form class="form-inline" action="" method="post" style="margin-top: 10px;">
                 <div class="form-group">
                     <label for="add_modify_token" data-toggle="tooltip" title="当前的Token是实时生成的,如果需要修改只需要复制已存在的Token并修改有效期即可!">增加/修改Token: </label>
                     <input type="text" class="form-control" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
@@ -520,7 +520,7 @@ auto_delete(); //定时删除
                 </div>
                 <div class="col-md-3">
                     <h5 class="header-dividing" data-toggle="tooltip" title="仅限存储分类路径为 Y/m/d/ 格式<br/>且每天需要访问一次后台才执行<br/>先重命名要删除文件夹作为备份<br/>超过定时日期的2倍时间后再删除重命名的文件夹<br/>超过定时日期前和开启分离的文件夹不删除">定时删除 <small>设置<code>0</code>关闭</small></h5>
-                    <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                    <form action="" method="post">
                         <div class="input-group">
                             <span class="input-group-addon">天数</span>
                             <input type="number" name="auto_delete" class="form-control" min="0" placeholder="0" value="<?php echo $config['auto_delete']; ?>" required="required">
@@ -544,7 +544,7 @@ auto_delete(); //定时删除
             </div>
             <div class="col-md-12">
                 <h5 class="header-dividing"></h5>
-                <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+                <form action="" method="post">
                     <div class="form-group col-md-12">
                         <div class="form-group col-md-6 col-xs-12">
                             <label data-toggle="tooltip" title="请选择合适的缩略图生成方式">缩略图生成方式</label>
@@ -878,7 +878,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="#" onclick="ajax_post('<?php echo $filen_name; ?>','suspic_reimg')">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="#" onclick="ajax_post('<?php echo $file_path; ?>','delete')">删除</a>
                                 </td>
@@ -973,13 +973,13 @@ auto_delete(); //定时删除
                     <div class="btn-group">
                         <a class="btn btn-mini btn-primary" href="https://github.com/icret/EasyImages2.0/releases" target="_blank" data-toggle="tooltip" title="Releases Info">Github</a>
                         <a class="btn btn-mini btn-primary" href="<?php echo getVersion('zipball_url'); ?>" target="_blank" data-toggle="tooltip" title="① 下载后上传至网站更新">下载新版本</a>
-                        <a class="btn btn-mini btn-danger" href="#" id="post" onclick="ajax_post('/admin/logs/version/version.json','del_version_file')" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</a>
+                        <a class="btn btn-mini btn-danger" href="#" id="post" onclick="ajax_post('<?php echo $config['domain']; ?>/admin/logs/version/version.json','del_version_file')" data-toggle="tooltip" title="② 升级后获取新的版本信息">更新版本号</a>
                     </div>
                 </div>
             <?php endif; ?>
         </div>
         <div class="tab-pane fade" id="Content9">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <div class="form-group col-md-12">
                     <h5>上传后首选显示</h5>
                     <label class="radio-inline">
@@ -1089,7 +1089,7 @@ auto_delete(); //定时删除
         </div>
         <div class="tab-pane fade" id="Content10">
             <!-- 管理员账号 start-->
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return md5_post()">
+            <form action="" method="post" onsubmit="return md5_post()">
                 <h5 class="header-dividing">管理员账号<small> 不更改账号或者密码就不要保存</small></h5>
                 <div class="col-md-12">
                     <div class="form-group col-md-4">
@@ -1124,7 +1124,7 @@ auto_delete(); //定时删除
                 </div>
             </div>
             <!-- 上传用户管理 start-->
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return uploader_md5_post()">
+            <form action="" method="post" onsubmit="return uploader_md5_post()">
                 <h5 class="header-dividing">上传者账号<small> 账户只能用于上传</small></h5>
                 <div class="col-md-12">
                     <div class="form-group col-md-3">
@@ -1175,7 +1175,7 @@ auto_delete(); //定时删除
                 <div class="datagrid-container"></div>
             </div>
             <!-- 源图加密Key start-->
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <h5 class="header-dividing">源图保护Key<small> * 设定后请勿更改,否则所有加密链接失效</small></h5>
                 <div class="col-md-3">
                     <div class="input-control has-icon-left" style="margin-top: 5px;">
@@ -1224,7 +1224,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="#" onclick="ajax_post('<?php echo $filen_name; ?>','recycle_reimg')">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="#" onclick="ajax_post('<?php echo $file_path; ?>','delete')">删除</a>
                                 </td>
@@ -1237,7 +1237,7 @@ auto_delete(); //定时删除
             <button class="btn btn-mini btn-danger" onclick="ajax_post('/recycle/','delDir')"><?php echo $cache_num; ?>张 | 删除全部</button>
         </div>
         <div class="tab-pane fade" id="Content12">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <div class="form-group col-md-6">
                     <label>水印方式</label>
                     <select class="chosen-select form-control" name="watermark">
@@ -1288,7 +1288,7 @@ auto_delete(); //定时删除
             </form>
         </div>
         <div class="tab-pane fade" id="Content13">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <h5 class="header-dividing">前端裁剪/压缩 <small>优点:服务器无压力 缺点:PC配置低的会导致浏览器卡顿,偶现丢失方向信息,仅支持JPG</small></h5>
                 <div class="col-md-12">
                     <div class="form-group col-md-2">
@@ -1349,7 +1349,7 @@ auto_delete(); //定时删除
         </div>
         <div class="tab-pane fade" id="Content14">
             <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
-            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
+            <a class="btn btn-mini btn-primary" href="manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
             <a class="btn btn-mini btn-primary" href="filer.php?path=<?php echo $config['path'] . date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="POST" style="margin-bottom: 5px;">
@@ -1382,7 +1382,7 @@ auto_delete(); //定时删除
                 </div>
             </div>
             <h5 class="header-dividing">远程附件 <small> 将文件以FTP方式上传到第三方</small></h5>
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post">
+            <form action="" method="post">
                 <div class="col-md-12">
                     <div class="form-group col-md-2">
                         <div class="switch switch-inline">
@@ -1657,7 +1657,7 @@ auto_delete(); //定时删除
                         add_time: '<?php echo date('Y-m-d H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='#' onclick=\"ajax_post('<?php echo $value['id']; ?>','delDir')\" class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
+                        manage: "<a href='manager.php?p=<?php echo $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo $key; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='#' onclick=\"ajax_post('<?php echo $value['id']; ?>','delDir')\" class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
                     },
                 <?php endforeach; ?>
             ]
@@ -1735,7 +1735,7 @@ auto_delete(); //定时删除
                         add_time: '<?php echo date('Y-m-d H:i:s', $v['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         files: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $k, $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo $k; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo $k; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $k; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='#' onclick=\"ajax_post('<?php echo $k; ?>','delDir')\">删除上传</a>",
+                        manage: "<a href='manager.php?p=<?php echo $k; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo $k; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo $k; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='#' onclick=\"ajax_post('<?php echo $k; ?>','delDir')\">删除上传</a>",
                     },
                 <?php endforeach; ?>
             ]

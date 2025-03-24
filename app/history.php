@@ -19,9 +19,10 @@ include_once __DIR__ . "/header.php";
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/viewjs/viewer.min.js"></script>
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/clipboard/clipboard.min.js"></script>
 <script>
-    if ($.zui.store.length() > 1) {
-        console.log('saved: ' + $.zui.store.length()) // 获取总数
-        $.zui.store.forEach(function(key, value) { // 遍历所有本地存储的条目
+    let history = $.zui.store.get("easy-image-history");
+    if (history) {
+        console.log('saved: ' + Object.keys(history).length) // 获取总数
+        Object.entries(history).forEach(([key, value]) => {  // 遍历所有本地存储的条目
             console.log('url list: ' + value['url']) // 获取所有链接
             if (value['url'] !== undefined) {
                 let v_url = parseURL(value['url']); // 获取链接路径 console.log(parseURL(value['url']).path);
@@ -37,25 +38,32 @@ include_once __DIR__ . "/header.php";
     $('.Remove').on('click', function() {
 
         let Remove = $('.Remove').attr("id");
-        $.zui.store.remove(Remove); // 删除指定存储条目
+        let history = $.zui.store.get("easy-image-history");
+        if (history) {
+            // 删除对象中的指定键
+            delete history[Remove];
+            // 更新存储
+            $.zui.store.set("easy-image-history", history);
+            new $.zui.Messager('已删除 ' + Remove + ' 上传记录', {
+                type: "success", // 定义颜色主题
+                icon: "ok-sign" // 定义消息图标
+            }).show();
+        }
 
-        new $.zui.Messager('已删除 ' + Remove + ' 上传记录', {
-            type: "success", // 定义颜色主题 
-            icon: "ok-sign" // 定义消息图标
-        }).show();
-
-        setTimeout(location.reload.bind(location), 2000); // 延迟2秒刷新
+        setTimeout(location.reload.bind(location), 500); // 延迟5m秒刷新
     })
 
     // 清空所有本地存储的条目
     $('button').on('click', function() {
-        new $.zui.Messager('已清空' + $.zui.store.length() + "条历史记录", {
-            type: "success", // 定义颜色主题 
-            icon: "ok-sign" // 定义消息图标
-        }).show();
-
-        $.zui.store.clear(); // 清空上传记录
-        setTimeout(location.reload.bind(location), 2000); // 延迟2秒刷新
+        let history = $.zui.store.get("easy-image-history");
+        if (history) {
+            new $.zui.Messager('已清空' + Object.keys(history).length + "条历史记录", {
+                        type: "success", // 定义颜色主题
+                        icon: "ok-sign" // 定义消息图标
+            }).show();
+            $.zui.store.remove("easy-image-history"); // 清空上传记录
+            setTimeout(location.reload.bind(location), 500); // 延迟5m秒刷新
+        }
     })
 
     // 复制 文件名/URL

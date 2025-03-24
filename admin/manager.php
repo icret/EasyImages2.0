@@ -2108,7 +2108,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                            if (in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), array('gif', 'jpg', 'jpeg', 'png', 'bmp', 'ico', 'svg', 'webp', 'avif'))): ?>
                                 <?php $imagePreview = fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f); ?>
                                 <!-- 分组图片浏览 -->                             
-                                <a href="<?php echo $imagePreview;?>" data-toggle="lightbox" data-group="manager-group"><img src="/app/thumb.php?img=<?php echo parse_url($imagePreview)['path'];?>" class="img-rounded" width="100px" height="100px" alt="<?php echo fm_enc($f);?>"></a>
+                                <a href="<?php echo $imagePreview;?>" data-toggle="lightbox" data-group="manager-group"><img src="<?php echo $config['domain']; ?>/app/thumb.php?img=<?php echo parse_url($imagePreview)['path'];?>" class="img-rounded" width="100px" height="100px" alt="<?php echo fm_enc($f);?>"></a>
                            <?php else: ?>
                                 <a href="<?php echo $filelink ?>" title="<?php echo $f ?>">
                             <?php endif; ?>

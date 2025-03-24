@@ -67,9 +67,9 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                       <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a>
                       <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrl; ?>" data-toggle="tooltip" title="复制链接" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
                       <?php if ($config['show_exif_info'] || is_who_login('admin')) : ?>
-                        <a href="/app/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                        <a href="info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
                       <?php endif; ?>
-                      <a href="/app/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载文件" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
+                      <a href="down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载文件" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
                       <?php if (!empty($config['report'])) : ?>
                         <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报文件" style="margin-left:10px;"></i></a>
                       <?php endif; ?>
@@ -145,7 +145,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     </div>
     <!-- 按日期-->
     <div class="col-md-2 col-xs-5">
-      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+      <form action="" method="get">
         <div class="input-group">
           <span class="input-group-addon fix-border fix-padding"></span>
           <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
@@ -169,9 +169,12 @@ if ($config['ad_top']) echo $config['ad_top_info'];
   <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
   <script>
     // viewjs
-    new Viewer(document.getElementById('viewjs'), {
-      url: 'data-original',
-    });
+    const viewjsElement = document.getElementById('viewjs');
+    if (viewjsElement) {
+      new Viewer(viewjsElement, {
+        url: 'data-original',
+      });
+    }
 
     // POST 删除提交
     function ajax_post(url, mode = 'delete') {

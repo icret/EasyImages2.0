@@ -92,7 +92,16 @@ function uploadCopy(copyID, loadClass) {
 
                 try { // 储存上传记录
                     console.log('history localStorage success');
-                    $.zui.store.set(obj.srcName, obj)
+                    // 获取现有的上传记录
+                    let history = $.zui.store.get("easy-image-history");
+                    // 如果不存在，则初始化为一个空对象
+                    if (!history) {
+                        history = {};
+                    }
+                    // 将新的记录添加到对象中，键为 obj.srcName，值为 obj
+                    history[obj.srcName] = obj;
+                    // 更新本地存储
+                    $.zui.store.set("easy-image-history", history);
                 } catch (err) {
                     // 存储上传记录失败提示
                     $.zui.messager.show('存储上传记录失败' + err, { icon: 'bell', time: 4000, type: 'danger', placement: 'top' });
