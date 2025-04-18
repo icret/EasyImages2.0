@@ -244,13 +244,14 @@ function config_path($path = null)
     // php7.0 $path = $path ?? date('Y/m/d/');
 
     $img_path = $config['path'] . $path;
-
-    if (!is_dir($img_path)) {
-        @mkdir($img_path, 0755, true);
+    
+    //检查文件夹状态
+    $img_path_root = APP_ROOT . $img_path;
+    if (!is_dir($img_path_root)) {
+        @mkdir($img_path_root, 0755, true);
     }
-
-    if (!is_writable($img_path)) {
-        @chmod($img_path, 0755);
+    if (!is_writable($img_path_root)) {
+        @chmod($img_path_root, 0755);
     }
 
     return $img_path;
@@ -567,9 +568,17 @@ function urlHash($data, $mode, $key = null)
 
     $iv = 'sciCuBC7orQtDhTO';
     if ($mode) {
-        return openssl_decrypt(base64_decode($data), "AES-128-XTS", $key, 0, $iv);
+        //如果没有 OpenSSL 的则用 Base64 函数解码
+        if (function_exists('openssl_decrypt')){
+            return openssl_decrypt(base64_decode($data), "AES-128-XTS", $key, 0, $iv);
+        }
+        return base64_decode($data);
     } else {
-        return base64_encode(openssl_encrypt($data, "AES-128-XTS", $key, 0, $iv));
+        //如果没有 OpenSSL 的则用 Base64 函数编码
+        if (function_exists('openssl_encrypt')){
+            return base64_encode(openssl_encrypt($data, "AES-128-XTS", $key, 0, $iv));
+        }
+        return base64_encode($data);
     }
 }
 
