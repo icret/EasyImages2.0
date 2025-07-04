@@ -77,8 +77,10 @@ if ($handle->uploaded) {
 
     // 文件命名
     $handle->file_new_name_body = imgName($handle->file_src_name_body);
-    // 添加Token ID
-    $handle->file_name_body_add = '-' . $tokenID;
+    // 添加Token ID 2025-07-04 增加Token ID后缀开关
+    if ($config['token_suffix_ID']) {
+        $handle->file_name_body_add = '-' . $tokenID;
+    }
     // 最大上传限制
     $handle->file_max_size = $config['maxSize'];
     // 最大宽度

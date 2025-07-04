@@ -1,3 +1,11 @@
+*2025-07-04 v2.8.7
+- 增加token ID开关 [#241](https://github.com/icret/EasyImages2.0/issues/241)
+
+* 2025-03-25 v2.8.6
+* feat: 添加svg矢量图，主要是广场预览 by @zhendery in https://github.com/icret/EasyImages2.0/pull/224
+* 修改captcha.php中的一处笔误，会导致Nginx报错 by @HC3560 in https://github.com/icret/EasyImages2.0/pull/234
+
+
 * 2024-06-14 v2.8.5
 - 优化API示例
 - 优化二级目录使用

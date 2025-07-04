@@ -560,7 +560,7 @@ class RExplorer
             </ul>
             <!-- 右侧的导航项目 -->
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="your/nice/url">欢迎您, ' . $member['username'] . '</a></li>
+              <li><a href="#">欢迎您, ' . $member['username'] . '</a></li>
               <li><a href="?action=logout">注销</a></li>
             </ul>
           </div>

@@ -70,7 +70,9 @@ if (isset($_POST['update'])) {
 if (isset($_POST['add_token_id'])) {
     $postArr = array(
         $_POST['add_token'] => array(
-            'id' => $_POST['add_token_id'], 'expired' => $_POST['add_token_expired'] * 86400 + time(), 'add_time' => time()
+            'id' => $_POST['add_token_id'],
+            'expired' => $_POST['add_token_expired'] * 86400 + time(),
+            'add_time' => time()
         )
     );
     $new_config = array_replace($tokenList, $postArr);
@@ -483,7 +485,7 @@ auto_delete(); //定时删除
                 <button type="submit" class="btn btn-primary">保存KEY</button>
             </form>
             <h5 class="page-header">Token API 管理: <?php if (!$config['token_path_status']) echo '<small>* 部分按钮需开启Token分离才能激活, 删除后不可恢复</small>'; ?></h5>
-            <p class="text-primary">API调用地址: <code><?php echo $config['domain']; ?>/api/index.php</code></p>
+            <label class="text-primary">当前Token列表 <small><code>调用地址: <?php echo $config['domain']; ?>/api/index.php</code></small></label>
             <div id="myDataGrid" class="datagrid table-bordered">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right" id="searchboxExample2" style="margin-bottom: 10px;">
                     <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="搜索Token">
@@ -492,18 +494,34 @@ auto_delete(); //定时删除
                 </div>
                 <div class="datagrid-container"></div>
             </div>
-            <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
-                <div class="form-group">
-                    <label for="add_modify_token" data-toggle="tooltip" title="当前的Token是实时生成的,如果需要修改只需要复制已存在的Token并修改有效期即可!">增加/修改Token: </label>
-                    <input type="text" class="form-control" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
+            <div class="col-md-12">
+                <h5 class="page-header">增加Token</h5>
+                <div class="col-md-9">
+                    <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label for="add_modify_token" data-toggle="tooltip" title="当前的Token是实时生成的,如果需要修改只需要复制已存在的Token并修改有效期即可!">增加/修改Token: </label>
+                            <input type="text" class="form-control" id="add_modify_token" name="add_token" value="<?php echo privateToken(); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="add_modify_token_time" data-toggle="tooltip" title="正整数或负整数<br/>正整数设置有效期<br/>负整数(-1)设置过期">有效期 (天): </label>
+                            <input type="number" class="form-control" id="add_modify_token_time" name="add_token_expired" min="-1" value="30" required="required">
+                        </div>
+                        <input type="hidden" class="form-control" name="add_token_id" value="<?php echo count($tokenList); ?>" placeholder="隐藏的保存">
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="add_modify_token_time" data-toggle="tooltip" title="正整数或负整数<br/>正整数设置有效期<br/>负整数(-1)设置过期">有效期 (天): </label>
-                    <input type="number" class="form-control" id="add_modify_token_time" name="add_token_expired" min="-1" value="30" required="required">
+                <div class="col-md-3">
+                    <form class="form-inline" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" style="margin-top: 10px;">
+                        <div class="switch switch-inline" data-toggle="tooltip" title="上传的图片名称后缀添加Token ID" data-original-title="上传的图片名称后缀添加Token ID">
+                            <input type="hidden" name="token_suffix_ID" value="0">
+                            <input type="checkbox" name="token_suffix_ID" value="1" <?php if ($config['token_suffix_ID']) echo 'checked="checked"'; ?>>
+                            <label style="font-weight: bold">suffix ID</label>
+                        </div>
+                        <input type="hidden" class="form-control" name="update" value="<?php echo date("Y-m-d H:i:s"); ?>" placeholder="隐藏的保存">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </form>
                 </div>
-                <input type="hidden" class="form-control" name="add_token_id" value="<?php echo count($tokenList); ?>" placeholder="隐藏的保存">
-                <button type="submit" class="btn btn-primary">添加</button>
-            </form>
+            </div>
         </div>
         <div class="tab-pane fade" id="Content6">
             <div class="col-md-12">
