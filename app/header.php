@@ -1,7 +1,9 @@
+<?php
+ob_start();
+require_once __DIR__ . '/function.php';
+?>
 <!DOCTYPE html>
 <html lang="zh-cn">
-<?php require_once __DIR__ . '/function.php'; ?>
-
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
