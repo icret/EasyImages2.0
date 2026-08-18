@@ -8,10 +8,10 @@ require_once APP_ROOT . '/config/config.guest.php';
 
 // 退出
 if (isset($_GET['login'])) {
-    if ($_GET['login'] = 'logout') {
+    if ($_GET['login'] == 'logout') {
 
         if (isset($_COOKIE['auth'])) {
-            setcookie('auth', null, time() - 1, '/');
+            setcookie('auth', '', time() - 1, '/');
             header("Refresh:2;url=../index.php");
             echo '
 				<script>
