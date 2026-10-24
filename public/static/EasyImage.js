@@ -182,15 +182,3 @@ function readTxt(filePath = '../admin/version.php') {
         });
     });
 }
-
-/**
- * JS验证是否为URL 这是提取自：npm包 async-validator的源码。
- * 参考: https://www.cnblogs.com/lanleiming/p/14250497.html
- * @param {*} str
- * @returns
- * @example isUrl('http://www.baidu.com') // true
- */
-function isUrl(str) {
-    var v = new RegExp('^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$', 'i');
-    return v.test(str);
-}
