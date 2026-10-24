@@ -47,7 +47,8 @@ $use_highlightjs = true;
 $highlightjs_style = 'vs';
 
 // Enable ace.js (https://ace.c9.io/) on view's page
-$edit_files = true;
+// 安全：关闭在线编辑，禁止在存储目录内改写文件内容（与 manager.php 安全钳制对齐）
+$edit_files = false;
 
 // Default timezone for date() and time()
 // Doc - http://php.net/manual/en/timezones.php
@@ -56,8 +57,8 @@ $default_timezone = 'Asia/Shanghai'; // UTC
 
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
-// 管理的目录
-$root_path = $_SERVER['DOCUMENT_ROOT'] . $config['path'];
+// 管理的目录（收敛到图片存储目录，不用可被虚拟主机改写的 DOCUMENT_ROOT；与 manager.php 安全钳制对齐）
+$root_path = APP_ROOT . $config['path'];
 
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
@@ -83,13 +84,13 @@ $datetime_format = 'Y.m.d H:i:s';
 
 // Allowed file extensions for create and rename files
 // e.g. 'txt,html,css,js'
-// 允许创建的文件格式
-$allowed_file_extensions = '';
+// 允许创建的文件格式（对齐主配置图片白名单，禁脚本类扩展名；与 manager.php 安全钳制对齐）
+$allowed_file_extensions = $config['extensions'];
 
 // Allowed file extensions for upload files
 // e.g. 'gif,png,jpg,html,txt'
-// 允许上传的文件格式
-$allowed_upload_extensions = '';
+// 允许上传的文件格式（对齐主配置图片白名单，禁脚本类扩展名；与 manager.php 安全钳制对齐）
+$allowed_upload_extensions = $config['extensions'];
 
 // Favicon path. This can be either a full url to an .PNG image, or a path based on the document root.
 // full path, e.g http://example.com/favicon.png
