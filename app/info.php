@@ -3,16 +3,24 @@ include_once __DIR__ . "/header.php";
 
 if (!$config['show_exif_info'] && !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?exif#closed'));
 
-// 获取图片地址
-if (isset($_GET['img'])) {
+// 获取图片地址（收敛到存储目录，防止路径穿越）
+if (isset($_GET['img']) || isset($_GET['history'])) {
     // 过滤特殊符号
-    $getIMG = strip_tags($_GET['img']);
-} elseif (isset($_GET['history'])) {
-    // 过滤特殊符号
-    if ($config['hide_path']) {
-        $getIMG = $config['path'] . ltrim(strip_tags($_GET['history']), '/');
-    } else {
-        $getIMG = strip_tags($_GET['history']);
+    $paramIMG = strip_tags(isset($_GET['img']) ? $_GET['img'] : $_GET['history']);
+    // 路径收敛
+    $error = null;
+    $getIMG = resolve_image_path($paramIMG, $error, 'file', true);
+
+    // 拒绝越界与穿越
+    if (in_array($error, array('traversal', 'outside'), true)) {
+        http_response_code(403);
+        exit('No Premitted');
+    }
+
+    // 参数非法或图片不存在，回落404图
+    if ($getIMG === false) {
+        http_response_code(404);
+        $getIMG = "/public/images/404.png";
     }
 } else {
     // 未获取到图片地址
@@ -130,13 +138,13 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                         <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
                         <!-- <a class="btn btn-mini btn-primary" data-toggle="collapse" data-target="#collapseExample"><i class="icon icon-caret-down"> Exif</i></a> -->
                         <a class="btn btn-mini btn-primary" href="" onclick="window.location.replace;"><i class="icon icon-spin icon-refresh"></i> 刷新</a>
-                        <a class="btn btn-mini btn-primary" href="/app/down.php?dw=<?php echo  $getIMG; ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
+                        <a class="btn btn-mini btn-primary" href="/app/down.php?dw=<?php echo htmlspecialchars($getIMG, ENT_QUOTES); ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
                         <?php if (!empty($config['report']) && !is_who_login('admin')) : ?>
                             <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
                         <?php endif; ?>
                         <?php if (is_who_login('admin')) : ?>
-                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post('<?php echo $getIMG; ?>','recycle')"><i class="icon icon-undo"> 回收</i></a>
-                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post('<?php echo $getIMG; ?>')"><i class="icon icon-trash"> 删除</i></a>
+                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post('<?php echo htmlspecialchars($getIMG, ENT_QUOTES); ?>','recycle')"><i class="icon icon-undo"> 回收</i></a>
+                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post('<?php echo htmlspecialchars($getIMG, ENT_QUOTES); ?>')"><i class="icon icon-trash"> 删除</i></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -189,9 +197,9 @@ if ($config['ad_top']) echo $config['ad_top_info'];
             <?php if ($logs[$logsName]['port'] != 0) : for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1) ?>
 
                     <div class="col-md-3">
-                        <a class="card" href="?img=<?php echo $logs[$randName]['path']; ?>" target="_blank">
-                            <img src="thumb.php?img=<?php echo $logs[$randName]['path']; ?>" width="100%">
-                            <div class="caption"><?php echo  $logs[$randName]['source']; ?></div>
+                        <a class="card" href="?img=<?php echo htmlspecialchars($logs[$randName]['path'], ENT_QUOTES); ?>" target="_blank">
+                            <img src="thumb.php?img=<?php echo htmlspecialchars($logs[$randName]['path'], ENT_QUOTES); ?>" width="100%">
+                            <div class="caption"><?php echo htmlspecialchars($logs[$randName]['source']); ?></div>
                         </a>
                     </div>
                 <?php endfor; ?>

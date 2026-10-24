@@ -231,8 +231,11 @@ if (isset($_POST['uploader_form'])) {
 
 // 删除非空目录
 if (isset($_REQUEST['delDir'])) {
-    $delDir = APP_ROOT . $config['path'] . $_REQUEST['delDir'];
-    if (deldir($delDir)) {
+    // 目录收敛，防止删除路径穿越
+    $error = null;
+    $safeDir = resolve_image_path($_REQUEST['delDir'], $error, 'dir');
+    $delDir = $safeDir === false ? null : APP_ROOT . $safeDir;
+    if ($delDir !== null && deldir($delDir)) {
         echo '
 		<script> new $.zui.Messager("删除成功! ", {
 			type: "success", // 定义颜色主题 

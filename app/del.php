@@ -22,8 +22,34 @@ if (empty($_REQUEST)) {
 
 // 解密删除
 if (isset($_GET['hash'])) {
-    $delHash = $_GET['hash'];
-    $delHash = urlHash($delHash, 1);
+    // 解密并收敛路径，防止解密结果被构造成路径穿越
+    $error = null;
+    $delHash = resolve_image_path(urlHash($_GET['hash'], 1, 'del'), $error);
+
+    // 拒绝越界与穿越
+    if (in_array($error, array('traversal', 'outside'), true)) {
+        http_response_code(403);
+        exit(json_encode(array(
+            'code' => 403,
+            'msg'  => '非法路径',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => null
+        ), JSON_UNESCAPED_UNICODE));
+    }
+
+    // 文件不存在
+    if ($delHash === false) {
+        exit(json_encode(array(
+            'code' => 404,
+            'msg'  => '文件不存在',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => null
+        ), JSON_UNESCAPED_UNICODE));
+    }
 
     if ($config['image_recycl']) {
         // 如果开启回收站则进入回收站
@@ -135,8 +161,11 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'delete') {
 
 // 广场|日志 - 回收文件
 if (isset($_POST['mode']) && $_POST['mode'] === 'recycle') {
-    if (is_file(APP_ROOT . $postURL)) {
-        checkImg($postURL, 3);
+    // 路径收敛到存储目录，避免用任意路径探测站点文件存在性
+    $error = null;
+    $recyclePath = resolve_image_path($postURL, $error);
+    if ($recyclePath !== false && is_file(APP_ROOT . $recyclePath)) {
+        checkImg($recyclePath, 3);
         exit(json_encode(array(
             'code' => 200,
             'msg' => '回收成功',
@@ -160,7 +189,12 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'recycle') {
 // 管理页面 - 删除版本信息文件
 if (isset($_POST['mode']) && $_POST['mode'] === 'del_version_file') {
     try {
-        @unlink(APP_ROOT . $postURL);
+        // 只删除固定的版本信息文件，不接受用户传入路径（防止管理员态删除站点任意文件）
+        $delFile = '/admin/logs/version/version.json';
+        if (!is_file(APP_ROOT . $delFile)) {
+            throw new Exception('版本信息文件不存在');
+        }
+        @unlink(APP_ROOT . $delFile);
         $re = json_encode(array(
             'code' => 200,
             'msg'  => '删除成功',
@@ -245,7 +279,13 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'suspic_reimg') {
 // 管理页面 - 删除非空目录
 if (isset($_POST['mode']) && $_POST['mode'] === 'delDir') {
     try {
-        $delDir = APP_ROOT . $config['path'] . $postURL; // 限制删除目录
+        // 目录收敛，限制删除目录只能在存储目录内
+        $error = null;
+        $safeDir = resolve_image_path($postURL, $error, 'dir');
+        if ($safeDir === false) {
+            throw new Exception('删除文件夹不存在或路径非法');
+        }
+        $delDir = APP_ROOT . $safeDir;
         if (deldir($delDir)) {
             $re = json_encode(array(
                 'code' => 200,
@@ -274,7 +314,20 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'delDir') {
 
 // 管理页面 - 删除指定日期文件夹
 if (isset($_POST['dateDir'])) {
-    $delDir = APP_ROOT . $config['path'] . $_POST['dateDir'];
+    // 目录收敛，限制删除目录只能在存储目录内
+    $error = null;
+    $safeDir = resolve_image_path($_POST['dateDir'], $error, 'dir');
+    if ($safeDir === false) {
+        exit(json_encode(array(
+            'code' => 404,
+            'msg'  => '删除文件夹不存在或路径非法',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delDir',
+            'url'  => null
+        ), JSON_UNESCAPED_UNICODE));
+    }
+    $delDir = APP_ROOT . $safeDir;
     if (deldir($delDir)) {
         echo json_encode(array(
             'code' => 200,

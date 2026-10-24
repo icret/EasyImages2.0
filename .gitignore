@@ -30,3 +30,9 @@ node_modules/
 *.phar
 
 AGENTS.md
+.codegraph/
+
+# ---- 图床运行时产物（存储目录内，不入库） ----
+i/cache/
+i/recycle/
+i/2*/

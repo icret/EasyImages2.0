@@ -9,15 +9,26 @@
 
 require_once __DIR__ . '/function.php';
 
+$real_path = null;
+
 if (isset($_GET['key'])) {
     $hide_original = $_GET['key'];
-    $real_path =  APP_ROOT . urlHash($hide_original, 1, crc32($config['hide_key']));
-} else {
-    $real_path = APP_ROOT . '/public/images/404.png';
+
+    // 解密并收敛路径，防止解密结果被构造成路径穿越
+    $error = null;
+    $hidePath = resolve_image_path(urlHash($hide_original, 1, 'hide'), $error);
+
+    // 拒绝越界与穿越
+    if (in_array($error, array('traversal', 'outside'), true)) {
+        http_response_code(403);
+        exit('No Premitted');
+    }
+
+    $real_path = $hidePath === false ? null : APP_ROOT . $hidePath;
 }
 
 // 文件不存在
-if (!is_file($real_path)) {
+if ($real_path === null || !is_file($real_path)) {
     $real_path = APP_ROOT . '/public/images/404.png';
 }
 

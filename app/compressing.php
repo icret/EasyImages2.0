@@ -15,25 +15,25 @@ if (!is_who_login('admin')) {
 // 文件夹压缩
 if (isset($_POST['folder'])) {
 
-    $getFolder = urldecode($_POST['folder']);
-
-    $source = $_POST['folder'];
-
     $type = $_POST['type'];
 
-    $folder =  '..' . $config['path'] . $getFolder;
+    // 目录收敛，只能压缩存储目录内的目录
+    $error = null;
+    $safeFolder = resolve_image_path($_POST['folder'], $error, 'dir');
 
-    if (!is_dir($folder)) {
-        exit($folder . '<script> new $.zui.Messager("没有这个文件夹!", {
+    if ($safeFolder === false) {
+        exit('<script> new $.zui.Messager("没有这个文件夹!", {
 			type: "danger", // 定义颜色主题 
 			icon: "exclamation-sign" // 定义消息图标
 			}).show();</script>');
     }
 
+    $folder = APP_ROOT . $safeFolder . '/';
+
     // 压缩前
     $sizeBefor = getDirectorySize($folder);
 
-    compress($folder, $type, $source);
+    compress($folder, $type);
 
     echo '
     <script> new $.zui.Messager("压缩完毕!", {

@@ -32,13 +32,14 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         }
       }
 
-      $path = preg_replace("/^d{4}-d{2}-d{2} d{2}:d{2}:d{2}$/s", "", trim($path));                      // 过滤非日期，删除空格
+      // 日期目录只允许数字、斜杠与短横线，过滤非日期并防止路径穿越
+      $path = preg_match('#^\d[\d/\-]*$#', trim($path)) ? trim($path) : date('Y/m/d/');
       $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
       $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
       // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
       $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
       $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
-      $allUploud = isset($_GET['date']) ? $_GET['date'] : date('Y/m/d/');
+      $allUploud = $path;                                                                                // 当前浏览日期
       $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');                 // 当前日期全部上传
       $httpUrl = array('date' => $path, 'num' => getFileNumber(APP_ROOT . config_path($path)));         // 组合url
 

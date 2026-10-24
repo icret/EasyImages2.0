@@ -92,10 +92,11 @@ function _login($user = null, $password = null)
         }
         // 存在cookie
         if (isset($_COOKIE['auth'])) {
-            $browser_cookie = json_decode($_COOKIE['auth']);
+            // 以关联数组解码，避免对象型 cookie 触发致命错误（CWE-248）
+            $browser_cookie = json_decode($_COOKIE['auth'], true);
 
-            // cookie无法读取
-            if (!$browser_cookie) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '登录已过期,请重新登录'));
+            // cookie无法读取或格式非法（非数组、缺少账号或密码字段、类型错误）
+            if (!is_array($browser_cookie) || !isset($browser_cookie[0], $browser_cookie[1]) || !is_scalar($browser_cookie[0]) || !is_scalar($browser_cookie[1])) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '登录已过期,请重新登录'));
             // 判断账号是否存在
             if ($browser_cookie[0] !== $config['user'] && !array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
             // 判断是否管理员
@@ -117,11 +118,14 @@ function _login($user = null, $password = null)
     // 前端验证
     $user = strip_tags($user);
     $password = strip_tags($password);
+    // cookie 安全属性：HttpOnly 阻止脚本读取、SameSite=Lax 缓解 CSRF、Secure 仅在 HTTPS 链路下开启
+    $cookieSecure = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+    $cookieOptions = array('expires' => time() + 3600 * 24 * 14, 'path' => '/', 'secure' => $cookieSecure, 'httponly' => true, 'samesite' => 'Lax');
     // 是否管理员
     if ($user === $config['user'] && $password === $config['password']) {
         // 将账号密码序列化后存储
         $browser_cookie = json_encode(array($user, $password));
-        setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
+        setcookie('auth', $browser_cookie, $cookieOptions);
         return json_encode(array('code' => 200, 'level' => 1, 'messege' => '管理员登录成功'));
     }
     // 是否上传者
@@ -130,7 +134,7 @@ function _login($user = null, $password = null)
         if ($guestConfig[$user]['expired'] < time()) return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
         // 未过期设置cookie
         $browser_cookie = json_encode(array($user, $password));
-        setcookie('auth', $browser_cookie, time() + 3600 * 24 * 14, '/');
+        setcookie('auth', $browser_cookie, $cookieOptions);
         return json_encode(array('code' => 200, 'level' => 2, 'messege' => $user . '用户登录成功'));
     }
     // 检查账号是否存在
@@ -254,6 +258,108 @@ function config_path($path = null)
     }
 
     return $img_path;
+}
+
+/**
+ * 图片路径收敛，防止路径穿越（CWE-22）
+ * 拒绝含 ../ 的入参，用 realpath() 归一化后强制校验结果落在图片存储目录内。
+ * 删除、压缩、下载等写/取回操作一律限定在存储目录；仅显式传入 $allow_site_root
+ * 的只读展示端点（缩略图、详情页）在管理员登录时才额外放开站点根目录。
+ * @param string $input 请求参数中的图片路径，如 /i/2024/01/01/x.png 或 2024/01/01/x.png
+ * @param string $error 引用返回失败原因：invalid 参数非法、traversal 穿越、outside 越出允许目录、missing 不存在
+ * @param string $type 校验对象：file 文件（默认）、dir 目录
+ * @param bool $allow_site_root 仅只读展示端点置 true：管理员登录时放开站点根；写/取回端点保持默认 false
+ * @return string|false 合法返回以 / 开头的站点相对路径（可拼接 APP_ROOT），非法返回 false
+ */
+function resolve_image_path($input, &$error = null, $type = 'file', $allow_site_root = false)
+{
+    global $config;
+
+    $error = null;
+
+    // 解码并统一分隔符，去掉域名、协议、查询串与锚点
+    $clean = str_replace('\\', '/', rawurldecode((string) $input));
+    if (strpos($clean, "\0") !== false) {
+        $error = 'invalid';
+        return false;
+    }
+    $urlPath = parse_url($clean, PHP_URL_PATH);
+    if (!is_string($urlPath) || $urlPath === '') {
+        $error = 'invalid';
+        return false;
+    }
+
+    // 折叠重复斜杠并去除 ./ 段
+    $path = '/' . ltrim(preg_replace('#/+#', '/', $urlPath), '/');
+    $path = str_replace('/./', '/', $path);
+
+    // 拒绝父目录穿越
+    if (preg_match('#(^|/)\.\.(/|$)#', $path)) {
+        $error = 'traversal';
+        return false;
+    }
+
+    // 补齐存储目录前缀（隐藏存储路径时历史记录的路径不含 /i/）
+    $storage = '/' . trim($config['path'], '/') . '/';
+    // 站点根放行只对显式 opt-in 的只读端点、且当前为管理员时生效；写/取回端点恒限定在存储目录
+    $isAdmin = $allow_site_root && is_who_login('admin');
+
+    // 允许的根目录：图片存储目录，管理员追加站点根目录
+    $allowedBases = array(array(realpath(APP_ROOT . rtrim($storage, '/')), $storage));
+    if ($isAdmin) {
+        $allowedBases[] = array(realpath(APP_ROOT), '/');
+    }
+
+    // 待校验路径：普通访问一律先映射到存储目录内，管理员再保留原路径
+    $candidates = array(strncmp($path, $storage, strlen($storage)) === 0 ? $path : $storage . ltrim($path, '/'));
+    if ($isAdmin) {
+        $candidates[] = $path;
+    }
+
+    // 逐个用 realpath() 归一化（符号链接也在此步解析），并校验是否落在允许目录内
+    $checkType = $type === 'dir' ? 'is_dir' : 'is_file';
+    $error = 'missing';
+    foreach ($candidates as $candidate) {
+        $real = realpath(APP_ROOT . $candidate);
+        if ($real === false || !$checkType($real)) continue;
+        foreach ($allowedBases as $allowedBase) {
+            list($base, $prefix) = $allowedBase;
+            if ($base === false) continue;
+            $baseLen = strlen($base);
+            if (strncmp($real, $base, $baseLen) !== 0) continue;
+            if (isset($real[$baseLen]) && $real[$baseLen] !== '/' && $real[$baseLen] !== '\\') continue;
+            $error = null;
+            return rtrim($prefix, '/') . '/' . trim(str_replace('\\', '/', substr($real, $baseLen)), '/');
+        }
+        // 保留首个有意义的失败原因，避免后续候选把 outside 覆盖回 missing
+        if ($error === 'missing') $error = 'outside';
+    }
+
+    return false;
+}
+
+/**
+ * 判断已存在的路径（绝对或相对 APP_ROOT）归一化后是否落在图片存储目录内
+ * 用作删除、压缩等写操作前的边界校验
+ * @param string $path 待校验路径
+ * @return bool 在存储目录内|不在
+ */
+function is_within_storage($path)
+{
+    global $config;
+
+    $base = realpath(APP_ROOT . '/' . trim($config['path'], '/') . '/');
+    $real = realpath($path);
+    if ($base === false || $real === false) {
+        return false;
+    }
+
+    $baseLen = strlen($base);
+    if (strncmp($real, $base, $baseLen) !== 0) {
+        return false;
+    }
+
+    return !isset($real[$baseLen]) || $real[$baseLen] === '/' || $real[$baseLen] === '\\';
 }
 
 /**
@@ -553,25 +659,52 @@ function getDistUsed($number)
 }
 
 /**
- * 加密/解密图片路径
- * @param string $data 要加密的内容
- * @param int $mode =1或0 1解密 0加密
- * @param String $key 盐
+ * 图片路径能力令牌（源图保护链接 / 用户删除链接）
+ * 采用 AES-256-GCM 认证加密：密钥由 HKDF-SHA256 从配置密钥派生（不再截断为 crc32 的 32 位），
+ * 每次加密使用随机 IV，密文自带完整性标签，令牌不可伪造、不可篡改。
+ * hide 与 del 使用不同主密钥与派生上下文做域隔离，互不通用。
+ * 不向后兼容：旧版 base64(AES-128-XTS, crc32) 令牌一律解密失败并回落为无效。
+ * @param string $data    mode=0 时待加密的站点相对路径；mode=1 时待解密的 base64url 令牌
+ * @param int    $mode    1 解密 0 加密
+ * @param string $context 用途域：'hide' 从 hide_key 派生，'del'(默认) 从 password 派生
+ * @return string|false   加密返回 base64url 令牌；解密失败(篡改/密钥不符/格式错)返回 false
  */
-function urlHash($data, $mode, $key = null)
+function urlHash($data, $mode, $context = 'del')
 {
     global $config;
 
-    if (!$key) {
-        $key = crc32($config['password']);
+    // 主密钥按用途分域：删除令牌绑定管理员口令，源图保护令牌绑定 hide_key
+    $master = $context === 'hide'
+        ? ($config['hide_key'] ?? '')
+        : ($config['password'] ?? '');
+
+    // HKDF 派生 256-bit 密钥，info 绑定用途做域隔离
+    $key = hash_hkdf('sha256', $master, 32, 'EasyImages2.0:urlHash:' . $context);
+
+    $cipher = 'aes-256-gcm';
+    $tagLen = 16;
+    $ivLen = 12;
+
+    if ($mode) {
+        // 解密：令牌 = base64url( iv | tag | ciphertext )
+        $raw = base64_decode(strtr((string) $data, '-_', '+/'), true);
+        if ($raw === false || strlen($raw) < $ivLen + $tagLen + 1) {
+            return false;
+        }
+        $iv = substr($raw, 0, $ivLen);
+        $tag = substr($raw, $ivLen, $tagLen);
+        $ct = substr($raw, $ivLen + $tagLen);
+        // GCM 标签验证不通过（篡改或密钥不符）时 openssl_decrypt 返回 false
+        return openssl_decrypt($ct, $cipher, $key, OPENSSL_RAW_DATA, $iv, $tag);
     }
 
-    $iv = 'sciCuBC7orQtDhTO';
-    if ($mode) {
-        return openssl_decrypt(base64_decode($data), "AES-128-XTS", $key, 0, $iv);
-    } else {
-        return base64_encode(openssl_encrypt($data, "AES-128-XTS", $key, 0, $iv));
+    // 加密：随机 IV，输出 base64url(iv|tag|ct)
+    $iv = random_bytes($ivLen);
+    $ct = openssl_encrypt($data, $cipher, $key, OPENSSL_RAW_DATA, $iv, $tag, '', $tagLen);
+    if ($ct === false) {
+        return false;
     }
+    return rtrim(strtr(base64_encode($iv . $tag . $ct), '+/', '-_'), '=');
 }
 
 /**
@@ -593,8 +726,8 @@ function getDel($url, $type)
         $url = APP_ROOT . $url;
     }
 
-    // 文件是否存在 限制删除目录
-    if (is_file($url) && strrpos($url, $config['path'])) {
+    // 文件是否存在 限制只能删除存储目录内的文件
+    if (is_file($url) && is_within_storage($url)) {
         // 执行删除
         if (@unlink($url)) {
             return TRUE;
@@ -624,8 +757,8 @@ function easyimage_delete($url, $type)
         $url = APP_ROOT . $url;
     }
 
-    // 文件是否存在 限制删除目录
-    if (is_file($url) && strrpos($url, $config['path'])) {
+    // 文件是否存在 限制只能删除存储目录内的文件
+    if (is_file($url) && is_within_storage($url)) {
         // 执行删除
         if (@unlink($url)) {
             return TRUE;
@@ -923,7 +1056,13 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
 
     /** # 如果违规则移动图片到违规文件夹 */
     if ($bad_pic === true) {
-        $old_path = APP_ROOT . parse_url($imageUrl)['path'];   // 提交网址中的文件路径 /i/2021/10/29/p8vypd.png
+        $old_path = APP_ROOT . parse_url($imageUrl)['path'];   // 提交网址中的文件路径 /i/2021-10-29/p8vypd.png
+
+        // 限制只能处理存储目录内的文件，防止路径穿越移文件
+        if (!is_within_storage($old_path)) {
+            return false;
+        }
+
         $name = parse_url($imageUrl)['path'];                  // 获得图片的相对地址
         $name = str_replace($config['path'], '', $name);       // 去除 path目录
         $name = str_replace('/', '_', $name);                  // 文件名 2021_10_30_p8vypd.png
@@ -956,7 +1095,12 @@ function re_checkImg($name, $dir = 'suspic/')
 {
     global $config;
 
-    $fileToPath = str_replace('_', '/', $name);                 // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021/11/03/pbmn1a.jpg
+    // 待还原的图片名只能是扁平文件名，防止路径穿越
+    if ($name === '' || strpos($name, '/') !== false || strpos($name, '\\') !== false || strpos($name, '..') !== false) {
+        return false;
+    }
+
+    $fileToPath = str_replace('_', '/', $name);                 // 将图片名称还原为带路径的名称，eg:2021_11_03_pbmn1a.jpg =>2021-11-03/pbmn1a.jpg
     $now_path_file = APP_ROOT . $config['path'] . $dir . $name; // 当前图片绝对位置 */i/suspic/2021_10_30_p8vypd.png
     if (is_file($now_path_file)) {
         $to_file = APP_ROOT . $config['path'] . $fileToPath;    // 要还原图片的绝对位置 */i/2021/10/30/p8vypd.png

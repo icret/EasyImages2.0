@@ -56,7 +56,6 @@ define('DEFAULT_WIDTH', $config['thumbnail_w']);
 define('DEFAULT_HEIGHT', $config['thumbnail_h']);
 define('FILE_CACHE_PREFIX', 'EasyImage');
 define('DEFAULT_ZC', 0);
-
 define('MAX_WIDTH', 10240);
 define('MAX_HEIGHT', 10240);
 define('FILE_CACHE_DIRECTORY', APP_ROOT . $config['path'] . 'cache/');
@@ -77,32 +76,32 @@ $ALLOWED_SITES = array(
 /**
  * 修复无法生成生成webp动态图片的缩略图bug
  */
+// 404 文件
+$i404 = APP_ROOT . '/public/images/404.png';
+
 if (isset($_GET['img'])) {
 
     // 引入文件
     require_once __DIR__ . '/TimThumb.php';
-    $src = $_GET['img'];
 
-    // 重定向不包含存储路径的缩略图地址
-    if (!stristr($src, $config['path'])) {
-        $src = $config['path'] . $src;
-        header("Location:thumb.php?img=$src");
-        exit();
-    }
+    // 路径收敛，越界与穿越一律拒绝；只读缩略图在管理员登录时放开站点根（详情页 404 回落图需要）
+    $error = null;
+    $imgPath = resolve_image_path($_GET['img'], $error, 'file', true);
 
-    // 图片绝对路径
-    $src = APP_ROOT . $_GET['img'];
-    // 获取文件后缀
-    $ext =  pathinfo($src)['extension'];
-    // 404 文件
-    $i404 = APP_ROOT . '/public/images/404.png';
-
-    // 文件不存在
-    if (!is_file($src)) {
-        // 输出404
+    // 图片不存在或路径非法，按状态输出404图
+    if ($imgPath === false) {
+        http_response_code(in_array($error, array('traversal', 'outside'), true) ? 403 : 404);
         header("Content-type: image/png");
         exit(file_get_contents($i404, true));
     }
+
+    // 回写规范路径，TimThumb 内部同样读取该参数
+    $_GET['img'] = $imgPath;
+
+    // 图片绝对路径
+    $src = APP_ROOT . $imgPath;
+    // 获取文件后缀
+    $ext =  pathinfo($src, PATHINFO_EXTENSION);
 
     switch ($ext) {
         case 'ico':

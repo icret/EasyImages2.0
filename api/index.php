@@ -138,13 +138,13 @@ if ($handle->uploaded) {
         if ($config['hide_path']) {
             $imageUrl = str_replace($config['path'], '/', $imageUrl);
         }
-        // 源图保护 key值是由crc32加密的hide_key
+        // 源图保护 key：由 urlHash('hide') 认证加密的路径令牌
         if ($config['hide']) {
-            $imageUrl = $config['domain'] . '/app/hide.php?key=' . urlHash($pathIMG, 0, crc32($config['hide_key']));
+            $imageUrl = $config['domain'] . '/app/hide.php?key=' . urlHash($pathIMG, 0, 'hide');
         }
         // 删除文件链接
         if ($config['show_user_hash_del']) {
-            $delUrl = $config['domain'] . '/app/del.php?hash=' . urlHash($pathIMG, 0);
+            $delUrl = $config['domain'] . '/app/del.php?hash=' . urlHash($pathIMG, 0, 'del');
         } else {
             $delUrl = "Admin closed user delete";
         }
