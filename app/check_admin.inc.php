@@ -6,10 +6,10 @@ if (!ini_get('display_errors')) {
 }
 error_reporting(E_ALL);
 
-// 检查当前PHP版本是否大于7.0
-if (PHP_VERSION < 7) {
+// 检查当前PHP版本是否大于7.4
+if (PHP_VERSION < 7.4) {
     echo ' 
-    new $.zui.Messager("当前PHP版本<7.0, 部分功能受限!",{
+    new $.zui.Messager("当前PHP版本<7.4, 部分功能受限!",{
         type: "primary", // 定义颜色主题 
         time:2000
     }).show();

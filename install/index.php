@@ -5,7 +5,7 @@ clearstatcache();
 if (file_exists(APP_ROOT . '/config/install.lock')) {
     exit(header("Location:/../index.php"));
 }
-$phpEnv = (PHP_VERSION >= 5.6) ? true : false;
+$phpEnv = (PHP_VERSION >= 7.4) ? true : false;
 $fileinfo = extension_loaded('fileinfo') ? true : false;
 $gd = extension_loaded('gd') ? true :  false;
 $openssl = extension_loaded('openssl') ? true :  false;
@@ -74,7 +74,7 @@ function checkPASS($name)
         <tbody>
             <tr>
                 <td>PHP</td>
-                <td>PHP >= 5.6</td>
+                <td>PHP >= 7.4</td>
                 <td><?php checkPASS($phpEnv); ?></td>
             </tr>
             <tr>
@@ -94,7 +94,7 @@ function checkPASS($name)
             </tr>
             <tr>
                 <td>openssl</td>
-                <td>建议支持 | 生成加密删除url,需PHP>7.0</td>
+                <td>建议支持 | 生成加密删除url,需PHP>7.4</td>
                 <td> <?php checkPASS($openssl); ?></td>
             </tr>
             <tr>

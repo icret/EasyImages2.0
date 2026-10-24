@@ -22,7 +22,7 @@ file_put_contents(APP_ROOT . '/config/EasyIamge.lock', '安装环境检测锁定
             </div>
             <div class="modal-body">
                 <h4>说明:</h4>
-                <h5>1. 建议使用<span class="text-red">PHP7.0</span>及以上版本;</h5>
+                <h5>1. 建议使用<span class="text-red">PHP8.0</span>及以上版本;</h5>
                 <h5>2. 上传失败大部分是由于<span class="text-red">upload_max_filesize、post_max_size、文件权限</span>设置不正确;</h5>
                 <h5>3. 主要用到<span class="text-red">Fileinfo、GD、Openssl</span>扩展,如果缺失会导致无法访问管理面板以及上传/删除图片。</h5>
                 <hr />
