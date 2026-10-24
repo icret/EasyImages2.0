@@ -3,17 +3,19 @@
  * 登录页面
  */
 require_once __DIR__ . '/../app/function.php';
+// 安全：登录页在任何 HTML 输出前建立会话，确保 output_buffering=Off 时 Set-Cookie 仍有效
+_session_boot(true);
 require_once APP_ROOT . '/app/header.php';
 require_once APP_ROOT . '/config/config.guest.php';
 
 // 退出
-if (isset($_GET['login'])) {
-    if ($_GET['login'] = 'logout') {
-
-        if (isset($_COOKIE['auth'])) {
-            setcookie('auth', null, time() - 1, '/');
-            header("Refresh:2;url=../index.php");
-            echo '
+if (isset($_GET['login']) && $_GET['login'] === 'logout') {
+    // 登出前判断是否已登录（登出会销毁会话）
+    $was_logged = is_who_login('status');
+    _logout();
+    if ($was_logged) {
+        header("Refresh:2;url=../index.php");
+        echo '
 				<script>
 					new $.zui.Messager("退出成功", {
 						type: "success", // 定义颜色主题 
@@ -23,8 +25,8 @@ if (isset($_GET['login'])) {
 					window.setTimeout("window.location=\'../index.php\'",2000);
 				</script>
         ';
-        } else {
-            echo '
+    } else {
+        echo '
 				<script>
 				new $.zui.Messager("尚未登录", {
 					type: "danger", // 定义颜色主题 
@@ -34,7 +36,6 @@ if (isset($_GET['login'])) {
 				window.setTimeout("window.location=\'./index.php\'",2000);
 				</script>
         ';
-        }
     }
     exit(require_once APP_ROOT . '/app/footer.php');
 }
@@ -54,7 +55,6 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             </script>';
             exit(require_once APP_ROOT . '/app/footer.php');
         } else {
-            session_start();
             if (strtolower($_REQUEST['code']) !== $_SESSION['code']) {
                 echo '
                 <script>

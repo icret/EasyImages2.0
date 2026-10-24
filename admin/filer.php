@@ -8,35 +8,36 @@
 require_once __DIR__ . '/../app/function.php';
 require_once __DIR__ . '/../config/config.php';
 
-// 开启tinyfilemanager文件管理
+// 开启文件管理
 if (!$config['file_manage']) {
     require_once APP_ROOT . '/app/header.php';
     echo '<h4 class="alert alert-danger">文件管理已关闭~~</h4>';
     header("refresh:3;url=" . $config['domain'] . '?manag-closed');
     exit(require_once APP_ROOT . '/app/footer.php');
 }
+
+// 安全：统一鉴权，仅图床管理员登录态可进入，此处不再单独校验凭据
+if (!is_who_login('admin')) {
+    require_once APP_ROOT . '/app/header.php';
+    echo '<h4 class="alert alert-danger">还没有登陆哦~~</h4>';
+    header("refresh:3;url=" . $config['domain'] . "/admin/index.php");
+    exit(require_once APP_ROOT . '/app/footer.php');
+}
 /**结束 - 自定义修改 */
 
-// 目录绝对路径，结尾不加 `/`
-// RexHelper::$root = $_SERVER['DOCUMENT_ROOT'];
-RexHelper::$root = $_SERVER['DOCUMENT_ROOT'];
+// 安全：目录绝对路径收敛到图片存储目录，结尾不加 `/`（不再以站点根为根）
+RexHelper::$root = rtrim(APP_ROOT . $config['path'], '/\\');
 
+// 安全：文件排除规则（隐藏文件、脚本与配置文件不可见）
+RexHelper::$ignore_list = array('/^\./', '/\.php[0-9]?$/i', '/\.phtml$/i', '/\.phar$/i', '/\.user\.ini$/i');
 
-// 系统用户列表，密码类型 MD5
-RexHelper::$users[$config['user']] = array(
-    'password' => $config['password']
-);
+// 安全：图片类型口径与主配置 extensions 对齐（与 manager.php 一致，避免管理员扩充格式后此处误拒）
+RexHelper::$img_suff = array_values(array_filter(array_map('trim', explode(',', strtolower($config['extensions'])))));
 
-// 可编辑文件后缀，开头不加 `.`
-// RexHelper::$text_suff[] = "jsx";
-// RexHelper::$text_suff[] = "php5";
-
-// 文件排除规则，仅正则表达式
-RexHelper::$ignore_list = array(
-    '/^\.git|.php|.htaccess|robots.txt|favicon.ico|README.md/', '/^admin|api|app|config|docs|install|public/'
-);
-
-session_start();
+// 安全：登录身份继承图床管理员会话（会话已由 function.php 统一建立），不再二次输入凭据
+if (session_status() === PHP_SESSION_ACTIVE) {
+    $_SESSION[RexHelper::$ssid] = array('username' => $config['user']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-Hans-CN">
@@ -368,13 +369,7 @@ class RExplorer
             <div class="upload">
                 <form method="post" enctype="multipart/form-data" action="?action=upload&path=' . $path . '">
                     <div class="row mb-4">
-                        <label class="col-sm-2 col-form-label">远程 URL</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="url">
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <label class="col-sm-2 col-form-label">本地文件</label>
+                        <label class="col-sm-2 col-form-label">本地图片</label>
                         <div class="col-sm-10">
                             <input type="file" class="form-control" name="file">
                         </div>
@@ -554,8 +549,6 @@ class RExplorer
                 <li class="' . ($view == 'newdir' ? 'active' : '') . '"><a href="?view=newdir&path=' . $pdir . '">新建目录</a></li>
                 <li class="' . ($view == 'newfile' ? 'active' : '') . '"><a href="?view=newfile&path=' . $pdir . '">新建文件</a></li>
                 <li class="' . ($view == 'upload' ? 'active' : '') . '"><a href="?view=upload&path=' . $pdir . '">上传文件</a></li>
-                <li class="' . ($view == 'zip' ? 'active' : '') . '"><a href="?view=zip&path=' . $pdir . '">打包目录</a></li>
-                <li class="' . ($view == 'unzip' ? 'active' : '') . '"><a href="?view=unzip&path=' . $pdir . '">解压文件</a></li>
                 <li class="' . ($view == 'opreset' ? 'active' : '') . '"><a href="?action=opreset&path=' . $path . '">清空OPCache</a></li>
             </ul>
             <!-- 右侧的导航项目 -->
@@ -601,17 +594,20 @@ class RExplorer
     static function url_redirect($url, $sec, $msg = '')
     {
         $url = str_replace(array("\n", "\r"), '', $url);
+        // 安全：$url 含用户可控的 path，分别对 HTML 上下文转义、对 JS 字符串 json 编码（并转义 < > & ' 防从 <script> 逃逸），避免反射 XSS
+        $url_html = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+        $url_js = json_encode($url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         $msg = $sec == 1 ? '操作成功！' : '操作失败！';
         $cat = $sec == 1 ? 'success' : 'danger';
         echo '
             <div class="container pt-3">
                 <div class="alert alert-' . $cat . '" role="alert">
-                    ' . $msg . $sec . '秒后重定向到 ' . $url . '
+                    ' . $msg . $sec . '秒后重定向到 ' . $url_html . '
                 </div>
              </div>
             <script type="text/javascript">
                 setTimeout(function() {
-                    location.href = "' . $url . '";
+                    location.href = ' . $url_js . ';
                 }, ' . $sec * 1000 . ');
             </script>
         ';
@@ -677,8 +673,9 @@ class RexAction
      */
     static function act_newdir($path)
     {
-        $filename = G('filename');
-        if (!$filename) {
+        // 安全：目录名取信单层 basename，拒绝分隔符上溢与隐藏/空名
+        $filename = basename(str_replace('\\', '/', (string) G('filename')));
+        if ($filename === '' || $filename === '.' || $filename === '..' || strpos($filename, '.') === 0) {
             RExplorer::url_redirect('?path=' . $path, 2, '目录名称无效！');
         }
         $mode = intval(G('mode'), 8);
@@ -699,9 +696,13 @@ class RexAction
      */
     static function act_newfile($path)
     {
-        $filename = G('filename');
-        if (!$filename || strpos($filename, '.') === false) {
+        $filename = basename(str_replace('\\', '/', (string) G('filename')));
+        if ($filename === '' || strpos($filename, '.') === 0 || strpos($filename, '.') === false) {
             RExplorer::url_redirect('?path=' . $path, 2, '文件名或扩展名无效！');
+        }
+        // 安全：只允许在存储目录内创建图片类型文件，禁写脚本/配置
+        if (!RexHelper::is_image_name($filename)) {
+            RExplorer::url_redirect('?path=' . $path, 2, '仅允许创建图片文件！');
         }
         $content = G('content');
         $sapath = RexHelper::path_rtoa($path);
@@ -719,6 +720,10 @@ class RexAction
      */
     static function act_edit($path)
     {
+        // 安全：不再改写非图片文件内容，杜绝在线写入 WebShell
+        if (!RexHelper::is_image_name($path)) {
+            RExplorer::url_redirect('?path=' . dirname($path), 2, '不允许编辑该文件！');
+        }
         $content = G('content');
         $sapath = RexHelper::path_rtoa($path);
         if (file_put_contents($sapath, $content) !== false) {
@@ -756,27 +761,21 @@ class RexAction
     static function act_upload($path)
     {
         $sapath = RexHelper::path_rtoa($path);
-        // 从远程获取
-        if ($fileurl = G('url')) {
-            if ($data = file_get_contents($fileurl)) {
-                $target = $sapath . DIRECTORY_SEPARATOR . basename($fileurl);
-                if (file_put_contents($target, $data)) {
-                    RExplorer::url_redirect('?path=' . $path, 1);
-                }
-                RExplorer::url_redirect('?path=' . $path, 2, '保存文件失败');
-            }
-            RExplorer::url_redirect('?path=' . $path, 2, '获取源文件失败');
-        }
+        // 安全：远程 URL 拉取会引入 SSRF 与任意落盘面，能力关闭
         // 从本地上传
         if (!empty($_FILES['file'])) {
             if ($_FILES['file']['error']) {
                 $msg = '错误代码 ' . $_FILES['file']['error'];
                 RExplorer::url_redirect('?path=' . $path, 2, $msg);
             }
-            $target = $sapath . DIRECTORY_SEPARATOR . $_FILES['file']['name'];
+            $name = basename(str_replace('\\', '/', (string) $_FILES['file']['name']));
+            // 安全：仅接受图片类型，拒绝脚本/隐藏文件上溢
+            if ($name === '' || strpos($name, '.') === 0 || !RexHelper::is_image_name($name)) {
+                RExplorer::url_redirect('?path=' . $path, 2, '仅允许上传图片文件！');
+            }
+            $target = $sapath . DIRECTORY_SEPARATOR . $name;
             if (file_exists($target)) {
-                $msg = $_FILES['file']['name'] . ' 文件已存在！';
-                RExplorer::url_redirect('?path=' . $path, 2, $msg);
+                RExplorer::url_redirect('?path=' . $path, 2, $name . ' 文件已存在！');
             }
             if (@move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
                 RExplorer::url_redirect('?path=' . $path, 1);
@@ -793,13 +792,13 @@ class RexAction
      */
     static function act_rename($path)
     {
-        $filename = G('filename');
-        if (!$filename) {
+        $filename = basename(str_replace('\\', '/', (string) G('filename')));
+        if ($filename === '' || strpos($filename, '.') === 0) {
             RExplorer::url_redirect('?view=rename&path=' . $path, 2, '名称不能为空！');
         }
         $sapath = RexHelper::path_rtoa($path);
-        if (is_file($sapath) && strpos($filename, '.') === false) {
-            RExplorer::url_redirect('?view=rename&path=' . $path, 2, '文件扩展名无效！');
+        if (is_file($sapath) && !RexHelper::is_image_name($filename)) {
+            RExplorer::url_redirect('?view=rename&path=' . $path, 2, '仅允许重命名为图片文件！');
         }
         $target = dirname($sapath) . DIRECTORY_SEPARATOR . $filename;
         if (@rename($sapath, $target)) {
@@ -831,37 +830,8 @@ class RexAction
      */
     static function act_zip($path)
     {
-        $filename = G('filename');
-        if (!$filename || !strpos($filename, '.')) {
-            RExplorer::url_redirect('?path=' . $path, 2, '压缩文件名无效！');
-        }
-        $filename = RexHelper::path_rtoa($filename);
-        if (file_exists($filename)) {
-            RExplorer::url_redirect('?path=' . $path, 2, '压缩文件已存在！');
-        }
-        $content = G('content');
-        if (!$content) {
-            RExplorer::url_redirect('?path=' . $path, 2, '压缩内容无效！');
-        }
-        $include = array();
-        $exclude = array();
-        $items = explode(PHP_EOL, $content);
-        foreach ($items as $item) {
-            if (strpos($item, 'exclude ') === 0) {
-                $exclude[] = RexHelper::path_rtoa(trim(substr($item, 8)));
-            } else {
-                $include[] = RexHelper::path_rtoa($item);
-            }
-        }
-        if (empty($include)) {
-            RExplorer::url_redirect('?path=' . $path, 2, '压缩内容无效！');
-        }
-        $zip = new ZipHelper();
-        $trimpath =  RexHelper::path_rtoa(G('trimpath'));
-        if ($zip->zip($filename, $msg, $include, $exclude, $trimpath)) {
-            RExplorer::url_redirect('?path=' . $path, 1, $msg);
-        }
-        RExplorer::url_redirect('?path=' . $path, 2, $msg);
+        // 安全：打包会引入归档与后续解压（zip-slip）面，图床存储目录只存图片，能力关闭
+        RExplorer::url_redirect('?path=' . $path, 2, '打包能力已关闭！');
     }
 
     /**
@@ -870,21 +840,8 @@ class RexAction
      */
     static function act_unzip($path)
     {
-        $root = RexHelper::path_rtoa(G('root'));
-        $filename = RexHelper::path_rtoa(G('filename'));
-        if (!$filename) {
-            $msg = '压缩文件路径无效！';
-            RExplorer::url_redirect('?path=' . $path, 2, $msg);
-        }
-        if (!$root) {
-            $msg = '解压缩路径无效！';
-            RExplorer::url_redirect('?path=' . $path, 2, $msg);
-        }
-        $zip = new ZipHelper();
-        if ($zip->unzip($filename, $root, $msg)) {
-            RExplorer::url_redirect('?path=' . $path, 1, $msg);
-        }
-        RExplorer::url_redirect('?path=' . $path, 2, $msg);
+        // 安全：解压存在 zip-slip 写任意路径风险，能力关闭
+        RExplorer::url_redirect('?path=' . $path, 2, '解压能力已关闭！');
     }
 
     /**
@@ -954,11 +911,21 @@ class RexHelper
      */
     static function path_rtoa($path)
     {
-        $path = self::$root . DIRECTORY_SEPARATOR . trim($path, '/\\');
-        if (DIRECTORY_SEPARATOR != '/') {
-            return str_replace('/', DIRECTORY_SEPARATOR, $path);
+        // 安全：逐段规范化 '.'/'..'，'..' 仅回退根内层级，结构上无法越过存储目录
+        $parts = preg_split('#[\\\\/]+#', (string) $path, -1, PREG_SPLIT_NO_EMPTY);
+        $rel = array();
+        foreach ($parts as $segment) {
+            if ($segment === '.') {
+                continue;
+            }
+            if ($segment === '..') {
+                array_pop($rel);
+                continue;
+            }
+            $rel[] = $segment;
         }
-        return $path;
+        $abs = rtrim(self::$root, '/\\') . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $rel);
+        return str_replace('/', DIRECTORY_SEPARATOR, $abs);
     }
 
     /**
@@ -995,6 +962,21 @@ class RexHelper
             }
         }
         return false;
+    }
+
+    /**
+     * 安全：是否为存储目录内允许的图片文件（扩展名命中图片白名单）
+     * @param string $name 文件名或路径
+     * @return bool
+     */
+    static function is_image_name($name)
+    {
+        $base = basename(str_replace('\\', '/', (string) $name));
+        if ($base === '' || strpos($base, '.') === 0) {
+            return false;
+        }
+        $ext = strtolower(pathinfo($base, PATHINFO_EXTENSION));
+        return in_array($ext, self::$img_suff, true);
     }
 }
 

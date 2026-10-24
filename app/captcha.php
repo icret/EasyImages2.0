@@ -1,7 +1,7 @@
 <?php
-session_start(); //设置session
-
 require __DIR__ . "/function.php";
+// 安全：验证码需为匿名访客建立会话，统一走加固过的 Session 引导
+_session_boot(true);
 
 //创建背景画布
 $img_w = 305;

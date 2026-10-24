@@ -1,4 +1,34 @@
-<Files ~ ".php">
-Order allow,deny
-Deny from all
-</Files>
+# 图片存储目录：禁止脚本执行，仅允许静态图片访问（Nginx/Caddy 等价配置见 docs/安全配置.md）
+
+# 以 mod_php 运行时关闭 PHP 引擎
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+
+# 兜底：关闭 PATH_INFO 解析，避免 /i/x.jpg/evil.php 被当脚本执行（php-fpm/fastcgi 下 engine off 不生效）
+AcceptPathInfo Off
+
+# 拒绝可被服务端解析执行或改写配置的扩展名（Apache 2.4 与 2.2 兼容）
+<FilesMatch "(?i)\.(php[0-9]?|phtml|phps|pht|phar|pl|py|jsp|asp|aspx|sh|cgi|htaccess|user\.ini)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 拒绝访问点号开头的隐藏文件（.htaccess、.user.ini 等）
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

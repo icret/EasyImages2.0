@@ -3,6 +3,9 @@ require_once __DIR__ . '/base.php';
 require_once __DIR__ . '/WaterMask.php';
 require_once APP_ROOT . '/config/config.guest.php';
 
+// 安全：登录态改由服务端 Session 承载，鉴权 Cookie 不再携带任何凭据
+_session_boot();
+
 /**
  * 判断GIF图片是否为动态
  * @param $filename string 文件
@@ -79,118 +82,169 @@ function is_Gif_Webp_Animated($src)
  * 返回参数解析 code=>状态码 200成功，400失败; 登录用户级别level => 0无状态, 1管理员, 2上传者, messege => 提示信息
  */
 
+/**
+ * 安全：建立/复用服务端登录会话
+ * 默认仅当浏览器已持有会话Cookie时才启动（不给匿名访客创建会话）；$create=true 强制创建（登录/验证码）
+ * @param bool $create 是否强制建立会话
+ */
+function _session_boot($create = false)
+{
+    // API 等无状态入口定义该常量后跳过会话
+    if (defined('EASYIMAGE_NO_SESSION') || session_status() === PHP_SESSION_ACTIVE || headers_sent()) {
+        return;
+    }
+    $secure = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+    session_set_cookie_params(array(
+        'lifetime' => 0,
+        'path'     => '/',
+        'secure'   => $secure,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ));
+    ini_set('session.use_strict_mode', '1');
+    if ($create || isset($_COOKIE[session_name()])) {
+        @session_start();
+    }
+}
+
+/**
+ * 安全：建立登录态并轮换会话ID（防会话固定），凭据不进浏览器
+ * @param string $user 用户名
+ * @param int $level 级别 1管理员 2上传者
+ * @param string $messege 提示信息
+ * @return string json code/level/messege
+ */
+function _login_session($user, $level, $messege)
+{
+    _session_boot(true);
+    // 安全：会话未能建立（如 output_buffering=Off 且已有输出导致 headers_sent）时，不得谎报登录成功
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '会话建立失败，请检查 PHP 输出缓冲/Session 配置后重试'));
+    }
+    session_regenerate_id(true);
+    $_SESSION['easyimage_auth'] = array('user' => $user, 'level' => $level, 'time' => time());
+    // 安全：主动失效历史携带凭据的 auth cookie（若存在）
+    if (isset($_COOKIE['auth'])) {
+        setcookie('auth', '', time() - 42000, '/');
+        unset($_COOKIE['auth']);
+    }
+    return json_encode(array('code' => 200, 'level' => $level, 'messege' => $messege));
+}
+
+/**
+ * 安全：登出，销毁服务端登录态并使会话失效
+ */
+function _logout()
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        unset($_SESSION['easyimage_auth']);
+        $_SESSION = array();
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+        }
+        session_destroy();
+    }
+    // 安全：失效历史携带凭据的 auth cookie（若存在）
+    if (isset($_COOKIE['auth'])) {
+        setcookie('auth', '', time() - 42000, '/');
+        unset($_COOKIE['auth']);
+    }
+}
+
+/**
+ * 安全：当前登录用户名（来自服务端会话），未登录返回 null
+ * @return string|null
+ */
+function login_username()
+{
+    $auth = isset($_SESSION['easyimage_auth']) ? $_SESSION['easyimage_auth'] : null;
+    return (is_array($auth) && isset($auth['user'])) ? $auth['user'] : null;
+}
+
+/**
+ * 2023-01-06 校验登录
+ * @param $user String 登录用户名
+ * @param $password 登录密码
+ * 返回参数解析 code=>状态码 200成功，400失败; 登录用户级别level => 0无状态, 1管理员, 2上传者, messege => 提示信息
+ */
 function _login($user = null, $password = null)
 {
     global $config;
     global $guestConfig;
 
-    // cookie验证
+    // 会话验证（无凭据入参）
     if ($user === null and $password === null) {
-        // 无cookie
-        if (empty($_COOKIE['auth'])) {
+        _session_boot();
+        $auth = isset($_SESSION['easyimage_auth']) ? $_SESSION['easyimage_auth'] : null;
+        if (!is_array($auth) || !isset($auth['user'], $auth['level'])) {
             return json_encode(array('code' => 400, 'level' => 0, 'messege' => '请登录'));
         }
-        // 存在cookie
-        if (isset($_COOKIE['auth'])) {
-            // 以关联数组解码，避免对象型 cookie 触发致命错误（CWE-248）
-            $browser_cookie = json_decode($_COOKIE['auth'], true);
-
-            // cookie无法读取或格式非法（非数组、缺少账号或密码字段、类型错误）
-            if (!is_array($browser_cookie) || !isset($browser_cookie[0], $browser_cookie[1]) || !is_scalar($browser_cookie[0]) || !is_scalar($browser_cookie[1])) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '登录已过期,请重新登录'));
-            // 判断账号是否存在
-            if ($browser_cookie[0] !== $config['user'] && !array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
-            // 判断是否管理员
-            if ($browser_cookie[0] === $config['user'] && $browser_cookie[1] === $config['password']) return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
-            // 判断是否上传者
-            if (array_key_exists($browser_cookie[0], $guestConfig) && $browser_cookie[1] === $guestConfig[$browser_cookie[0]]['password']) {
-                // 判断上传者是否过期
-                if ($guestConfig[$browser_cookie[0]]['expired'] < time()) {
-                    // 上传者账户密码正确,但是账户过期
-                    return json_encode(array('code' => 400, 'level' => 0, 'messege' => $browser_cookie[0] . '账号已过期'));
-                }
-                return json_encode(array('code' => 200, 'level' => 2, 'messege' => $browser_cookie[0] . '用户已登录'));
-            }
-            // 账号存在,密码错误
-            if ($browser_cookie[0] === $config['user'] || array_key_exists($browser_cookie[0], $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
+        // 管理员：会话与配置身份一致
+        if ($auth['level'] === 1 && $auth['user'] === $config['user']) {
+            return json_encode(array('code' => 200, 'level' => 1, 'messege' => '尊敬的管理员'));
         }
+        // 上传者：账户仍存在且未过期
+        if ($auth['level'] === 2 && array_key_exists($auth['user'], $guestConfig)) {
+            if ($guestConfig[$auth['user']]['expired'] < time()) {
+                _logout();
+                return json_encode(array('code' => 400, 'level' => 0, 'messege' => $auth['user'] . '账号已过期'));
+            }
+            return json_encode(array('code' => 200, 'level' => 2, 'messege' => $auth['user'] . '用户已登录'));
+        }
+        // 会话与配置不一致（账号被删除/改名/降权），使会话失效
+        _logout();
+        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '登录已过期,请重新登录'));
     }
 
-    // 前端验证
+    // 前端登录验证
     $user = strip_tags($user);
     $password = strip_tags($password);
-    // cookie 安全属性：HttpOnly 阻止脚本读取、SameSite=Lax 缓解 CSRF、Secure 仅在 HTTPS 链路下开启
-    $cookieSecure = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
-    $cookieOptions = array('expires' => time() + 3600 * 24 * 14, 'path' => '/', 'secure' => $cookieSecure, 'httponly' => true, 'samesite' => 'Lax');
     // 是否管理员
     if ($user === $config['user'] && $password === $config['password']) {
-        // 将账号密码序列化后存储
-        $browser_cookie = json_encode(array($user, $password));
-        setcookie('auth', $browser_cookie, $cookieOptions);
-        return json_encode(array('code' => 200, 'level' => 1, 'messege' => '管理员登录成功'));
+        return _login_session($user, 1, '管理员登录成功');
     }
     // 是否上传者
     if (array_key_exists($user, $guestConfig) && $password === $guestConfig[$user]['password']) {
         // 上传者账号过期
-        if ($guestConfig[$user]['expired'] < time()) return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
-        // 未过期设置cookie
-        $browser_cookie = json_encode(array($user, $password));
-        setcookie('auth', $browser_cookie, $cookieOptions);
-        return json_encode(array('code' => 200, 'level' => 2, 'messege' => $user . '用户登录成功'));
+        if ($guestConfig[$user]['expired'] < time()) {
+            return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
+        }
+        return _login_session($user, 2, $user . '用户登录成功');
     }
-    // 检查账号是否存在
-    if (array_key_exists($user, $guestConfig) || $user === $config['user']) {
-        // 账号存在,密码错误
-        if ($user === $config['user'] || array_key_exists($user, $guestConfig)) return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
-    } else {
-        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
+    // 账号存在但密码错误 / 账号不存在
+    if ($user === $config['user'] || array_key_exists($user, $guestConfig)) {
+        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
     }
-
-    // 未知错误
-    return json_encode(array('code' => 400, 'level' => 0, 'messege' => '未知错误'));
+    return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
 }
 
 /**
- * 校验登录 2023-01-05弃用
+ * 校验登录状态码（保留旧返回码语义，改由服务端会话推导）
+ * @return int 201未登录 203无效 204管理员 205上传者 206过期
  */
 function checkLogin()
 {
-    global $guestConfig;
     global $config;
+    global $guestConfig;
 
-    // 无cookie
-    if (empty($_COOKIE['auth'])) {
+    _session_boot();
+    $auth = isset($_SESSION['easyimage_auth']) ? $_SESSION['easyimage_auth'] : null;
+    if (!is_array($auth) || !isset($auth['user'], $auth['level'])) {
         return 201;
     }
-
-    // 存在cookie
-    if (isset($_COOKIE['auth'])) {
-
-        $getCOK = json_decode($_COOKIE['auth']);
-
-        // 无法读取cookie
-        if (!$getCOK) {
-            return 202;
-        }
-
-        // 密码错误
-        if ($getCOK[1] !== $config['password'] && $getCOK[1] !== $guestConfig[$getCOK[0]]['password']) {
-            return 203;
-        }
-
-        // 管理员登陆
-        if ($getCOK[0] === $config['user'] && $getCOK[1] === $config['password']) {
-            return 204;
-        }
-
-        // 上传者账号登陆
-        if ($getCOK[1] === $guestConfig[$getCOK[0]]['password']) {
-            if ($guestConfig[$getCOK[0]]['expired'] < time()) {
-                // 上传者账号过期
-                return 206;
-            }
-            return 205;
-        }
+    if ($auth['level'] === 1 && $auth['user'] === $config['user']) {
+        return 204;
     }
+    if ($auth['level'] === 2 && array_key_exists($auth['user'], $guestConfig)) {
+        if ($guestConfig[$auth['user']]['expired'] < time()) {
+            return 206;
+        }
+        return 205;
+    }
+    return 203;
 }
 
 /**

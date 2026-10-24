@@ -36,31 +36,8 @@ define('APP_TITLE', $config['title'] . ' Manager');
 
 // --- EDIT BELOW CONFIGURATION CAREFULLY ---
 
-// Auth with login/password
-// set true/false to enable/disable it
-// Is independent from IP white- and blacklisting
-$use_auth = true;
-
-// Login user name and password
-// Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
-// Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
-$auth_users = array(
-    'admin' => '$2y$10$/K.hjNr84lLNDt8fTXjoI.DBp6PpeyoJ.mGwrrLuCZfAwfSAGqhOW', //admin@123
-    'user' => '$2y$10$Fg6Dz8oH9fPoZ2jJan5tZuv6Z4Kp7avtQ9bDfrdRntXtPeiMAZyGO' //12345
-);
-
-// Readonly users
-// e.g. array('users', 'guest', ...)
-$readonly_users = array(
-    'user'
-);
-
-// Global readonly, including when auth is not being used
-$global_readonly = false;
-
-// user specific directories
-// array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
-$directories_users = array();
+// 安全：图床登录身份，管理员可写、上传者只读
+$fm_is_guest = is_who_login('guest');
 
 // Enable highlight.js (https://highlightjs.org/) on view's page
 $use_highlightjs = true;
@@ -70,22 +47,26 @@ $use_highlightjs = true;
 $highlightjs_style = 'vs';
 
 // Enable ace.js (https://ace.c9.io/) on view's page
-$edit_files = true;
+$edit_files = false;
 
 // Default timezone for date() and time()
 // Doc - http://php.net/manual/en/timezones.php
 $default_timezone = 'Etc/UTC'; // UTC
 
 // Root path for file manager
-// use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
-$root_path = $_SERVER['DOCUMENT_ROOT'];
+// 安全：只能管理图片存储目录，不再以站点根为根（DOCUMENT_ROOT 在不同入口下可能指向项目根）
+$root_path = APP_ROOT . $config['path'];
 
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
-// Will not working if $root_path will be outside of server document root
-$root_url = '';
+$root_url = trim($config['path'], '/');
 
 // Server hostname. Can set manually if wrong
-$http_host = $_SERVER['HTTP_HOST'];
+// 以配置的站点域名为权威值，不直接信任 Host 头（Host 头可控会污染 FM_SELF_URL 的跳转与回显）
+$http_host = parse_url($config['domain'], PHP_URL_HOST);
+$http_port = parse_url($config['domain'], PHP_URL_PORT);
+if (empty($http_port) && isset($_SERVER['SERVER_PORT']) && !in_array((int) $_SERVER['SERVER_PORT'], array(80, 443), true)) {
+    $http_host .= ':' . preg_replace('/[^\d]/', '', (string) $_SERVER['SERVER_PORT']);
+}
 
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
@@ -98,13 +79,11 @@ $iconv_input_encoding = 'UTF-8';
 // Doc - https://www.php.net/manual/en/function.date.php
 $datetime_format = 'd.m.y H:i';
 
-// Allowed file extensions for create and rename files
-// e.g. 'txt,html,css,js'
-$allowed_file_extensions = '';
+// 安全：创建/重命名/上传的扩展名白名单，空白名单在 TFM 语义下等于不限制类型
+$allowed_file_extensions = $config['extensions'];
 
 // Allowed file extensions for upload files
-// e.g. 'gif,png,jpg,html,txt'
-$allowed_upload_extensions = '';
+$allowed_upload_extensions = $config['extensions'];
 
 // Favicon path. This can be either a full url to an .PNG image, or a path based on the document root.
 // full path, e.g http://example.com/favicon.png
@@ -112,8 +91,7 @@ $allowed_upload_extensions = '';
 $favicon_path = '';
 
 // Files and folders to excluded from listing
-// e.g. array('myfile.html', 'personal-folder', '*.php', ...)
-$exclude_items = array();
+$exclude_items = array('.htaccess', '.user.ini');
 
 // Online office Docs Viewer
 // Availabe rules are 'google', 'microsoft' or false
@@ -153,10 +131,48 @@ $ip_blacklist = array(
     '::'            // non-routable meta ipv6
 );
 
-// if User has the customized config file, try to use it to override the default config above
-$config_file = __DIR__.'/../config/config.manager.php';
+// 读取用户自定义的文件管理调优配置（仅允许非安全项，安全项在下方强制覆盖）
+$config_file = __DIR__ . '/../config/config.manager.php';
 if (is_readable($config_file)) {
-    @include($config_file);
+    include_once $config_file;
+}
+
+// --- 安全强制覆盖：顺序为默认值 → 用户配置 → 安全下限，config.manager.php 无法降级以下任何一项 ---
+$root_path = APP_ROOT . $config['path'];
+$root_url = trim($config['path'], '/');
+$allowed_file_extensions = $config['extensions'];
+$allowed_upload_extensions = $config['extensions'];
+// 拒绝任何不在图片白名单内的扩展名（含无扩展名的 .htaccess、.user.ini）
+$fm_exec_extensions = array('php', 'php2', 'php3', 'php4', 'php5', 'php6', 'php7', 'php8', 'phps', 'phtml', 'pht', 'phar', 'phmtl', 'htaccess', 'user.ini', 'inc', 'cgi', 'pl', 'py', 'sh', 'asp', 'aspx', 'jsp');
+$fm_image_extensions = array_map('trim', explode(',', strtolower($config['extensions'])));
+// 鉴权唯一来源：图床登录态（页首 is_who_login('admin'|'guest')）
+$auth_users = array();
+$readonly_users = array();
+$directories_users = array();
+$use_auth = false;
+// 关闭内容编辑器，禁止在存储目录内改写文件内容
+$edit_files = false;
+// 隐藏文件不可见不可管理，.htaccess / .user.ini 恒定排除
+$exclude_items = array('.htaccess', '.user.ini');
+// 安全：主机名以配置域名为权威（含端口），config.manager.php 不能把它降级回 $_SERVER['HTTP_HOST']
+$fm_host = parse_url($config['domain'], PHP_URL_HOST);
+$fm_port = parse_url($config['domain'], PHP_URL_PORT);
+if (!empty($fm_host)) {
+    if (!empty($fm_port)) {
+        $http_host = $fm_host . ':' . $fm_port;
+    } elseif (isset($_SERVER['SERVER_PORT']) && !in_array((int) $_SERVER['SERVER_PORT'], array(80, 443), true)) {
+        // 域名未显式带端口但服务监听非标准端口时补服务器端口（端口由服务器决定，非攻击者可控）
+        $http_host = $fm_host . ':' . preg_replace('/[^\d]/', '', (string) $_SERVER['SERVER_PORT']);
+    } else {
+        $http_host = $fm_host;
+    }
+} else {
+    $http_host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/[^\w.\-:\[\]]/', '', (string) $_SERVER['HTTP_HOST']) : '';
+}
+// 存储目录未创建时兼容初始化
+if (!is_dir($root_path)) {
+    config_path();
+    $root_path = rtrim(APP_ROOT . '/' . trim($config['path'], '/') . '/', '/');
 }
 
 // --- EDIT BELOW CAREFULLY OR DO NOT EDIT AT ALL ---
@@ -175,11 +191,12 @@ $cfg = new FM_Config();
 // Default language
 $lang = isset($cfg->data['lang']) ? $cfg->data['lang'] : 'en';
 
-// Show or hide files and folders that starts with a dot
-$show_hidden_files = isset($cfg->data['show_hidden']) ? $cfg->data['show_hidden'] : true;
+// 安全：隐藏文件（.htaccess/.user.ini）不可见也不可管理，不受 TFM 设置页写回的 $CONFIG 影响
+$show_hidden_files = false;
 
 // PHP error reporting - false = Turns off Errors, true = Turns on Errors
-$report_errors = isset($cfg->data['error_reporting']) ? $cfg->data['error_reporting'] : true;
+// 安全：关闭错误回显，避免绝对路径与堆栈泄露；写回项也强制为关闭
+$report_errors = false;
 
 // Hide Permissions and Owner cols in file-listing
 $hide_Cols = isset($cfg->data['hide_Cols']) ? $cfg->data['hide_Cols'] : true;
@@ -222,19 +239,12 @@ if (defined('FM_EMBED')) {
         mb_regex_encoding('UTF-8');
     }
 
-    session_cache_limiter('');
-    session_name(FM_SESSION_ID );
-    function session_error_handling_function($code, $msg, $file, $line) {
-        // Permission denied for default session, try to create a new one
-        if ($code == 2) {
-            session_abort();
-            session_id(session_create_id());
-            @session_start();
-        }
+    // 安全：会话已由 function.php 统一建立则直接复用，避免重复 session_start 冲突
+    if (session_status() === PHP_SESSION_NONE) {
+        session_cache_limiter('');
+        session_name(FM_SESSION_ID);
+        @session_start();
     }
-    set_error_handler('session_error_handling_function');
-    session_start();
-    restore_error_handler();
 }
 
 if (empty($auth_users)) {
@@ -409,7 +419,7 @@ defined('FM_FILE_EXTENSION') || define('FM_FILE_EXTENSION', $allowed_file_extens
 defined('FM_UPLOAD_EXTENSION') || define('FM_UPLOAD_EXTENSION', $allowed_upload_extensions);
 defined('FM_EXCLUDE_ITEMS') || define('FM_EXCLUDE_ITEMS', (version_compare(PHP_VERSION, '7.0.0', '<') ? serialize($exclude_items) : $exclude_items));
 defined('FM_DOC_VIEWER') || define('FM_DOC_VIEWER', $online_viewer);
-define('FM_READONLY', $use_auth && !empty($readonly_users) && isset($_SESSION[FM_SESSION_ID]['logged']) && in_array($_SESSION[FM_SESSION_ID]['logged'], $readonly_users));
+define('FM_READONLY', $fm_is_guest);
 define('FM_IS_WIN', DIRECTORY_SEPARATOR == '\\');
 
 // always use ?p=
@@ -461,6 +471,11 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
             fm_set_msg(lng('File not found'), 'error');
             fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
         }
+        // 安全：内容编辑器已关闭，且只允许改写图片白名单内的文件，不得写入可执行/配置类型
+        if (!FM_EDIT_FILE || !fm_is_image_file($file)) {
+            fm_set_msg(lng('File extension is not allowed'), 'error');
+            fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
+        }
         header('X-XSS-Protection:0');
         $file_path = $path . '/' . $file;
 
@@ -485,7 +500,16 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
 
     // backup files
     if (isset($_POST['type']) && $_POST['type'] == "backup" && !empty($_POST['file'])) {
-        $fileName = $_POST['file'];
+        // 安全：内容编辑器已关闭，backup 仅服务于编辑前备份，此处一并拒绝，避免在图片目录产出非白名单 .bak
+        if (!FM_EDIT_FILE) {
+            echo lng('Not allowed');
+            exit();
+        }
+        $fileName = str_replace(array('/', '\\', '..'), '', $_POST['file']);
+        if ($fileName === '' || !fm_is_image_file($fileName)) {
+            echo lng('File extension is not allowed');
+            exit();
+        }
         $fullPath = FM_ROOT_PATH . '/';
         if (!empty($_POST['path'])) {
             $relativeDirPath = fm_clean_path($_POST['path']);
@@ -517,8 +541,9 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
             $newLng = 'en';
         }
 
-        $erp = isset($_POST['js-error-report']) && $_POST['js-error-report'] == "true" ? true : false;
-        $shf = isset($_POST['js-show-hidden']) && $_POST['js-show-hidden'] == "true" ? true : false;
+        // 安全：错误回显与隐藏文件展示不作为可写回项，保持强制关闭
+        $erp = false;
+        $shf = false;
         $hco = isset($_POST['js-hide-cols']) && $_POST['js-hide-cols'] == "true" ? true : false;
         $caf = isset($_POST['js-calc-folder']) && $_POST['js-calc-folder'] == "true" ? true : false;
         $te3 = $_POST['js-theme-3'];
@@ -530,10 +555,6 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         if ($cfg->data['error_reporting'] != $erp) {
             $cfg->data['error_reporting'] = $erp;
             $report_errors = $erp;
-        }
-        if ($cfg->data['show_hidden'] != $shf) {
-            $cfg->data['show_hidden'] = $shf;
-            $show_hidden_files = $shf;
         }
         if ($cfg->data['show_hidden'] != $shf) {
             $cfg->data['show_hidden'] = $shf;
@@ -653,8 +674,8 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
 
 // Delete file / folder
 if (isset($_GET['del']) && !FM_READONLY) {
-    $del = str_replace( '/', '', fm_clean_path( $_GET['del'] ) );
-    if ($del != '' && $del != '..' && $del != '.') {
+    $del = fm_sanitize_name($_GET['del']);
+    if ($del !== false) {
         $path = FM_ROOT_PATH;
         if (FM_PATH != '') {
             $path .= '/' . FM_PATH;
@@ -676,8 +697,8 @@ if (isset($_GET['del']) && !FM_READONLY) {
 // Create folder
 if (isset($_GET['new']) && isset($_GET['type']) && !FM_READONLY) {
     $type = $_GET['type'];
-    $new = str_replace( '/', '', fm_clean_path( strip_tags( $_GET['new'] ) ) );
-    if (fm_isvalid_filename($new) && $new != '' && $new != '..' && $new != '.') {
+    $new = fm_sanitize_name($_GET['new']);
+    if ($new !== false) {
         $path = FM_ROOT_PATH;
         if (FM_PATH != '') {
             $path .= '/' . FM_PATH;
@@ -788,6 +809,10 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
     // to
     $copy_to_path = FM_ROOT_PATH;
     $copy_to = fm_clean_path($_POST['copy_to']);
+    if ($copy_to !== '' && !fm_is_safe_relative_path($copy_to)) {
+        fm_set_msg(lng('Invalid characters in file name'), 'error');
+        fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
+    }
     if ($copy_to != '') {
         $copy_to_path .= '/' . $copy_to;
     }
@@ -808,7 +833,9 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
     $files = $_POST['file'];
     if (is_array($files) && count($files)) {
         foreach ($files as $f) {
-            if ($f != '') {
+            // 安全：选中项只能是当前目录下的名称，不接受任何路径上溢
+            $f = fm_sanitize_name($f);
+            if ($f !== false) {
                 // abs path from
                 $from = $path . '/' . $f;
                 // abs path to
@@ -842,20 +869,16 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
 // Rename
 if (isset($_GET['ren'], $_GET['to']) && !FM_READONLY) {
     // old name
-    $old = $_GET['ren'];
-    $old = fm_clean_path($old);
-    $old = str_replace('/', '', $old);
+    $old = fm_sanitize_name($_GET['ren']);
     // new name
-    $new = $_GET['to'];
-    $new = fm_clean_path(strip_tags($new));
-    $new = str_replace('/', '', $new);
+    $new = fm_sanitize_name(strip_tags($_GET['to']));
     // path
     $path = FM_ROOT_PATH;
     if (FM_PATH != '') {
         $path .= '/' . FM_PATH;
     }
     // rename
-    if (fm_isvalid_filename($new) && $old != '' && $new != '') {
+    if ($old !== false && $new !== false) {
         if (fm_rename($path . '/' . $old, $path . '/' . $new)) {
             fm_set_msg(sprintf(lng('Renamed from').' <b>%s</b> '. lng('to').' <b>%s</b>', fm_enc($old), fm_enc($new)));
         } else {
@@ -869,14 +892,13 @@ if (isset($_GET['ren'], $_GET['to']) && !FM_READONLY) {
 
 // Download
 if (isset($_GET['dl'])) {
-    $dl = $_GET['dl'];
-    $dl = fm_clean_path($dl);
-    $dl = str_replace('/', '', $dl);
+    $dl = fm_sanitize_name($_GET['dl']);
     $path = FM_ROOT_PATH;
     if (FM_PATH != '') {
         $path .= '/' . FM_PATH;
     }
-    if ($dl != '' && is_file($path . '/' . $dl)) {
+    // 安全：只允许取回图片类型，不得下载存储目录内的配置/日志/隐藏文件
+    if ($dl !== false && fm_is_image_file($dl) && is_file($path . '/' . $dl)) {
         fm_download_file($path . '/' . $dl, $dl, 1024);
         exit;
     } else {
@@ -888,8 +910,8 @@ if (isset($_GET['dl'])) {
 // Upload
 if (!empty($_FILES) && !FM_READONLY) {
     $override_file_name = false;
-    $chunkIndex = $_POST['dzchunkindex'];
-    $chunkTotal = $_POST['dztotalchunkcount'];
+    $chunkIndex = filter_input(INPUT_POST, 'dzchunkindex', FILTER_VALIDATE_INT);
+    $chunkTotal = filter_input(INPUT_POST, 'dztotalchunkcount', FILTER_VALIDATE_INT);
 
     $f = $_FILES;
     $path = FM_ROOT_PATH;
@@ -897,21 +919,33 @@ if (!empty($_FILES) && !FM_READONLY) {
     if (FM_PATH != '') {
         $path .= '/' . FM_PATH;
     }
+    // 安全(纵深防御)：写入目标目录必须解析在存储根内，拒绝符号链接等越界（与 download sink 同形）
+    $fm_real_root = realpath(FM_ROOT_PATH);
+    $fm_real_dir = realpath($path);
+    if ($fm_real_root === false || $fm_real_dir === false
+        || ($fm_real_dir !== $fm_real_root && strpos($fm_real_dir, $fm_real_root . DIRECTORY_SEPARATOR) !== 0)) {
+        http_response_code(403);
+        echo json_encode(array('status' => 'error', 'info' => 'Invalid path!'));
+        exit();
+    }
 
     $errors = 0;
     $uploads = 0;
-    $allowed = (FM_UPLOAD_EXTENSION) ? explode(',', FM_UPLOAD_EXTENSION) : false;
     $response = array (
         'status' => 'error',
         'info'   => 'Oops! Try again'
     );
 
-    $filename = $f['file']['name'];
+    $filename = fm_sanitize_name($f['file']['name']);
     $tmp_name = $f['file']['tmp_name'];
-    $ext = pathinfo($filename, PATHINFO_FILENAME) != '' ? strtolower(pathinfo($filename, PATHINFO_EXTENSION)) : '';
-    $isFileAllowed = ($allowed) ? in_array($ext, $allowed) : true;
+    $ext = $filename === false ? '' : strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    // 安全：名称与目标路径均逐段校验；白名单非空时无扩展名也拒绝；拒写隐藏文件
+    $fullpath_input = isset($_REQUEST['fullpath']) ? (string) $_REQUEST['fullpath'] : '';
+    // 落盘只用 $path 与 basename 文件名，fullpath 仅作额外约束：空(存储根)或合法相对路径均放行
+    $isPathSafe = ($fullpath_input === '' || fm_is_safe_relative_path($fullpath_input));
+    $isFileAllowed = $filename !== false && $isPathSafe && fm_is_valid_ext($filename) && strpos($filename, '.') !== 0;
 
-    if(!fm_isvalid_filename($filename) && !fm_isvalid_filename($_REQUEST['fullpath'])) {
+    if ($filename === false || !$isPathSafe) {
         $response = array (
             'status'    => 'error',
             'info'      => "Invalid File name!",
@@ -921,12 +955,13 @@ if (!empty($_FILES) && !FM_READONLY) {
 
     $targetPath = $path . $ds;
     if ( is_writable($targetPath) ) {
-        $fullPath = $path . '/' . basename($_REQUEST['fullpath']);
+        // 安全：落盘名称只取信上传文件自身名称的 basename，不再取信客户端可控的 fullpath 尾部
+        $fullPath = $path . '/' . $filename;
         $folder = substr($fullPath, 0, strrpos($fullPath, "/"));
 
-        if(file_exists ($fullPath) && !$override_file_name && !$chunks) {
+        if(file_exists ($fullPath) && !$override_file_name) {
             $ext_1 = $ext ? '.'.$ext : '';
-            $fullPath = $path . '/' . basename($_REQUEST['fullpath'], $ext_1) .'_'. date('ymdHis'). $ext_1;
+            $fullPath = $path . '/' . pathinfo($filename, PATHINFO_FILENAME) .'_'. date('ymdHis'). $ext_1;
         }
 
         if (!is_dir($folder)) {
@@ -1014,7 +1049,9 @@ if (isset($_POST['group'], $_POST['delete']) && !FM_READONLY) {
     $files = $_POST['file'];
     if (is_array($files) && count($files)) {
         foreach ($files as $f) {
-            if ($f != '') {
+            // 安全：删除项限定在当前目录内的单层名称，拒绝任何路径上溢（原实现可将 ../../x 直接拼进 unlink）
+            $f = fm_sanitize_name($f);
+            if ($f !== false) {
                 $new_path = $path . '/' . $f;
                 if (!fm_rdelete($new_path)) {
                     $errors++;
@@ -1035,118 +1072,17 @@ if (isset($_POST['group'], $_POST['delete']) && !FM_READONLY) {
 
 // Pack files
 if (isset($_POST['group']) && (isset($_POST['zip']) || isset($_POST['tar'])) && !FM_READONLY) {
-    $path = FM_ROOT_PATH;
-    $ext = 'zip';
-    if (FM_PATH != '') {
-        $path .= '/' . FM_PATH;
-    }
-
-    //set pack type
-    $ext = isset($_POST['tar']) ? 'tar' : 'zip';
-
-
-    if (($ext == "zip" && !class_exists('ZipArchive')) || ($ext == "tar" && !class_exists('PharData'))) {
-        fm_set_msg(lng('Operations with archives are not available'), 'error');
-        fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
-    }
-
-    $files = $_POST['file'];
-    if (!empty($files)) {
-        chdir($path);
-
-        if (count($files) == 1) {
-            $one_file = reset($files);
-            $one_file = basename($one_file);
-            $zipname = $one_file . '_' . date('ymd_His') . '.'.$ext;
-        } else {
-            $zipname = 'archive_' . date('ymd_His') . '.'.$ext;
-        }
-
-        if($ext == 'zip') {
-            $zipper = new FM_Zipper();
-            $res = $zipper->create($zipname, $files);
-        } elseif ($ext == 'tar') {
-            $tar = new FM_Zipper_Tar();
-            $res = $tar->create($zipname, $files);
-        }
-
-        if ($res) {
-            fm_set_msg(sprintf(lng('Archive').' <b>%s</b> '.lng('Created'), fm_enc($zipname)));
-        } else {
-            fm_set_msg(lng('Archive not created'), 'error');
-        }
-    } else {
-        fm_set_msg(lng('Nothing selected'), 'alert');
-    }
-
+    // 安全：图床存储目录只允许存放图片，打包会引入归档文件与后续解压（zip-slip）面，能力关闭
+    fm_set_msg(lng('Operations with archives are not available'), 'error');
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
 
 // Unpack
 if (isset($_GET['unzip']) && !FM_READONLY) {
-    $unzip = $_GET['unzip'];
-    $unzip = fm_clean_path($unzip);
-    $unzip = str_replace('/', '', $unzip);
-    $isValid = false;
-
-    $path = FM_ROOT_PATH;
-    if (FM_PATH != '') {
-        $path .= '/' . FM_PATH;
-    }
-
-    if ($unzip != '' && is_file($path . '/' . $unzip)) {
-        $zip_path = $path . '/' . $unzip;
-        $ext = pathinfo($zip_path, PATHINFO_EXTENSION);
-        $isValid = true;
-    } else {
-        fm_set_msg(lng('File not found'), 'error');
-    }
-
-
-    if (($ext == "zip" && !class_exists('ZipArchive')) || ($ext == "tar" && !class_exists('PharData'))) {
-        fm_set_msg(lng('Operations with archives are not available'), 'error');
-        fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
-    }
-
-    if ($isValid) {
-        //to folder
-        $tofolder = '';
-        if (isset($_GET['tofolder'])) {
-            $tofolder = pathinfo($zip_path, PATHINFO_FILENAME);
-            if (fm_mkdir($path . '/' . $tofolder, true)) {
-                $path .= '/' . $tofolder;
-            }
-        }
-
-        if($ext == "zip") {
-            $zipper = new FM_Zipper();
-            $res = $zipper->unzip($zip_path, $path);
-        } elseif ($ext == "tar") {
-            try {
-                $gzipper = new PharData($zip_path);
-                if (@$gzipper->extractTo($path,null, true)) {
-                    $res = true;
-                } else {
-                    $res = false;
-                }
-            } catch (Exception $e) {
-                //TODO:: need to handle the error
-                $res = true;
-            }
-        }
-
-        if ($res) {
-            fm_set_msg(lng('Archive unpacked'));
-        } else {
-            fm_set_msg(lng('Archive not unpacked'), 'error');
-        }
-
-    } else {
-        fm_set_msg(lng('File not found'), 'error');
-    }
+    // 安全：图床存储目录不存放归档，解压能力（含 zip-slip 面）一律关闭
+    fm_set_msg(lng('Operations with archives are not available'), 'error');
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
-
 // Change Perms (not for Windows)
 if (isset($_POST['chmod']) && !FM_READONLY && !FM_IS_WIN) {
     $path = FM_ROOT_PATH;
@@ -1154,10 +1090,8 @@ if (isset($_POST['chmod']) && !FM_READONLY && !FM_IS_WIN) {
         $path .= '/' . FM_PATH;
     }
 
-    $file = $_POST['chmod'];
-    $file = fm_clean_path($file);
-    $file = str_replace('/', '', $file);
-    if ($file == '' || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
+    $file = fm_sanitize_name($_POST['chmod']);
+    if ($file === false || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
         fm_set_msg(lng('File not found'), 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
@@ -1381,8 +1315,8 @@ if (isset($_POST['copy']) && !FM_READONLY) {
 
 // copy form
 if (isset($_GET['copy']) && !isset($_GET['finish']) && !FM_READONLY) {
-    $copy = $_GET['copy'];
-    $copy = fm_clean_path($copy);
+    $copy = fm_clean_path($_GET['copy']);
+    $copy = str_replace('/', '', $copy);
     if ($copy == '' || !file_exists(FM_ROOT_PATH . '/' . $copy)) {
         fm_set_msg(lng('File not found'), 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -1606,11 +1540,10 @@ if (isset($_GET['help'])) {
 
 // file viewer
 if (isset($_GET['view'])) {
-    $file = $_GET['view'];
     $quickView = (isset($_GET['quickView']) && $_GET['quickView'] == 1) ? true : false;
-    $file = fm_clean_path($file, false);
-    $file = str_replace('/', '', $file);
-    if ($file == '' || !is_file($path . '/' . $file) || in_array($file, $GLOBALS['exclude_items'])) {
+    $file = fm_sanitize_name($_GET['view']);
+    // 安全：只允许预览图片，存储目录内的配置/日志/隐藏文件不得被回显
+    if ($file === false || !fm_is_image_file($file) || !is_file($path . '/' . $file) || in_array($file, $GLOBALS['exclude_items'])) {
         fm_set_msg(lng('File not found'), 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
@@ -1801,10 +1734,9 @@ if (isset($_GET['view'])) {
 
 // file editor
 if (isset($_GET['edit'])) {
-    $file = $_GET['edit'];
-    $file = fm_clean_path($file, false);
-    $file = str_replace('/', '', $file);
-    if ($file == '' || !is_file($path . '/' . $file)) {
+    $file = fm_sanitize_name($_GET['edit']);
+    // 安全：内容编辑器已全局关闭，不再提供任何文件改写入口
+    if ($file === false || !FM_EDIT_FILE || FM_READONLY || !fm_is_image_file($file) || !is_file($path . '/' . $file)) {
         fm_set_msg(lng('File not found'), 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
@@ -1826,6 +1758,11 @@ if (isset($_GET['edit'])) {
 
     // Save File
     if (isset($_POST['savedata'])) {
+        // 安全：不得经由表单写入非图片文件
+        if (!fm_is_image_file($file)) {
+            fm_set_msg(lng('File extension is not allowed'), 'error');
+            fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
+        }
         $writedata = $_POST['savedata'];
         $fd = fopen($file_path, "w");
         @fwrite($fd, $writedata);
@@ -1897,10 +1834,8 @@ if (isset($_GET['edit'])) {
 
 // chmod (not for Windows)
 if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
-    $file = $_GET['chmod'];
-    $file = fm_clean_path($file);
-    $file = str_replace('/', '', $file);
-    if ($file == '' || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
+    $file = fm_sanitize_name($_GET['chmod']);
+    if ($file === false || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
         fm_set_msg(lng('File not found'), 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
@@ -2180,10 +2115,6 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 <li class="list-inline-item"><a href="#/invert-all" class="btn btn-small btn-outline-primary btn-2" onclick="invert_all();return false;"><i class="fa fa-th-list"></i> <?php echo lng('InvertSelection') ?> </a></li>
                 <li class="list-inline-item"><input type="submit" class="hidden" name="delete" id="a-delete" value="Delete" onclick="return confirm('<?php echo lng('Delete selected files and folders?'); ?>')">
                     <a href="javascript:document.getElementById('a-delete').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-trash"></i> <?php echo lng('Delete') ?> </a></li>
-                <li class="list-inline-item"><input type="submit" class="hidden" name="zip" id="a-zip" value="zip" onclick="return confirm('<?php echo lng('Create archive?'); ?>')">
-                    <a href="javascript:document.getElementById('a-zip').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php echo lng('Zip') ?> </a></li>
-                <li class="list-inline-item"><input type="submit" class="hidden" name="tar" id="a-tar" value="tar" onclick="return confirm('<?php echo lng('Create archive?'); ?>')">
-                    <a href="javascript:document.getElementById('a-tar').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php echo lng('Tar') ?> </a></li>
                 <li class="list-inline-item"><input type="submit" class="hidden" name="copy" id="a-copy" value="Copy">
                     <a href="javascript:document.getElementById('a-copy').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-files-o"></i> <?php echo lng('Copy') ?> </a></li>
             </ul>
@@ -2289,12 +2220,69 @@ function fm_rchmod($path, $filemode, $dirmode)
  */
 function fm_is_valid_ext($filename)
 {
-    $allowed = (FM_FILE_EXTENSION) ? explode(',', FM_FILE_EXTENSION) : false;
+    $allowed = (FM_FILE_EXTENSION) ? array_map('trim', explode(',', strtolower(FM_FILE_EXTENSION))) : false;
 
-    $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    $isFileAllowed = ($allowed) ? in_array($ext, $allowed) : true;
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    // 安全：可执行与服务/目录配置文件扩展名黑名单
+    if (in_array(strtolower(basename(str_replace('\\', '/', $filename))), array('.htaccess', '.user.ini'), true) || in_array($ext, array('php', 'php2', 'php3', 'php4', 'php5', 'php6', 'php7', 'php8', 'phps', 'phtml', 'pht', 'phar', 'htaccess', 'ini', 'inc', 'cgi', 'pl', 'py', 'sh', 'asp', 'aspx', 'jsp'), true)) {
+        return false;
+    }
+    // 安全：白名单非空时，无扩展名文件（如 .htaccess）一律拒绝
+    $isFileAllowed = ($allowed) ? in_array($ext, $allowed, true) : true;
 
     return ($isFileAllowed) ? true : false;
+}
+
+/**
+ * 安全：清洗请求传入的单层文件/目录名，非法返回 false
+ * 拒绝分隔符上溢、空名、'.'/'..' 与隐藏文件（.htaccess、.user.ini 等）
+ * @param string $name 原始名称
+ * @return string|false 安全名称|非法
+ */
+function fm_sanitize_name($name)
+{
+    $name = basename(str_replace('\\', '/', (string) $name));
+    if ($name === '' || $name === '.' || $name === '..' || !fm_isvalid_filename($name) || strpos($name, '.') === 0) {
+        return false;
+    }
+
+    return $name;
+}
+
+/**
+ * 安全：是否图片存储目录内允许存放的图片文件（扩展名在图床白名单内且非隐藏文件）
+ * @param string $filename 文件名
+ * @return bool 是|否
+ */
+function fm_is_image_file($filename)
+{
+    global $fm_image_extensions;
+
+    $name = basename(str_replace('\\', '/', $filename));
+    if ($name === '' || strpos($name, '.') === 0) {
+        return false;
+    }
+
+    return in_array(strtolower(pathinfo($name, PATHINFO_EXTENSION)), $fm_image_extensions, true);
+}
+
+/**
+ * 安全：请求传入的相对路径是否合法（逐段拒绝空段、'.'、'..' 与非法字符）
+ * @param string $path 相对路径
+ * @return bool 合法|非法
+ */
+function fm_is_safe_relative_path($path)
+{
+    if (!is_string($path) || $path === '') {
+        return false;
+    }
+    foreach (preg_split('#[\\\\/]+#', $path) as $segment) {
+        if ($segment === '' || $segment === '.' || $segment === '..' || !fm_isvalid_filename($segment)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -3041,12 +3029,20 @@ function fm_get_file_mimes($extension)
  function scan($dir, $filter = '') {
     $path = FM_ROOT_PATH.'/'.$dir;
      if($dir) {
-         $ite = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-         $rii = new RegexIterator($ite, "/(" . $filter . ")/i");
+         // 安全：搜索限定在存储目录内，无效正则/不可读目录不报错回显，结果只包含图片
+         if (!is_dir($path)) {
+             return array();
+         }
+         $ite = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS));
+         try {
+             $rii = new RegexIterator($ite, "/(" . $filter . ")/i");
+         } catch (Throwable $e) {
+             return array();
+         }
 
          $files = array();
          foreach ($rii as $file) {
-             if (!$file->isDir()) {
+             if (!$file->isDir() && fm_is_image_file($file->getFilename())) {
                  $fileName = $file->getFilename();
                  $location = str_replace(FM_ROOT_PATH, '', $file->getPath());
                  $files[] = array(
@@ -3058,6 +3054,7 @@ function fm_get_file_mimes($extension)
          }
          return $files;
      }
+    return array();
 }
 
 /*
@@ -3072,12 +3069,20 @@ function fm_download_file($fileLocation, $fileName, $chunkSize  = 1024)
 {
     if (connection_status() != 0)
         return (false);
+    // 安全(backport #953)：在任何响应头发出前解析真实路径并校验仍在存储根内，作为 download sink 的纵深防御
+    $realLocation = realpath($fileLocation);
+    $realRoot = realpath(FM_ROOT_PATH);
+    if ($realLocation === false || $realRoot === false || strpos($realLocation, $realRoot . DIRECTORY_SEPARATOR) !== 0) {
+        http_response_code(403);
+        return false;
+    }
+    $fileLocation = $realLocation;
     $extension = pathinfo($fileName, PATHINFO_EXTENSION);
 
     $contentType = fm_get_file_mimes($extension);
     header("Cache-Control: public");
-    header("Content-Transfer-Encoding: binary\n");
-    header('Content-Type: $contentType');
+    header("Content-Transfer-Encoding: binary");
+    header('Content-Type: ' . $contentType);
 
     $contentDisposition = 'attachment';
 
@@ -3111,7 +3116,10 @@ function fm_download_file($fileLocation, $fileName, $chunkSize  = 1024)
         die('Zero byte file! Aborting download');
     }
     @ini_set('magic_quotes_runtime', 0);
-    $fp = fopen("$fileLocation", "rb");
+    $fp = @fopen($fileLocation, "rb");
+    if ($fp === false) {
+        return false;
+    }
 
     fseek($fp, $range);
 

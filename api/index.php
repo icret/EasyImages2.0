@@ -2,6 +2,9 @@
 
 namespace Verot\Upload;
 
+// API 为 Token 鉴权的无状态入口，不需要服务端登录会话
+define('EASYIMAGE_NO_SESSION', true);
+
 require_once __DIR__ . '/../app/function.php';
 require_once APP_ROOT . '/app/class.upload.php';
 require_once APP_ROOT . '/config/api_key.php';

@@ -1,0 +1,10 @@
+# 配置目录内含管理员账号、密码哈希、API Token 等凭据，禁止任何 Web 访问
+# Nginx/Caddy/Lighttpd 不读取本文件，等价防护见 docs/安全配置.md
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
