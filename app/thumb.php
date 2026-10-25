@@ -100,8 +100,8 @@ if (isset($_GET['img'])) {
 
     // 图片绝对路径
     $src = APP_ROOT . $imgPath;
-    // 获取文件后缀
-    $ext =  pathinfo($src, PATHINFO_EXTENSION);
+    // 获取文件后缀（统一小写，避免 .WEBP/.SVG 等大写扩展名走错分支）
+    $ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
 
     switch ($ext) {
         case 'ico':

@@ -32,7 +32,7 @@ RexHelper::$root = rtrim(APP_ROOT . $config['path'], '/\\');
 RexHelper::$ignore_list = array('/^\./', '/\.php[0-9]?$/i', '/\.phtml$/i', '/\.phar$/i', '/\.user\.ini$/i');
 
 // 安全：图片类型口径与主配置 extensions 对齐（与 manager.php 一致，避免管理员扩充格式后此处误拒）
-RexHelper::$img_suff = array_values(array_filter(array_map('trim', explode(',', strtolower($config['extensions'])))));
+RexHelper::$img_suff = array_values(array_filter(array_map('trim', explode(',', strtolower($config['extensions'] ?? '')))));
 
 // 安全：登录身份继承图床管理员会话（会话已由 function.php 统一建立），不再二次输入凭据
 if (session_status() === PHP_SESSION_ACTIVE) {
@@ -664,7 +664,9 @@ class RexAction
     static function act_logout()
     {
         unset($_SESSION[RexHelper::$ssid]);
-        RExplorer::url_redirect('?r=ok', 1);
+        // 鉴权已统一由图床登录态承载：只清 Rexplorer 会话会被顶部鉴权闸立刻重建，
+        // 因此“注销”改为登出图床会话，避免按钮点了却没有效果
+        RExplorer::url_redirect('index.php?login=logout', 1);
     }
 
     /**

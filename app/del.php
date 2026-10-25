@@ -76,15 +76,24 @@ if (isset($_GET['hash'])) {
             ), JSON_UNESCAPED_UNICODE));
         }
     } else {
-        getDel($delHash, 'url'); // 直接删除
+        // 直接删除：以 unlink 实际结果为准，失败时不再谎报成功
+        if (getDel($delHash, 'url') === true) {
+            any_upload($delHash, $delHash, 'delete'); // FTP删除
 
-        any_upload($delHash, $delHash, 'delete'); // FTP删除
-
+            exit(json_encode(array(
+                'code' => 200,
+                'msg'  => '删除成功',
+                'type' => 'success',
+                'icon' => 'ok-sign',
+                'mode' => 'delete',
+                'url'  => $delHash
+            ), JSON_UNESCAPED_UNICODE));
+        }
         exit(json_encode(array(
-            'code' => 200,
-            'msg'  => '删除成功',
-            'type' => 'success',
-            'icon' => 'ok-sign',
+            'code' => 404,
+            'msg'  => '删除失败',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
             'mode' => 'delete',
             'url'  => $delHash
         ), JSON_UNESCAPED_UNICODE));
@@ -130,7 +139,7 @@ if (isset($_POST['recycle_url_array'])) {
     }
 }
 
-if (isset($_POST['url'])) $postURL = strip_tags($_POST['url']);
+$postURL = isset($_POST['url']) ? strip_tags((string) $_POST['url']) : '';
 
 // 广场|日志 - 单文件删除
 if (isset($_POST['mode']) && $_POST['mode'] === 'delete') {
@@ -164,8 +173,7 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'recycle') {
     // 路径收敛到存储目录，避免用任意路径探测站点文件存在性
     $error = null;
     $recyclePath = resolve_image_path($postURL, $error);
-    if ($recyclePath !== false && is_file(APP_ROOT . $recyclePath)) {
-        checkImg($recyclePath, 3);
+    if ($recyclePath !== false && is_file(APP_ROOT . $recyclePath) && checkImg($recyclePath, 3) === true) {
         exit(json_encode(array(
             'code' => 200,
             'msg' => '回收成功',
@@ -194,7 +202,10 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'del_version_file') {
         if (!is_file(APP_ROOT . $delFile)) {
             throw new Exception('版本信息文件不存在');
         }
-        @unlink(APP_ROOT . $delFile);
+        // 删除失败同样要如实返回，不能在成功分支里无条件抛错
+        if (!@unlink(APP_ROOT . $delFile)) {
+            throw new Exception('更新版本号失败');
+        }
         $re = json_encode(array(
             'code' => 200,
             'msg'  => '删除成功',
@@ -203,7 +214,6 @@ if (isset($_POST['mode']) && $_POST['mode'] === 'del_version_file') {
             'mode' => 'delete',
             'url'  => $postURL
         ), JSON_UNESCAPED_UNICODE);
-        throw new Exception('更新版本号失败');
     } catch (Exception $e) {
         $re = json_encode(array(
             'code' => 404,

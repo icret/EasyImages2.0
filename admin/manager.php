@@ -55,18 +55,13 @@ $default_timezone = 'Etc/UTC'; // UTC
 
 // Root path for file manager
 // 安全：只能管理图片存储目录，不再以站点根为根（DOCUMENT_ROOT 在不同入口下可能指向项目根）
-$root_path = APP_ROOT . $config['path'];
+$root_path = rtrim(APP_ROOT . $config['path'], '/\\');
 
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 $root_url = trim($config['path'], '/');
 
-// Server hostname. Can set manually if wrong
-// 以配置的站点域名为权威值，不直接信任 Host 头（Host 头可控会污染 FM_SELF_URL 的跳转与回显）
-$http_host = parse_url($config['domain'], PHP_URL_HOST);
-$http_port = parse_url($config['domain'], PHP_URL_PORT);
-if (empty($http_port) && isset($_SERVER['SERVER_PORT']) && !in_array((int) $_SERVER['SERVER_PORT'], array(80, 443), true)) {
-    $http_host .= ':' . preg_replace('/[^\d]/', '', (string) $_SERVER['SERVER_PORT']);
-}
+// Server hostname：在下方“安全强制覆盖”块中统一按配置域名计算，此处不再重复解析
+// （原实现先算一遍再被覆盖，且域名自带端口时会漏掉端口）
 
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
@@ -138,13 +133,12 @@ if (is_readable($config_file)) {
 }
 
 // --- 安全强制覆盖：顺序为默认值 → 用户配置 → 安全下限，config.manager.php 无法降级以下任何一项 ---
-$root_path = APP_ROOT . $config['path'];
+$root_path = rtrim(APP_ROOT . $config['path'], '/\\');
 $root_url = trim($config['path'], '/');
-$allowed_file_extensions = $config['extensions'];
-$allowed_upload_extensions = $config['extensions'];
-// 拒绝任何不在图片白名单内的扩展名（含无扩展名的 .htaccess、.user.ini）
-$fm_exec_extensions = array('php', 'php2', 'php3', 'php4', 'php5', 'php6', 'php7', 'php8', 'phps', 'phtml', 'pht', 'phar', 'phmtl', 'htaccess', 'user.ini', 'inc', 'cgi', 'pl', 'py', 'sh', 'asp', 'aspx', 'jsp');
-$fm_image_extensions = array_map('trim', explode(',', strtolower($config['extensions'])));
+$allowed_file_extensions = $config['extensions'] ?? '';
+$allowed_upload_extensions = $config['extensions'] ?? '';
+// 图片白名单：与主配置 extensions 对齐，不在白名单内的扩展名一律拒绝（含无扩展名的 .htaccess、.user.ini）
+$fm_image_extensions = array_values(array_filter(array_map('trim', explode(',', strtolower($config['extensions'] ?? '')))));
 // 鉴权唯一来源：图床登录态（页首 is_who_login('admin'|'guest')）
 $auth_users = array();
 $readonly_users = array();

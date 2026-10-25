@@ -18,7 +18,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       $listDate = $config['listDate'];                                                                  // 配置限制日期
       $path =  date('Y/m/d/');                                                                          // 当前日期
       if (isset($_GET['date'])) {
-        if ($_GET['date'] < date('Y/m/d/', strtotime("- $listDate day"))) {                             // GET日期小于配置日期时返回当前日期
+        $getDate = (string) $_GET['date'];                                                              // 数组型入参先转字符串，避免 trim/比较报错
+        if ($getDate < date('Y/m/d/', strtotime("- $listDate day"))) {                                  // GET日期小于配置日期时返回当前日期
           $path =  date('Y/m/d/');
           echo '
           <script>
@@ -28,16 +29,17 @@ if ($config['ad_top']) echo $config['ad_top_info'];
             }).show();
           </script>';
         } else {
-          $path = $_GET['date'];                                                                        // 如果不小于则返回当前GET日期
+          $path = $getDate;                                                                             // 如果不小于则返回当前GET日期
         }
       }
 
       // 日期目录只允许数字、斜杠与短横线，过滤非日期并防止路径穿越
       $path = preg_match('#^\d[\d/\-]*$#', trim($path)) ? trim($path) : date('Y/m/d/');
-      $keyNum = isset($_GET['num']) ? $_GET['num'] : $config['listNumber'];                             // 获取指定浏览数量
+      $path = rtrim($path, '/') . '/';                                                                  // 统一补全末尾斜杠，保证 glob 只匹配该日期目录
+      $keyNum = isset($_GET['num']) ? (string) $_GET['num'] : $config['listNumber'];                    // 获取指定浏览数量
       $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
       // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
-      $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search'])  : '*.*'; // 按照图片格式
+      $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", (string) $_GET['search'])  : '*.*'; // 按照图片格式
       $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
       $allUploud = $path;                                                                                // 当前浏览日期
       $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');                 // 当前日期全部上传

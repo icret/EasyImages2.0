@@ -55,7 +55,8 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             </script>';
             exit(require_once APP_ROOT . '/app/footer.php');
         } else {
-            if (strtolower($_REQUEST['code']) !== $_SESSION['code']) {
+            // 数组型入参先转字符串；验证码未生成时按空串比对（不读未定义下标）
+            if (strtolower((string) $_REQUEST['code']) !== ($_SESSION['code'] ?? '')) {
                 echo '
                 <script>
                     new $.zui.Messager("验证码错误!", {type: "danger" // 定义颜色主题 

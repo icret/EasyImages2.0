@@ -5,8 +5,8 @@ if (!$config['show_exif_info'] && !is_who_login('admin')) exit(header('Location:
 
 // 获取图片地址（收敛到存储目录，防止路径穿越）
 if (isset($_GET['img']) || isset($_GET['history'])) {
-    // 过滤特殊符号
-    $paramIMG = strip_tags(isset($_GET['img']) ? $_GET['img'] : $_GET['history']);
+    // 过滤特殊符号（数组型入参会触发 strip_tags TypeError，先转字符串）
+    $paramIMG = strip_tags((string) (isset($_GET['img']) ? $_GET['img'] : $_GET['history']));
     // 路径收敛
     $error = null;
     $getIMG = resolve_image_path($paramIMG, $error, 'file', true);

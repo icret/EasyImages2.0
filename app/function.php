@@ -85,13 +85,16 @@ function _session_boot($create = false)
     $secure = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
         || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
         || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+    // 保留原 14 天免登录体验：Cookie 与 GC 有效期对齐，默认 gc_maxlifetime(1440s) 会让管理员约 24 分钟就掉线
+    $lifetime = 3600 * 24 * 14;
     session_set_cookie_params(array(
-        'lifetime' => 0,
+        'lifetime' => $lifetime,
         'path'     => '/',
         'secure'   => $secure,
         'httponly' => true,
         'samesite' => 'Lax',
     ));
+    ini_set('session.gc_maxlifetime', (string) $lifetime);
     ini_set('session.use_strict_mode', '1');
     if ($create || isset($_COOKIE[session_name()])) {
         @session_start();
@@ -112,11 +115,16 @@ function _login_session($user, $level, $messege)
     if (session_status() !== PHP_SESSION_ACTIVE) {
         return json_encode(array('code' => 400, 'level' => 0, 'messege' => '会话建立失败，请检查 PHP 输出缓冲/Session 配置后重试'));
     }
-    session_regenerate_id(true);
+    // 输出已发送时无法再写 Cookie，跳过轮换以避免 Warning（登录态仍以当前会话写入）
+    if (!headers_sent()) {
+        session_regenerate_id(true);
+    }
     $_SESSION['easyimage_auth'] = array('user' => $user, 'level' => $level, 'time' => time());
     // 安全：主动失效历史携带凭据的 auth cookie（若存在）
     if (isset($_COOKIE['auth'])) {
-        setcookie('auth', '', time() - 42000, '/');
+        if (!headers_sent()) {
+            setcookie('auth', '', time() - 42000, '/');
+        }
         unset($_COOKIE['auth']);
     }
     return json_encode(array('code' => 200, 'level' => $level, 'messege' => $messege));
@@ -130,7 +138,7 @@ function _logout()
     if (session_status() === PHP_SESSION_ACTIVE) {
         unset($_SESSION['easyimage_auth']);
         $_SESSION = array();
-        if (ini_get('session.use_cookies')) {
+        if (ini_get('session.use_cookies') && !headers_sent()) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
         }
@@ -138,7 +146,9 @@ function _logout()
     }
     // 安全：失效历史携带凭据的 auth cookie（若存在）
     if (isset($_COOKIE['auth'])) {
-        setcookie('auth', '', time() - 42000, '/');
+        if (!headers_sent()) {
+            setcookie('auth', '', time() - 42000, '/');
+        }
         unset($_COOKIE['auth']);
     }
 }
@@ -1991,34 +2001,45 @@ function any_upload($remoteFile = null, $localFile = null, $way = 'upload')
 /**
  * 分片上传
  * @param $target_name 名称
- * @return Sting $target_name
+ * @return string 合并后的文件绝对路径
  */
 function chunk($target_name)
 {
     global $config;
     // 分片名只能为扁平名，旧写法直接拼接 $_POST['name']，存在路径穿越与写非预期位置风险
-    $target_name = basename((string) $target_name);
+    if (is_array($target_name)) {
+        die('Invalid input');
+    }
+    $target_name = basename(str_replace('\\', '/', (string) $target_name));
     if ($target_name === '' || $target_name === '.' || $target_name === '..' || strpos($target_name, "\0") !== false) {
         die('Invalid input');
     }
     $path = $config['path'] ?? '';
+    // 分片缓存根目录（新装站点可能尚未创建 cache 目录）
+    $cache_dir = APP_ROOT . $path . 'cache/';
     // 分片缓存目录
-    $temp_dir = APP_ROOT . $path . 'cache/' . $target_name . '/';
+    $temp_dir = $cache_dir . $target_name . '/';
     // 分片合并后的文件
-    $target_file = APP_ROOT . $path . 'cache/' . $target_name;
+    $target_file = $cache_dir . $target_name;
     // 储存分片
     if (!is_dir($temp_dir)) mkdir($temp_dir, 0755, true);
     // 检查分片参数（$_REQUEST 键可能不存在，先取再判）
     $chunk = $_REQUEST['chunk'] ?? null;
     $chunks = $_REQUEST['chunks'] ?? null;
-    if (!is_numeric($chunk) || !is_numeric($chunks) || $chunks < 1) {
+    if (!is_numeric($chunk) || !is_numeric($chunks) || (int) $chunks < 1) {
         die('Invalid input');
     }
-    // 移动缓存分片
-    move_uploaded_file($_FILES['file']['tmp_name'], $temp_dir . $chunk);
+    $chunk = (int) $chunk;
+    $chunks = (int) $chunks;
+    // 移动缓存分片（分片文件缺失时不再继续，避免后续合并出空文件）
+    if (!isset($_FILES['file']['tmp_name']) || !is_uploaded_file($_FILES['file']['tmp_name'])
+        || !move_uploaded_file($_FILES['file']['tmp_name'], $temp_dir . $chunk)) {
+        die('Invalid input');
+    }
     // 合并分片
-    if ($chunk == $chunks - 1) { // 最后一个分片
+    if ($chunk === $chunks - 1) { // 最后一个分片
         // 旧写法 fopen($target_name) 用相对路径（落到当前工作目录），且先 mkdir 了同名目录导致 fopen 必败
+        if (!is_dir($cache_dir)) mkdir($cache_dir, 0755, true);
         $handle = @fopen($target_file, 'w');
         if ($handle === false) {
             die('Invalid input');
