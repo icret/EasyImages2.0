@@ -55,13 +55,14 @@ $sanitizePathConfig = function ($value) {
     }
     return '/' . trim($value, '/') . '/';
 };
-// 安全：账号名去除空白与路径分隔符，避免被拼进上传目录
+// 安全：账号须以英文字母开头，仅允许字母/数字与 . _ - ，长度 1~64。
+// 杜绝纯数字名（会被 arrayeval 落成 int，登录会话复核的 === 因 int/string 类型漂移而失效）与中文/斜杠等异常字符。
 $sanitizeAccount = function ($value) {
     if (!is_string($value)) {
         return null;
     }
     $value = preg_replace('/[\s\/\\\\]+/', '', strip_tags($value));
-    if ($value === '' || $value === '.' || $value === '..') {
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9_.\-]{0,63}$/', $value)) {
         return null;
     }
     return $value;
@@ -320,7 +321,7 @@ if (isset($_POST['admin_form'])) {
     if ($adminUser === null || $adminPassword === null || (is_array($guestConfig) && isset($guestConfig[$adminUser]))) {
         echo '
         <script>
-            new $.zui.Messager("管理员账号无效、密码为空或账号与上传者相同!", {
+            new $.zui.Messager("管理员账号格式无效(须字母开头，仅含 字母/数字/._- )、密码为空或与上传者相同!", {
                 type: "danger", // 定义颜色主题 
                 icon: "exclamation-sign" // 定义消息图标
             }).show();
@@ -354,7 +355,7 @@ if (isset($_POST['uploader_form'])) {
     if ($uploaderUser === null || $uploaderPassword === null || $uploaderUser === ($config['user'] ?? '')) {
         echo '
         <script>
-        new $.zui.Messager("上传用户账号无效、密码为空或与管理员账号相同!", {
+        new $.zui.Messager("上传者账号格式无效(须字母开头，仅含 字母/数字/._- )、密码为空或与管理员相同!", {
             type: "danger", // 定义颜色主题 
             icon: "exclamation-sign" // 定义消息图标
         }).show();
@@ -1057,7 +1058,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="#" onclick="ajax_post('<?php echo $filen_name; ?>','suspic_reimg')">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="#" onclick="ajax_post('<?php echo $file_path; ?>','delete')">删除</a>
                                 </td>
@@ -1281,7 +1282,7 @@ auto_delete(); //定时删除
                 <div class="col-md-12">
                     <div class="form-group col-md-4">
                         <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
-                            <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user']; ?>" required="required" placeholder="更改管理账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            <input type="text" name="user" id="account" class="form-control" value="<?php echo $config['user']; ?>" required="required" placeholder="更改管理账号(字母开头，可含 数字._- )" onkeyup="this.value=this.value.replace(/[^\w.\-]/g,'')">
                             <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                         </div>
                     </div>
@@ -1316,7 +1317,7 @@ auto_delete(); //定时删除
                 <div class="col-md-12">
                     <div class="form-group col-md-3">
                         <div class="input-control has-icon-left" data-toggle="tooltip" title="上传者账号只能上传不能操作其他项目">
-                            <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" autocomplete="off" placeholder="添加上传者账号" onkeyup="this.value=this.value.replace(/\s/g,'')">
+                            <input type="text" name="uploader_user" id="account" class="form-control" value="" required="required" autocomplete="off" placeholder="添加上传者账号(字母开头，可含 数字._- )" onkeyup="this.value=this.value.replace(/[^\w.\-]/g,'')">
                             <label for="account" class="input-control-icon-left"><i class="icon icon-user "></i></label>
                         </div>
                     </div>
@@ -1411,7 +1412,7 @@ auto_delete(); //定时删除
                                 <td><?php echo $file_size; ?></td>
                                 <td>
                                     <a class="btn btn-mini" href="<?php echo $url; ?>" target="_blank">查看</a>
-                                    <a class="btn btn-mini" href="/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
+                                    <a class="btn btn-mini" href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $file_path; ?>" target="_blank">信息</a>
                                     <a class="btn btn-mini btn-success" href="#" onclick="ajax_post('<?php echo $filen_name; ?>','recycle_reimg')">恢复</a>
                                     <a class="btn btn-mini btn-danger" href="#" onclick="ajax_post('<?php echo $file_path; ?>','delete')">删除</a>
                                 </td>
@@ -1536,7 +1537,7 @@ auto_delete(); //定时删除
         </div>
         <div class="tab-pane fade" id="Content14">
             <h5 class="header-dividing">文件管理 <small>由作者定制,非必要请勿替换</small></h5>
-            <a class="btn btn-mini btn-primary" href="/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
+            <a class="btn btn-mini btn-primary" href="<?php echo $config['domain']; ?>/admin/manager.php?p=<?php echo date('Y/m/d'); ?> " target="_blank" data-toggle="tooltip" title="使用Tinyfilemanager管理文件"><i class="icon icon-folder-open"> 文件管理</i></a>
             <a class="btn btn-mini btn-primary" href="filer.php?path=<?php echo '/' . date('Y/m/d'); ?>" target="_blank" data-toggle="tooltip" title="使用web-indexr管理文件"><i class="icon icon-folder-close"> 文件管理</i></a>
             <h5 class="header-dividing">删除文件 <small>* 删除后不可恢复</small></h5>
             <form class="form-inline" method="POST" style="margin-bottom: 5px;">
@@ -1845,7 +1846,7 @@ auto_delete(); //定时删除
                         add_time: '<?php echo date('Y-m-d H:i:s', $value['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         number: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $value['id'], $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo (int) $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo rawurlencode($key); ?>&csrf=<?php echo $csrf; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo rawurlencode($key); ?>&csrf=<?php echo $csrf; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='#' onclick=\"ajax_post('<?php echo (int) $value['id']; ?>','delDir')\" class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
+                        manage: "<a href='<?php echo $config['domain']; ?>/admin/manager.php?p=<?php echo (int) $value['id']; ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_token=<?php echo rawurlencode($key); ?>&csrf=<?php echo $csrf; ?>' class='btn btn-mini btn-danger'>禁用</a> <a href='admin.inc.php?delete_token=<?php echo rawurlencode($key); ?>&csrf=<?php echo $csrf; ?>' class='btn btn-mini btn-danger'>删除</a> <a href='#' onclick=\"ajax_post('<?php echo (int) $value['id']; ?>','delDir')\" class='btn btn-mini btn-primary <?php if (!$config['token_path_status']) echo 'disabled'; ?>'>删除上传</a>"
                     },
                 <?php endforeach; ?>
             ]
@@ -1923,7 +1924,7 @@ auto_delete(); //定时删除
                         add_time: '<?php echo date('Y-m-d H:i:s', $v['add_time']); ?>',
                         expired: '<?php echo $expired; ?>',
                         files: <?php echo get_file_by_glob(APP_ROOT . $config['path'] . $k, $type = 'number'); ?>,
-                        manage: "<a href='/admin/manager.php?p=<?php echo rawurlencode($k); ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo rawurlencode($k); ?>&csrf=<?php echo $csrf; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo rawurlencode($k); ?>&csrf=<?php echo $csrf; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='#' onclick=\"ajax_post('<?php echo rawurlencode($k); ?>','delDir')\">删除上传</a>",
+                        manage: "<a href='<?php echo $config['domain']; ?>/admin/manager.php?p=<?php echo rawurlencode($k); ?>' target='_blank' class='btn btn-mini btn-success <?php if (!$config['guest_path_status']) echo 'disabled'; ?>'>文件</a> <a href='admin.inc.php?stop_guest=<?php echo rawurlencode($k); ?>&csrf=<?php echo $csrf; ?>' class='btn btn-mini btn-danger'>禁用</a> <a class='btn btn-mini btn-danger' href='admin.inc.php?delete_guest=<?php echo rawurlencode($k); ?>&csrf=<?php echo $csrf; ?>'>删除</a> <a class='btn btn-mini btn-primary <?php if (!$config['guest_path_status']) echo 'disabled'; ?>' href='#' onclick=\"ajax_post('<?php echo rawurlencode($k); ?>','delDir')\">删除上传</a>",
                     },
                 <?php endforeach; ?>
             ]

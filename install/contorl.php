@@ -33,8 +33,13 @@ if (hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, hash('sha256', $plainPassword))
 // 安装器入参恒为明文，显式走明文路径：存 bcrypt(SHA256(明文))，不走“十六进制当摘要”的猜测分支；
 // 登录校验走 easyimage_password_verify()→password_verify(摘要, bcrypt)，与存法配对。
 $config['password'] = easyimage_password_hash_plaintext($plainPassword);
-$safeUser = preg_replace('/[^\w\.\-]/', '', (string) $_POST['user']);
-$config['user'] = $safeUser !== '' ? $safeUser : 'admin';
+// 安全：管理员账号须以英文字母开头，仅允许字母/数字与 . _ - （与后台 $sanitizeAccount 同规则）。
+// 拒绝纯数字名，避免其被 arrayeval 落成 int 引发登录会话复核的 int/string 类型漂移失效。
+$safeUser = preg_replace('/[\s\/\\\\]+/', '', strip_tags((string) $_POST['user']));
+if (!preg_match('/^[A-Za-z][A-Za-z0-9_.\-]{0,63}$/', $safeUser)) {
+  exit('<script>window.alert("管理员账号须以英文字母开头，仅可包含字母、数字与 . _ -（1~64位）!");location.href="./index.php";</script>');
+}
+$config['user'] = $safeUser;
 
 if (isset($_POST['domain'])) {
   $config['domain'] = rtrim((string) $_POST['domain'], '/');

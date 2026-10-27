@@ -16,7 +16,7 @@ mustLogin();
       </div>
     </div>
   <?php endif; ?>
-  <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="/app/upload.php">
+  <div id='upShowID' class="uploader col-md-12 clo-xs-12" data-ride="uploader" data-url="<?php echo $config['domain']; ?>/app/upload.php">
     <div class="uploader-message text-center">
       <div class="content"></div>
       <button type="button" class="close">x</button>

@@ -48,7 +48,7 @@ if ($config['notice_status'] > 0) : ?>
     <!-- 页脚信息 -->
     <a href="https://github.com/icret/EasyImages2.0" target="_blank" rel="nofollow" data-toggle="tooltip" title="Github Releases">© Since 2018</a>
     <a href="https://calc.appsr.cn/" target="_blank" data-toggle="tooltip" title="简单图床官网">EasyImage</a>
-    <a href="/app/DMCA.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
+    <a href="<?php echo $config['domain']; ?>/app/DMCA.php" target="_blank" data-toggle="tooltip" title="使用协议">DMCA</a>
     <!-- 二维码按钮 -->
     <a data-toggle="modal" href="#qr"><i class="icon icon-qrcode hidden-xs inline-block" data-toggle="tooltip" title="二维码"></i></a>
     <?php /** 暗黑模式 */ if ($config['dark-mode']) : ?>

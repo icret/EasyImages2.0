@@ -60,6 +60,9 @@
 - 修复文件管理器（`admin/filer.php`）存储型 XSS 与符号链接越界：文件名/路径按 HTML 与 inline JS 分别转义，对已存在路径做 `realpath` 二次边界校验，禁止 SVG 在线新建/编辑 `9f8abdb` `b12cb67`
 - 修复后台登出与文件管理登录逻辑：`admin/index.php` 注销改为登出图床会话，移除重复的 host 解析与未使用变量 `4e62145`
 - 修复下载与输入类型：下载扩展名白名单统一转小写并去空格，路径/日期/验证码入参显式转字符串 `4e62145`
+- 修复管理员/上传者账号设为纯数字时「登录成功即掉线」（[#252](https://github.com/icret/EasyImages2.0/issues/252)）：`arrayeval()` 将纯数字值以无引号整数落盘，而登录会话复核以严格 `===` 比较会话中的字符串账号与配置里的整数账号，PHP 8 下恒为 `false`。改从入参根治——后台改密/增改上传者与安装器的账号统一要求 ASCII 字母开头、仅允许字母/数字与 `.` `_` `-`（1~64 位），彻底消除整数化类型漂移（`admin/admin.inc.php`、`install/contorl.php`、`install/install.php`）
+- 修复二级目录/反向代理子路径部署下大量内部链接指向站点根而 404（[#146](https://github.com/icret/EasyImages2.0/issues/146)、[#193](https://github.com/icret/EasyImages2.0/issues/193)）：首页上传端点 `data-url` 及页脚、图片详情、广场、上传日志、后台回收/待审与文件管理入口、TinyFileManager 缩略图共 13 处硬编码的站点根绝对路径（`/app/…`、`/admin/…`）统一改为 `$config['domain']` 前缀，与页头导航、缩略图、跳转的既有约定一致（`index.php`、`app/footer.php`、`app/info.php`、`app/list.php`、`app/viewlog.php`、`admin/admin.inc.php`、`admin/manager.php`）。`domain` 为空的站点根部署行为不变；子目录部署须将「网站域名」填为含子目录的完整基址方能生效
+- 修复页面头部「首页」链接在 `domain` 为空时渲染为 `href=""`、点击不跳转：改为在 `$config['domain']` 后补 `/`，空域名回落站点根、子目录基址亦正确（`app/header.php`）
 
 #### 性能优化
 

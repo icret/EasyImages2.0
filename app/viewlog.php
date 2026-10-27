@@ -196,7 +196,7 @@ try {
                         size: '<?php echo $viewlogEsc($v['size'] ?? ''); ?>',
                         checkImg: '<?php echo strstr((string) ($v['checkImg'] ?? ''), 'OFF') ? '否' : '是'; ?>',
                         from: '<?php echo is_numeric($v['from'] ?? '') ? 'API' : '网页'; ?>',
-                        manage: '<div class="btn-group"><a href="<?php echo $viewlogEsc(rand_imgurl() . $logPath); ?>" target="_blank" class="btn btn-mini btn-success">查看</a> <a href="/app/info.php?img=<?php echo $logPathEsc; ?>" target="_blank" class="btn btn-mini">信息</a><a href="#" onclick="ajax_post(<?php echo $logPathJs; ?>,\'recycle\')" class="btn btn-mini btn-info">回收</a> <a href="#" onclick="ajax_post(<?php echo $logPathJs; ?>,\'delete\')" class="btn btn-mini btn-danger">删除</a></div>',
+                        manage: '<div class="btn-group"><a href="<?php echo $viewlogEsc(rand_imgurl() . $logPath); ?>" target="_blank" class="btn btn-mini btn-success">查看</a> <a href="<?php echo $config['domain']; ?>/app/info.php?img=<?php echo $logPathEsc; ?>" target="_blank" class="btn btn-mini">信息</a><a href="#" onclick="ajax_post(<?php echo $logPathJs; ?>,\'recycle\')" class="btn btn-mini btn-info">回收</a> <a href="#" onclick="ajax_post(<?php echo $logPathJs; ?>,\'delete\')" class="btn btn-mini btn-danger">删除</a></div>',
                     },					
                 <?php endforeach; ?>
             ]

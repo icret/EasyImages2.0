@@ -72,7 +72,7 @@ $state = $_POST['check'];
             <div class="form-group">
                 <label class="col-sm-2 ">管理账号</label>
                 <div class="col-md-6 col-sm-10">
-                    <input type="text" class="form-control" name="user" value="admin" placeholder="请以大小写英文或数字输入管理员账号" onkeyup="this.value=this.value.replace(/[^\w\.\/]/ig,'')">
+                    <input type="text" class="form-control" name="user" value="admin" placeholder="字母开头，可含数字与 . _ -" onkeyup="this.value=this.value.replace(/[^\w.\-]/g,'')">
                 </div>
             </div>
             <div class="form-group">
