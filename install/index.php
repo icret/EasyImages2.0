@@ -195,8 +195,8 @@ function checkPASS($name)
                 <i class="icon icon-qrcode"></i>二维码 </a>
         </div>
         <?php echo 'Copyright © 2018-' . date('Y'); ?>
-        <a href="https://png.cm/" target="_blank">EasyImage</a> By
-        <a href="https://blog.png.cm/902.html" target="_blank">Icret</a> Version:<a href="https://github.com/icret/EasyImages2.0" target="_blank"><?php echo APP_VERSION; ?></a>
+        <a href="https://calc.appsr.cn/" target="_blank">EasyImage</a> By
+        <a href="https://calc.appsr.cn/" target="_blank">Icret</a> Version:<a href="https://github.com/icret/EasyImages2.0" target="_blank"><?php echo APP_VERSION; ?></a>
     </footer>
 </body>
 

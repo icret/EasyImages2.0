@@ -7,7 +7,7 @@
 ![EasyImage简单图床使用PicGo上传图片](images/4128197507.png)
 
 ```PicGo
-API地址:https://png.cm/api/index.php // 输入你网站api地址
+API地址:https://calc.appsr.cn/api/index.php // 输入你网站api地址
 POST参数名: image
 JSON路径: url
 自定义Body: {"token":"1c17b11693cb5ec63859b091c5b9c1b2"} // 这里输入你网站生成的token

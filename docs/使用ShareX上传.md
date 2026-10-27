@@ -11,7 +11,7 @@
   "Name": "简单图床API图片上传",
   "DestinationType": "ImageUploader",
   "RequestMethod": "POST",
-  "RequestURL": "https://png.cm/api/index.php",
+  "RequestURL": "https://calc.appsr.cn/api/index.php",
   "Body": "MultipartFormData",
   "Arguments": {
     "token": "1c17b11693cb5ec63859b091c5b9c1b2"

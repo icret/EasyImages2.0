@@ -488,7 +488,7 @@ auto_delete(); //定时删除
                 <div class="form-group col-md-12">
                     <div class="form-group col-md-1">
                         <label data-toggle="tooltip" title="前后需加'/'">存储目录</label>
-                        <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考: https://blog.png.cm/981.html 或 README.md">
+                        <input type="text" class="form-control" name="path" required="required" value="<?php echo $config['path']; ?>" onkeyup="this.value=this.value.replace(/\s/g,'')" title="可根据Apache/Nginx配置安全,参考 README.md">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="storage_path" data-toggle="tooltip" title="图片的分类目录<br>更改会导致广场无法使用<br>非必要不要修改,末尾需要加'/' <br />PHP date() 函数参考">存储分类路径 <a href="https://www.runoob.com/php/php-date.html" target="_blank"><i class="icon icon-external-link"></i></a></label>
@@ -1113,7 +1113,7 @@ auto_delete(); //定时删除
                 <a href="https://icret.github.io/EasyImages2.0/#/./使用PicGo上传" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用PicGo上传">PicGo</span></a>
                 <h6>开发支持</h6>
                 <p>
-                    <a href="https://png.cm/?demo" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="演示地址"><i class="icon icon-external-link"></i> Demo</span></a>
+                    <a href="https://calc.appsr.cn/?demo" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="演示地址"><i class="icon icon-external-link"></i> Demo</span></a>
                     <a href="<?php echo is_file(APP_ROOT . '/docs/index.html') ?  '../docs' : 'https://icret.github.io/EasyImages2.0/#/'; ?>" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="使用手册"><i class="icon icon-book"></i> Manual</span></a>
                     <a href="https://t.me/Easy_Image" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="EasyImage Telegram Group"><i class="icon icon-comments-alt"></i> Telegram</span></a>
                     <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><span class="label label-badge label-primary" data-toggle="tooltip" title="GitHub 社区"><i class="icon icon-comments-alt"></i> Discuss</span></a>

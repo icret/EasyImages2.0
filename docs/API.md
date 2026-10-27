@@ -5,8 +5,10 @@
         "code":200,
         "url":"https:\/\/i2.100024.xyz\/2023\/01\/24\/10gwv0y-0.webp",
         "srcName":"195124",
-        "thumb":"https:\/\/png.cm\/application\/thumb.php?img=\/i\/2023\/01\/24\/10gwv0y-0.webp",
-        "del":"https:\/\/png.cm\/application\/del.php?hash=bW8vWG4vcG8yM2pLQzRJUGI0dHlTZkN4L2grVmtwUTFhd1A4czJsbHlMST0="
+        "thumb":"https:\/\/calc.appsr.cn\/app\/thumb.php?img=\/i\/2023\/01\/24\/10gwv0y-0.webp",
+        "del":"https:\/\/calc.appsr.cn\/app\/del.php?hash=bW8vWG4vcG8yM2pLQzRJUGI0dHlTZkN4L2grVmtwUTFhd1A4czJsbHlMST0=",
+        "id":0,
+        "message":"success"
     }
 ```
 - 返回示例解释
@@ -16,13 +18,15 @@
   `srcName` 原始名称
   `thumb` 缩略图
   `del` 文件删除链接
+  `id` Token ID（api_key.php 中该 Token 的整数 id，配合文件名后缀开关使用）
+  `message` 返回信息（成功为 success，失败为具体错误）
 
 ### 上传示例 仅供参考
 
 - html
 
 ```html
-<form action="http://127.0.0.1/api/index.php" method="post" enctype="multipart/form-data">
+<form action="http://localhost/api/index.php" method="post" enctype="multipart/form-data">
     <input type="file" name="image" accept="image/*" required>
     <input type="text" name="token" placeholder="在tokenList文件找到token并输入" required> 
     <input type="submit" value="上传">
@@ -41,7 +45,7 @@ image_path = "/path/to/your/image.jpg"
 token = "your_token_value_here"
 
 # 目标URL
-url = "http://127.0.0.1/api/index.php"
+url = "http://localhost/api/index.php"
 
 # 构建请求参数
 files = {'image': open(image_path, 'rb')}
@@ -59,7 +63,7 @@ else:
 - Curl
 
 ```CURL
-curl -X POST http://127.0.0.1/api/index.php \
+curl -X POST http://localhost/api/index.php \
 -F "image=@/path/to/your/file/example.jpg" \
 -F "token=your_token"
 ```
@@ -78,7 +82,7 @@ formData.append('token', token);
 
 // 发起上传请求
 $.ajax({
-    url: 'http://127.0.0.1/api/index.php',
+    url: 'http://localhost/api/index.php',
     type: 'POST',
     data: formData,
     processData: false,

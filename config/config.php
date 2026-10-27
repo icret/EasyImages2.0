@@ -10,8 +10,8 @@ $config=Array
 	'notice_status'=>0,
 	'notice'=>'<p>简单图床是一款开源图床, 支持多文件上传无数据库；</p>
 <p>如果你喜欢这种图床风格就<a href="https://github.com/icret/EasyImages2.0" target="_black">下载</a>喔 (๑•̀ㅂ•́)و✧</p>',
-	'domain'=>'http://127.0.0.1',
-	'imgurl'=>'http://127.0.0.1',
+	'domain'=>'',
+	'imgurl'=>'',
 	'user'=>'admin',
 	'password'=>'$2y$12$vX4ZGHn5V2Zo8n40Ota6hOr4LCjKPZsv3Ax285k81B1D/qH0JreSu',
 	'ftp_status'=>0,
@@ -35,7 +35,7 @@ $config=Array
 	'maxSize'=>10485760,
 	'maxUploadFiles'=>30,
 	'watermark'=>0,
-	'waterText'=>'简单图床 - png.cm',
+	'waterText'=>'简单图床 - calc.appsr.cn',
 	'waterPosition'=>9,
 	'textColor'=>'rgba(255,0,0,1)',
 	'textSize'=>20,
@@ -136,7 +136,7 @@ $config=Array
 <h5>本人仅为程序开源创作,如遇非法网站使用与本人无关,请勿用于商业用途;</h5>
 <h5>更改配置或内容应注意闭合标签, 否则会导致页面显示不全或者功能异常;</h5>
 <h5>作为开发者你可以对相应功能进行扩展(增删改相应代码), 但请保留代码中源作者信息。</h5>
-<a href="https://png.cm/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示</button></a>
+<a href="https://calc.appsr.cn/?admin.inc" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-external-link"></i> 演示</button></a>
 <a href="https://icret.github.io/EasyImages2.0/#/" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-book"></i> 手册</button></a>
 <a href="https://github.com/icret/EasyImages2.0/discussions" target="_blank"><button type="button" class="btn btn-mini"><i class="icon icon-comments-alt"></i> 社区</button></a>
 <a href="https://t.me/Easy_Image" target="_blank" data-toggle="tooltip" title="EasyImage Telegram Group"><button type="button" class="btn btn-mini"><i class="icon icon-plane"></i> Telegram</button></a>

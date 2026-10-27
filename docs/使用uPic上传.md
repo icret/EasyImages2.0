@@ -7,7 +7,7 @@
 ![EasyImage简单图床使用uPic上传图片](images/uPic.avif)
 
 ```uPic
-API地址:https://png.cm/api/index.php // 输入你网站api地址
+API地址:https://calc.appsr.cn/api/index.php // 输入你网站api地址
 请求方式: POST
 文件字段名: image
 添加其他字段：

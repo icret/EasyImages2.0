@@ -9,6 +9,6 @@
 - 本程序对于环境要求极低
 
 [GitHub](https://github.com/icret/EasyImages2.0)
-[DEMO](https://png.cm/)
+[DEMO](https://calc.appsr.cn/)
 
 <!-- ![color](#f1939c) -->
