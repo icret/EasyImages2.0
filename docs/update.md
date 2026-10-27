@@ -1,10 +1,10 @@
 * 2026-10-27 v2.8.7
 
-> 安全与稳定性集中修复版本。`2.8.6..2.8.7` 共 18 次提交（含 3 次合并提交）、66 个文件变更（+3196 / -1809）。本轮代码审计确认 2 个严重级、11 个高危级、21 个中危级、11 个低危级问题，除出厂默认口令需人工修改外均已完成修复或加固。**升级前请先阅读文末「升级注意」**。
+> 安全与稳定性集中修复版本。`2.8.6..2.8.7` 共 19 次提交（含 3 次合并提交）、67 个文件变更（+3601 / -1894）。本轮代码审计确认 2 个严重级、11 个高危级、21 个中危级、11 个低危级问题，已完成修复或加固；口令存储升级为加盐 bcrypt，与全部安全修复一致地**不做向后兼容**。**升级前请先阅读文末「升级注意」**。
 
 #### 安全修复
 
-- 修复安装器可被任意访客重装并接管站点：仅在「无 `config/install.lock` 且管理员密码仍为出厂默认口令（bcrypt）」时允许安装，新增 `EASYIMAGE_DEFAULT_PASSWORD_HASH` 常量、第二步来源校验、账号/域名清洗与密码 8~64 位限制 `9f8abdb`
+- 修复安装器可被任意访客重装并接管站点：仅在「无 `config/install.lock` 且管理员口令仍为出厂默认」时允许安装，并禁止再以出厂默认口令完成安装；新增 `EASYIMAGE_DEFAULT_PASSWORD` 常量与由其派生的 `EASYIMAGE_DEFAULT_PASSWORD_HASH`（不再硬编码摘要字面量）、第二步来源校验、账号/域名清洗与密码 8~64 位限制；「是否仍为出厂默认」的判定由字符串比较统一改为 `password_verify(默认摘要, 存储值)`（`app/check.php`、`install/index.php`、`install/install.php`、`install/contorl.php`、`admin/inc.check.php`） `9f8abdb` `941512d`
 - 修复文件管理器越权写 WebShell（[#285](https://github.com/icret/EasyImages2.0/issues/285)）：`admin/manager.php`、`admin/filer.php` 根目录收敛到图片存储目录，创建/上传扩展名对齐主配置图片白名单，关闭在线编辑、打包下载与远程拉取并补鉴权闸 `b12cb67` `0e6838d`
 - 修复认证凭据可重放（#285）：登录态由下发 `auth` Cookie 改为服务端 Session + `session_regenerate_id()`，主动失效历史凭据 Cookie，并提供 `_logout()` 统一登出 `b12cb67`
 - 修复登录日志泄露可重放凭据（#285）：不再记录口令或其 SHA256 摘要，并清理换行防止日志伪造 `b12cb67` `9f8abdb`
@@ -16,17 +16,17 @@
 - 修复统计页任意目录删除：`admin/chart.php`、`admin/zui.chart.php` 只允许清空固定的 `admin/logs/counts` 目录 `9f8abdb`
 - 新增服务端上传扩展名白名单：`app/upload.php`、`api/index.php` 必须命中 `config.extensions`，不再只信任 MIME 类型 `9f8abdb`
 - 修复 TinyFileManager 远程 URL 上传导致的 SSRF：关闭该能力并移除 `shell_exec` MIME 回退 `9f8abdb`
-- 修复 `X-Forwarded-For`/`Client-IP` 伪造绕过 IP 黑白名单与游客每日限额：`real_ip()` 仅在直连对端为内网/回环（可信代理）时采信转发头，并用 `filter_var()` 校验；新增 `trusted_proxy` 配置项，公网反代/CDN 部署可填写代理出口 IP（支持 `*` 通配段） `9f8abdb`
-- 修复审查发现的防护短板：文件管理器 SVG/图片内容校验改为在分片合并后的完整文件上执行（合法首片+恶意后续片不再能绕过，>10MB 合法大图不再被首片截断误拒）；首页→安装页跳转增加“密码仍为出厂默认”前置条件，与安装门闸不再构成重定向死环；`zui.chart.php` 补齐 CSRF 校验；批量删除改走 `resolve_image_path()` 收敛并按实际结果返回状态；后台改密补 8 位最小长度；`path_rtoa()` 越界改为拒绝并校验新建目标的最近存在祖先；`real_ip()` 采信转发头支持可信代理名单；缩略图生成失败回落原图；日志输出侧补转义
+- 修复 `X-Forwarded-For`/`Client-IP` 伪造绕过 IP 黑白名单与游客每日限额：`real_ip()` 仅在直连对端为内网/回环（可信代理）时采信转发头，并用 `filter_var()` 校验；新增 `trusted_proxy` 配置项，公网反代/CDN 部署可填写代理出口 IP（支持 `*` 通配段） `9f8abdb` `941512d`
+- 修复审查发现的防护短板：文件管理器 SVG/图片内容校验改为在分片合并后的完整文件上执行（合法首片+恶意后续片不再能绕过，>10MB 合法大图不再被首片截断误拒）；首页→安装页跳转增加“密码仍为出厂默认”前置条件，与安装门闸不再构成重定向死环；`zui.chart.php` 补齐 CSRF 校验；批量删除改走 `resolve_image_path()` 收敛并按实际结果返回状态；后台改密补 8 位最小长度；`path_rtoa()` 越界改为拒绝并校验新建目标的最近存在祖先；`real_ip()` 采信转发头支持可信代理名单；缩略图生成失败回落原图；日志输出侧补转义 `941512d`
 - 新增后台 CSRF 防护：`csrf_token()`/`csrf_verify()` 令牌保存在服务端 Session，表单由页面 JS 自动补隐藏字段，危险 GET 操作由服务端拼接 `&csrf=`，`app/del.php` 管理员 POST 与统计页 POST 统一校验；公开能力（hash 删除链接）不受影响 `9f8abdb`
 - 修复源图保护默认 Key 可预测：开启 `hide` 而 `hide_key` 为空或仍为公开默认值时，自动生成 16 字节随机 Key `9f8abdb`
-- 口令存储升级为加盐 bcrypt（cost 12），**不向后兼容**：落盘由无盐单轮 `SHA256(明文)` 改为 `bcrypt(SHA256(明文))`，即使 `config.php` 泄露也不再直接得到可离线暴破的凭据（登录线上仍传前端 `SHA256(明文)` 摘要作 pre-hash，重放防护由 TLS/会话承担）；安装器、后台改密、上传者增改均走同一算法，登录端以提交摘要做 `password_verify`（修复 [#268](https://github.com/icret/EasyImages2.0/pull/268) 早期直接存 bcrypt 导致“安装完即无法登录”的问题，改为与登录校验配对的正确实现）。**不再接受遗留无盐 SHA256 摘要作为存储值**（无透明迁移），升级后存量以 SHA256 存储的管理员/上传者口令均失效，需重新走安装引导或按下方恢复路径重置
-- 收紧认证写入与校验路径（本轮复核加固）：安装器/口令恢复页等“入参恒为明文”的写入路径显式按 `bcrypt(SHA256(明文))` 计算，不再猜测“64 位十六进制即摘要”（避免默认摘要串被当摘要绕过禁默认判定、以及十六进制明文口令被锁死）；安装禁默认改为按有效摘要比对（与输入形态无关）；登录失败统一为「账号或密码错误」并对不存在账号也跑一次 bcrypt 拉平时序，抑制账号枚举；后台改密对明文回退补 8~64 位长度校验；`app/reset_password.php` 的在线口令转换改为仅登录管理员可用（防匿名触发 bcrypt 的 CPU 放大），被锁在外者走静态恢复指引；出厂示例上传者账号（遗留 SHA256、已失效）移除
+- 口令存储升级为加盐 bcrypt（cost 12），**不向后兼容**：落盘由无盐单轮 `SHA256(明文)` 改为 `bcrypt(SHA256(明文))`，即使 `config.php` 泄露也不再直接得到可离线暴破的凭据（登录线上仍传前端 `SHA256(明文)` 摘要作 pre-hash，重放防护由 TLS/会话承担）；安装器、后台改密、上传者增改均走同一算法，登录端以提交摘要做 `password_verify`（修复 [#268](https://github.com/icret/EasyImages2.0/pull/268) 早期直接存 bcrypt 导致“安装完即无法登录”的问题，改为与登录校验配对的正确实现）。**不再接受遗留无盐 SHA256 摘要作为存储值**（无透明迁移），升级后存量以 SHA256 存储的管理员/上传者口令均失效，需重新走安装引导或按下方恢复路径重置 `9f8abdb` `941512d`
+- 收紧认证写入与校验路径（本轮复核加固）：安装器/口令恢复页等“入参恒为明文”的写入路径显式按 `bcrypt(SHA256(明文))` 计算，不再猜测“64 位十六进制即摘要”（避免默认摘要串被当摘要绕过禁默认判定、以及十六进制明文口令被锁死）；安装禁默认改为按有效摘要比对（与输入形态无关）；登录失败统一为「账号或密码错误」并对不存在账号也跑一次 bcrypt 拉平时序，抑制账号枚举；后台改密对明文回退补 8~64 位长度校验；`app/reset_password.php` 的在线口令转换改为仅登录管理员可用（防匿名触发 bcrypt 的 CPU 放大），被锁在外者走静态恢复指引；出厂示例上传者账号（遗留 SHA256、已失效）移除 `941512d`
 - 新增分片上传参数校验：`chunk`/`chunks` 非数字、数组入参或直接缺失分片文件时拒绝请求 `5472245` `90ab630` `4e62145`
 - 新增部署侧防护：新增 `config/.htaccess`（配置目录整体拒绝 Web 访问）、重写 `i/.htaccess`（关闭 PHP 引擎 + `AcceptPathInfo Off` + 可执行扩展名拒绝 + 隐藏文件拒绝 + SVG sandbox）、新增根目录 `.htaccess`（拒绝读取审计报告与安装锁）；`docs/安全配置.md` 同步 Nginx/Caddy 等价规则 `b12cb67` `9f8abdb`
 - 新增基础安全响应头：`X-Content-Type-Options: nosniff`、`X-Frame-Options: SAMEORIGIN`、`Referrer-Policy: same-origin`（`app/base.php`，CLI 下跳过） `9f8abdb`
 - 其他加固：后台配置保存改为只接受已存在的配置键（`array_intersect_key`），并对存储路径/管理员路径/账号/密码/Token 入参做收敛校验；验证码随机源 `rand()` → `random_int()`；`get_whole_url()` 过滤 Host 头非法字符；`class.version.php` 恢复 TLS 校验并移除全局 `error_reporting(0)`；Bing 背景抓取重写为 HTTPS + curl 超时 + TLS 校验 + 图片内容校验 + 固定 cache 目录 `9f8abdb`
-- 加固输出与响应头：`app/hide.php` 补扩展名白名单并返回正确 `Content-Type`；路径收敛后越界请求统一返回 403、文件不存在返回 404（`thumb/down/info`）；`app/info.php` 与 `app/compressing.php` 结果字段转义，下载文件名头引号化；`app/reset_password.php` 的 `md5()` 入参类型校验 `e337a2b` `b12cb67` `9f8abdb`
+- 加固输出与响应头：`app/hide.php` 补扩展名白名单并返回正确 `Content-Type`；路径收敛后越界请求统一返回 403、文件不存在返回 404（`thumb/down/info`）；`app/info.php` 与 `app/compressing.php` 结果字段转义，下载文件名头引号化；`app/reset_password.php` 的 `md5` 表单入参补 `is_string` 类型校验 `e337a2b` `b12cb67` `9f8abdb` `941512d`
 
 #### 功能新增
 
@@ -66,12 +66,14 @@
 - 页面头部「广场」文件计数不再每次请求递归扫描整个存储目录，改为缓存化读取 `easyimage_cached_file_count()` `9f8abdb`
 - `getFileNumber()` 改为目录迭代器实现，`get_file_by_glob()` 与 `app/total_files.php` 增加请求内缓存/记忆化 `3fe184d` `9f8abdb`
 - 版本检查增加请求内缓存，关闭环境自检时不再发起网络请求 `9f8abdb`
+- 「是否仍为出厂默认口令」的 bcrypt 判定结果按会话缓存（存储口令变化时才重算），避免每次进入后台设置页都跑一次 cost 12 的 bcrypt `941512d`
 
 #### 兼容性调整
 
 - 最低 PHP 版本由 5.6/7.0 提升至 7.4，官方支持范围 7.4 ~ 8.4；安装检查项、环境自检门槛与 README/docs 徽章及文案同步 `d2ffef2`
 - PHP 8.5 兼容：`finfo_close()`/`curl_close()`/`imagedestroy()` 弃用统一加 `PHP_VERSION_ID < 80500` 判定，`exit(header())` 改为 `header(); exit;`，TimThumb 反引号改 `shell_exec()` 并判断函数可用性；涉及 `class.upload.php`、`class.version.php`、`bing.php`、`TimThumb.php`、`WaterMask.php`、`Zebra_Image.php`、`captcha.php`、`admin/manager.php`、`install/*` `9f8abdb`
 - PHP 8.1+ 传 null 参数的 Deprecated 全面收口，并消除未定义变量/数组键、`pathinfo` 缺键、`foreach(false)` 等告警 `3fe184d` `4e62145`
+- 口令存储格式变更：`config/config.php` 的 `password` 由 64 位十六进制无盐 SHA256 变为 `$2y$12$...` bcrypt 串，读取方（`urlHash()` 主密钥、默认口令检测）已同步适配；`config/config.guest.php` 移除出厂示例上传者账号（其遗留 SHA256 值升级后无效） `941512d`
 
 #### 依赖更新
 
@@ -84,8 +86,10 @@
 
 - `app/function.php` 严格等价重构（约 1360 行变更）：`??` 替代 isset 三元、`preg_grep` 改写目录遍历、比较符与 `htmlentities`/`real_ip` 保持原语义 `3fe184d`
 - 移除 `public/static/EasyImage.js` 中无引用的 `isUrl()` 死代码 `3fe184d`
+- 删除无引用死文件 `app/check_admin.inc.php`（早期前台环境自检提示块，全库无任何 `include`/`require` 引用点，且其「是否仍为出厂默认口令」判定用字串比较、bcrypt 化后永不命中；环境自检提示统一由 `admin/inc.check.php` 承担）（`941512d` 删除死函数 `checkEnv()` 后同批复核发现）
 - 版本标识统一为 2.8.7：`APP_VERSION`（`app/base.php`）、`admin/version.php`、`config/config.php` 的 `update` 时间戳 `e0665f0` `3fe184d`
-- `.gitignore` 忽略运行时产物与部署文件：`i/cache/`、`i/recycle/`、`i/2*/`、`config/install.lock`、`config/EasyIamge.lock` 及本地审计报告 `e337a2b` `dcb9776` `9f8abdb`
+- `.gitignore` 忽略运行时产物与部署文件：`i/cache/`、`i/recycle/`、`i/2*/`、`config/install.lock`、`config/EasyIamge.lock`、本地审计报告，以及后台运行时日志目录 `admin/logs/`（登录日志、上传日志、IP 计数、统计缓存，均按需自动创建） `e337a2b` `dcb9776` `9f8abdb` `941512d`
+- 口令散列逻辑收敛为 `easyimage_password_digest()` / `easyimage_password_hash()` / `easyimage_password_hash_plaintext()` / `easyimage_password_verify()` 四个辅助函数，安装器、后台改密、上传者增改、恢复页与 `_login()` 全部复用，避免多处实现不一致；同时删除无调用点的死函数 `checkEnv()`（其配置开关 `checkEnv` 仍由 `admin/inc.check.php` 使用） `941512d`
 
 #### 升级注意
 
@@ -93,12 +97,12 @@
 2. 曾使用默认 `hide_key`（`EasyImage2.0`）的源图保护直链，会因 Key 被自动随机化而失效，需重新获取链接。
 3. 登录态由 Cookie 迁移到服务端 Session，升级后所有已登录会话需重新登录，`auth` Cookie 不再下发。
 4. 最低 PHP 版本提升至 7.4，PHP 5.6 ~ 7.3 站点须先升级 PHP，否则安装引导与环境检查不通过。
-5. `config/config.php` 新增 `token_suffix_ID` 键：沿用 2.8.6 旧配置时该键缺失会触发 `Undefined array key`，且后台保存只接受已存在的配置键，需手动在 `config.php` 补 `'token_suffix_ID'=>1`。
+5. `config/config.php` 新增 `token_suffix_ID` 键：沿用 2.8.6 旧配置时该键缺失会触发 `Undefined array key`，且后台保存只接受已存在的配置键，需手动在 `config.php` 补 `'token_suffix_ID'=>1`。同为新增键的 `trusted_proxy` 以 `?? ''` 读取，旧配置缺失不影响运行，仅在需信任公网代理时补填。
 6. ip2region 数据文件已切换为 v3 结构：若曾自行下载旧版 `app/ip2region/ip2region.xdb`，需按后台提示重新下载，否则 IP 定位查询失败。
 7. 文件管理器能力收敛：仅能管理图片存储目录，在线编辑、打包下载、远程 URL 拉取均已关闭；`config/config.manager.php` 中的安全项会被 `admin/manager.php` 的强制覆盖块降级，手动改回无效。
 8. `i/.htaccess`、`config/.htaccess` 与根目录 `.htaccess` 仅对 Apache 生效，Nginx/Caddy 需按 `docs/安全配置.md` 配置等价规则（目录脚本执行拒绝、SVG `CSP sandbox`、隐藏文件拒绝）。
-9. 安装器仅在「无 `config/install.lock` 且密码为出厂默认」时可用；需要重新安装时先删除该锁文件，且发行包不应携带它。
-10. 出厂默认管理员口令未做修改，部署后必须立即在后台改密（改密后依赖管理员密码派生的删除链接与源图保护链接会同步变化）。
+9. 安装器仅在「无 `config/install.lock` 且存储口令仍为出厂默认」时可用，且不再允许以出厂默认口令 `admin@123` 完成安装；需要重装时先删除该锁文件并将口令恢复为默认，发行包不应携带它。
+10. 出厂默认凭据仍为 `admin@123`（`config/config.php` 中的存储值已替换为其加盐 bcrypt 串），部署后必须立即改密；因 `urlHash()` 的 HKDF 主密钥取自管理员口令，改密会使旧的加密删除链接与源图保护链接同步失效（页面重新渲染的新链接不受影响）。
 11. ECharts 升级至 6.x，统计页图表的默认主题色与图例样式可能与旧版存在视觉差异。
 12. 鉴黄新增 `Hentai` 判定维度，同一 `checkImg_value` 阈值下被标记为可疑的图片比例会上升，请按实际效果调整阈值。
 13. 分片上传依赖存储目录下的 `cache/` 子目录（缺失时自动创建），目录权限不足会导致分片合并失败。
