@@ -14,17 +14,17 @@ const USAGE_SPACE_KEY = 'usage_space';
 const FILENUM_KEY = 'filenum';
 const DIRNUM_KEY = 'dirnum';
 
-require_once '../app/chart.php';
+require_once __DIR__ . '/../app/chart.php';
 
-// 检查是否开启查询
-if ($config['public'] === 0) {
+// 检查是否开启查询（兼容字符串 '0' 的旧配置）
+if (empty($config['public'])) {
     http_response_code(403); // 返回403 Forbidden
     die('开放数据接口已关闭!');
 }
 
 // 获取并验证GET参数
-$show = isset($_GET['show']) ? trim($_GET['show']) : '';
-if (!$show || !in_array($show, $config['public_list'])) {
+$show = isset($_GET['show']) && is_string($_GET['show']) ? trim($_GET['show']) : '';
+if ($show === '' || !is_array($config['public_list']) || !in_array($show, $config['public_list'], true)) {
     http_response_code(400); // 返回400 Bad Request
     die('没有权限或参数错误!');
 }
@@ -49,14 +49,15 @@ try {
 
         // 总空间
         case 'total_space':
-            echo getDistUsed(disk_total_space('.'));
+            $totalSpace = disk_total_space(__DIR__);
+            echo $totalSpace !== false ? getDistUsed($totalSpace) : '0bytes';
             break;
 
         // 已用空间
         case 'used_space':
-            $totalSpace = disk_total_space('.');
+            $totalSpace = disk_total_space(__DIR__);
             if ($totalSpace !== false && is_numeric($totalSpace)) {
-                $freeSpace = disk_free_space('.');
+                $freeSpace = disk_free_space(__DIR__);
                 if ($freeSpace !== false && is_numeric($freeSpace)) {
                     echo getDistUsed($totalSpace - $freeSpace);
                 } else {
@@ -67,9 +68,9 @@ try {
             }
             break;
 
-        // 剩余空间
+        // 剩余空间（使用当前站点所在分区，避免 Windows 下 '/' 无效）
         case 'free_space':
-            $freeSpace = disk_free_space('/');
+            $freeSpace = disk_free_space(__DIR__);
             if ($freeSpace !== false && is_numeric($freeSpace)) {
                 echo getDistUsed($freeSpace);
             } else {

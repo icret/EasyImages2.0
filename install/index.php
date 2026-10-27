@@ -1,9 +1,14 @@
 <?php
 require_once __DIR__ . '/../app/function.php';
 clearstatcache();
-// 存在程序锁则跳转主页
+// 存在程序锁或已完成安装则跳转主页
 if (file_exists(APP_ROOT . '/config/install.lock')) {
-    exit(header("Location:/../index.php"));
+    header("Location: ../index.php");
+    exit;
+}
+if (!isset($config['password']) || !hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
+    header("Location: ../index.php");
+    exit;
 }
 $phpEnv = (PHP_VERSION >= 7.4) ? true : false;
 $fileinfo = extension_loaded('fileinfo') ? true : false;

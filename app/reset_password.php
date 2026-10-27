@@ -2,7 +2,7 @@
 include_once __DIR__ . "/header.php";
 
 $value = '';
-if (isset($_POST['md5'])) {
+if (isset($_POST['md5']) && is_string($_POST['md5'])) {
     $value = hash('sha256', $_POST['md5']);
 }
 

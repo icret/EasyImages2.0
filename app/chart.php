@@ -40,6 +40,7 @@ function write_chart_total()
 
     $count_day = getLatelyTime('month');
 
+    $count_contents = array();
     $count_contents['filename'] = $chart_total_file_md5; // 文件名称
     $count_contents['total_time'] = date('Y-m-d H:i:s'); // 统计时间
     $count_contents['date'] = date('YmdH');              // 校对时间
@@ -58,8 +59,10 @@ function write_chart_total()
         mkdir(APP_ROOT . '/admin/logs/counts/', 0755, true);
     }
 
-    $count_contents = json_encode($count_contents, true);
-    file_put_contents($chart_total_file, $count_contents);  // 存储文件
+    $count_contents = json_encode($count_contents, JSON_UNESCAPED_UNICODE);
+    if ($count_contents !== false) {
+        file_put_contents($chart_total_file, $count_contents, LOCK_EX);  // 存储文件
+    }
 
 }
 
@@ -68,33 +71,57 @@ function read_chart_total()
     global $chart_total_file;
     global $config;
 
-    $cache_freq = $config['cache_freq'];
+    $cache_freq = max(1, (int) ($config['cache_freq'] ?? 1));
+    $read = function () use ($chart_total_file) {
+        $raw = is_file($chart_total_file) ? @file_get_contents($chart_total_file) : false;
+        $data = is_string($raw) ? json_decode($raw, true) : null;
+        return is_array($data) ? $data : null;
+    };
 
-    if (file_exists($chart_total_file)) {
-        $read_chart_file = file_get_contents($chart_total_file);
-        $read_chart_file = json_decode($read_chart_file, true);
-    } else {
+    $data = $read();
+    // 用统计时间计算真实缓存时长，避免跨月时 "YmdH" 相减得到错误差值
+    $stale = true;
+    if (is_array($data) && !empty($data['total_time'])) {
+        $timestamp = strtotime((string) $data['total_time']);
+        $stale = ($timestamp === false) || (time() - $timestamp > $cache_freq * 3600);
+    }
+    if ($stale) {
         write_chart_total();
-        $read_chart_file = file_get_contents($chart_total_file);
-        $read_chart_file = json_decode($read_chart_file, true);
+        $data = $read();
     }
 
-    if ((date('YmdH') - $read_chart_file['date']) > $cache_freq) {
-        write_chart_total();
-        $read_chart_file = file_get_contents($chart_total_file);
-        $read_chart_file = json_decode($read_chart_file, true);
+    // 缓存损坏/为空时返回空结构，调用方无需再做 isset 判断
+    if (!is_array($data) || empty($data['chart_data']) || !is_array($data['chart_data'])
+        || empty($data['chart_disk']) || !is_array($data['chart_disk'])) {
+        return array('filename' => '', 'date' => array(), 'number' => array(), 'disk' => array(), 'total_time' => '');
     }
 
-    for ($i = 0; $i < count($read_chart_file['chart_data']); $i++) {
+    $chart_data_date = $chart_data_num = $chart_total_disk = array();
+    foreach ($data['chart_data'] as $day) {
         // 读取每日上传数量
-        foreach ($read_chart_file['chart_data'][$i] as $key => $value) {
-            $chart_data_date[] = '"' . $key . '" ,';
-            $chart_data_num[] = '"' . $value . '" ,';
+        if (!is_array($day)) {
+            continue;
         }
-        foreach ($read_chart_file['chart_disk'][$i] as $value) {
-            $value = round($value / 1024 / 1024, 2);
+        foreach ($day as $key => $value) {
+            $chart_data_date[] = '"' . $key . '" ,';
+            $chart_data_num[] = '"' . (int) $value . '" ,';
+        }
+    }
+    foreach ($data['chart_disk'] as $day) {
+        if (!is_array($day)) {
+            continue;
+        }
+        foreach ($day as $value) {
+            $value = round((float) $value / 1024 / 1024, 2);
             $chart_total_disk[] = '"' . $value . '" ,';
         }
     }
-    return array('filename' => $read_chart_file['filename'], 'date' => $chart_data_date, 'number' => $chart_data_num, 'disk' => $chart_total_disk, 'total_time' => $read_chart_file['total_time']);
+
+    return array(
+        'filename'   => $data['filename'] ?? '',
+        'date'       => $chart_data_date,
+        'number'     => $chart_data_num,
+        'disk'       => $chart_total_disk,
+        'total_time' => $data['total_time'] ?? '',
+    );
 }

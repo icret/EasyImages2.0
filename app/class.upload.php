@@ -2483,7 +2483,10 @@ class Upload {
                         }
                         if ($f) {
                             $mime = finfo_file($f, realpath($this->file_src_pathname));
-                            finfo_close($f);
+                            // PHP 8.5 起 finfo_close() 已弃用（对象自动释放），低版本仍显式关闭
+                            if (PHP_VERSION_ID < 80500) {
+                                finfo_close($f);
+                            }
                             $this->file_src_mime = $mime;
                             $this->log .= '&nbsp;&nbsp;&nbsp;&nbsp;MIME type detected as ' . $this->file_src_mime . ' by Fileinfo PECL extension<br />';
                             if (preg_match("/^([\.\w-]+)\/([\.\w-]+)(.*)$/i", $this->file_src_mime)) {
@@ -2988,7 +2991,9 @@ class Upload {
      */
     function imageunset($im) {
         if (is_resource($im)) {
-            imagedestroy($im);
+            if (PHP_VERSION_ID < 80500) {
+                imagedestroy($im);
+            }
         } else if (is_object($im) && $im instanceOf \GdImage) {
             unset($im);
         }

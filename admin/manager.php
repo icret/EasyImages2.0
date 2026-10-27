@@ -578,6 +578,9 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
 
     //upload using url
     if(isset($_POST['type']) && $_POST['type'] == "upload" && !empty($_REQUEST["uploadurl"])) {
+        // 安全：远程 URL 拉取会带来 SSRF（内网/云元数据地址）与任意落盘面，与 filer.php 口径一致关闭
+        echo json_encode(array('status' => 'error', 'info' => 'Remote upload is disabled'));
+        exit();
         $path = FM_ROOT_PATH;
         if (FM_PATH != '') {
             $path .= '/' . FM_PATH;
@@ -636,7 +639,9 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
             if (!$success) {
                 $err = array("message" => curl_error($ch));
             }
-            @curl_close($ch);
+            if (PHP_VERSION_ID < 80500) {
+                @curl_close($ch);
+            }
             fclose($fp);
             $fileinfo->size = $curl_info["size_download"];
             $fileinfo->type = $curl_info["content_type"];
@@ -967,6 +972,18 @@ if (!empty($_FILES) && !FM_READONLY) {
 
 
         if (empty($f['file']['error']) && !empty($tmp_name) && $tmp_name != 'none' && $isFileAllowed) {
+            // 安全：SVG 需通过脚本/事件/外链校验，其余格式必须是可解析的真实图片
+            if ($ext === 'svg') {
+                if (!is_safe_svg($tmp_name)) {
+                    echo json_encode(array('status' => 'error', 'info' => 'Unsafe SVG content'));
+                    exit();
+                }
+            } elseif (in_array($ext, array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico'), true)
+                && @getimagesize($tmp_name) === false) {
+                // tif/tga 等 getimagesize 不一定支持，且不可被 Web 执行，不做强校验
+                echo json_encode(array('status' => 'error', 'info' => 'File is not a valid image'));
+                exit();
+            }
             if ($chunkTotal){
                 $out = @fopen("{$fullPath}.part", $chunkIndex == 0 ? "wb" : "ab");
                 if ($out) {
@@ -2377,16 +2394,18 @@ function fm_get_mime_type($file_path)
 {
     if (function_exists('finfo_open')) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo === false) {
+            return '--';
+        }
         $mime = finfo_file($finfo, $file_path);
-        finfo_close($finfo);
+        if (PHP_VERSION_ID < 80500) {
+            finfo_close($finfo);
+        }
         return $mime;
     } elseif (function_exists('mime_content_type')) {
         return mime_content_type($file_path);
-    } elseif (!stristr(ini_get('disable_functions'), 'shell_exec')) {
-        $file = escapeshellarg($file_path);
-        $mime = shell_exec('file -bi ' . $file);
-        return $mime;
     } else {
+        // 安全：不再回退到 shell_exec 探测 MIME，避免任何命令执行面
         return '--';
     }
 }

@@ -47,9 +47,16 @@ class Thumb
     public static function out($filename, $output, $width, $height, $valign = 'middle')
     {
         $thumb = self::make($filename, $width, $height, $valign);
-        $fh = fopen($output, 'wb'); # 二进制文件
+        if ($thumb === '') {
+            return false;
+        }
+        $fh = @fopen($output, 'wb'); # 二进制文件
+        if ($fh === false) {
+            return false;
+        }
         fwrite($fh, $thumb);
         fclose($fh);
+        return true;
     }
 
     /**
@@ -109,10 +116,18 @@ class Thumb
             18 => 'webp'
         );
         # 获取图片信息
-        $imginfo = getimagesize($filename);
-        $img_w = $imginfo[0];
-        $img_h = $imginfo[1];
-        self::$img_type = $filetype[$imginfo[2]];
+        $imginfo = @getimagesize($filename);
+        if (!is_array($imginfo) || empty($imginfo[0]) || empty($imginfo[1]) || empty($imginfo[2])) {
+            return '';
+        }
+        $img_w = (int) $imginfo[0];
+        $img_h = (int) $imginfo[1];
+        self::$img_type = isset($filetype[$imginfo[2]]) ? $filetype[$imginfo[2]] : 'unknown';
+        // 仅处理 GD 支持解码的格式，避免 imagecreatefromtif_ii 之类不存在的函数触发致命错误
+        if (!in_array(self::$img_type, array('gif', 'jpeg', 'png', 'bmp', 'webp', 'wbmp'), true)
+            || !function_exists('imagecreatefrom' . self::$img_type)) {
+            return '';
+        }
 
 
         $thumb_h = $height; # 固定背景画布的高度
@@ -132,7 +147,10 @@ class Thumb
 
         # 载入要缩放的图片
         $loadimg = 'imagecreatefrom' . self::$img_type;
-        $tmp_img = $loadimg($filename);
+        $tmp_img = @$loadimg($filename);
+        if (!$tmp_img) {
+            return '';
+        }
 
 
         switch ($valign) {
@@ -157,7 +175,10 @@ class Thumb
         # 合成缩略图
         imagecopyresampled($thumb, $tmp_img, 0, 0, 0, $dst_y, $width, $height, $img_w, $img_h);
 
-        ob_clean();
+        // 无活动输出缓冲时 ob_clean() 会告警
+        if (ob_get_level() > 0) {
+            ob_clean();
+        }
         # 展示图片
         ob_start();
         $showimg = 'image' . self::$img_type;
@@ -165,8 +186,10 @@ class Thumb
         $thumb_img = ob_get_clean();
 
         # 释放资源
-        imagedestroy($tmp_img);
-        imagedestroy($thumb);
+        if (PHP_VERSION_ID < 80500) {
+            imagedestroy($tmp_img);
+            imagedestroy($thumb);
+        }
         return $thumb_img;
     }
 }

@@ -32,3 +32,12 @@ AcceptPathInfo Off
         Deny from all
     </IfModule>
 </FilesMatch>
+
+# SVG 可按同源脚本执行：直接访问时以 CSP sandbox 禁用脚本/插件，并禁止 MIME 嗅探
+# （<img> 内嵌渲染不受影响；Nginx/Caddy 等价配置见 docs/安全配置.md）
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    <FilesMatch "(?i)\.svg$">
+        Header set Content-Security-Policy "sandbox"
+    </FilesMatch>
+</IfModule>

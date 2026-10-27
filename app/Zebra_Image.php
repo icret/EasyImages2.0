@@ -2108,9 +2108,11 @@ class Zebra_Image {
 
         }
 
-        // free memory
-        imagedestroy($this->source_identifier);
-        imagedestroy($identifier);
+        // free memory（PHP 8.5 起 imagedestroy 已弃用）
+        if (PHP_VERSION_ID < 80500) {
+            imagedestroy($this->source_identifier);
+            imagedestroy($identifier);
+        }
 
         // for PHP 8.0.0+ imagedestroy is no-op (https://php.watch/versions/8.0/gdimage)
         // and we have to use unset()

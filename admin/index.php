@@ -45,7 +45,8 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
 
     // 验证码
     if ($config['captcha']) {
-        if (empty($_REQUEST['code'])) {
+        $codeRequest = isset($_REQUEST['code']) && is_string($_REQUEST['code']) ? $_REQUEST['code'] : '';
+        if ($codeRequest === '') {
             echo '
             <script>
                 new $.zui.Messager("请填写验证码!", {type: "danger" // 定义颜色主题 
@@ -55,8 +56,8 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             </script>';
             exit(require_once APP_ROOT . '/app/footer.php');
         } else {
-            // 数组型入参先转字符串；验证码未生成时按空串比对（不读未定义下标）
-            if (strtolower((string) $_REQUEST['code']) !== ($_SESSION['code'] ?? '')) {
+            // 验证码未生成时按空串比对（不读未定义下标）
+            if (strtolower($codeRequest) !== ($_SESSION['code'] ?? '')) {
                 echo '
                 <script>
                     new $.zui.Messager("验证码错误!", {type: "danger" // 定义颜色主题 
@@ -93,7 +94,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
     }
 
     // 登录日志
-    write_login_log($_POST['user'], $_POST['password'], $login["messege"]);
+    write_login_log($_POST['user'], $login["messege"]);
 }
 ?>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/login.css">

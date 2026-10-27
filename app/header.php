@@ -1,6 +1,12 @@
+<?php
+require_once __DIR__ . '/function.php';
+// 统计函数需在全局作用域引入，供页面头部读取缓存化文件数量
+if (!function_exists('read_total_json')) {
+	require_once __DIR__ . '/total_files.php';
+}
+?>
 <!DOCTYPE html>
 <html lang="zh-cn">
-<?php require_once __DIR__ . '/function.php'; ?>
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -37,7 +43,7 @@
 			<ul class="nav nav-pills">
 				<li><a href="<?php echo $config['domain']; ?>"><i class="icon icon-home"></i> 首页</a></li>
 				<?php /** 非管理或未开启不显示广场 */ if ($config['showSwitch'] || is_who_login('admin')) : ?>
-					<li><a href="<?php echo $config['domain']; ?>/app/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo get_file_by_glob(APP_ROOT . config_path(), 'number'); ?></span></a></li>
+					<li><a href="<?php echo $config['domain']; ?>/app/list.php"><i class="icon icon-th"></i> 广场<span class="label label-badge label-primary"><?php echo easyimage_cached_file_count(); ?></span></a></li>
 				<?php endif; ?>
 				<?php /** 非管理或未开启不显示上传历史 */ if ($config['history'] || is_who_login('admin')) : ?>
 					<li><a href="<?php echo $config['domain']; ?>/app/history.php"><i class="icon icon-history"></i> 历史<span class="label label-badge label-primary"></span></a></li>

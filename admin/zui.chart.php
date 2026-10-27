@@ -6,21 +6,31 @@ require_once '../app/header.php';
 require_once APP_ROOT . '/app/chart.php';
 
 // 检测登录和是否开启统计
-if (!$config['chart_on'] || !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?hart#closed'));
+if (!$config['chart_on'] || !is_who_login('admin')) {
+    header('Location: ' . $config['domain'] . '?hart#closed');
+    exit;
+}
 
 // 检测登录
 if (!is_who_login('admin')) {
     checkLogin();
     exit(require_once APP_ROOT . '/app/footer.php');
 }
-// 删除统计文件
+// 删除统计缓存：只允许清空固定统计目录，绝不接受任意路径
 if (isset($_POST['del_total'])) {
-    @deldir($_POST['del_total']);
+    $countsDir = realpath(APP_ROOT . '/admin/logs/counts');
+    $requested = realpath((string) $_POST['del_total']);
+    $cleared = false;
+    if ($countsDir !== false && $requested !== false && $requested === $countsDir) {
+        @deldir($countsDir);
+        @mkdir($countsDir, 0755, true);
+        $cleared = true;
+    }
     echo '
 		<script>
-		new $.zui.Messager("重新统计成功!", {
-			type: "success", // 定义颜色主题 
-			icon: "ok-sign" // 定义消息图标
+		new $.zui.Messager("' . ($cleared ? '重新统计成功!' : '路径非法，统计缓存未清空!') . '", {
+			type: "' . ($cleared ? 'success' : 'danger') . '", // 定义颜色主题
+			icon: "' . ($cleared ? 'ok-sign' : 'exclamation-sign') . '" // 定义消息图标
 		}).show();
 		</script>
 		';

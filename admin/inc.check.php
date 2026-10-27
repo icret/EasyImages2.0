@@ -3,11 +3,8 @@
 /** 禁止直接访问 */
 defined('APP_ROOT') ?: exit;
 
-// 开启 DEBUG 2023-04-03
-if (!ini_get('display_errors')) {
-    ini_set('display_errors', 'On');
-}
-error_reporting(E_ALL);
+// 安全：设置页不再强制打开 display_errors，避免在生产环境泄露绝对路径/堆栈
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 // 检查当前PHP版本是否大于7.4
 if (PHP_VERSION < 7.4) {
@@ -34,7 +31,7 @@ foreach ($expand as $val) {
 }
 
 // 检测是否修改默认密码
-if ($config['password'] === '7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358') {
+if ($config['password'] === EASYIMAGE_DEFAULT_PASSWORD_HASH) {
     echo '
     new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
         type: "warning", // 定义颜色主题 
@@ -127,8 +124,9 @@ if ($config['checkImg'] !== 0) {
 
     if ($config['checkImg'] === 2) {
 
-        $ip = parse_url($config['nsfwjs_url'])['host'];
-        $port = parse_url($config['nsfwjs_url'])['port'];
+        $nsfwParsed = parse_url((string) $config['nsfwjs_url']);
+        $ip = is_array($nsfwParsed) ? ($nsfwParsed['host'] ?? '') : '';
+        $port = is_array($nsfwParsed) ? ($nsfwParsed['port'] ?? 80) : 80;
 
         if (filter_var($ip, FILTER_VALIDATE_IP)) {
             if (!@IP_URL_Ping($ip, $port, 1)) {

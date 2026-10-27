@@ -1,10 +1,7 @@
 <?php
 
-// 开启 DEBUG 2023-04-03
-if (!ini_get('display_errors')) {
-    ini_set('display_errors', 'On');
-}
-error_reporting(E_ALL);
+// 安全：不再强制打开 display_errors，避免信息泄露
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 // 检查当前PHP版本是否大于7.4
 if (PHP_VERSION < 7.4) {
@@ -31,7 +28,7 @@ foreach ($expand as $val) {
 }
 
 // 检测是否修改默认密码
-if ($config['password'] === '7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358') {
+if ($config['password'] === EASYIMAGE_DEFAULT_PASSWORD_HASH) {
     echo '
     new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
         type: "warning", // 定义颜色主题 

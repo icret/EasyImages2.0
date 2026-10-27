@@ -8,8 +8,11 @@ require_once __DIR__ . '/function.php';
 
 // 非管理员不可访问!
 if (!is_who_login('admin')) exit('Permission denied');
-// 禁止直接访问
-if (empty($_REQUEST['sign']) || $_REQUEST['sign'] !== md5($config['password'] . date('ymdh'))) exit('Authentication error!');
+// 禁止直接访问（恒定时间比对签名）
+$viewlogSign = isset($_REQUEST['sign']) ? $_REQUEST['sign'] : '';
+if (!is_string($viewlogSign) || !hash_equals(md5($config['password'] . date('ymdh')), $viewlogSign)) {
+    exit('Authentication error!');
+}
 
 // 登录日志
 if (isset($_GET['login_log'])) {
@@ -26,11 +29,17 @@ if (isset($_GET['login_log'])) {
 // 上传日志
 require_once APP_ROOT . '/app/header.php';
 
-if (isset($_POST['logDate'])) {
-    $logFile = APP_ROOT . '/admin/logs/upload/' . $_POST['logDate'] . '.php';
-} else {
-    $logFile = APP_ROOT . '/admin/logs/upload/' . date('Y-m') . '.php';
+// 月份只允许 YYYY-MM，避免把任意路径拼进 include
+$logDate = isset($_POST['logDate']) ? (string) $_POST['logDate'] : '';
+if (!preg_match('/^\d{4}-\d{2}$/', $logDate)) {
+    $logDate = date('Y-m');
 }
+$logFile = APP_ROOT . '/admin/logs/upload/' . $logDate . '.php';
+
+// 输出到 JS 字符串：去除换行并按 HTML 上下文转义（<script> 内实体不会被解码，安全）
+$viewlogEsc = function ($value) {
+    return htmlspecialchars(str_replace(array("\r", "\n"), ' ', (string) $value), ENT_QUOTES, 'UTF-8');
+};
 
 try {
     if (is_file($logFile)) {
@@ -38,10 +47,15 @@ try {
     } else {
         throw new Exception('<h3 class="alert alert-danger">日志文件不存在, 请在图床安全中开启上传日志!</h3>');
     }
+    if (!isset($logs) || !is_array($logs)) {
+        throw new Exception('<div class="alert alert-danger">日志格式损坏，无法解析!</div>');
+    }
     if (empty($logs)) {
         throw new Exception('<div class="alert alert-info">没有上传日志!<div>');
     }
 } catch (Exception $e) {
+    // 原实现吞掉了异常信息，用户只看到空白页
+    echo $e->getMessage();
     require_once APP_ROOT . '/app/footer.php';
     exit;
 }
@@ -55,7 +69,7 @@ try {
         </div>
         <div class="datagrid-container"></div>
     </div>
-    <p class="text-muted" style="font-size:10px;"><i class="modal-icon icon-info"></i> 建议使用分辨率 ≥ 1366*768px; 当前日志文件: <?php echo $logFile; ?></p>
+    <p class="text-muted" style="font-size:10px;"><i class="modal-icon icon-info"></i> 建议使用分辨率 ≥ 1366*768px; 当前日志文件: <?php echo htmlspecialchars($logFile, ENT_QUOTES, 'UTF-8'); ?></p>
 </div>
 <link rel="stylesheet" href="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.css">
 <script type="application/javascript" src="<?php static_cdn(); ?>/public/static/zui/lib/datagrid/zui.datagrid.min.js"></script>
@@ -69,7 +83,8 @@ try {
     function ajax_post(url, mode = 'delete') {
         $.post("del.php", {
                 url: url,
-                mode: mode
+                mode: mode,
+                csrf_token: <?php echo json_encode(csrf_token()); ?>
             },
             function(data, status) {
                 console.log(data)
@@ -162,19 +177,25 @@ try {
                 },
             ],
             array: [
-                <?php foreach ($logs as $k => $v) : ?> {
-                        orgin: '<?php echo $k; ?>',
-                        source: '<input class="form-control input-sm" type="text" value="<?php echo $v['source']; ?>" readonly>',
-                        date: '<?php echo $v['date']; ?>',
-                        ip: '<a href="http://freeapi.ipip.net/<?php echo $v['ip']; ?>" target="_blank"><?php echo $v['ip'] . ':' . $v['port']; ?></a>', // 备用IP查询: https://www.ip138.com/iplookup.asp?ip= http://ip.tool.chinaz.com/$ip
-                        ip2region: '<?php echo ip2region($v['ip']); ?>',
-                        user_agent: '<input class="form-control input-sm" type="text" value="<?php echo $v['user_agent']; ?>" readonly>',
-                        path: '<input class="form-control input-sm" type="text" value="<?php echo $v['path']; ?>" readonly>',
-                        md5: '<input class="form-control input-sm" type="text" value="<?php echo $v['md5']; ?>" readonly>',
-                        size: '<?php echo $v['size']; ?>',
-                        checkImg: '<?php echo strstr('OFF', $v['checkImg']) ? '否' : '是'; ?>',
-                        from: '<?php echo is_string($v['from']) ? "网页" : 'API: ' . $v['from']; ?>',
-                        manage: '<div class="btn-group"><a href="<?php echo rand_imgurl() . $v['path']; ?>" target="_blank" class="btn btn-mini btn-success">查看</a> <a href="/app/info.php?img=<?php echo $v['path']; ?>" target="_blank" class="btn btn-mini">信息</a><a href="#" onclick="ajax_post(\'<?php echo $v['path']; ?>\',\'recycle\')" class="btn btn-mini btn-info">回收</a> <a href="#" onclick="ajax_post(\'<?php echo $v['path']; ?>\',\'delete\')" class="btn btn-mini btn-danger">删除</a></div>',
+                <?php foreach ($logs as $k => $v) :
+                    $logIp = isset($v['ip']) ? (string) $v['ip'] : '';
+                    $logPort = isset($v['port']) ? (string) $v['port'] : '';
+                    $logPath = isset($v['path']) ? (string) $v['path'] : '';
+                    $logPathEsc = $viewlogEsc($logPath);
+                    $logPathJs = htmlspecialchars(json_encode($logPath, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                ?> {
+                        orgin: '<?php echo $viewlogEsc($k); ?>',
+                        source: '<input class="form-control input-sm" type="text" value="<?php echo $viewlogEsc($v['source'] ?? ''); ?>" readonly>',
+                        date: '<?php echo $viewlogEsc($v['date'] ?? ''); ?>',
+                        ip: '<a href="http://freeapi.ipip.net/<?php echo $viewlogEsc($logIp); ?>" target="_blank"><?php echo $viewlogEsc($logIp . ':' . $logPort); ?></a>',
+                        ip2region: '<?php echo ip2region($logIp); ?>',
+                        user_agent: '<input class="form-control input-sm" type="text" value="<?php echo $viewlogEsc($v['user_agent'] ?? ''); ?>" readonly>',
+                        path: '<input class="form-control input-sm" type="text" value="<?php echo $logPathEsc; ?>" readonly>',
+                        md5: '<input class="form-control input-sm" type="text" value="<?php echo $viewlogEsc($v['md5'] ?? ''); ?>" readonly>',
+                        size: '<?php echo $viewlogEsc($v['size'] ?? ''); ?>',
+                        checkImg: '<?php echo strstr((string) ($v['checkImg'] ?? ''), 'OFF') ? '否' : '是'; ?>',
+                        from: '<?php echo is_numeric($v['from'] ?? '') ? 'API' : '网页'; ?>',
+                        manage: '<div class="btn-group"><a href="<?php echo $viewlogEsc(rand_imgurl() . $logPath); ?>" target="_blank" class="btn btn-mini btn-success">查看</a> <a href="/app/info.php?img=<?php echo $logPathEsc; ?>" target="_blank" class="btn btn-mini">信息</a><a href="#" onclick="ajax_post(<?php echo $logPathJs; ?>,\'recycle\')" class="btn btn-mini btn-info">回收</a> <a href="#" onclick="ajax_post(<?php echo $logPathJs; ?>,\'delete\')" class="btn btn-mini btn-danger">删除</a></div>',
                     },					
                 <?php endforeach; ?>
             ]

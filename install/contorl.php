@@ -2,26 +2,41 @@
 require_once __DIR__ . '/../app/function.php';
 
 if (file_exists(APP_ROOT . '/config/install.lock')) {
-  exit(header("Location:/../index.php"));
+  header("Location: ../index.php");
+  exit;
 }
 
-if (isset($_POST['password'])) {
-  if ($_POST['password'] === $_POST['repassword']) {
-
-    $config['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $config['user'] = $_POST['user'];
-  } else {
-
-    exit('<script>window.alert("两次密码不一致请重新输入!");location.href="./index.php";</script>');
-  }
+// 安全：安装器只允许在“尚未配置”时执行。默认密码仍是出厂哈希才视为未配置，
+// 这样即使 install.lock 丢失/被删，已上线站点也不会被任意访客重置管理员口令。
+if (!isset($config['password']) || !hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
+  exit('<script>window.alert("站点已完成安装，如需重装请手动删除 config/install.lock 并恢复默认密码。");location.href="../index.php";</script>');
 }
+
+if (!isset($_POST['password'], $_POST['repassword'], $_POST['user'])) {
+  header("Location: index.php");
+  exit;
+}
+
+$plainPassword = (string) $_POST['password'];
+if (!hash_equals($plainPassword, (string) $_POST['repassword'])) {
+  exit('<script>window.alert("两次密码不一致请重新输入!");location.href="./index.php";</script>');
+}
+if (strlen($plainPassword) < 8 || strlen($plainPassword) > 64) {
+  exit('<script>window.alert("密码长度应为 8~64 位!");location.href="./index.php";</script>');
+}
+
+// 登录端校验的是 SHA256(明文)（前端 SHA256.js 计算后提交），此处必须保持同一算法；
+// 原实现写入 password_hash()（bcrypt），导致安装完成后永远无法登录。
+$config['password'] = hash('sha256', $plainPassword);
+$safeUser = preg_replace('/[^\w\.\-]/', '', (string) $_POST['user']);
+$config['user'] = $safeUser !== '' ? $safeUser : 'admin';
 
 if (isset($_POST['domain'])) {
-  $config['domain'] = $_POST['domain'];
+  $config['domain'] = rtrim((string) $_POST['domain'], '/');
 }
 
 if (isset($_POST['imgurl'])) {
-  $config['imgurl'] = $_POST['imgurl'];
+  $config['imgurl'] = rtrim((string) $_POST['imgurl'], '/');
 }
 
 $config_file = APP_ROOT . '/config/config.php';

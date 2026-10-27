@@ -1,54 +1,88 @@
 <?php
 
 /**
- * php抓取bing每日图片并保存到服务器
- * 作者：mengkun (mkblog.cn)
- * 日期：2016/12/23
- * 修改：Icret
- * 修改日期：2023-03-09
+ * 必应每日图片代理（本地缓存）
+ * 原实现直接 readfile() 远程 HTTP 地址且不校验响应，存在超时/内容不可控问题；
+ * 现改为 curl + TLS 校验 + 图片内容校验，并统一缓存到图片存储目录的 cache 子目录。
  */
 include_once __DIR__ . '/function.php';
-include_once APP_ROOT . '/config/config.php';
 
-$path = APP_ROOT . $config['path'] . $config['delDir']; // 设置图片缓存文件夹
-$filename = date("Ymd") . '.jpg';          // 用年月日来命名新的文件名
-if (file_exists($path . $filename))        // 如果文件不存在，则说明今天还没有进行缓存
-{
-    header("Content-type: image/jpeg");
-    exit(file_get_contents($path . $filename, true));
-} else {
+$cacheDir = APP_ROOT . $config['path'] . 'cache/';
+$cacheFile = $cacheDir . date('Ymd') . '.jpg';
 
-    if (!file_exists($path)) //如果目录不存在
-    {
-        mkdir($path, 0777);  //创建缓存目录
+header('Content-Type: image/jpeg');
+header('X-Content-Type-Options: nosniff');
+header('Cache-Control: public, max-age=3600');
+
+$output = function ($file = null) {
+    if (is_string($file) && is_file($file)) {
+        readfile($file);
+        exit;
     }
-    $str = file_get_contents('http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1'); //读取必应api，获得相应数据
-    $str = json_decode($str, true);
-    $imgurl = 'http://cn.bing.com' . $str['images'][0]['url'];  //获取图片url
-    $img = grabImage($imgurl, $path .  $filename);              //读取并保存图片
+    http_response_code(404);
+    $fallback = APP_ROOT . '/public/images/404.png';
+    if (is_file($fallback)) {
+        header('Content-Type: image/png');
+        readfile($fallback);
+    }
+    exit;
+};
+
+if (is_file($cacheFile)) {
+    $output($cacheFile);
 }
+
+if (!is_dir($cacheDir)) {
+    @mkdir($cacheDir, 0755, true);
+}
+
 /**
- * 远程抓取图片并保存
- * @param $url 图片url
- * @param $filename 保存名称和路径
+ * 拉取远程内容
+ * @param string $url
+ * @param int $timeout
+ * @return string|false
  */
-function grabImage($url, $filename = "")
-{
-    if ($url == "") return false;       //如果$url地址为空，直接退出
-    if ($filename == "")                //如果没有指定新的文件名
-    {
-        $ext = strrchr($url, ".");      //得到$url的图片格式
-        $filename = date("Ymd") . $ext; //用天月面时分秒来命名新的文件名
+$fetch = function ($url, $timeout = 5) {
+    if (!function_exists('curl_init')) {
+        return false;
     }
-    ob_start();                         //打开输出
-    readfile($url);                     //输出图片文件
-    $img = ob_get_contents();           //得到浏览器输出
-    ob_end_clean();                     //清除输出并关闭
-    $fp2 = @fopen($filename, "w+");
-    fwrite($fp2, $img);                 //向当前目录写入图片文件，并重新命名
-    fclose($fp2);
-    return $filename;                   //返回新的文件名
+    $ch = curl_init($url);
+    curl_setopt_array($ch, array(
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => $timeout,
+        CURLOPT_TIMEOUT        => $timeout,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS      => 3,
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_SSL_VERIFYHOST => 2,
+        CURLOPT_USERAGENT      => 'EasyImage/' . APP_VERSION,
+    ));
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if (PHP_VERSION_ID < 80500) {
+        curl_close($ch);
+    }
+    return ($body !== false && $code === 200) ? $body : false;
+};
+
+$api = $fetch('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1');
+$data = is_string($api) ? json_decode($api, true) : null;
+$relative = is_array($data) && isset($data['images'][0]['url']) ? $data['images'][0]['url'] : '';
+
+// 只接受站内相对路径，避免被响应内容带到任意主机
+if (!is_string($relative) || strpos($relative, '/') !== 0 || strpos($relative, '//') === 0) {
+    $output();
 }
 
-header("Content-type: image/jpeg");
-exit(file_get_contents($path . $filename, true));
+$image = $fetch('https://cn.bing.com' . $relative, 8);
+if (!is_string($image) || strlen($image) < 100 || @getimagesizefromstring($image) === false) {
+    $output();
+}
+
+if (@file_put_contents($cacheFile, $image, LOCK_EX) === false) {
+    // 缓存目录不可写时仍直接输出本次结果
+    echo $image;
+    exit;
+}
+
+$output($cacheFile);

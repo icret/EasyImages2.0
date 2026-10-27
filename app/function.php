@@ -96,9 +96,82 @@ function _session_boot($create = false)
     ));
     ini_set('session.gc_maxlifetime', (string) $lifetime);
     ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
     if ($create || isset($_COOKIE[session_name()])) {
         @session_start();
     }
+}
+
+/**
+ * 安全：CSRF 令牌（服务端会话承载，表单与状态变更链接共用）
+ * @return string 32 字节十六进制令牌
+ */
+function csrf_token()
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        _session_boot(true);
+    }
+    // 输出已发送/会话未能建立时返回空令牌，由调用方按未登录处理，避免读写未初始化的 $_SESSION
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        return '';
+    }
+    if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * 安全：校验 CSRF 令牌（恒定时间比较）
+ * @param mixed $token 请求携带的令牌
+ * @return bool
+ */
+function csrf_verify($token)
+{
+    if (!is_string($token) || $token === '') {
+        return false;
+    }
+    $expected = isset($_SESSION['csrf_token']) ? $_SESSION['csrf_token'] : '';
+    return is_string($expected) && $expected !== '' && hash_equals($expected, $token);
+}
+
+/**
+ * 安全：SVG 上传安全校验
+ * SVG 可按同源脚本执行，除 <script> 外还需拒绝事件属性、外部引用与 foreignObject 等载体。
+ * @param string $file SVG 文件绝对路径
+ * @return bool 安全|不安全
+ */
+function is_safe_svg($file)
+{
+    if (!is_file($file) || !is_readable($file)) {
+        return false;
+    }
+    $svg = @file_get_contents($file);
+    if ($svg === false || $svg === '') {
+        return false;
+    }
+    $patterns = array(
+        '/<\s*script\b/i',
+        '/<\s*foreignObject\b/i',
+        '/<\s*iframe\b/i',
+        '/<\s*embed\b/i',
+        '/<\s*object\b/i',
+        '/<\s*use\b/i',
+        '/<\s*image\b/i',
+        '/\bon[a-z]+\s*=/i',
+        '/javascript\s*:/i',
+        '/\bdata\s*:\s*text\/html/i',
+        '/<\?php/i',
+        '/<!ENTITY/i',
+        '/xlink\s*:\s*href\s*=/i',
+        '/\bhref\s*=/i',
+    );
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $svg)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -198,23 +271,32 @@ function _login($user = null, $password = null)
         return json_encode(array('code' => 400, 'level' => 0, 'messege' => '登录已过期,请重新登录'));
     }
 
-    // 前端登录验证（strip_tags/addcslashes 不接受 null，PHP 8.1 起会 deprecate）
-    $user = strip_tags((string) $user);
-    $password = strip_tags((string) $password);
-    // 是否管理员
-    if ($user === ($config['user'] ?? null) && $password === ($config['password'] ?? null)) {
+    // 前端登录验证（strip_tags 不接受 null，PHP 8.1 起会 deprecate；数组型入参直接拒绝）
+    if (!is_string($user) || !is_string($password)) {
+        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号或密码格式错误'));
+    }
+    $user = strip_tags($user);
+    $password = strip_tags($password);
+    $configuredUser = (string) ($config['user'] ?? '');
+    $configuredPassword = (string) ($config['password'] ?? '');
+    // 是否管理员（恒定时间比较，避免长度/前缀时间侧信道）
+    if ($configuredUser !== '' && $configuredPassword !== ''
+        && hash_equals($configuredUser, $user) && hash_equals($configuredPassword, $password)) {
         return _login_session($user, 1, '管理员登录成功');
     }
     // 是否上传者
-    if (array_key_exists($user, $guestConfig) && $password === ($guestConfig[$user]['password'] ?? null)) {
-        // 上传者账号过期
-        if (($guestConfig[$user]['expired'] ?? 0) < time()) {
-            return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
+    if (array_key_exists($user, $guestConfig)) {
+        $guestPassword = (string) ($guestConfig[$user]['password'] ?? '');
+        if ($guestPassword !== '' && hash_equals($guestPassword, $password)) {
+            // 上传者账号过期
+            if (($guestConfig[$user]['expired'] ?? 0) < time()) {
+                return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
+            }
+            return _login_session($user, 2, $user . '用户登录成功');
         }
-        return _login_session($user, 2, $user . '用户登录成功');
     }
     // 账号存在但密码错误 / 账号不存在
-    if ($user === $config['user'] || array_key_exists($user, $guestConfig)) {
+    if (($configuredUser !== '' && hash_equals($configuredUser, $user)) || array_key_exists($user, $guestConfig)) {
         return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
     }
     return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
@@ -297,14 +379,17 @@ function config_path($path = null)
     // php7.0 $path = $path ?? date('Y/m/d/');
     // 原 empty($path) 会把 '0' 这类合法目录名当成空值重新生成
 
-    $img_path = ($config['path'] ?? '') . $path;
+    // 统一分隔符并保证站点相对路径以 / 开头（config.path/admin_path 末尾或开头缺少 / 时也能正确拼接 APP_ROOT）
+    // 相对路径的落盘与权限操作必须锚定 APP_ROOT，否则在 cwd 不是项目根（CLI、部分 FCGI 环境）时会创建到错误位置
+    $img_path = '/' . ltrim(str_replace('\\', '/', ($config['path'] ?? '') . $path), '/');
+    $absolute = APP_ROOT . $img_path;
 
-    if (!is_dir($img_path)) {
-        @mkdir($img_path, 0755, true);
+    if (!is_dir($absolute)) {
+        @mkdir($absolute, 0755, true);
     }
 
-    if (!is_writable($img_path)) {
-        @chmod($img_path, 0755);
+    if (!is_writable($absolute)) {
+        @chmod($absolute, 0755);
     }
 
     return $img_path;
@@ -417,24 +502,25 @@ function is_within_storage($path)
  * @param null $source 源文件名称
  * @return false|int|string|null
  */
+function easyimage_create_guid() // guid生成函数
+{
+    if (function_exists('com_create_guid') === true) {
+        return trim(com_create_guid(), '{}');
+    }
+
+    return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+}
+
+/** uuid 生成 */
+function easyimage_uuid()
+{
+    $chars = md5(uniqid(mt_rand(), true));
+    return substr($chars, 0, 8) . '-' . substr($chars, 8, 4) . '-' . substr($chars, 12, 4) . '-' . substr($chars, 16, 4) . '-' . substr($chars, 20, 12);
+}
+
 function imgName($source = null)
 {
     global $config;
-
-    function create_guid() // guid生成函数
-    {
-        if (function_exists('com_create_guid') === true) {
-            return trim(com_create_guid(), '{}');
-        }
-
-        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
-    }
-
-    function uuid() // 生成uuid
-    {
-        $chars = md5(uniqid(mt_rand(), true));
-        return substr($chars, 0, 8) . '-' . substr($chars, 8, 4) . '-' . substr($chars, 12, 4) . '-' . substr($chars, 16, 4) . '-' . substr($chars, 20, 12); // return $uuid;
-    }
 
     switch ($config['imgName'] ?? 'default') {
 
@@ -443,7 +529,9 @@ function imgName($source = null)
             break;
         case "source":
             // 以上传文件名称 例：微信图片_20211228214754
-            // 过滤非法名称 $source = preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/","",$source);
+            // 先取单层文件名并去除控制字符；最终仍由 Upload 类的 sanitize() 统一清洗
+            $source = basename(str_replace('\\', '/', (string) $source));
+            $source = preg_replace('/[\x00-\x1F\x7F]/u', '', $source);
             return $source;
             break;
         case "date":
@@ -460,7 +548,7 @@ function imgName($source = null)
             break;
         case "guid":
             // 全球唯一标识符 例：6EDAD0CC-AB0C-4F61-BCCA-05FAD65BF0FA
-            return create_guid();
+            return easyimage_create_guid();
             break;
         case "md5":
             // md5加密时间 例：3888aa69eb321a2b61fcc63520bf6c82
@@ -475,11 +563,11 @@ function imgName($source = null)
             return crc32(microtime());
             break;
         case "snowflake":
-            include __DIR__ . '/class.snowflake.php';
-            return SnowFlake::createOnlyId(); // 分布式id
+            require_once __DIR__ . '/class.snowflake.php';
+            return class_exists('SnowFlake') ? SnowFlake::createOnlyId() : uniqid(true); // 分布式id
             break;
         case "uuid":
-            return uuid(); // uuid
+            return easyimage_uuid(); // uuid
             break;
         default:
             return base_convert(date('His') . mt_rand(1001, 9999), 10, 36); // 将上传时间+随机数转换为36进制 例：vx77yu
@@ -534,20 +622,39 @@ function getDirectorySize($path)
  */
 function getFileNumber($dir)
 {
-    $num = 0;
-    $arr = glob($dir);
-    // glob() 失败返回 false，PHP 8 下 foreach(false) 会报 warning
-    if (!is_array($arr)) {
-        return $num;
+    // 目录不存在时直接返回 0，避免 glob()/迭代器在 PHP 8 下告警
+    if (!is_dir($dir)) {
+        return 0;
     }
-    foreach ($arr as $v) {
-        if (is_file($v)) {
-            $num++;
-        } else {
-            $num += getFileNumber($v . "/*");
+    $num = 0;
+    try {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
+                $num++;
+            }
         }
+    } catch (Throwable $e) {
+        return 0;
     }
     return $num;
+}
+
+/**
+ * 缓存化的文件总数（头部导航每个页面都会展示，避免每次请求全量递归扫描）
+ * @return int
+ */
+function easyimage_cached_file_count()
+{
+    // total_files.php 必须在全局作用域引入（在函数内 require 会把其 $totalJsonName 等变量限制在函数作用域，
+    // 导致 creat_json() 里的 global $totalJsonName 取到空值）
+    if (!function_exists('read_total_json')) {
+        return 0;
+    }
+    $count = read_total_json('filenum');
+    return is_numeric($count) ? (int) $count : 0;
 }
 
 /**
@@ -604,6 +711,14 @@ function get_file_by_glob($dir_fileName_suffix, $type = 'list')
 {
     global $config;
 
+    // 请求内缓存：同一页面会多次统计同一目录（头部、列表、管理页），避免重复递归扫描
+    static $cache = array();
+    $cacheKey = $type . '|' . $dir_fileName_suffix;
+    if (array_key_exists($cacheKey, $cache)) {
+        return $cache[$cacheKey];
+    }
+    $res = $type === 'number' ? 0 : array();
+
     // 获取所有文件
     if ($type == 'list') {
         $flag = defined('GLOB_BRACE') ? GLOB_BRACE : 0;
@@ -635,6 +750,7 @@ function get_file_by_glob($dir_fileName_suffix, $type = 'list')
             }
         }
     }
+    $cache[$cacheKey] = $res;
     return $res;
 }
 
@@ -870,6 +986,12 @@ function getVersion($name = 'tag_name')
 {
     global $config;
 
+    // 请求内缓存：管理页会多次读取同一字段，避免重复读盘/重复请求 GitHub
+    static $cache = array();
+    if (array_key_exists($name, $cache)) {
+        return $cache[$name];
+    }
+
     if (!empty($config['checkEnv'])) {
         require_once __DIR__ . '/class.version.php';
         $url = "https://api.github.com/repositories/188228357/releases/latest"; // 获取版本地址
@@ -877,18 +999,19 @@ function getVersion($name = 'tag_name')
         try {
             // 旧写法 !empty() 与 return 各调一次 readJson（重复读盘解析）
             $version = $getVersion->readJson($name);
-            if (!empty($version)) {
-                return $version; // 返回版本信息
-            } else {
-                return '存在版本文件, 但是内容为空,请等待1小时候后再次更新版本号!';
-            }
+            $result = !empty($version)
+                ? $version
+                : '存在版本文件, 但是内容为空,请等待1小时候后再次更新版本号!';
         } catch (Throwable $e) {
-            $getVersion->downJson(); // 获取版本信息
-            return '获取版本文件失败,请检查curl或者网络 错误信息: ' . $e->getMessage();
+            // readJson 内部已尝试过 downJson，失败后直接返回提示，避免重复网络请求拖慢后台
+            $result = '获取版本文件失败,请检查curl或者网络 错误信息: ' . $e->getMessage();
         }
     } else {
-        return '已关闭环境自检, 当前版本:' . APP_VERSION;
+        $result = '已关闭环境自检, 当前版本:' . APP_VERSION;
     }
+
+    $cache[$name] = $result;
+    return $result;
 }
 
 /**
@@ -943,7 +1066,9 @@ function moderatecontent_json($img, $url = null)
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36');
     $output = curl_exec($ch);
-    curl_close($ch);
+    if (PHP_VERSION_ID < 80500) {
+        curl_close($ch);
+    }
     $output = json_decode($output, true);
     return $output;
 }
@@ -978,7 +1103,9 @@ function nsfwjs_json($url, $data = '')
     $params[CURLOPT_SSL_VERIFYHOST] = false; //请求https时,其他方案查看其他博文
     curl_setopt_array($ch, $params); //传入curl参数
     $content = curl_exec($ch); //执行
-    curl_close($ch); //关闭连接
+    if (PHP_VERSION_ID < 80500) {
+        curl_close($ch); //关闭连接
+    }
     $content = json_decode($content, true);
     return $content;
 }
@@ -1078,7 +1205,7 @@ function checkImg($imageUrl, $type = 1, $dir = 'suspic/')
         $suspic_dir = APP_ROOT . $config['path'] . $dir;       // suspic路径
 
         if (!is_dir($suspic_dir)) {                            // 创建suspic目录并移动
-            mkdir($suspic_dir, 0777, true);
+            @mkdir($suspic_dir, 0755, true);
         }
         if (is_file($old_path)) {
             rename($old_path, $new_path);
@@ -1135,7 +1262,7 @@ function creat_thumbnail_images($imgName)
     $cache_path = APP_ROOT . ($config['path'] ?? '') . 'cache/';                                   // cache目录的绝对路径
 
     if (!is_dir($cache_path)) {                                                                   // 创建cache目录
-        mkdir($cache_path, 0777, true);
+        @mkdir($cache_path, 0755, true);
     }
     if (!isGifAnimated($old_img_path)) {                                                          // 仅针对非gif创建图片缩略图
         $new_imgName = APP_ROOT . $config['path'] . 'cache/' . date('Y_m_d') . '_' . $imgName;    // 缩略图缓存的绝对路径
@@ -1194,9 +1321,9 @@ function creat_thumbnail_by_list($imgUrl)
     global $config;
     ini_set('max_execution_time', '300'); // 脚本运行的时间（以秒为单位）0不限制
 
-    $extension = pathinfo($imgUrl, PATHINFO_EXTENSION);
-    // 过滤非指定格式
-    if (!in_array($extension, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'))) {
+    $extension = strtolower(pathinfo((string) $imgUrl, PATHINFO_EXTENSION));
+    // 过滤非指定格式（GD/Thumb 不支持 tif/tga，直接回落到通用文件图标，避免致命错误）
+    if (!in_array($extension, array('png', 'gif', 'jpeg', 'jpg', 'webp', 'bmp'), true)) {
         // ico和svg格式直接返回直链
         if ($extension === 'ico' || $extension === 'svg') return $imgUrl;
         // 其他格式直接返回指定图标
@@ -1266,8 +1393,8 @@ function creat_thumbnail_by_list($imgUrl)
             Thumb::out($abPathName, $new_imgName, $config['thumbnail_w'] ?? 0, $config['thumbnail_h'] ?? 0);
         }
 
-        // 输出缩略图
-        return $new_imgName;
+        // 输出缩略图（返回可访问 URL，而不是服务器绝对路径）
+        return $config['domain'] . $config['path'] . 'cache/' . $thumbnail;
     }
 }
 
@@ -1283,7 +1410,9 @@ function get_whole_url($search = null)
     $path_info = $_SERVER['PATH_INFO'] ?? '';
     // REQUEST_URI 已含查询串；不存在时用 SCRIPT_NAME + QUERY_STRING(或 PATH_INFO) 拼出
     $relate_url = $_SERVER['REQUEST_URI'] ?? $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
-    $whole_url = $sys_protocal . ($_SERVER['HTTP_HOST'] ?? '') . $relate_url;
+    // Host 头由客户端控制，过滤非法字符避免 Host Header 注入到跳转/安装链接
+    $host = preg_replace('/[^A-Za-z0-9\.\-:\[\]]/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+    $whole_url = $sys_protocal . $host . $relate_url;
 
     if ($search !== null && $search !== '') {
         // 旧写法 if ($search) 在 $search 为 "0" 时不进入分支；strrpos 返回 0 时又会被 ?: 吞掉，
@@ -1338,7 +1467,22 @@ function arrayeval($array, $format = false, $level = 0)
     $comma = $space;
     foreach ($array as $key => $val) {
         $key = is_string($key) ? '\'' . addcslashes($key, '\'\\') . '\'' : $key;
-        $val = !is_array($val) && (!preg_match('/^\-?\d+$/', $val) || strlen($val) > 12) ? '\'' . addcslashes($val, '\'\\') . '\'' : $val;
+        // 按类型序列化：布尔/null/浮点不再被 preg_match()/addcslashes() 隐式转换（PHP 8.1+ 弃用告警）
+        if (is_array($val)) {
+            // 由下方递归处理
+        } elseif (is_bool($val)) {
+            $val = $val ? 'true' : 'false';
+        } elseif ($val === null) {
+            $val = 'NULL';
+        } elseif (is_int($val)) {
+            $val = (string) $val;
+        } elseif (is_float($val)) {
+            $val = var_export($val, true);
+        } elseif (is_string($val) && preg_match('/^-?\d+$/', $val) && strlen($val) <= 12) {
+            // 保留数字字面量
+        } else {
+            $val = '\'' . addcslashes((string) $val, '\'\\') . '\'';
+        }
         if (is_array($val)) {
             $evaluate .= $comma . $key . '=>' . arrayeval($val, $format, $level + 1);
         } else {
@@ -1375,40 +1519,38 @@ function real_ip()
         return $realip;
     }
 
-    if (isset($_SERVER)) {
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            /* 取X-Forwarded-For中第一个非unknown的有效IP字符串 */
-            foreach ($arr as $ip) {
-                $ip = trim($ip);
+    // 直连对端地址永远是可信来源
+    $remote = $_SERVER['REMOTE_ADDR'] ?? (getenv('REMOTE_ADDR') ?: '0.0.0.0');
+    $realip = $remote;
 
-                if ($ip != 'unknown') {
-                    $realip = $ip;
-
-                    break;
-                }
-            }
-        } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $realip = $_SERVER['HTTP_CLIENT_IP'];
-        } else {
-            if (isset($_SERVER['REMOTE_ADDR'])) {
-                $realip = $_SERVER['REMOTE_ADDR'];
-            } else {
-                $realip = '0.0.0.0';
-            }
+    // 仅当直连对端是内网/回环地址（即前方存在可信反向代理）时才采信转发头，
+    // 防止互联网客户端直接伪造 X-Forwarded-For 绕过 IP 黑白名单与游客上传限额。
+    $remoteIsValid = filter_var($remote, FILTER_VALIDATE_IP) !== false;
+    $peerIsPrivate = $remoteIsValid && filter_var(
+        $remote,
+        FILTER_VALIDATE_IP,
+        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+    ) === false;
+    if ($peerIsPrivate) {
+        $candidates = array();
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $candidates = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $candidates = array($_SERVER['HTTP_CLIENT_IP']);
         }
-    } else {
-        if (getenv('HTTP_X_FORWARDED_FOR')) {
-            $realip = getenv('HTTP_X_FORWARDED_FOR');
-        } elseif (getenv('HTTP_CLIENT_IP')) {
-            $realip = getenv('HTTP_CLIENT_IP');
-        } else {
-            $realip = getenv('REMOTE_ADDR');
+        foreach ($candidates as $ip) {
+            $ip = trim($ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                $realip = $ip;
+                break;
+            }
         }
     }
-    // 使用正则验证IP地址的有效性，防止伪造IP地址进行SQL注入攻击
-    preg_match("/[\d\.]{7,15}/", $realip, $onlineip);
-    $realip = !empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0';
+
+    // 最终仍不合法时回退为不可路由地址
+    if (!filter_var($realip, FILTER_VALIDATE_IP)) {
+        $realip = '0.0.0.0';
+    }
     return $realip;
 }
 
@@ -1440,7 +1582,10 @@ function checkIP($ipNow = null, $ipList = null, $model = false)
         return false;
     }
 
-    $ipregexp = implode('|', str_replace(array('*', '.'), array('\d+', '\.'), $ipList));
+    // 先 preg_quote 再还原通配符：避免名单中的 + ( ) [ ] 等元字符破坏正则或触发 warning
+    $ipregexp = implode('|', array_map(function ($item) {
+        return str_replace('\*', '\d+', preg_quote($item, '/'));
+    }, $ipList));
     // 用 / 作正则定界符（旧写法 "^(...)"$" 首字符即引号被当分隔符，导致 preg_match 报“No ending delimiter”而使名单彻底失效）
     $matched = preg_match('/^(' . $ipregexp . ')$/', $ipNow);
 
@@ -1691,11 +1836,12 @@ function write_upload_logs($filePath, $sourceName, $absolutePath, $fileSize, $fr
 
     // $name = trim(basename($filePath), " \t\n\r\0\x0B"); // 当前图片名称
     $log = array(basename($filePath) => array(             // 以上传图片名称为Array
-        'source'     => htmlspecialchars((string) $sourceName), // 原始文件名称
+        // 原始文件名称/UA 均由客户端控制：存储时只做长度与控制字符收敛，展示端统一做 HTML 转义
+        'source'     => substr(strip_tags(str_replace(array("\r", "\n"), ' ', (string) $sourceName)), 0, 255),
         'date'       => date('Y-m-d H:i:s'),               // 上传日期
         'ip'         => real_ip(),                         // 上传IP
         'port'       => $_SERVER['REMOTE_PORT'] ?? '',     // IP端口（CLI/局部代理下可能不存在）
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '', // 浏览器信息（非浏览器上传时不存在）
+        'user_agent' => preg_replace('/[\x00-\x1F\x7F]/', ' ', substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500)),
         'path'       => $filePath,                         // 文件相对路径
         'size'       => getDistUsed($fileSize),            // 文件大小(格式化)
         'md5'        => md5_file($absolutePath),           // 文件的md5
@@ -1865,10 +2011,9 @@ function auto_delete()
 /**
  * 登录日志
  * @param String $user 用户
- * @param String $pass 密码
  * @param String $msg  提示
  */
-function write_login_log($user, $pass, $msg)
+function write_login_log($user, $msg)
 {
     $log_path = APP_ROOT . '/admin/logs/login/';
     $log_file = $log_path . date('/Y-m-') . 'logs.php';
@@ -1877,8 +2022,10 @@ function write_login_log($user, $pass, $msg)
     if (!is_dir($log_path)) mkdir($log_path, 0755, true);
     if (!is_file($log_file)) file_put_contents($log_file, '<?php /** 登录日志 */ exit; ?>' . PHP_EOL, FILE_APPEND | LOCK_EX);
 
-    /** 写入日志 */
-    $log = htmlentities(date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 密码: ' .  $pass . ' 提示: ' . $msg);
+    // 安全：登录日志不再记录任何口令/摘要（登录校验使用 SHA256 摘要，记录摘要等同泄露可重放凭据）
+    $user = str_replace(array("\r", "\n"), ' ', strip_tags((string) $user));
+    $msg = str_replace(array("\r", "\n"), ' ', strip_tags((string) $msg));
+    $log = htmlentities(date('Y-m-d H:i:s') . ' IP: ' . real_ip() . ' 账号: ' . $user . ' 提示: ' . $msg, ENT_QUOTES, 'UTF-8');
     file_put_contents($log_file, $log . PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
@@ -1899,7 +2046,9 @@ function validUrl($url)
     $contents = curl_exec($ch);
 
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); //获取请求状态码
-    curl_close($ch);
+    if (PHP_VERSION_ID < 80500) {
+        curl_close($ch);
+    }
     if ($http_code != '200') {
         return false;
     }

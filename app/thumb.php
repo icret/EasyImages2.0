@@ -110,6 +110,8 @@ if (isset($_GET['img'])) {
             break;
         case 'svg':
             header('Content-Type:image/svg+xml');
+            // 旧文件可能包含脚本：直接打开时以 CSP sandbox 禁用脚本执行
+            header('Content-Security-Policy: sandbox');
             exit(file_get_contents($src, true));
             break;
         case 'webp':
@@ -120,6 +122,13 @@ if (isset($_GET['img'])) {
             } else {
                 timthumb::start();
             }
+            break;
+        case 'tif':
+        case 'tiff':
+        case 'tga':
+            // GD/TimThumb 不支持这些格式，输出占位图而不是触发致命错误
+            header("Content-type: image/png");
+            exit(file_get_contents($i404, true));
             break;
         default:
             timthumb::start();

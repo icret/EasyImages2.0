@@ -33,26 +33,47 @@ class Imgcompress
      */
     public function compressImg($saveName = '')
     {
-        $this->_openImage();
-        if (!empty($saveName)) $this->_saveImage($saveName);  //保存
-        else $this->_showImage();
+        // 源图损坏或 GD 不支持该格式时安全返回，避免 imagecreatefrom*() 致命错误
+        if (!$this->_openImage()) {
+            return false;
+        }
+        if (!empty($saveName)) {
+            return $this->_saveImage($saveName);
+        }
+        $this->_showImage();
+        return true;
     }
 
     /**
      * 内部：打开图片
+     * @return bool 成功|失败
      */
     private function _openImage()
     {
-        list($width, $height, $type, $attr) = getimagesize($this->src);
+        if (!is_file($this->src)) {
+            return false;
+        }
+        $info = @getimagesize($this->src);
+        if (!is_array($info) || empty($info[0]) || empty($info[1]) || empty($info[2])) {
+            return false;
+        }
+        $type = strtolower((string) image_type_to_extension($info[2], false));
+        // 只处理 GD 有对应 imagecreatefrom* 的格式（tif/tga/ico 等不支持，直接跳过）
+        if (!in_array($type, array('jpeg', 'png', 'gif', 'bmp', 'webp'), true) || !function_exists('imagecreatefrom' . $type)) {
+            return false;
+        }
         $this->imageinfo = array(
-            'width' => $width,
-            'height' => $height,
-            'type' => image_type_to_extension($type, false),
-            'attr' => $attr
+            'width' => (int) $info[0],
+            'height' => (int) $info[1],
+            'type' => $type,
+            'attr' => isset($info[3]) ? $info[3] : '',
         );
-        $fun = "imagecreatefrom" . $this->imageinfo['type'];
-        $this->image = $fun($this->src);
-        $this->_thumpImage();
+        $fun = 'imagecreatefrom' . $type;
+        $this->image = @$fun($this->src);
+        if (!$this->image) {
+            return false;
+        }
+        return $this->_thumpImage();
     }
 
     /**
@@ -60,9 +81,13 @@ class Imgcompress
      */
     private function _thumpImage()
     {
-        $new_width = $this->imageinfo['width'] * $this->percent;
-        $new_height = $this->imageinfo['height'] * $this->percent;
-        $image_thump = imagecreatetruecolor($new_width, $new_height);
+        $percent = min(1, max(0.01, (float) $this->percent));
+        $new_width = max(1, (int) round($this->imageinfo['width'] * $percent));
+        $new_height = max(1, (int) round($this->imageinfo['height'] * $percent));
+        $image_thump = @imagecreatetruecolor($new_width, $new_height);
+        if (!$image_thump) {
+            return false;
+        }
         /**
          * 保留图片透明通道 
          * 简单图床 EasyImage 2.0 2021-5-9 21:48:59 
@@ -74,8 +99,11 @@ class Imgcompress
         //将原图复制带图片载体上面，并且按照一定比例压缩,极大的保持了清晰度
         imagecopyresampled($image_thump, $this->image, 0, 0, 0, 0, $new_width, $new_height, $this->imageinfo['width'], $this->imageinfo['height']);
 
-        imagedestroy($this->image);
+        if (PHP_VERSION_ID < 80500) {
+            imagedestroy($this->image);
+        }
         $this->image = $image_thump;
+        return true;
     }
 
     /**
@@ -110,7 +138,10 @@ class Imgcompress
             $dstName = $dstImgName . $this->imageinfo['type'];
         }
         $funcs = "image" . $this->imageinfo['type'];
-        $funcs($this->image, $dstName);
+        if (!function_exists($funcs)) {
+            return false;
+        }
+        return $funcs($this->image, $dstName);
     }
 
     /**
@@ -118,6 +149,8 @@ class Imgcompress
      */
     public function __destruct()
     {
-        imagedestroy($this->image);
+        if ($this->image && PHP_VERSION_ID < 80500) {
+            imagedestroy($this->image);
+        }
     }
 }

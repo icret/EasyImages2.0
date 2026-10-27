@@ -111,14 +111,28 @@ if (isset($_GET['hash'])) {
 // 非管理员不可访问
 if (!is_who_login('admin')) exit('Permission denied');
 
+// 安全：管理员 POST 操作校验 CSRF 令牌（hash 删除链接是公开能力，已在上方分支处理并退出）
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : '')) {
+    http_response_code(403);
+    exit(json_encode(array(
+        'code' => 403,
+        'msg'  => 'CSRF token invalid',
+        'type' => 'danger',
+        'icon' => 'exclamation-sign',
+        'mode' => 'delete',
+        'url'  => null
+    ), JSON_UNESCAPED_UNICODE));
+}
+
 // 广场 - 批量删除文件
 if (isset($_POST['del_url_array'])) {
-    $del_url_array = $_POST['del_url_array'];
-    $del_num = count($del_url_array);
-    for ($i = 0; $i < $del_num; $i++) {
-        getDel($del_url_array[$i], 'url');
+    // 数组型入参做严格校验，非数组/非字符串项直接忽略，避免 count()/路径拼接 TypeError
+    $del_url_array = is_array($_POST['del_url_array']) ? $_POST['del_url_array'] : array();
+    $del_url_array = array_values(array_filter($del_url_array, 'is_string'));
+    foreach ($del_url_array as $delUrlItem) {
+        getDel($delUrlItem, 'url');
         // FTP删除
-        any_upload($del_url_array[$i], $del_url_array[$i], 'delete');
+        any_upload($delUrlItem, $delUrlItem, 'delete');
     }
     echo json_encode(array(
         'code' => 200,
@@ -128,14 +142,21 @@ if (isset($_POST['del_url_array'])) {
         'mode' => 'delete',
         'url'  => $del_url_array
     ), JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 // 广场 - 批量回收文件
 if (isset($_POST['recycle_url_array'])) {
-    $recycle_url_array = $_POST['recycle_url_array'];
-    $del_num = count($recycle_url_array);
-    for ($i = 0; $i < $del_num; $i++) {
-        checkImg($recycle_url_array[$i], 3);
+    $recycle_url_array = is_array($_POST['recycle_url_array']) ? $_POST['recycle_url_array'] : array();
+    foreach ($recycle_url_array as $recycleItem) {
+        if (!is_string($recycleItem)) {
+            continue;
+        }
+        $error = null;
+        $recyclePath = resolve_image_path($recycleItem, $error);
+        if ($recyclePath !== false && is_file(APP_ROOT . $recyclePath)) {
+            checkImg($recyclePath, 3);
+        }
     }
 }
 

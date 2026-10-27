@@ -3,6 +3,9 @@
 /** 广场页面 */
 require_once __DIR__ . '/header.php';
 
+// 管理员删除操作使用的 CSRF 令牌（仅管理员生成，避免给匿名访客创建会话）
+$delCsrf = is_who_login('admin') ? csrf_token() : '';
+
 /** 顶部广告 */
 if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
@@ -18,7 +21,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
       $listDate = $config['listDate'];                                                                  // 配置限制日期
       $path =  date('Y/m/d/');                                                                          // 当前日期
       if (isset($_GET['date'])) {
-        $getDate = (string) $_GET['date'];                                                              // 数组型入参先转字符串，避免 trim/比较报错
+        $getDate = is_string($_GET['date']) ? $_GET['date'] : '';                                        // 数组型入参按空值处理
         if ($getDate < date('Y/m/d/', strtotime("- $listDate day"))) {                                  // GET日期小于配置日期时返回当前日期
           $path =  date('Y/m/d/');
           echo '
@@ -33,13 +36,26 @@ if ($config['ad_top']) echo $config['ad_top_info'];
         }
       }
 
-      // 日期目录只允许数字、斜杠与短横线，过滤非日期并防止路径穿越
-      $path = preg_match('#^\d[\d/\-]*$#', trim($path)) ? trim($path) : date('Y/m/d/');
+      // 日期目录严格限定为 Y/m/d 且必须是真实日期：旧实现允许任意长度数字/斜杠，
+      // 任何访客都能通过 ?date=999999/99/99/... 让 config_path() 递归创建大量目录（DoS）
+      $path = trim($path);
+      if (preg_match('#^\d{4}/\d{1,2}/\d{1,2}/?$#', $path)) {
+          $dateParts = explode('/', rtrim($path, '/'));
+          if (count($dateParts) !== 3 || !checkdate((int) $dateParts[1], (int) $dateParts[2], (int) $dateParts[0])) {
+              $path = date('Y/m/d/');
+          }
+      } else {
+          $path = date('Y/m/d/');
+      }
       $path = rtrim($path, '/') . '/';                                                                  // 统一补全末尾斜杠，保证 glob 只匹配该日期目录
-      $keyNum = isset($_GET['num']) ? (string) $_GET['num'] : $config['listNumber'];                    // 获取指定浏览数量
-      $keyNum = preg_replace("/[\W]/", "", trim($keyNum));                                              // 过滤非数字，删除空格
+      $keyNum = isset($_GET['num']) && is_string($_GET['num']) ? $_GET['num'] : (string) $config['listNumber']; // 获取指定浏览数量
+      $keyNum = (int) preg_replace("/[\W]/", "", trim($keyNum));                                        // 过滤非数字，删除空格
+      if ($keyNum < 1) {
+          $keyNum = (int) $config['listNumber'];
+      }
+      $keyNum = min($keyNum, 1000);                                                                      // 限制单页渲染上限
       // $fileArr = getFile(APP_ROOT . config_path($path));                                             // 获取当日上传列表
-      $fileType = isset($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", (string) $_GET['search'])  : '*.*'; // 按照图片格式
+      $fileType = isset($_GET['search']) && is_string($_GET['search']) ? '*.' . preg_replace("/[\W]/", "", $_GET['search']) : '*.*'; // 按照图片格式
       $fileArr = get_file_by_glob(APP_ROOT . config_path($path) .  $fileType, 'list');                  // 获取当日上传列表
       $allUploud = $path;                                                                                // 当前浏览日期
       $allUploud = get_file_by_glob(APP_ROOT . $config['path'] . $allUploud, 'number');                 // 当前日期全部上传
@@ -62,24 +78,30 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 $relative_path = config_path($path) . $value;     // 相对路径
                 $imgUrl = $config['domain'] . $relative_path;     // 图片地址
                 $linkUrl = rand_imgurl() . $config_path . $value; // 图片复制与原图地址
+                // 文件名/域名最终可能来自管理员配置或磁盘，输出前统一按 HTML/JS 上下文转义
+                $relativePathEsc = htmlspecialchars($relative_path, ENT_QUOTES, 'UTF-8');
+                $imgUrlEsc = htmlspecialchars($imgUrl, ENT_QUOTES, 'UTF-8');
+                $linkUrlEsc = htmlspecialchars($linkUrl, ENT_QUOTES, 'UTF-8');
+                $thumbUrlEsc = htmlspecialchars(creat_thumbnail_by_list($imgUrl), ENT_QUOTES, 'UTF-8');
+                $reportUrlEsc = htmlspecialchars($config['report'] . '?Website1=' . $linkUrl, ENT_QUOTES, 'UTF-8');
             ?>
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                   <div class="card">
-                    <li><img src="<?php static_cdn(); ?>/public/images/loading.svg" data-image="<?php echo creat_thumbnail_by_list($imgUrl); ?>" data-original="<?php echo $imgUrl; ?>" alt="简单图床-EasyImage"></li>
+                    <li><img src="<?php static_cdn(); ?>/public/images/loading.svg" data-image="<?php echo $thumbUrlEsc; ?>" data-original="<?php echo $imgUrlEsc; ?>" alt="简单图床-EasyImage"></li>
                     <div class="bottom-bar">
-                      <a href="<?php echo $linkUrl; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a>
-                      <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrl; ?>" data-toggle="tooltip" title="复制链接" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
+                      <a href="<?php echo $linkUrlEsc; ?>" target="_blank"><i class="icon icon-picture" data-toggle="tooltip" title="打开" style="margin-left:10px;"></i></a>
+                      <a href="#" class="copy" data-clipboard-text="<?php echo $linkUrlEsc; ?>" data-toggle="tooltip" title="复制链接" style="margin-left:10px;"><i class="icon icon-copy"></i></a>
                       <?php if ($config['show_exif_info'] || is_who_login('admin')) : ?>
-                        <a href="/app/info.php?img=<?php echo $relative_path; ?>" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
+                        <a href="/app/info.php?img=<?php echo $relativePathEsc; ?>" data-toggle="tooltip" title="详细信息" target="_blank" style="margin-left:10px;"><i class="icon icon-info-sign"></i></a>
                       <?php endif; ?>
-                      <a href="/app/down.php?dw=<?php echo $relative_path; ?>" data-toggle="tooltip" title="下载文件" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
+                      <a href="/app/down.php?dw=<?php echo $relativePathEsc; ?>" data-toggle="tooltip" title="下载文件" target="_blank" style="margin-left:10px;"><i class="icon icon-cloud-download"></i></a>
                       <?php if (!empty($config['report'])) : ?>
-                        <a href="<?php echo $config['report'] . '?Website1=' . $linkUrl; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报文件" style="margin-left:10px;"></i></a>
+                        <a href="<?php echo $reportUrlEsc; ?>" target="_blank"><i class="icon icon-question-sign" data-toggle="tooltip" title="举报文件" style="margin-left:10px;"></i></a>
                       <?php endif; ?>
                       <?php if (is_who_login('admin')) : ?>
-                        <a href="#" onclick="ajax_post('<?php echo $relative_path; ?>','recycle')" data-toggle="tooltip" title="回收文件" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
-                        <a href="#" onclick="ajax_post('<?php echo $relative_path; ?>')" data-toggle="tooltip" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
-                        <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $relative_path; ?>"> 选择</label>
+                        <a href="#" onclick="ajax_post('<?php echo $relativePathEsc; ?>','recycle')" data-toggle="tooltip" title="回收文件" style="margin-left:10px;"><i class="icon icon-undo"></i></a>
+                        <a href="#" onclick="ajax_post('<?php echo $relativePathEsc; ?>')" data-toggle="tooltip" title="删除文件" style="margin-left:10px;"><i class="icon icon-trash"></i></a>
+                        <label class="text-primary"><input type="checkbox" id="url" name="checkbox" value="<?php echo $relativePathEsc; ?>"> 选择</label>
                       <?php endif; ?>
                     </div>
                   </div>
@@ -148,7 +170,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     </div>
     <!-- 按日期-->
     <div class="col-md-2 col-xs-5">
-      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="get">
+      <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" method="get">
         <div class="input-group">
           <span class="input-group-addon fix-border fix-padding"></span>
           <input type="text" class="form-control form-date input-sm" name="date" value="<?php echo date('Y/m/d/'); ?>" readonly="readonly">
@@ -195,7 +217,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
           if (result == true) {
             $.post("del.php", {
                 url: url,
-                mode: mode
+                mode: mode,
+                csrf_token: <?php echo json_encode($delCsrf); ?>
               },
               function(data, status) {
                 console.log(data)
@@ -279,7 +302,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
               console.log(check_val);
             }
             $.post("del.php", {
-              'recycle_url_array': check_val
+              'recycle_url_array': check_val,
+              csrf_token: <?php echo json_encode($delCsrf); ?>
             }, );
             new $.zui.Messager("放入回收站成功", {
               type: "success", // 定义颜色主题 
@@ -326,7 +350,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
               console.log(check_val);
             }
             $.post("del.php", {
-                'del_url_array': check_val
+                'del_url_array': check_val,
+                csrf_token: <?php echo json_encode($delCsrf); ?>
               },
               function(data) {
                 if (data.search('success') > 0) {

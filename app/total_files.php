@@ -20,8 +20,14 @@ function total_files($file)
 {
     global $dirn;
     global $filen;
-    $dir = opendir($file);
-    while ($filename = readdir($dir)) {
+    if (!is_dir($file)) {
+        return;
+    }
+    $dir = @opendir($file);
+    if ($dir === false) {
+        return;
+    }
+    while (($filename = readdir($dir)) !== false) {
         if ($filename != "." && $filename != "..") {
             $filename = $file . "/" . $filename;
             if (is_dir($filename)) {
@@ -48,6 +54,9 @@ function creat_json() // 创建json文件
     global $total_file_path;
     global $totalJsonMD5;
 
+    // 递归统计前重置累计值，避免同请求内多次统计时数量叠加
+    $dirn = 0;
+    $filen = 0;
     total_files($total_file_path);
     $usage_space = getDistUsed(getDirectorySize(APP_ROOT . $config['path']));
     $todayUpload = getFileNumber(APP_ROOT . config_path()); // 今日上传数量
@@ -63,35 +72,48 @@ function creat_json() // 创建json文件
         'todayUpload' => $todayUpload,                       // 今日上传数量
         'yestUpload'  => $yestUpload                         // 昨日上传数量
     ];
-    $totalJsonInfo = json_encode($totalJsonInfo, true);
-    if (is_dir(APP_ROOT . '/admin/logs/counts/')) {
-        file_put_contents($totalJsonName, $totalJsonInfo);
-    } else {
-        mkdir(APP_ROOT . '/admin/logs/counts/', 0777, true);  // 创建cache目录
-        file_put_contents($totalJsonName, $totalJsonInfo);
+    $totalJsonInfo = json_encode($totalJsonInfo, JSON_UNESCAPED_UNICODE);
+    if ($totalJsonInfo === false) {
+        return;
     }
+    if (!is_dir(APP_ROOT . '/admin/logs/counts/')) {
+        @mkdir(APP_ROOT . '/admin/logs/counts/', 0755, true);  // 创建cache目录
+    }
+    file_put_contents($totalJsonName, $totalJsonInfo, LOCK_EX);
 }
 function read_total_json($total) // 读取json文件
 {
-    global $totalJsonFile;
     global $totalJsonName;
     global $config;
-    $cache_freq = $config['cache_freq'];
 
-    if (file_exists($totalJsonName)) {
-        $totalJsonFile = file_get_contents($totalJsonName);
-        $totalJsonFile = json_decode($totalJsonFile, true);
-    } else {
-        creat_json();
-        $totalJsonFile = file_get_contents($totalJsonName);
-        $totalJsonFile = json_decode($totalJsonFile, true);
+    // 请求内记忆化：同一页面多次查询不同字段只统计一次
+    static $memo = null;
+    if (is_array($memo) && array_key_exists($total, $memo)) {
+        return $memo[$total];
     }
 
-    if ((date('YmdH') - $totalJsonFile['date']) > $cache_freq) {
+    $cache_freq = max(1, (int) ($config['cache_freq'] ?? 1));
+    $read = function () use ($totalJsonName) {
+        $raw = is_file($totalJsonName) ? @file_get_contents($totalJsonName) : false;
+        $data = is_string($raw) ? json_decode($raw, true) : null;
+        return is_array($data) ? $data : null;
+    };
+
+    $data = $read();
+    // 用统计时间计算真实缓存时长，避免跨月时 "YmdH" 相减得到错误差值
+    $stale = true;
+    if (is_array($data) && !empty($data['total_time'])) {
+        $timestamp = strtotime((string) $data['total_time']);
+        $stale = ($timestamp === false) || (time() - $timestamp > $cache_freq * 3600);
+    }
+    if ($stale) {
         creat_json();
-        $totalJsonFile = file_get_contents($totalJsonName);
-        $totalJsonFile = json_decode($totalJsonFile, true);
+        $data = $read();
     }
 
-    return $totalJsonFile[$total];
+    if (!is_array($data)) {
+        return 0;
+    }
+    $memo = $data;
+    return array_key_exists($total, $data) ? $data[$total] : 0;
 }

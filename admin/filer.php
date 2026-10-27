@@ -129,7 +129,8 @@ if (session_status() === PHP_SESSION_ACTIVE) {
  */
 function G($name, $defv = '')
 {
-    if (isset($_REQUEST[$name])) {
+    // 数组型入参一律回落默认值，避免 strpos/file_put_contents 等函数 TypeError
+    if (isset($_REQUEST[$name]) && !is_array($_REQUEST[$name])) {
         return $_REQUEST[$name];
     }
     return $defv;
@@ -218,28 +219,38 @@ class RExplorer
         ';
         foreach ($fslist as $item) {
             $suffix = $item->isDir() ? '/' : '';
-            $srpath = RexHelper::path_ator($item->getRealPath());
+            $realPath = $item->getRealPath();
+            if ($realPath === false) {
+                continue; // 断链符号链接等无法解析的项直接跳过
+            }
+            $srpath = RexHelper::path_ator($realPath);
             if (RexHelper::is_ignore($item->getFileName())) {
                 continue;
             }
+            // 文件名/路径可能来自用户上传或管理员新建：HTML 属性用 htmlspecialchars，
+            // inline JS 用 json_encode（属性值里的 HTML 实体会被解码，单靠 htmlspecialchars 不足以防逃逸）
+            $nameEsc = htmlspecialchars($item->getFileName(), ENT_QUOTES, 'UTF-8');
+            $pathParam = rawurlencode($srpath);
+            $deleteUrlJs = json_encode('?action=delete&path=' . $srpath, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+            $thumbParam = rawurlencode($srpath);
 
             echo '<tr>';
             if (RexHelper::file_catetory($srpath) == 'image') {
                 echo '
                 <td>
-                    <img data-toggle="lightbox" src="../app/thumb.php?img=', $srpath, '" data-image="' . $srpath . '" data-caption="查看原图" class="img-thumbnail" alt="查看原图" width="80">
+                    <img data-toggle="lightbox" src="../app/thumb.php?img=', $thumbParam, '" data-image="', htmlspecialchars($srpath, ENT_QUOTES, 'UTF-8'), '" data-caption="查看原图" class="img-thumbnail" alt="查看原图" width="80">
                 </td>';
             } else {
                 echo '
                 <td>
-                    <a href="?path=' . $srpath . '">' . $item->getFileName() . $suffix . '</a>
+                    <a href="?path=', $pathParam, '">', $nameEsc, $suffix, '</a>
                 </td>';
             }
             echo '
                 <td>' . ($item->isFile() ? RexHelper::format_bytes($item->getSize()) : '-') . '</td>
                 <td class="d-none d-sm-table-cell">' . substr(sprintf('%o', $item->getPerms()), -4) . '</td>
                 <td class="d-none d-md-table-cell">' . $item->getOwner() . ':' . $item->getGroup() . '<td>' . date('Y-m-d H:i', $item->getCTime()) . '</td>
-                <td><a href="?path=' . $srpath . '">查看</a>|<a href="?view=rename&path=' . $srpath . '">改名</a>|<a href="?view=chmod&path=' . $srpath . '">权限</a>|<a href="javascript:;" onclick="do_cofirm(\'?action=delete&path=' . $srpath . '\', \'删除\')">删除</a></td>
+                <td><a href="?path=', $pathParam, '">查看</a>|<a href="?view=rename&path=', $pathParam, '">改名</a>|<a href="?view=chmod&path=', $pathParam, '">权限</a>|<a href="javascript:;" onclick="do_cofirm(', htmlspecialchars($deleteUrlJs, ENT_QUOTES, 'UTF-8'), ', \'删除\')">删除</a></td>
             </tr>
             ';
         }
@@ -257,7 +268,7 @@ class RExplorer
     {
         echo '
             <div class="newdir">
-                <form method="post" action="?action=newdir&path=' . $path . '">
+                <form method="post" action="?action=newdir&path=' . rawurlencode($path) . '">
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">目录名</label>
                         <div class="col-sm-10">
@@ -286,7 +297,7 @@ class RExplorer
     {
         echo '
             <div class="newfile">
-            <form method="post" action="?action=newfile&path=' . $path . '">
+            <form method="post" action="?action=newfile&path=' . rawurlencode($path) . '">
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">文件名</label>
                         <div class="col-sm-10">
@@ -320,7 +331,7 @@ class RExplorer
                 $c = htmlspecialchars(file_get_contents($sapath));
                 echo '
                     <div class="edit">
-                        <form method="post" action="?action=edit&path=' . $path . '">
+                        <form method="post" action="?action=edit&path=' . rawurlencode($path) . '">
                             <div class="mb-4">
                                 <textarea class="form-control" name="content" rows="30">' . $c . '</textarea>
                             </div>
@@ -340,9 +351,9 @@ class RExplorer
             case 'image':
                 echo '
                     <div class="card view-image">
-                        <img src="', $path, '" class="card-img-top">
+                        <img src="', htmlspecialchars($path, ENT_QUOTES, 'UTF-8'), '" class="card-img-top">
                         <div class="card-body">
-                            <a href="', $path, '" class="card-link">查看原图</a>
+                            <a href="', htmlspecialchars($path, ENT_QUOTES, 'UTF-8'), '" class="card-link">查看原图</a>
                         </div>
                     </div>
                 ';
@@ -351,7 +362,7 @@ class RExplorer
                 echo '
                     <div class="card">
                         <div class="card-body">
-                            <a href="', $path, '" class="card-link">下载文件</a>
+                            <a href="', htmlspecialchars($path, ENT_QUOTES, 'UTF-8'), '" class="card-link">下载文件</a>
                         </div>
                     </div>
                 ';
@@ -367,7 +378,7 @@ class RExplorer
     {
         echo '
             <div class="upload">
-                <form method="post" enctype="multipart/form-data" action="?action=upload&path=' . $path . '">
+                <form method="post" enctype="multipart/form-data" action="?action=upload&path=' . rawurlencode($path) . '">
                     <div class="row mb-4">
                         <label class="col-sm-2 col-form-label">本地图片</label>
                         <div class="col-sm-10">
@@ -390,11 +401,11 @@ class RExplorer
     {
         echo '
             <div class="rename">
-                <form method="post"  action="?action=rename&path=' . $path . '">
+                <form method="post"  action="?action=rename&path=' . rawurlencode($path) . '">
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">原名称</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" value="' . basename($path) . '" readonly>
+                            <input type="text" class="form-control" value="' . htmlspecialchars(basename($path), ENT_QUOTES, 'UTF-8') . '" readonly>
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -421,11 +432,11 @@ class RExplorer
         $perms = substr(sprintf("%o", fileperms($sapath)), -4);
         echo '
             <div class="chmod">
-                <form method="post"  action="?action=chmod&path=' . $path . '">
+                <form method="post"  action="?action=chmod&path=' . rawurlencode($path) . '">
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">名称</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" value="' . basename($path) . '" disabled>
+                            <input type="text" class="form-control" value="' . htmlspecialchars(basename($path), ENT_QUOTES, 'UTF-8') . '" disabled>
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -450,7 +461,7 @@ class RExplorer
     {
         echo '
             <div class="zip">
-                <form method="post" action="?action=zip&path=' . $path . '">
+                <form method="post" action="?action=zip&path=' . rawurlencode($path) . '">
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">压缩文件名</label>
                         <div class="col-sm-10">
@@ -491,7 +502,7 @@ class RExplorer
     {
         echo '
             <div class="unzip">
-                <form method="post" action="?action=unzip&path=' . $path . '">
+                <form method="post" action="?action=unzip&path=' . rawurlencode($path) . '">
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">压缩包路径</label>
                         <div class="col-sm-10">
@@ -546,14 +557,14 @@ class RExplorer
           <div class="collapse navbar-collapse navbar-collapse-example">
             <!-- 一般导航项目 -->
             <ul class="nav navbar-nav">
-                <li class="' . ($view == 'newdir' ? 'active' : '') . '"><a href="?view=newdir&path=' . $pdir . '">新建目录</a></li>
-                <li class="' . ($view == 'newfile' ? 'active' : '') . '"><a href="?view=newfile&path=' . $pdir . '">新建文件</a></li>
-                <li class="' . ($view == 'upload' ? 'active' : '') . '"><a href="?view=upload&path=' . $pdir . '">上传文件</a></li>
-                <li class="' . ($view == 'opreset' ? 'active' : '') . '"><a href="?action=opreset&path=' . $path . '">清空OPCache</a></li>
+                <li class="' . ($view == 'newdir' ? 'active' : '') . '"><a href="?view=newdir&path=' . rawurlencode($pdir) . '">新建目录</a></li>
+                <li class="' . ($view == 'newfile' ? 'active' : '') . '"><a href="?view=newfile&path=' . rawurlencode($pdir) . '">新建文件</a></li>
+                <li class="' . ($view == 'upload' ? 'active' : '') . '"><a href="?view=upload&path=' . rawurlencode($pdir) . '">上传文件</a></li>
+                <li class="' . ($view == 'opreset' ? 'active' : '') . '"><a href="?action=opreset&path=' . rawurlencode($path) . '">清空OPCache</a></li>
             </ul>
             <!-- 右侧的导航项目 -->
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">欢迎您, ' . $member['username'] . '</a></li>
+              <li><a href="#">欢迎您, ' . htmlspecialchars((string) ($member['username'] ?? ''), ENT_QUOTES, 'UTF-8') . '</a></li>
               <li><a href="?action=logout">注销</a></li>
             </ul>
           </div>
@@ -576,7 +587,7 @@ class RExplorer
         $items = explode('/', trim($path, '/'));
         foreach ($items as $item) {
             $full .= '/' . $item;
-            echo '<li class="breadcrumb-item"><a href="?path=', $full, '">', $item, '</a></li>';
+            echo '<li class="breadcrumb-item"><a href="?path=', rawurlencode($full), '">', htmlspecialchars($item, ENT_QUOTES, 'UTF-8'), '</a></li>';
         }
         echo '
                 </ol>
@@ -706,6 +717,10 @@ class RexAction
         if (!RexHelper::is_image_name($filename)) {
             RExplorer::url_redirect('?path=' . $path, 2, '仅允许创建图片文件！');
         }
+        // SVG 可按同源脚本执行，禁止通过文件管理器在线新建/编辑
+        if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) === 'svg') {
+            RExplorer::url_redirect('?path=' . $path, 2, '不允许在线创建 SVG 文件！');
+        }
         $content = G('content');
         $sapath = RexHelper::path_rtoa($path);
         is_dir($sapath) || $sapath = dirname($sapath); // 降级
@@ -722,8 +737,8 @@ class RexAction
      */
     static function act_edit($path)
     {
-        // 安全：不再改写非图片文件内容，杜绝在线写入 WebShell
-        if (!RexHelper::is_image_name($path)) {
+        // 安全：不再改写非图片文件内容，杜绝在线写入 WebShell；SVG 在线编辑同样禁止
+        if (!RexHelper::is_image_name($path) || strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'svg') {
             RExplorer::url_redirect('?path=' . dirname($path), 2, '不允许编辑该文件！');
         }
         $content = G('content');
@@ -774,6 +789,21 @@ class RexAction
             // 安全：仅接受图片类型，拒绝脚本/隐藏文件上溢
             if ($name === '' || strpos($name, '.') === 0 || !RexHelper::is_image_name($name)) {
                 RExplorer::url_redirect('?path=' . $path, 2, '仅允许上传图片文件！');
+            }
+            // 逐层校验实际内容：SVG 走安全规则，其余格式必须是 GD 可解析的真实图片
+            $tmpName = isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '';
+            if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+                RExplorer::url_redirect('?path=' . $path, 2, '上传临时文件无效！');
+            }
+            $extLower = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            if ($extLower === 'svg') {
+                if (!is_safe_svg($tmpName)) {
+                    RExplorer::url_redirect('?path=' . $path, 2, 'SVG 包含不安全内容，已拒绝！');
+                }
+            } elseif (in_array($extLower, array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico'), true)
+                && @getimagesize($tmpName) === false) {
+                // tif/tga 等 getimagesize 不一定支持的格式不做强校验（不可被 Web 执行）
+                RExplorer::url_redirect('?path=' . $path, 2, '文件不是有效图片！');
             }
             $target = $sapath . DIRECTORY_SEPARATOR . $name;
             if (file_exists($target)) {
@@ -927,6 +957,16 @@ class RexHelper
             $rel[] = $segment;
         }
         $abs = rtrim(self::$root, '/\\') . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $rel);
+        // 符号链接可能把路径带出存储根：存在的路径用 realpath 归一化后再次校验边界
+        $rootReal = realpath(self::$root);
+        $absReal = realpath($abs);
+        if ($rootReal !== false && $absReal !== false) {
+            $prefix = rtrim($rootReal, '/\\') . DIRECTORY_SEPARATOR;
+            if ($absReal !== $rootReal && strpos($absReal, $prefix) !== 0) {
+                return rtrim(self::$root, '/\\');
+            }
+        }
+        // 保持原路径格式（不做 realpath 回写），避免符号链接/大小写差异影响 path_ator() 的相对路径计算
         return str_replace('/', DIRECTORY_SEPARATOR, $abs);
     }
 

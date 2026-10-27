@@ -36,3 +36,11 @@ AGENTS.md
 i/cache/
 i/recycle/
 i/2*/
+
+# ---- 运行时锁文件（部署产物，不入库） ----
+config/install.lock
+config/EasyIamge.lock
+
+# ---- 审计报告（含部署安全细节，默认不入库） ----
+AUDIT_REPORT.md
+FIX_RECORD.md

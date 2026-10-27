@@ -1,0 +1,13 @@
+# 根目录安全规则（Apache）
+# 审计报告与安装锁包含敏感部署信息，禁止通过 Web 直接读取。
+# Nginx/Caddy 请按 docs/安全配置.md 增加等价的 location 拒绝规则。
+
+<FilesMatch "^(AUDIT_REPORT|FIX_RECORD)\.md$|^install\.lock$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

@@ -1,5 +1,10 @@
-*2025-07-04 v2.8.7
-- 增加token ID开关 [#241](https://github.com/icret/EasyImages2.0/issues/241)
+* 2026-10-27 v2.8.7
+- 全面代码审计与安全加固：安装器重装接管、SVG 存储型 XSS、后台日志 XSS/文件包含、统计页任意目录删除、CSRF、SSRF、X-Forwarded-For 伪造等
+- 上传端增加服务端扩展名白名单与 SVG 内容安全校验，修复后台日志凭据泄露
+- 修复 PHP 8.5 弃用告警（finfo_close/curl_close/imagedestroy/exit(header) 等）与压缩、缩略图对不支持格式的致命错误
+- 优化文件统计与缓存读取，修复广场日期目录创建 DoS、详情页日志匹配、Bing 背景抓取与文件管理器路径边界
+- 增加 token ID 开关 [#241](https://github.com/icret/EasyImages2.0/issues/241)
+- 增加安装锁与环境自检默认密码常量，补充部署安全响应头
 
 * 2025-03-25 v2.8.6
 * feat: 添加svg矢量图，主要是广场预览 by @zhendery in https://github.com/icret/EasyImages2.0/pull/224

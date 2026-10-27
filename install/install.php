@@ -1,15 +1,21 @@
 <?php
 require_once __DIR__ . '/../app/function.php';
-// 存在程序锁则跳转主页
+// 存在程序锁或已完成安装则跳转主页（防止已上线站点被人重新安装接管）
 if (file_exists(APP_ROOT . '/config/install.lock')) {
-    exit(header("Location:/../index.php"));
+    header("Location: ../index.php");
+    exit;
+}
+if (!isset($config['password']) || !hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
+    header("Location: ../index.php");
+    exit;
 }
 
 // 验证上一步环境检测
-$state = isset($_POST['check']) ? $_POST['check'] : exit(header("Location:index.php"));
-if ($state !== 'checked') {
-    exit(header("Location:index.php"));
+if (!isset($_POST['check']) || $_POST['check'] !== 'checked') {
+    header("Location: index.php");
+    exit;
 }
+$state = $_POST['check'];
 
 ?>
 <!DOCTYPE html>

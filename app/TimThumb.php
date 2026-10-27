@@ -841,7 +841,7 @@ class timthumb
             $exec = OPTIPNG_PATH;
             $this->debug(3, "optipng'ing $tempfile");
             $presize = filesize($tempfile);
-            $out = `$exec -o1 $tempfile`; //you can use up to -o7 but it really slows things down
+            $out = function_exists('shell_exec') ? shell_exec(escapeshellarg($exec) . ' -o1 ' . escapeshellarg($tempfile)) : ''; //you can use up to -o7 but it really slows things down
             clearstatcache();
             $aftersize = filesize($tempfile);
             $sizeDrop = $presize - $aftersize;
@@ -856,7 +856,7 @@ class timthumb
             $exec = PNGCRUSH_PATH;
             $tempfile2 = tempnam($this->cacheDirectory, 'timthumb_tmpimg_');
             $this->debug(3, "pngcrush'ing $tempfile to $tempfile2");
-            $out = `$exec $tempfile $tempfile2`;
+            $out = function_exists('shell_exec') ? shell_exec(escapeshellarg($exec) . ' ' . escapeshellarg($tempfile) . ' ' . escapeshellarg($tempfile2)) : '';
             $todel = "";
             if (is_file($tempfile2)) {
                 $sizeDrop = filesize($tempfile) - filesize($tempfile2);
@@ -906,8 +906,10 @@ class timthumb
             return $this->error("Could not get a lock for writing.");
         }
         $this->debug(3, "Done image replace with security header. Cleaning up and running cleanCache()");
-        imagedestroy($canvas);
-        imagedestroy($image);
+        if (PHP_VERSION_ID < 80500) {
+            imagedestroy($canvas);
+            imagedestroy($image);
+        }
         return true;
     }
 
@@ -1065,7 +1067,7 @@ class timthumb
             $command = "$xv --server-args=\"-screen 0, {$screenX}x{$screenY}x{$colDepth}\" $cuty $proxy --max-wait=$timeout --user-agent=\"$ua\" --javascript=$jsOn --java=$javaOn --plugins=$pluginsOn --js-can-open-windows=off --url=\"$url\" --out-format=$format --out=$tempfile";
         }
         $this->debug(3, "Executing command: $command");
-        $out = `$command`;
+        $out = function_exists('shell_exec') ? shell_exec($command) : '';
         $this->debug(3, "Received output: $out");
         if (!is_file($tempfile)) {
             $this->set404();
@@ -1360,11 +1362,15 @@ class timthumb
                 return false;
             }
             if ($curlResult) {
-                curl_close($curl);
+                if (PHP_VERSION_ID < 80500) {
+                    curl_close($curl);
+                }
                 return true;
             } else {
                 $this->lastURLError = curl_error($curl);
-                curl_close($curl);
+                if (PHP_VERSION_ID < 80500) {
+                    curl_close($curl);
+                }
                 return false;
             }
         } else {

@@ -1,7 +1,13 @@
 <?php
 include_once __DIR__ . "/header.php";
 
-if (!$config['show_exif_info'] && !is_who_login('admin')) exit(header('Location: ' . $config['domain'] . '?exif#closed'));
+// 管理员删除操作使用的 CSRF 令牌（仅管理员生成）
+$delCsrf = is_who_login('admin') ? csrf_token() : '';
+
+if (!$config['show_exif_info'] && !is_who_login('admin')) {
+    header('Location: ' . $config['domain'] . '?exif#closed');
+    exit;
+}
 
 // 获取图片地址（收敛到存储目录，防止路径穿越）
 if (isset($_GET['img']) || isset($_GET['history'])) {
@@ -31,25 +37,28 @@ if (isset($_GET['img']) || isset($_GET['history'])) {
 // 开启隐藏上传目录
 if ($config['hide_path']) {
     $img_url = rand_imgurl() . str_replace($config['path'], '/', $getIMG);
-
-    // 获取当前图片日志文件
-    $logs = str_replace('/', '-', substr(parse_url($img_url, PHP_URL_PATH), 1, 7));
 } else {
-    // 关闭隐藏上传目录
     $img_url = rand_imgurl() . $getIMG;
-
-    // 获取当前图片日志文件
-    $logs = str_replace('/', '-', substr(str_replace($config['path'], '', parse_url($img_url, PHP_URL_PATH)), 0, 7));
 }
 
-// 导入日志文件
-$logsName = basename($img_url);
+// 日志月份直接从存储相对路径提取，避免依赖域名/隐藏目录配置导致匹配失败
+$logsName = basename($getIMG);
+$imgPathForLog = parse_url((string) $getIMG, PHP_URL_PATH);
+if (is_string($imgPathForLog) && preg_match('#/(\d{4})/(\d{2})/#', $imgPathForLog, $dateMatch)) {
+    $logs = $dateMatch[1] . '-' . $dateMatch[2];
+} else {
+    $logs = date('Y-m');
+}
+// 导入日志文件：月份只允许 YYYY-MM，避免动态路径 include（LFI）面
+if (!preg_match('/^\d{4}-\d{2}$/', $logs)) {
+    $logs = date('Y-m');
+}
 if (is_file(APP_ROOT . '/admin/logs/upload/' . $logs . '.php')) {
     include APP_ROOT . '/admin/logs/upload/' . $logs . '.php';
 } else {
     $logs = array($logsName => array('source' => '请在图床安全中开启上传日志!', 'date' => '请在图床安全中开启上传日志!', 'ip' => '0.0.0.0', 'port' => '0', 'user_agent' => '请在图床安全中开启上传日志!', 'path' => '请在图床安全中开启上传日志!', 'size' => '请在图床安全中开启上传日志!', 'md5' => '请在图床安全中开启上传日志!', 'checkImg' => '请在图床安全中开启上传日志!', 'from' => '请在图床安全中开启上传日志!'));
 }
-if (empty($logs[$logsName])) {
+if (!is_array($logs) || empty($logs[$logsName])) {
     $logs = array($logsName => array('source' => '日志不存在', 'date' => '日志不存在', 'ip' => '0.0.0.0', 'port' => '0', 'user_agent' => '日志不存在', 'path' => '日志不存在', 'size' => '日志不存在', 'md5' => '日志不存在', 'checkImg' => '日志不存在', 'from' => '日志不存在'));
 }
 // 图片真实路径
@@ -64,19 +73,34 @@ if (!is_file($imgABPath)) {
 $imgSize = filesize($imgABPath);
 // 上传时间
 $upTime = filemtime($imgABPath);
+
+// 输出转义：图片地址与日志字段均可能来自管理员配置/客户端输入
+$infoEsc = function ($value) {
+    return htmlspecialchars(str_replace(array("\r", "\n"), ' ', (string) $value), ENT_QUOTES, 'UTF-8');
+};
+$imgUrlEsc = $infoEsc($img_url);
+$imgBaseEsc = $infoEsc(basename($getIMG));
+$imgExtEsc = $infoEsc(pathinfo($getIMG, PATHINFO_EXTENSION));
+$imgPathJs = $infoEsc(json_encode($getIMG, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+$logEntry = (isset($logs[$logsName]) && is_array($logs[$logsName])) ? $logs[$logsName] : array();
+$logField = function ($key, $default = '') use ($logEntry, $infoEsc) {
+    return $infoEsc(array_key_exists($key, $logEntry) ? $logEntry[$key] : $default);
+};
+$logIpRaw = isset($logEntry['ip']) ? (string) $logEntry['ip'] : '';
+$logIpSafe = filter_var($logIpRaw, FILTER_VALIDATE_IP) ? $logIpRaw : '0.0.0.0';
 // 广告
 if ($config['ad_top']) echo $config['ad_top_info'];
 ?>
 <div class="col-md-12" style="margin-bottom:10px;">
     <div class="col-md-6">
-        <img src="<?php echo $img_url; ?>" class="img-rounded" height="436px" width="540px" data-toggle="lightbox" id="img1" data-caption="<?php echo pathinfo($img_url, PATHINFO_FILENAME); ?>的详细信息" alt="<?php echo $img_url; ?>" />
+        <img src="<?php echo $imgUrlEsc; ?>" class="img-rounded" height="436px" width="540px" data-toggle="lightbox" id="img1" data-caption="<?php echo $infoEsc(pathinfo($img_url, PATHINFO_FILENAME)); ?>的详细信息" alt="<?php echo $imgUrlEsc; ?>" />
     </div>
     <div class="col-md-6 table-responsive table-condensed">
         <table class="table table-hover table-striped table-bordered text-nowrap">
             <tbody>
                 <tr>
                     <td>图片名称</td>
-                    <td> <?php echo basename($getIMG); ?></td>
+                    <td> <?php echo $imgBaseEsc; ?></td>
                 </tr>
                 <tr>
                     <td>图片大小</td>
@@ -84,7 +108,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 </tr>
                 <tr>
                     <td>图片类型</td>
-                    <td>image/<?php echo pathinfo($getIMG, PATHINFO_EXTENSION); ?></td>
+                    <td>image/<?php echo $imgExtEsc; ?></td>
                 </tr>
                 <tr>
                     <td>图片宽高</td>
@@ -96,55 +120,55 @@ if ($config['ad_top']) echo $config['ad_top_info'];
                 </tr> -->
                 <tr>
                     <td>上传时间</td>
-                    <td><?php echo $logs[$logsName]['date']; ?></td>
+                    <td><?php echo $logField('date'); ?></td>
                 </tr>
                 <?php if (is_who_login('admin')) : ?>
                     <tr class="text-primary">
                         <td>原始名称</td>
-                        <td><?php echo htmlspecialchars($logs[$logsName]['source']); ?></td>
+                        <td><?php echo $logField('source'); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>原始大小</td>
-                        <td><?php echo $logs[$logsName]['size']; ?></td>
+                        <td><?php echo $logField('size'); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>上传者IP</td>
-                        <td><?php echo $logs[$logsName]['ip'] . ':' . $logs[$logsName]['port']; ?></td>
+                        <td><?php echo $logField('ip') . ':' . $logField('port'); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>上传地址</td>
-                        <td><?php echo Ip2Region($logs[$logsName]['ip']); ?></td>
+                        <td><?php echo Ip2Region($logIpSafe); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>监黄状态</td>
-                        <td><?php echo strstr('OFF', $logs[$logsName]['checkImg']) ? '未开启' : '已通过'; ?></td>
+                        <td><?php echo strstr((string) ($logEntry['checkImg'] ?? ''), 'OFF') ? '未开启' : '已通过'; ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>上传方式</td>
-                        <td><?php echo is_numeric($logs[$logsName]['from']) ?  '通过API | Token ID: ' . $logs[$logsName]['from']  : "通过网页"; ?></td>
+                        <td><?php echo is_numeric($logEntry['from'] ?? '') ? '通过API | Token ID: ' . $logField('from') : "通过网页"; ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>文件路径</td>
-                        <td><?php echo $logs[$logsName]['path']; ?></td>
+                        <td><?php echo $logField('path'); ?></td>
                     </tr>
                     <tr class="text-primary">
                         <td>文件MD5</td>
-                        <td><?php echo $logs[$logsName]['md5']; ?></td>
+                        <td><?php echo $logField('md5'); ?></td>
                     </tr>
                 <?php endif; ?>
                 <tr>
                     <td>文件操作</td>
                     <td>
-                        <a class="btn btn-mini btn-primary" href="<?php echo  $img_url; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
+                        <a class="btn btn-mini btn-primary" href="<?php echo $imgUrlEsc; ?>" target="_blank"><i class="icon icon-picture"> 查看</i></a>
                         <!-- <a class="btn btn-mini btn-primary" data-toggle="collapse" data-target="#collapseExample"><i class="icon icon-caret-down"> Exif</i></a> -->
                         <a class="btn btn-mini btn-primary" href="" onclick="window.location.replace;"><i class="icon icon-spin icon-refresh"></i> 刷新</a>
                         <a class="btn btn-mini btn-primary" href="/app/down.php?dw=<?php echo htmlspecialchars($getIMG, ENT_QUOTES); ?>" target="_blank"><i class="icon icon-cloud-download"> 下载</i></a>
                         <?php if (!empty($config['report']) && !is_who_login('admin')) : ?>
-                            <a class="btn btn-mini btn-warning" href="<?php echo $config['report'] . '?Website1=' . $img_url; ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
+                            <a class="btn btn-mini btn-warning" href="<?php echo $infoEsc($config['report'] . '?Website1=' . $img_url); ?>" target="_blank"><i class="icon icon-question-sign"> 举报</i></a>
                         <?php endif; ?>
                         <?php if (is_who_login('admin')) : ?>
-                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post('<?php echo htmlspecialchars($getIMG, ENT_QUOTES); ?>','recycle')"><i class="icon icon-undo"> 回收</i></a>
-                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post('<?php echo htmlspecialchars($getIMG, ENT_QUOTES); ?>')"><i class="icon icon-trash"> 删除</i></a>
+                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post(<?php echo $imgPathJs; ?>,'recycle')"><i class="icon icon-undo"> 回收</i></a>
+                            <a class="btn btn-mini btn-warning" href="#" onclick="ajax_post(<?php echo $imgPathJs; ?>)"><i class="icon icon-trash"> 删除</i></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -160,14 +184,14 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-6" style="padding-bottom: 10px;">
         <div class="input-group">
             <span class="input-group-addon"><i class="icon icon-link"></i> 直 链&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" class="form-control" id="links" value="<?php echo $img_url; ?>">
+            <input type="text" class="form-control" id="links" value="<?php echo $imgUrlEsc; ?>">
             <span class="input-group-btn"><button class="btn btn-default btnLinks" onclick="uploadCopy('links','.btnLinks')" type="button">复制</button></span>
         </div>
     </div>
     <div class="col-md-6" style="padding-bottom: 10px;">
         <div class="input-group">
             <span class="input-group-addon"><i class="icon icon-chat"></i> 论坛代码&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" class="form-control" id="bbscode" value="[img]<?php echo $img_url; ?>[/img]">
+            <input type="text" class="form-control" id="bbscode" value="[img]<?php echo $imgUrlEsc; ?>[/img]">
             <span class="input-group-btn"><button class="btn btn-default btnBbscode" onclick="uploadCopy('bbscode','.btnBbscode')" type="button">复制</button></span>
         </div>
     </div>
@@ -176,14 +200,14 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-6" style="padding-bottom: 10px;">
         <div class="input-group">
             <span class="input-group-addon"><i class="icon icon-code"></i> MarkDown</span>
-            <input type="text" class="form-control" id="markdown" value="![简单图床 - EasyImage](<?php echo $img_url; ?>)">
+            <input type="text" class="form-control" id="markdown" value="![简单图床 - EasyImage](<?php echo $imgUrlEsc; ?>)">
             <span class="input-group-btn"><button class="btn btn-default btnMarkDown" onclick="uploadCopy('markdown','.btnMarkDown')" type="button">复制</button></span>
         </div>
     </div>
     <div class="col-md-6" style="padding-bottom: 10px;">
         <div class="input-group">
             <span class="input-group-addon"><i class="icon icon-html5"></i> HTML&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" class="form-control" id="html" value='<img src="<?php echo $img_url; ?>" alt="简单图床 - EasyImage" />'>
+            <input type="text" class="form-control" id="html" value='<img src="<?php echo $imgUrlEsc; ?>" alt="简单图床 - EasyImage" />'>
             <span class="input-group-btn"><button class="btn btn-default btnHtml" onclick="uploadCopy('html','.btnHtml')" type="button">复制</button></span>
         </div>
     </div>
@@ -194,7 +218,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     <div class="col-md-12" style="padding-bottom: 10px;">
         <h4 class="header-dividing">当月随机图片：</h4>
         <div class="cards cards-borderless">
-            <?php if ($logs[$logsName]['port'] != 0) : for ($i = 0; $i <= 7; $i++) : $randName = array_rand($logs, 1) ?>
+            <?php if (!empty($logEntry['port']) && !empty($logs)) : for ($i = 0; $i < 8; $i++) : $randName = array_rand($logs, 1) ?>
 
                     <div class="col-md-3">
                         <a class="card" href="?img=<?php echo htmlspecialchars($logs[$randName]['path'], ENT_QUOTES); ?>" target="_blank">
@@ -218,7 +242,8 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     function ajax_post(url, mode = 'delete') {
         $.post("del.php", {
                 url: url,
-                mode: mode
+                mode: mode,
+                csrf_token: <?php echo json_encode($delCsrf); ?>
             },
             function(data, status) {
                 console.log(data)
@@ -285,7 +310,7 @@ if ($config['ad_top']) echo $config['ad_top_info'];
     }
 
     // 更改网页标题
-    document.title = "图片<?php echo basename($getIMG); ?>的详细信息 - <?php echo $config['title']; ?>"
+    document.title = "图片" + <?php echo json_encode(basename($getIMG), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + "的详细信息 - " + <?php echo json_encode($config['title'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 </script>
 <?php
 /** 引入底部 */

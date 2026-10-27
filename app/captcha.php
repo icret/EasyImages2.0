@@ -19,7 +19,8 @@ $charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 $str_len = strlen($charset) - 1;
 /*for循环打印输出验证码*/
 for ($i = 0; $i < $count; $i++) {
-    $code .= $charset[rand(0, $str_len)];
+    // 验证码必须使用 CSPRNG，rand()/mt_rand() 可被预测
+    $code .= $charset[random_int(0, $str_len)];
 }
 
 /*strtolower函数将输入的验证码自动转换为小写，用户不需要特意区分大小写*/
@@ -59,4 +60,6 @@ for ($i = 0; $i < 5; $i++) {
 // 因为有些浏览器，访问的content-type会是文本型，所以我们需要设置成图片的格式类型
 header("content-type:image/png");
 imagepng($img); //建立png函数
-imagedestroy($img);
+if (PHP_VERSION_ID < 80500) {
+    imagedestroy($img);
+}

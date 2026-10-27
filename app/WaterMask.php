@@ -91,7 +91,9 @@ class Imgs
                 imagewebp($temp_img, $savepath, 100);
                 break;
         }
-        imagedestroy($im);
+        if (PHP_VERSION_ID < 80500) {
+            imagedestroy($im);
+        }
         return $savepath;
     }
 
@@ -294,7 +296,9 @@ class Imgs
          */
         if (file_exists($def['res'])) {
             imagecopy($dst_img, $markim, $x, $y, 0, 0, $logow, $logoh);
-            imagedestroy($markim);
+            if (PHP_VERSION_ID < 80500) {
+                imagedestroy($markim);
+            }
         } else {
             $rgb = explode(',', $def['color']);
             if (count($rgb) != 4) {
@@ -350,8 +354,10 @@ class Imgs
                 return array('code' => false, 'msg' => '保存图片类型有误');
                 break;
         }
-        #  销毁图片内存资源
-        imagedestroy($dst_img);
+        #  销毁图片内存资源（PHP 8.5 起 imagedestroy 已弃用）
+        if (PHP_VERSION_ID < 80500) {
+            imagedestroy($dst_img);
+        }
         return array('code' => true, 'msg' => '添加水印成功', 'url' => $def['name']);
     }
 }

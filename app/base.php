@@ -23,6 +23,12 @@
 
 // 设置html为utf8
 header('Content-Type:text/html;charset=utf-8');
+// 基础安全响应头（CLI 下 header() 无意义；HTML/JSON/图片端点均受益）
+if (PHP_SAPI !== 'cli' && !headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: same-origin');
+}
 // 定义根目录
 define('APP_ROOT', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__) . '/../')));
 // 时区设置 https://www.php.net/manual/zh/timezones.php
@@ -34,5 +40,7 @@ ini_set('memory_limit', '512M');
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 // 定义程序版本
 define('APP_VERSION', '2.8.7');
+// 出厂默认管理员密码的 SHA256（仅用于安装器/环境自检判断，登录仍以 config.password 为准）
+define('EASYIMAGE_DEFAULT_PASSWORD_HASH', '7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358');
 
 /*---------------基础配置结束-------------------*/
