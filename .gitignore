@@ -44,3 +44,6 @@ config/EasyIamge.lock
 # ---- 审计报告（含部署安全细节，默认不入库） ----
 AUDIT_REPORT.md
 FIX_RECORD.md
+
+# ---- 后台运行时日志（登录日志、上传日志、IP 计数、统计缓存，含敏感信息，不入库） ----
+admin/logs/

@@ -19,7 +19,8 @@ if (isset($_GET['login_log'])) {
     $file = APP_ROOT . '/admin/logs/login/' . date('/Y-m-') . 'logs.php';
     echo '<pre class="pre-scrollable" style="background-color: rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);">';
     if (is_file($file)) {
-        echo file_get_contents($file);
+        // 输出侧转义：升级前写入的历史日志可能含未转义内容，避免在管理员页面执行 HTML/JS
+        echo htmlspecialchars((string) file_get_contents($file), ENT_QUOTES, 'UTF-8');
     } else {
         echo '并未生成登录日志,请检查文件权限!';
     }

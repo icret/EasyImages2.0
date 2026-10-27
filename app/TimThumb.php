@@ -1048,7 +1048,6 @@ class timthumb
         $jsOn = WEBSHOT_JAVASCRIPT_ON ? 'on' : 'off';
         $javaOn = WEBSHOT_JAVA_ON ? 'on' : 'off';
         $pluginsOn = WEBSHOT_PLUGINS_ON ? 'on' : 'off';
-        $proxy = WEBSHOT_PROXY ? ' --http-proxy=' . WEBSHOT_PROXY : '';
         $tempfile = tempnam($this->cacheDirectory, 'timthumb_webshot');
         $url = $this->src;
         if (!preg_match('/^https?:\/\/[a-zA-Z0-9\.\-]+/i', $url)) {
@@ -1060,11 +1059,23 @@ class timthumb
         // So we're now filtering out the characters: '$', '(' and ')' in the above regex to avoid this. 
         // We are also filtering out chars rarely used in URLs but legal accoring to the URL RFC which might be exploitable. These include: @*!~#[]',
         // We're doing this because we're passing this URL to the shell and need to make very sure it's not going to execute arbitrary commands. 
+        // 安全：所有拼接进 shell 的变量逐一 escapeshellarg，避免命令注入（原写法仅靠字符过滤护 $url）
+        $screenArg = '-screen 0, ' . $screenX . 'x' . $screenY . 'x' . $colDepth; // 均为程序内整型常量
+        $proxyArg = WEBSHOT_PROXY ? ' --http-proxy=' . escapeshellarg(WEBSHOT_PROXY) : '';
+        $cmdTail = ' --max-wait=' . (int) $timeout
+            . ' --user-agent=' . escapeshellarg($ua)
+            . ' --javascript=' . escapeshellarg($jsOn)
+            . ' --java=' . escapeshellarg($javaOn)
+            . ' --plugins=' . escapeshellarg($pluginsOn)
+            . ' --js-can-open-windows=off'
+            . ' --url=' . escapeshellarg($url)
+            . ' --out-format=' . escapeshellarg($format)
+            . ' --out=' . escapeshellarg($tempfile);
         if (WEBSHOT_XVFB_RUNNING) {
             putenv('DISPLAY=:100.0');
-            $command = "$cuty $proxy --max-wait=$timeout --user-agent=\"$ua\" --javascript=$jsOn --java=$javaOn --plugins=$pluginsOn --js-can-open-windows=off --url=\"$url\" --out-format=$format --out=$tempfile";
+            $command = escapeshellarg($cuty) . $proxyArg . $cmdTail;
         } else {
-            $command = "$xv --server-args=\"-screen 0, {$screenX}x{$screenY}x{$colDepth}\" $cuty $proxy --max-wait=$timeout --user-agent=\"$ua\" --javascript=$jsOn --java=$javaOn --plugins=$pluginsOn --js-can-open-windows=off --url=\"$url\" --out-format=$format --out=$tempfile";
+            $command = escapeshellarg($xv) . ' --server-args=' . escapeshellarg($screenArg) . ' ' . escapeshellarg($cuty) . $proxyArg . $cmdTail;
         }
         $this->debug(3, "Executing command: $command");
         $out = function_exists('shell_exec') ? shell_exec($command) : '';

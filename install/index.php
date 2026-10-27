@@ -6,9 +6,9 @@ if (file_exists(APP_ROOT . '/config/install.lock')) {
     header("Location: ../index.php");
     exit;
 }
-if (!isset($config['password']) || !hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
-    header("Location: ../index.php");
-    exit;
+if (!isset($config['password']) || !password_verify(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
+    // 非默认密码说明站点已安装，给可读提示而非静默跳回（避免与首页 check.php 构成重定向环）
+    exit('<script>window.alert("站点已完成安装，如需重装请手动删除 config/install.lock 并恢复默认密码。");location.href="../index.php";</script>');
 }
 $phpEnv = (PHP_VERSION >= 7.4) ? true : false;
 $fileinfo = extension_loaded('fileinfo') ? true : false;

@@ -3,8 +3,12 @@
 /** 禁止直接访问 */
 defined('APP_ROOT') ?: exit;
 
-// 跳转安装
-if (!is_file(APP_ROOT . '/config/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
+// 跳转安装：仅在“确实可安装”（锁缺失且密码仍为出厂默认）时引导去安装页；
+// 否则会与 install 侧门闸（非默认密码跳回主页）构成无限重定向环
+if (!is_file(APP_ROOT . '/config/install.lock')
+    and is_file(APP_ROOT . '/install/install.php')
+    and isset($config['password'])
+    and password_verify(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
     exit('<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>');
 }
 /** 检测弹窗 */

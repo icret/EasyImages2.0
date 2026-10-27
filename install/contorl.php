@@ -6,9 +6,9 @@ if (file_exists(APP_ROOT . '/config/install.lock')) {
   exit;
 }
 
-// 安全：安装器只允许在“尚未配置”时执行。默认密码仍是出厂哈希才视为未配置，
+// 安全：安装器只允许在“尚未配置”时执行。当前口令仍为出厂默认才视为未配置（存储已为 bcrypt，故用 password_verify 比对默认摘要），
 // 这样即使 install.lock 丢失/被删，已上线站点也不会被任意访客重置管理员口令。
-if (!isset($config['password']) || !hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
+if (!isset($config['password']) || !password_verify(EASYIMAGE_DEFAULT_PASSWORD_HASH, (string) $config['password'])) {
   exit('<script>window.alert("站点已完成安装，如需重装请手动删除 config/install.lock 并恢复默认密码。");location.href="../index.php";</script>');
 }
 
@@ -24,10 +24,15 @@ if (!hash_equals($plainPassword, (string) $_POST['repassword'])) {
 if (strlen($plainPassword) < 8 || strlen($plainPassword) > 64) {
   exit('<script>window.alert("密码长度应为 8~64 位!");location.href="./index.php";</script>');
 }
+// 安全：不向后兼容——禁止用出厂默认口令完成安装，强制设置自定义密码。
+// 按“有效摘要”比对（与输入形态无关）：拦明文 admin@123，也不允许落入与默认凭据等价的存储值
+if (hash_equals(EASYIMAGE_DEFAULT_PASSWORD_HASH, hash('sha256', $plainPassword))) {
+  exit('<script>window.alert("禁止使用出厂默认密码，请设置自定义密码!");location.href="./index.php";</script>');
+}
 
-// 登录端校验的是 SHA256(明文)（前端 SHA256.js 计算后提交），此处必须保持同一算法；
-// 原实现写入 password_hash()（bcrypt），导致安装完成后永远无法登录。
-$config['password'] = hash('sha256', $plainPassword);
+// 安装器入参恒为明文，显式走明文路径：存 bcrypt(SHA256(明文))，不走“十六进制当摘要”的猜测分支；
+// 登录校验走 easyimage_password_verify()→password_verify(摘要, bcrypt)，与存法配对。
+$config['password'] = easyimage_password_hash_plaintext($plainPassword);
 $safeUser = preg_replace('/[^\w\.\-]/', '', (string) $_POST['user']);
 $config['user'] = $safeUser !== '' ? $safeUser : 'admin';
 

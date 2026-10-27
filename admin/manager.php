@@ -971,20 +971,23 @@ if (!empty($_FILES) && !FM_READONLY) {
 
 
 
-        if (empty($f['file']['error']) && !empty($tmp_name) && $tmp_name != 'none' && $isFileAllowed) {
-            // 安全：SVG 需通过脚本/事件/外链校验，其余格式必须是可解析的真实图片
+        // 安全：SVG 需通过脚本/事件/外链校验，其余格式必须是可解析的真实图片。
+        // 校验必须在“完整文件”上执行：分片上传时每个分片是截断内容，
+        // 只验首片可被“合法首片+恶意后续片”绕过，大图中段格式特征也会被误判。
+        $fm_content_unsafe = function ($file, $ext) {
             if ($ext === 'svg') {
-                if (!is_safe_svg($tmp_name)) {
-                    echo json_encode(array('status' => 'error', 'info' => 'Unsafe SVG content'));
-                    exit();
-                }
-            } elseif (in_array($ext, array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico'), true)
-                && @getimagesize($tmp_name) === false) {
-                // tif/tga 等 getimagesize 不一定支持，且不可被 Web 执行，不做强校验
-                echo json_encode(array('status' => 'error', 'info' => 'File is not a valid image'));
-                exit();
+                return !is_safe_svg($file);
             }
+            if (in_array($ext, array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico'), true)) {
+                // tif/tga 等 getimagesize 不一定支持，且不可被 Web 执行，不做强校验
+                return @getimagesize($file) === false;
+            }
+            return false;
+        };
+
+        if (empty($f['file']['error']) && !empty($tmp_name) && $tmp_name != 'none' && $isFileAllowed) {
             if ($chunkTotal){
+                // 非末片不做内容校验，合并完成后在落盘文件上复验
                 $out = @fopen("{$fullPath}.part", $chunkIndex == 0 ? "wb" : "ab");
                 if ($out) {
                     $in = @fopen($tmp_name, "rb");
@@ -1014,10 +1017,19 @@ if (!empty($_FILES) && !FM_READONLY) {
 
 
 
-                if ($chunkIndex == $chunkTotal - 1) {
-                    rename("{$fullPath}.part", $fullPath);
+                if ($chunkIndex == $chunkTotal - 1 && @rename("{$fullPath}.part", $fullPath)) {
+                    // 安全：对合并后的完整文件做内容校验，失败即删除
+                    if ($fm_content_unsafe($fullPath, $ext)) {
+                        @unlink($fullPath);
+                        echo json_encode(array('status' => 'error', 'info' => $ext === 'svg' ? 'Unsafe SVG content' : 'File is not a valid image'));
+                        exit();
+                    }
                 }
 
+            } else if ($fm_content_unsafe($tmp_name, $ext)) {
+                // 安全：非分片上传在临时文件上校验，通过后才落盘
+                echo json_encode(array('status' => 'error', 'info' => $ext === 'svg' ? 'Unsafe SVG content' : 'File is not a valid image'));
+                exit();
             } else if (move_uploaded_file($tmp_name, $fullPath)) {
                 // Be sure that the file has been uploaded
                 if ( file_exists($fullPath) ) {

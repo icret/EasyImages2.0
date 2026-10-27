@@ -129,19 +129,47 @@ if (isset($_POST['del_url_array'])) {
     // 数组型入参做严格校验，非数组/非字符串项直接忽略，避免 count()/路径拼接 TypeError
     $del_url_array = is_array($_POST['del_url_array']) ? $_POST['del_url_array'] : array();
     $del_url_array = array_values(array_filter($del_url_array, 'is_string'));
+    $del_failed = array();
     foreach ($del_url_array as $delUrlItem) {
-        getDel($delUrlItem, 'url');
+        // 安全：与批量回收分支同一收敛路径，拒绝穿越/越出存储目录的入参
+        $error = null;
+        $delPath = resolve_image_path($delUrlItem, $error);
+        if ($delPath === false || !is_file(APP_ROOT . $delPath) || easyimage_delete($delPath, 'url') !== true) {
+            $del_failed[] = $delUrlItem;
+            continue;
+        }
         // FTP删除
         any_upload($delUrlItem, $delUrlItem, 'delete');
     }
-    echo json_encode(array(
-        'code' => 200,
-        'msg'  => '删除成功',
-        'type' => 'success',
-        'icon' => 'ok-sign',
-        'mode' => 'delete',
-        'url'  => $del_url_array
-    ), JSON_UNESCAPED_UNICODE);
+    // 按实际删除结果如实返回，不再无条件“删除成功”
+    if (count($del_failed) === 0) {
+        echo json_encode(array(
+            'code' => 200,
+            'msg'  => '删除成功',
+            'type' => 'success',
+            'icon' => 'ok-sign',
+            'mode' => 'delete',
+            'url'  => $del_url_array
+        ), JSON_UNESCAPED_UNICODE);
+    } elseif (count($del_failed) < count($del_url_array)) {
+        echo json_encode(array(
+            'code' => 206,
+            'msg'  => '部分删除失败',
+            'type' => 'warning',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $del_failed
+        ), JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode(array(
+            'code' => 404,
+            'msg'  => '删除失败',
+            'type' => 'danger',
+            'icon' => 'exclamation-sign',
+            'mode' => 'delete',
+            'url'  => $del_failed
+        ), JSON_UNESCAPED_UNICODE);
+    }
     exit;
 }
 

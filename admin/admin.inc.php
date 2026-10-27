@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify(isset($_POST['csrf_tok
     http_response_code(403);
     exit('CSRF token invalid');
 }
-foreach (array('stop_token', 'delete_token', 'stop_guest', 'delete_guest', 'delDir') as $csrfAction) {
+foreach (array('stop_token', 'delete_token', 'stop_guest', 'delete_guest') as $csrfAction) {
     if (isset($_GET[$csrfAction]) && !csrf_verify(isset($_GET['csrf']) ? $_GET['csrf'] : '')) {
         http_response_code(403);
         exit('CSRF token invalid');
@@ -66,7 +66,8 @@ $sanitizeAccount = function ($value) {
     }
     return $value;
 };
-// 前端提交的是 SHA256 摘要；若为明文（JS 被禁用）则服务端补算，保持登录算法一致
+// 前端提交的是 SHA256 摘要；若为明文（JS 被禁用）则服务端补算。
+// 落盘统一升级为加盐 bcrypt（cost 12），有效摘要=提交摘要或明文补算，与登录校验函数保持同一算法
 $normalizePasswordHash = function ($value) {
     if (!is_string($value)) {
         return null;
@@ -75,7 +76,11 @@ $normalizePasswordHash = function ($value) {
     if ($value === '') {
         return null;
     }
-    return preg_match('/^[a-f0-9]{64}$/i', $value) ? strtolower($value) : hash('sha256', $value);
+    // 协议提交的是 64 位 SHA256 摘要；非摘要视为明文回退，必须满足 8~64 位，杜绝弱明文口令落盘
+    if (!preg_match('/^[a-f0-9]{64}$/', strtolower($value)) && (strlen($value) < 8 || strlen($value) > 64)) {
+        return null;
+    }
+    return easyimage_password_hash($value);
 };
 
 // 修改config配置
@@ -102,6 +107,20 @@ if (isset($_POST['update'])) {
     }
     // 密码：允许留空表示不修改
     if (isset($safePost['password'])) {
+        // 安全：明文回退路径（JS 被禁用/直接 POST 时）必须验长度，与 $normalizePasswordHash 及安装器的 8~64 位策略对齐，避免弱口令落盘或超长明文静默丢弃
+        $rawPassword = trim((string) $safePost['password']);
+        if ($rawPassword !== '' && !preg_match('/^[a-f0-9]{64}$/i', $rawPassword) && (strlen($rawPassword) < 8 || strlen($rawPassword) > 64)) {
+            echo '
+            <script>
+            new $.zui.Messager("明文密码长度应为 8~64 位!", {
+                type: "danger",
+                icon: "exclamation-sign"
+            }).show();
+            </script>
+            ';
+            header("refresh:1;");
+            exit;
+        }
         $newPassword = $normalizePasswordHash($safePost['password']);
         if ($newPassword === null) {
             unset($safePost['password']);
@@ -183,7 +202,7 @@ if (isset($_POST['add_token_id'])) {
 if (isset($_GET['stop_token'])) {
     $stop_token = is_string($_GET['stop_token']) ? $_GET['stop_token'] : '';
     if (!is_array($tokenList) || !isset($tokenList[$stop_token])) {
-        header("refresh:1;url=/admin/admin.inc.php");
+        header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
         exit;
     }
     $postArr = array(
@@ -203,16 +222,27 @@ if (isset($_GET['stop_token'])) {
         }).show();
         </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 // 删除Token
 if (isset($_GET['delete_token'])) {
     $deleteToken = is_string($_GET['delete_token']) ? $_GET['delete_token'] : '';
-    if (is_array($tokenList)) {
-        unset($tokenList[$deleteToken]);
-        cache_write($api_key_file, $tokenList, 'tokenList');
+    // 与禁用分支一致：先验记录存在，不存在时如实提示，不再无条件回显“删除成功”
+    if (!is_array($tokenList) || !isset($tokenList[$deleteToken])) {
+        echo '
+  <script>
+  new $.zui.Messager("API Token 记录不存在!", {
+    type: "danger", // 定义颜色主题 
+    icon: "exclamation-sign" // 定义消息图标
+  }).show();
+  </script>
+  ';
+        header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
+        exit;
     }
+    unset($tokenList[$deleteToken]);
+    cache_write($api_key_file, $tokenList, 'tokenList');
     echo '
   <script>
   new $.zui.Messager("删除 API Token 成功!", {
@@ -221,14 +251,15 @@ if (isset($_GET['delete_token'])) {
   }).show();
   </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
+    exit;
 }
 
 // 禁用用户
 if (isset($_GET['stop_guest'])) {
     $stop_guest = is_string($_GET['stop_guest']) ? $_GET['stop_guest'] : '';
     if (!is_array($guestConfig) || !isset($guestConfig[$stop_guest])) {
-        header("refresh:1;url=/admin/admin.inc.php");
+        header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
         exit;
     }
     $postArr = array(
@@ -248,17 +279,28 @@ if (isset($_GET['stop_guest'])) {
         }).show();
         </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 
 // 删除用户
 if (isset($_GET['delete_guest'])) {
     $deleteGuest = is_string($_GET['delete_guest']) ? $_GET['delete_guest'] : '';
-    if (is_array($guestConfig)) {
-        unset($guestConfig[$deleteGuest]);
-        cache_write($guest_config_file, $guestConfig, 'guestConfig');
+    // 与禁用分支一致：先验记录存在，不存在时如实提示
+    if (!is_array($guestConfig) || !isset($guestConfig[$deleteGuest])) {
+        echo '
+  <script>
+  new $.zui.Messager("上传用户记录不存在!", {
+    type: "danger", // 定义颜色主题 
+    icon: "exclamation-sign" // 定义消息图标
+  }).show();
+  </script>
+  ';
+        header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
+        exit;
     }
+    unset($guestConfig[$deleteGuest]);
+    cache_write($guest_config_file, $guestConfig, 'guestConfig');
     echo '
   <script>
   new $.zui.Messager("删除上传用户成功!", {
@@ -267,7 +309,8 @@ if (isset($_GET['delete_guest'])) {
   }).show();
   </script>
   ';
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
+    exit;
 }
 
 //  添加管理员修改config.php
@@ -361,7 +404,7 @@ if (isset($_REQUEST['delDir'])) {
 		}).show();</script>';
     }
     // header("refresh:1;"); // 1s后刷新当前页面
-    header("refresh:1;url=/admin/admin.inc.php");
+    header("refresh:1;url=" . $config['domain'] . "/admin/admin.inc.php");
 }
 
 auto_delete(); //定时删除
@@ -731,6 +774,9 @@ auto_delete(); //定时删除
                                 <textarea class="form-control" rows="4" name="check_ip_list" data-toggle="tooltip" title="每个IP以英文,结尾 支持IP段 例:123.23.23.44,193.134.*.*" placeholder="每个IP以英文,结尾 支持IP段 例:192.168.1.13,123.23.23.44,193.134.*.*" onkeyup="this.value=this.value.replace(/\s/g,'')"><?php echo $config['check_ip_list']; ?></textarea>
                                 <label class="radio-inline"><input type="radio" name="check_ip_model" value="0" <?php if ($config['check_ip_model'] == 0) echo 'checked'; ?>> 黑名单模式</label>
                                 <label class="radio-inline"><input type="radio" name="check_ip_model" value="1" <?php if ($config['check_ip_model'] == 1) echo 'checked'; ?>> 白名单模式</label>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" rows="2" name="trusted_proxy" data-toggle="tooltip" title="反代/CDN 场景下才采信 X-Forwarded-For 的代理 IP,每个以英文,结尾 支持IP段 例:104.16.0.0/16写法不支持,可用104.16.*.*" placeholder="仅站点前方有公网反向代理/CDN时填写代理出口IP,内网反代无需填写"><?php echo $config['trusted_proxy'] ?? ''; ?></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -1260,7 +1306,7 @@ auto_delete(); //定时删除
                         <li>直接输入账号和密码即可完成修改</li>
                         <li>更改后会立即生效并重新登录,请务必牢记账号和密码! </li>
                         <li>如果忘记账号可以打开-><code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</li>
-                        <li>如果忘记密码请将密码->转换成SHA256-><a href="<?php echo $config['domain'] . '/app/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</li>
+                        <li>如果忘记密码可用<a href="<?php echo $config['domain'] . '/app/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>将明文口令生成加盐 bcrypt 串->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>$2y$12$...</strong>'">password</code>对应的键值->粘贴填入（若完全锁死，可先用发行包内 config.php 覆盖，再用出厂默认口令 admin@123 登录后立即改密）</li>
                     </ul>
                 </div>
             </div>

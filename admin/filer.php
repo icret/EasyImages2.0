@@ -152,6 +152,10 @@ class RExplorer
         }
         // 查看路径
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            echo '<strong class="red">路径非法，拒绝访问！</strong>';
+            return;
+        }
         if (is_dir($sapath)) {
             return self::view_list($path);
         }
@@ -191,6 +195,9 @@ class RExplorer
     static function view_list($path)
     {
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false || !is_dir($sapath)) {
+            RExplorer::url_redirect('?', 2, '路径非法或不存在！');
+        }
         $fslist = iterator_to_array(new FilesystemIterator($sapath, 256));
         ksort($fslist, SORT_NATURAL);
         usort($fslist, function ($a, $b) {
@@ -325,6 +332,9 @@ class RExplorer
     static function view_edit($path)
     {
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?', 2, '路径非法，拒绝访问！');
+        }
         $category = RexHelper::file_catetory($sapath);
         switch ($category) {
             case 'text':
@@ -429,6 +439,9 @@ class RExplorer
     static function view_chmod($path)
     {
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false || !file_exists($sapath)) {
+            RExplorer::url_redirect('?', 2, '路径非法或不存在！');
+        }
         $perms = substr(sprintf("%o", fileperms($sapath)), -4);
         echo '
             <div class="chmod">
@@ -534,7 +547,8 @@ class RExplorer
     static function body_navbar($path, $view)
     {
         $pdir = $path;
-        if (!is_dir(RexHelper::path_rtoa($path))) {
+        $navAbs = RexHelper::path_rtoa($path);
+        if ($navAbs === false || !is_dir($navAbs)) {
             $pdir = dirname($path);
         }
         $member = RexAction::user_info();
@@ -693,6 +707,9 @@ class RexAction
         }
         $mode = intval(G('mode'), 8);
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?path=' . $path, 2, '路径非法，拒绝访问！');
+        }
         $target = $sapath . DIRECTORY_SEPARATOR . $filename;
         if (file_exists($target)) {
             RExplorer::url_redirect('?path=' . $path, 2, ' 目标已存在！');
@@ -723,6 +740,9 @@ class RexAction
         }
         $content = G('content');
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?path=' . $path, 2, '路径非法，拒绝访问！');
+        }
         is_dir($sapath) || $sapath = dirname($sapath); // 降级
         $target = $sapath . DIRECTORY_SEPARATOR . $filename;
         if (file_put_contents($target, $content) !== false) {
@@ -743,6 +763,9 @@ class RexAction
         }
         $content = G('content');
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?path=' . dirname($path), 2, '路径非法，拒绝访问！');
+        }
         if (file_put_contents($sapath, $content) !== false) {
             RExplorer::url_redirect('?path=' . $path, 1);
         }
@@ -756,6 +779,9 @@ class RexAction
     static function act_delete($path)
     {
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?', 2, '路径非法，拒绝访问！');
+        }
         if (is_file($sapath)) {
             if (@unlink($sapath)) {
                 RExplorer::url_redirect('?path=' . dirname($path), 1);
@@ -778,6 +804,9 @@ class RexAction
     static function act_upload($path)
     {
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?', 2, '路径非法，拒绝访问！');
+        }
         // 安全：远程 URL 拉取会引入 SSRF 与任意落盘面，能力关闭
         // 从本地上传
         if (!empty($_FILES['file'])) {
@@ -829,6 +858,9 @@ class RexAction
             RExplorer::url_redirect('?view=rename&path=' . $path, 2, '名称不能为空！');
         }
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?view=rename&path=' . $path, 2, '路径非法，拒绝访问！');
+        }
         if (is_file($sapath) && !RexHelper::is_image_name($filename)) {
             RExplorer::url_redirect('?view=rename&path=' . $path, 2, '仅允许重命名为图片文件！');
         }
@@ -850,6 +882,9 @@ class RexAction
             RExplorer::url_redirect('?view=chmod&path=' . $path, 2, '权限模式无效！');
         }
         $sapath = RexHelper::path_rtoa($path);
+        if ($sapath === false) {
+            RExplorer::url_redirect('?view=chmod&path=' . $path, 2, '路径非法，拒绝访问！');
+        }
         if (@chmod($sapath, $mode)) {
             RExplorer::url_redirect('?path=' . dirname($path), 1);
         }
@@ -939,7 +974,7 @@ class RexHelper
     /**
      * 相对路径转绝对路径
      * @param string $path 路径
-     * @return string
+     * @return string|false 越界返回 false，调用方必须拒绝 false
      */
     static function path_rtoa($path)
     {
@@ -959,11 +994,25 @@ class RexHelper
         $abs = rtrim(self::$root, '/\\') . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $rel);
         // 符号链接可能把路径带出存储根：存在的路径用 realpath 归一化后再次校验边界
         $rootReal = realpath(self::$root);
+        if ($rootReal === false) {
+            return false;
+        }
+        $prefix = rtrim($rootReal, '/\\') . DIRECTORY_SEPARATOR;
         $absReal = realpath($abs);
-        if ($rootReal !== false && $absReal !== false) {
-            $prefix = rtrim($rootReal, '/\\') . DIRECTORY_SEPARATOR;
+        if ($absReal !== false) {
             if ($absReal !== $rootReal && strpos($absReal, $prefix) !== 0) {
-                return rtrim(self::$root, '/\\');
+                // 安全：越界直接拒绝，不再静默回退到存储根（避免调用方拿到根路径继续操作）
+                return false;
+            }
+        } else {
+            // 目标不存在（新建文件/目录）时，对最近的存在祖先做同样的边界校验，
+            // 避免父级符号链接（root/link -> /etc/）把新文件写到根外
+            for ($probe = $abs; $probe !== '' && !file_exists($probe);) {
+                $probe = dirname($probe);
+            }
+            $probeReal = realpath($probe);
+            if ($probeReal !== false && $probeReal !== $rootReal && strpos($probeReal, $prefix) !== 0) {
+                return false;
             }
         }
         // 保持原路径格式（不做 realpath 回写），避免符号链接/大小写差异影响 path_ator() 的相对路径计算

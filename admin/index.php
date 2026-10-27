@@ -110,7 +110,7 @@ if (isset($_POST['password']) and isset($_POST['user'])) {
             </div>
             <div class="modal-body">
                 <p class="text-primary">忘记账号可以打开<code>/config/config.php</code>文件找到<code data-toggle="tooltip" title="'user'=><strong>admin</strong>'">user</code>对应的键值->填入</p>
-                <p class="text-success">忘记密码请将密码转换成SHA256(<a href="<?php echo $config['domain'] . '/app/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>)->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>e6e0612609</strong>'">password</code>对应的键值->填入</p>
+                <p class="text-success">忘记密码请在此输入明文密码生成加密串（加盐 bcrypt，<a href="<?php echo $config['domain'] . '/app/reset_password.php'; ?>" target="_blank" class="text-purple">转换网址</a>）->打开<code>/config/config.php</code>文件->找到<code data-toggle="tooltip" title="'password'=>'<strong>$2y$12$...</strong>'">password</code>对应的键值->粘贴填入</p>
                 <h4 class="text-danger">更改后会立即生效并重新登录,请务必牢记账号和密码! </h4>
             </div>
             <div class="modal-footer">

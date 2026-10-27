@@ -237,6 +237,68 @@ function login_username()
 }
 
 /**
+ * 计算口令“有效摘要”：登录线上协议提交的是前端 SHA256 摘要；
+ * 安装器/明文回退传进来的是明文，此处补算保持与协议一致。
+ * @param string $value 客户端提交值（64 位十六进制摘要或明文）
+ * @return string 归一化后的有效摘要（小写 64 位十六进制），空值返回空串
+ */
+function easyimage_password_digest($value)
+{
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+    $lower = strtolower($value);
+    // 已是 64 位十六进制摘要则归一化小写；否则按明文补算 SHA256
+    return preg_match('/^[a-f0-9]{64}$/', $lower) ? $lower : hash('sha256', $value);
+}
+
+/**
+ * 生成落盘口令散列：加盐 bcrypt（cost 12），输入为“有效摘要”而非明文
+ * @param string $value 客户端提交值（摘要或明文）
+ * @return string
+ */
+function easyimage_password_hash($value)
+{
+    return password_hash(easyimage_password_digest($value), PASSWORD_BCRYPT, ['cost' => EASYIMAGE_BCRYPT_COST]);
+}
+
+/**
+ * 写入路径已知入参为明文时使用（安装器、口令恢复页）：显式补算 SHA256 再 bcrypt，
+ * 绝不走“64 位十六进制当摘要透传”的猜测分支（该猜测会使默认摘要串被当摘要、并锁死十六进制明文口令）
+ * @param string $plain 明文口令
+ * @return string
+ */
+function easyimage_password_hash_plaintext($plain)
+{
+    return password_hash(hash('sha256', (string) $plain), PASSWORD_BCRYPT, ['cost' => EASYIMAGE_BCRYPT_COST]);
+}
+
+// 登录失败分支用于拉平时序的固定占位散列（永不作为真实凭据，仅抵消 bcrypt 命中/未命中的耗时差）。
+// 注意：串内 cost 与 EASYIMAGE_BCRYPT_COST 硬编码一致（当前 $2y$12$），调整 cost 时必须同步重生成此占位串，否则时序拉平会出现可测偏差
+// php -r "echo password_hash('easyimage-timing-equalizer', PASSWORD_BCRYPT, ['cost' => 12]);"
+define('EASYIMAGE_TIMING_DUMMY_BCRYPT', '$2y$12$rbu4O6I0cRiY/P58hxFgI.DoW.2JPqrgSv6TgYVFsX47d4XgIiEj6');
+
+/**
+ * 校验登录提交值与存储值
+ * 安全：仅接受加盐 bcrypt，不再接受遗留无盐 SHA256（不向后兼容）；
+ * 配置泄露不再直接暴露可离线暴破的凭据（线上仍传 SHA256 明文摘要作 pre-hash，重放由 TLS/会话承担）
+ * @param string $submitted 客户端提交值（登录为 SHA256 摘要，明文回退会补算）
+ * @param string $stored 存储值（必须是 bcrypt 串）
+ * @return bool
+ */
+function easyimage_password_verify($submitted, $stored)
+{
+    $stored = (string) $stored;
+    $effective = easyimage_password_digest($submitted);
+    if ($stored === '' || $effective === '') {
+        return false;
+    }
+    // 只认 bcrypt；遗留 SHA256 摘要或非散列串一律拒绝
+    return password_verify($effective, $stored);
+}
+
+/**
  * 2023-01-06 校验登录
  * @param $user String 登录用户名
  * @param $password 登录密码
@@ -279,15 +341,19 @@ function _login($user = null, $password = null)
     $password = strip_tags($password);
     $configuredUser = (string) ($config['user'] ?? '');
     $configuredPassword = (string) ($config['password'] ?? '');
-    // 是否管理员（恒定时间比较，避免长度/前缀时间侧信道）
-    if ($configuredUser !== '' && $configuredPassword !== ''
-        && hash_equals($configuredUser, $user) && hash_equals($configuredPassword, $password)) {
-        return _login_session($user, 1, '管理员登录成功');
+    // 是否管理员（先恒定时间比对用户名，再以口令校验函数比对密码；仅接受 bcrypt）
+    $accountKnown = false;
+    if ($configuredUser !== '' && $configuredPassword !== '' && hash_equals($configuredUser, $user)) {
+        $accountKnown = true;
+        if (easyimage_password_verify($password, $configuredPassword)) {
+            return _login_session($user, 1, '管理员登录成功');
+        }
     }
     // 是否上传者
     if (array_key_exists($user, $guestConfig)) {
+        $accountKnown = true;
         $guestPassword = (string) ($guestConfig[$user]['password'] ?? '');
-        if ($guestPassword !== '' && hash_equals($guestPassword, $password)) {
+        if ($guestPassword !== '' && easyimage_password_verify($password, $guestPassword)) {
             // 上传者账号过期
             if (($guestConfig[$user]['expired'] ?? 0) < time()) {
                 return json_encode(array('code' => 400, 'level' => 0, 'messege' => $user . '账号已过期'));
@@ -295,11 +361,12 @@ function _login($user = null, $password = null)
             return _login_session($user, 2, $user . '用户登录成功');
         }
     }
-    // 账号存在但密码错误 / 账号不存在
-    if (($configuredUser !== '' && hash_equals($configuredUser, $user)) || array_key_exists($user, $guestConfig)) {
-        return json_encode(array('code' => 400, 'level' => 0, 'messege' => '密码错误'));
+    // 安全：账号不存在时也跑一次 bcrypt 拉平时序（避免以耗时区分“账号存在/不存在”），
+    // 并统一文案为“账号或密码错误”，避免响应文案辅助账号枚举
+    if (!$accountKnown) {
+        easyimage_password_verify($password !== '' ? $password : 'x', EASYIMAGE_TIMING_DUMMY_BCRYPT);
     }
-    return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号不存在'));
+    return json_encode(array('code' => 400, 'level' => 0, 'messege' => '账号或密码错误'));
 }
 
 /**
@@ -850,33 +917,14 @@ function urlHash($data, $mode, $context = 'del')
 }
 
 /**
- * 删除指定文件
+ * 删除指定文件（历史接口，保留供既有调用点使用）
+ * 安全修复与 easyimage_delete() 同源，直接委托避免两份实现不一致
  * @param $url string 文件
  * @param $type string 模式
  */
 function getDel($url, $type)
 {
-    global $config;
-    // url本地化（(string) 防止入参为数组/arrayeval 写入的非常规类型时 strpos() 报 TypeError）
-    $url = htmlspecialchars(str_replace($config['domain'] ?? '', '', (string) $url)); // 过滤html 获取url path
-    $url = urldecode(trim($url));
-
-    if ($type == 'url') {
-        $url = APP_ROOT . $url;
-    }
-    if ($type == 'hash') {
-        $url = APP_ROOT . $url;
-    }
-
-    // 文件是否存在 限制只能删除存储目录内的文件
-    if (is_file($url) && is_within_storage($url)) {
-        // 执行删除
-        if (@unlink($url)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
+    return easyimage_delete($url, $type);
 }
 
 
@@ -888,8 +936,9 @@ function getDel($url, $type)
 function easyimage_delete($url, $type)
 {
     global $config;
-    // url本地化
-    $url = htmlspecialchars(str_replace($config['domain'] ?? '', '', (string) $url)); // 过滤html 获取url path
+    // url本地化（仅去域名前缀与解码；不做 htmlspecialchars，
+    // 路径中的 & ' 等字符被实体化后会导致合法文件永远删不掉）
+    $url = str_replace($config['domain'] ?? '', '', (string) $url); // 获取url path
     $url = urldecode(trim($url));
 
     if ($type == 'url') {
@@ -927,28 +976,6 @@ function is_who_login($user)
     if ($user === 'guest') if (($status['level'] ?? 0) == 2) return true;
 
     return false;
-}
-
-/**
- * 检查PHP缺少简单图床必备的扩展
- * 需检测的扩展：'fileinfo', 'iconv', 'gd', 'mbstring', 'openssl','zip',
- * zip 扩展不是必须的，但会影响tinyfilemanager文件压缩(本次不检测)。
- *
- * 检测是否更改默认域名
- *
- * 检测是否修改默认密码
- * @param $mode bool 是否开启检测
- */
-function checkEnv($mode)
-{
-    // 初始化安装
-    if (!is_file(APP_ROOT . '/config/install.lock') and is_file(APP_ROOT . '/install/install.php')) {
-        echo '<script type="text/javascript">window.location.href="' . get_whole_url('/') . '/install/index.php"</script>';
-    }
-
-    if ($mode) {
-        require_once __DIR__ . '/check.php';
-    }
 }
 
 /**
@@ -1382,15 +1409,21 @@ function creat_thumbnail_by_list($imgUrl)
         // 缩略图缓存的绝对路径 $imgName 是不带/i/的相对路径
         $new_imgName = $cache_path . $thumbnail;
         // 创建并保存缩略图
+        $thumbOk = false;
         if (($config['thumbnail'] ?? 0) == 2) {
             require_once __DIR__ . '/Zebra_Image.php';
             $image = new Zebra_Image();
             $image->source_path = $abPathName;
             $image->target_path = $new_imgName;
-            $image->resize($config['thumbnail_w'] ?? 0, $config['thumbnail_h'] ?? 0, ZEBRA_IMAGE_CROP_CENTER);
+            $thumbOk = $image->resize($config['thumbnail_w'] ?? 0, $config['thumbnail_h'] ?? 0, ZEBRA_IMAGE_CROP_CENTER) === true;
         } else {
             require_once __DIR__ . '/class.thumb.php';
-            Thumb::out($abPathName, $new_imgName, $config['thumbnail_w'] ?? 0, $config['thumbnail_h'] ?? 0);
+            $thumbOk = Thumb::out($abPathName, $new_imgName, $config['thumbnail_w'] ?? 0, $config['thumbnail_h'] ?? 0) !== false;
+        }
+
+        // 生成失败时回落原图 URL，避免输出不存在的缩略图死链且每次渲染重复尝试生成
+        if (!$thumbOk || !is_file($new_imgName)) {
+            return $imgUrl;
         }
 
         // 输出缩略图（返回可访问 URL，而不是服务器绝对路径）
@@ -1478,8 +1511,8 @@ function arrayeval($array, $format = false, $level = 0)
             $val = (string) $val;
         } elseif (is_float($val)) {
             $val = var_export($val, true);
-        } elseif (is_string($val) && preg_match('/^-?\d+$/', $val) && strlen($val) <= 12) {
-            // 保留数字字面量
+        } elseif (is_string($val) && preg_match('/^(0|-?[1-9]\d{0,11})$/', $val)) {
+            // 保留合法十进制整数字面量；含前导零的串（007/018）落盘会被按八进制解析或引发语法错误，保持字符串形式
         } else {
             $val = '\'' . addcslashes((string) $val, '\'\\') . '\'';
         }
@@ -1514,6 +1547,7 @@ function writefile($filename, $writetext, $openmod = 'w')
  */
 function real_ip()
 {
+    global $config;
     static $realip = NULL;
     if ($realip !== NULL) {
         return $realip;
@@ -1523,15 +1557,18 @@ function real_ip()
     $remote = $_SERVER['REMOTE_ADDR'] ?? (getenv('REMOTE_ADDR') ?: '0.0.0.0');
     $realip = $remote;
 
-    // 仅当直连对端是内网/回环地址（即前方存在可信反向代理）时才采信转发头，
-    // 防止互联网客户端直接伪造 X-Forwarded-For 绕过 IP 黑白名单与游客上传限额。
+    // 仅当直连对端是内网/回环地址，或命中 trusted_proxy 可信代理名单（支持 * 通配段）时
+    // 才采信转发头，防止互联网客户端直接伪造 X-Forwarded-For 绕过 IP 黑白名单与游客上传限额；
+    // 公网反代/CDN 部署需在后台配置代理出口 IP，否则整个代理集群会被当作同一访客
     $remoteIsValid = filter_var($remote, FILTER_VALIDATE_IP) !== false;
     $peerIsPrivate = $remoteIsValid && filter_var(
         $remote,
         FILTER_VALIDATE_IP,
         FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
     ) === false;
-    if ($peerIsPrivate) {
+    $trustedList = trim((string) ($config['trusted_proxy'] ?? ''));
+    $peerIsTrusted = $trustedList !== '' && checkIP($remote, $trustedList, true) === false;
+    if ($peerIsPrivate || $peerIsTrusted) {
         $candidates = array();
         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $candidates = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);

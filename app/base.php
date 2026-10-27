@@ -40,7 +40,11 @@ ini_set('memory_limit', '512M');
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 // 定义程序版本
 define('APP_VERSION', '2.8.7');
-// 出厂默认管理员密码的 SHA256（仅用于安装器/环境自检判断，登录仍以 config.password 为准）
-define('EASYIMAGE_DEFAULT_PASSWORD_HASH', '7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358');
+// 出厂默认管理员口令与其 SHA256 “有效摘要”（注意：*_HASH 存的是有效摘要/针值，不是落盘散列）。
+// 安装器/环境自检据此判断“是否仍为默认口令”（用 password_verify 比对存储的 bcrypt）；登录仍以 config.password 为准
+define('EASYIMAGE_DEFAULT_PASSWORD', 'admin@123');
+define('EASYIMAGE_DEFAULT_PASSWORD_HASH', hash('sha256', EASYIMAGE_DEFAULT_PASSWORD));
+// 口令落盘统一使用的 bcrypt cost（集中定义，避免多处硬编码漂移）
+define('EASYIMAGE_BCRYPT_COST', 12);
 
 /*---------------基础配置结束-------------------*/

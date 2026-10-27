@@ -18,6 +18,11 @@ if (!is_who_login('admin')) {
 }
 // 删除统计缓存：只允许清空固定统计目录，绝不接受任意路径
 if (isset($_POST['del_total'])) {
+    // 安全：与 chart.php 同一 CSRF 校验（本页无 admin.inc.php 的自动补 token JS，表单改为服务端注入令牌）
+    if (!csrf_verify(isset($_POST['csrf_token']) ? $_POST['csrf_token'] : '')) {
+        http_response_code(403);
+        exit('CSRF token invalid');
+    }
     $countsDir = realpath(APP_ROOT . '/admin/logs/counts');
     $requested = realpath((string) $_POST['del_total']);
     $cleared = false;
@@ -73,6 +78,7 @@ if (is_array($char_data)) {
             <form action="chart.php" method="post">
                 <span>统计时间:<?php echo $char_data['total_time']; ?></span>
                 <input type="hidden" name="del_total" value="<?php echo APP_ROOT . '/admin/logs/counts/'; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
                 <button class="btn btn-mini btn-primary"><i class="icon icon-spin icon-refresh"></i>重新统计</button>
             </form>
         </div>

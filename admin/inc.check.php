@@ -30,8 +30,15 @@ foreach ($expand as $val) {
     }
 }
 
-// 检测是否修改默认密码
-if ($config['password'] === EASYIMAGE_DEFAULT_PASSWORD_HASH) {
+// 检测是否修改默认密码（存储已为加盐 bcrypt，故用 password_verify 比对默认摘要）。
+// bcrypt(cost 12) 单次数百 ms，按会话缓存结果（仅在存储口令变化时重算），避免每进后台设置页都跑一次
+$storedPwd = (string) ($config['password'] ?? '');
+$pwdCache = $_SESSION['easyimage_default_pwd'] ?? null;
+if (!is_array($pwdCache) || ($pwdCache['pwd'] ?? '') !== $storedPwd) {
+    $pwdCache = array('pwd' => $storedPwd, 'is_default' => password_verify(EASYIMAGE_DEFAULT_PASSWORD_HASH, $storedPwd));
+    $_SESSION['easyimage_default_pwd'] = $pwdCache;
+}
+if (!empty($pwdCache['is_default'])) {
     echo '
     new $.zui.Messager("请修改默认密码,否则会有泄露风险! ",{
         type: "warning", // 定义颜色主题 
@@ -131,7 +138,7 @@ if ($config['checkImg'] !== 0) {
         if (filter_var($ip, FILTER_VALIDATE_IP)) {
             if (!@IP_URL_Ping($ip, $port, 1)) {
                 echo '
-                    new $.zui.Messager("' . $ip . $port . ' 鉴黄接口无法ping通! ",{
+                    new $.zui.Messager("' . htmlspecialchars((string) $ip, ENT_QUOTES, 'UTF-8') . htmlspecialchars((string) $port, ENT_QUOTES, 'UTF-8') . ' 鉴黄接口无法ping通! ",{
                         type: "warning", // 定义颜色主题 
                         time:3700
                     }).show();
@@ -140,7 +147,7 @@ if ($config['checkImg'] !== 0) {
         } else {
             if (!@IP_URL_Ping($ip, 80, 1)) {
                 echo '
-                    new $.zui.Messager("' . $ip . ' 鉴黄接口无法ping通! ",{
+                    new $.zui.Messager("' . htmlspecialchars((string) $ip, ENT_QUOTES, 'UTF-8') . ' 鉴黄接口无法ping通! ",{
                         type: "warning", // 定义颜色主题 
                         time:3700
                     }).show();
